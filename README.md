@@ -25,30 +25,30 @@ Show me the code!
 
 This is how you connect and subscribe to receive events on a topic ..
 
-`
-var sess;
+      var sess;
 
-function onEvent1(topic, event) {
-   alert("got event: " + event);
-}
+      function onEvent1(topic, event) {
+         alert("got event: " + event);
+      }
 
-$(document).ready(function() {
-   sess = new ab.Session("ws://localhost:9000", function() {
+      $(document).ready(function() {
+         sess = new ab.Session("ws://localhost:9000", function() {
 
-      sess.prefix("event", "http://example.com/event#");
-      sess.subscribe("event:event1", onEvent1);
-   });
-});
-`
+            sess.prefix("event", "http://example.com/event#");
+            sess.subscribe("event:event1", onEvent1);
+         });
+      });
+
 
 .. and publish and event to a topic
 
-`
-sess.publish("event:event1", {a: 23, b: "foobar"});
 
-...
+      sess.publish("event:event1", {a: 23, b: "foobar"});
 
-<button onclick="sendMyEvent();">Publish!</button>
-`
+      ...
+
+      <button onclick="sendMyEvent();">Publish!</button>
+
+
 
 
