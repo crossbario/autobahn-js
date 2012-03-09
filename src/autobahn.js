@@ -1,22 +1,13 @@
 /*!
-   Autobahn WebSockets - http://autobahn.ws
-   Copyright Tavendo GmbH. Licensed under the Apache 2.0 License.
-   See license text at http://www.apache.org/licenses/LICENSE-2.0
-*/
-
-/*jshint forin:true,
-         noarg:true,
-         noempty:true,
-         eqeqeq:true,
-         bitwise:true,
-         strict:true,
-         undef:true,
-         curly:true,
-         browser:true,
-         indent:3,
-         maxerr:50,
-         newcap:true */
-/*global window, navigator, WebSocket, MozWebSocket, console, $ */
+ * AutobahnJS v@VERSION
+ * http://autobahn.ws
+ *
+ * Copyright 2011, 2012 Tavendo GmbH.
+ * Licensed under the Apache 2.0 License.
+ * See license text at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Date: @DATE
+ */
 
 "use strict";
 
@@ -24,7 +15,7 @@ var ab = window.ab = {};
 
 // version number of Autobahn WebSockets JS is (now) numbered
 // independently of Autobahn Websockets for Python (and others)!
-ab.version = "0.5.0";
+ab.version = "0.6.0";
 
 
 /**
