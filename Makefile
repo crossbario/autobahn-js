@@ -1,3 +1,5 @@
+UPLOADLOCATION = "www.tavendo.de:~/static/autobahnjs"
+
 SRC_DIR = src
 TEST_DIR = test
 BUILD_DIR = build
@@ -20,6 +22,10 @@ VER = sed "s/@VERSION/${AB_VER}/"
 DATE=$(shell git log -1 --pretty=format:%ad)
 
 all: core
+
+publish: autobahn min
+	@@echo "Uploading AutobahnJS .."
+	scp ${AB} ${AB_MIN} ${UPLOADLOCATION}
 
 core: autobahn min hint
 	@@echo "AutobahnJS build complete."
