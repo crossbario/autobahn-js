@@ -23,7 +23,14 @@ message serialization format.
 Show me the code!
 -----------------
 
-This is how you connect and subscribe to receive events on a topic ..
+This is how you do publish & subscribe with AutobahnJS.
+
+Include required libs
+
+      <script src="http://code.jquery.com/jquery.min.js"></script>
+      <script src="http://autobahn.ws/public/autobahn.min.js"></script>
+
+.. connect and subscribe to receive events on a topic
 
       var sess;
 
@@ -48,7 +55,3 @@ This is how you connect and subscribe to receive events on a topic ..
       ...
 
       <button onclick="sendMyEvent();">Publish!</button>
-
-
-
-
