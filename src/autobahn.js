@@ -15,7 +15,7 @@ var ab = window.ab = {};
 
 // version number of Autobahn WebSockets JS is (now) numbered
 // independently of Autobahn Websockets for Python (and others)!
-ab.version = "0.6.0";
+ab._version = "0.6.0";
 
 
 /**
@@ -206,6 +206,10 @@ ab.debug = function (debugWamp, debugWs) {
    }
 };
 
+ab.version = function () {
+   return ab._version;
+};
+
 ab.PrefixMap = function () {
 
    var self = this;
@@ -243,9 +247,11 @@ ab.PrefixMap.prototype.remove = function (prefix) {
    }
 };
 
-ab.PrefixMap.prototype.resolve = function (curie) {
+ab.PrefixMap.prototype.resolve = function (curie, pass) {
 
    var self = this;
+
+   // skip if not a CURIE
    var i = curie.indexOf(":");
    if (i >= 0) {
       var prefix = curie.substring(0, i);
@@ -253,31 +259,37 @@ ab.PrefixMap.prototype.resolve = function (curie) {
          return self._index[prefix] + curie.substring(i + 1);
       }
    }
-   return null;
-};
 
-ab.PrefixMap.prototype.resolveOrPass = function (curieOrUri) {
-
-   var self = this;
-   var u = self.resolve(curieOrUri);
-   if (u) {
-      return u;
+   // either pass-through or null
+   if (pass == true) {
+      return curie;
    } else {
-      return curieOrUri;
+      return null;
    }
 };
 
-ab.PrefixMap.prototype.shrink = function (uri) {
+ab.PrefixMap.prototype.shrink = function (uri, pass) {
 
    var self = this;
-   for (var i = uri.length; i > 0; i -= 1) {
-      var u = uri.substring(0, i);
-      var p = self._rindex[u];
-      if (p) {
-         return p + ":" + uri.substring(i);
+
+   // skip if already a CURIE
+   var i = uri.indexOf(":");
+   if (i == -1) {
+      for (var i = uri.length; i > 0; i -= 1) {
+         var u = uri.substring(0, i);
+         var p = self._rindex[u];
+         if (p) {
+            return p + ":" + uri.substring(i);
+         }
       }
    }
-   return uri;
+
+   // either pass-through or null
+   if (pass == true) {
+      return uri;
+   } else {
+      return null;
+   }
 };
 
 
@@ -400,7 +412,7 @@ ab.Session = function (wsuri, onopen, onclose, options) {
       }
       else if (o[0] === ab._MESSAGE_TYPEID_EVENT)
       {
-         var subid = self._prefixes.resolveOrPass(o[1]);
+         var subid = self._prefixes.resolve(o[1], true);
          if (subid in self._subscriptions) {
 
             var uri2 = o[1];
@@ -540,24 +552,17 @@ ab.Session.prototype.sessionid = function () {
 };
 
 
-ab.Session.prototype.shrink = function (uri) {
+ab.Session.prototype.shrink = function (uri, pass) {
 
    var self = this;
-   return self._prefixes.shrink(uri);
+   return self._prefixes.shrink(uri, pass);
 };
 
 
-ab.Session.prototype.resolveOrPass = function (curieOrUri) {
+ab.Session.prototype.resolve = function (curie, pass) {
 
    var self = this;
-   return self._prefixes.resolveOrPass(curieOrUri);
-};
-
-
-ab.Session.prototype.resolve = function (curie) {
-
-   var self = this;
-   return self._prefixes.resolve(curie);
+   return self._prefixes.resolve(curie, pass);
 };
 
 
@@ -594,7 +599,7 @@ ab.Session.prototype.call = function () {
    }
    self._calls[callid] = d;
 
-   var procuri = arguments[0];
+   var procuri = self._prefixes.shrink(arguments[0], true);
    var obj = [ab._MESSAGE_TYPEID_CALL, callid, procuri];
    for (var i = 1; i < arguments.length; i += 1) {
       obj.push(arguments[i]);
@@ -607,7 +612,6 @@ ab.Session.prototype.call = function () {
       d._ab_tid = self._wsuri + "  [" + self._session_id + "][" + callid + "]";
       console.time(d._ab_tid);
       console.info();
-
    }
 
    return d;
@@ -620,7 +624,7 @@ ab.Session.prototype.subscribe = function (topicuri, callback) {
 
    // subscribe by sending WAMP message when topic not already subscribed
    //
-   var rtopicuri = self._prefixes.resolveOrPass(topicuri);
+   var rtopicuri = self._prefixes.resolve(topicuri, true);
    if (!(rtopicuri in self._subscriptions)) {
 
       if (ab._debugpubsub) {
@@ -653,8 +657,7 @@ ab.Session.prototype.unsubscribe = function (topicuri, callback) {
 
    var self = this;
 
-   var rtopicuri = self._prefixes.resolveOrPass(topicuri);
-
+   var rtopicuri = self._prefixes.resolve(topicuri, true);
    if (!(rtopicuri in self._subscriptions)) {
       throw "not subscribed to topic " + rtopicuri;
    }
