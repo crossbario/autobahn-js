@@ -304,6 +304,10 @@ ab._MESSAGE_TYPEID_PUBLISH        = 7;
 ab._MESSAGE_TYPEID_EVENT          = 8;
 
 
+ab.CONNECTION_UNREACHABLE = 0;
+ab.CONNECTION_CLOSED = 1;
+ab.CONNECTION_LOST = 2;
+
 ab.Session = function (wsuri, onopen, onclose, options) {
 
    var self = this;
@@ -501,8 +505,8 @@ ab.Session = function (wsuri, onopen, onclose, options) {
 
    self._websocket.onerror = function (e)
    {
-      console.log("onerror");
-      console.log(e);
+      // FF fires this upon unclean closes
+      // Chrome does not fire this
    };
 
    self._websocket.onclose = function (e)
@@ -512,13 +516,29 @@ ab.Session = function (wsuri, onopen, onclose, options) {
       } else {
          console.log("Autobahn could not connect to " + self._wsuri + " (code " + e.code + ", reason '" + e.reason + "', wasClean " + e.wasClean + ").");
       }
+
+      // fire app callback
       if (self._websocket_onclose !== null) {
-         self._websocket_onclose();
+         if (ab._websocket_connected) {
+            if (e.wasClean) {
+               // connection was closed cleanly (closing HS was performed)
+               self._websocket_onclose(ab.CONNECTION_CLOSED);
+            } else {
+               // connection was closed uncleanly (lost without closing HS)
+               self._websocket_onclose(ab.CONNECTION_LOST);
+            }
+         } else {
+            // connection could not be established in the first place
+            self._websocket_onclose(ab.CONNECTION_UNREACHABLE);
+         }
       }
+
+      // cleanup - reconnect requires a new session object!
       self._websocket_connected = false;
       self._wsuri = null;
       self._websocket_onopen = null;
       self._websocket_onclose = null;
+      self._websocket = null;
    };
 };
 
@@ -542,6 +562,18 @@ ab.Session.prototype._send = function (msg) {
       console.log(rmsg);
       console.groupEnd();
    }
+};
+
+
+ab.Session.prototype.close = function () {
+
+   var self = this;
+
+   if (!self._websocket_connected) {
+      throw "Autobahn not connected";
+   }
+
+   self._websocket.close();
 };
 
 
