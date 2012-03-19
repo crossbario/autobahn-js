@@ -304,9 +304,9 @@ ab._MESSAGE_TYPEID_PUBLISH        = 7;
 ab._MESSAGE_TYPEID_EVENT          = 8;
 
 
-ab.CONNECTION_UNREACHABLE = 0;
-ab.CONNECTION_CLOSED = 1;
-ab.CONNECTION_LOST = 2;
+ab.CONNECTION_CLOSED = 0;
+ab.CONNECTION_LOST = 1;
+ab.CONNECTION_UNREACHABLE = 2;
 
 ab.Session = function (wsuri, onopen, onclose, options) {
 
@@ -443,17 +443,21 @@ ab.Session = function (wsuri, onopen, onclose, options) {
       {
          if (self._session_id === null) {
             self._session_id = o[1];
+            self._wamp_version = o[2];
+            self._server = o[3];
 
             if (ab._debugrpc || ab._debugpubsub) {
                console.group("WAMP Welcome");
                console.info(self._wsuri + "  [" + self._session_id + "]");
+               console.log(self._wamp_version);
+               console.log(self._server);
                console.groupEnd();
             }
 
             // only now that we have received the initial server-to-client
             // welcome message, fire application onopen() hook
             if (self._websocket_onopen !== null) {
-               self._websocket_onopen();
+               self._websocket_onopen(self._session_id, self._wamp_version, self._server);
             }
          } else {
             throw "protocol error (welcome message received more than once)";
@@ -511,15 +515,17 @@ ab.Session = function (wsuri, onopen, onclose, options) {
 
    self._websocket.onclose = function (e)
    {
-      if (ab._websocket_connected) {
-         console.log("Autobahn connection to " + self._wsuri + " lost (code " + e.code + ", reason '" + e.reason + "', wasClean " + e.wasClean + ").");
-      } else {
-         console.log("Autobahn could not connect to " + self._wsuri + " (code " + e.code + ", reason '" + e.reason + "', wasClean " + e.wasClean + ").");
+      if (ab._debugws) {
+         if (self._websocket_connected) {
+            console.log("Autobahn connection to " + self._wsuri + " lost (code " + e.code + ", reason '" + e.reason + "', wasClean " + e.wasClean + ").");
+         } else {
+            console.log("Autobahn could not connect to " + self._wsuri + " (code " + e.code + ", reason '" + e.reason + "', wasClean " + e.wasClean + ").");
+         }
       }
 
       // fire app callback
-      if (self._websocket_onclose !== null) {
-         if (ab._websocket_connected) {
+      if (self._websocket_onclose !== undefined) {
+         if (self._websocket_connected) {
             if (e.wasClean) {
                // connection was closed cleanly (closing HS was performed)
                self._websocket_onclose(ab.CONNECTION_CLOSED);
