@@ -627,7 +627,7 @@ ab.Session.prototype.call = function () {
 
    var self = this;
 
-   var d = new $.Deferred();
+   var d = new when.defer();
    var callid;
    while (true) {
       callid = ab._newid();
