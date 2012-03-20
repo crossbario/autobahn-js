@@ -355,7 +355,7 @@ ab.Session = function (wsuri, onopen, onclose, options) {
    {
       if (ab._debugws) {
          self._rxcnt += 1;
-         console.group("WAMP Receive");
+         console.group("WS Receive");
          console.info(self._wsuri + "  [" + self._session_id + "]");
          console.log(self._rxcnt);
          console.log(e.data);
@@ -577,7 +577,7 @@ ab.Session.prototype._send = function (msg) {
    self._txcnt += 1;
 
    if (ab._debugws) {
-      console.group("WAMP Transmit");
+      console.group("WS Send");
       console.info(self._wsuri + "  [" + self._session_id + "]");
       console.log(self._txcnt);
       console.log(rmsg);
@@ -622,6 +622,10 @@ ab.Session.prototype.resolve = function (curie, pass) {
 ab.Session.prototype.prefix = function (prefix, uri) {
 
    var self = this;
+
+   if (self._prefixes.get(prefix) !== undefined) {
+      throw "prefix '" + prefix + "' already defined";
+   }
 
    self._prefixes.set(prefix, uri);
 
@@ -750,21 +754,71 @@ ab.Session.prototype.unsubscribe = function (topicuri, callback) {
 };
 
 
-ab.Session.prototype.publish = function (topicuri, event, excludeMe) {
+ab.Session.prototype.publish = function () {
 
    var self = this;
 
-   excludeMe = typeof(excludeMe) !== 'undefined' ? excludeMe : true;
+   var topicuri = arguments[0];
+   var event = arguments[1];
+
+   var excludeMe = null;
+   var exclude = null;
+   var eligible = null;
+
+   var msg = null;
+
+   if (arguments.length > 3) {
+
+      if (!(arguments[2] instanceof Array)) {
+         throw "invalid argument type(s)";
+      }
+      if (!(arguments[3] instanceof Array)) {
+         throw "invalid argument type(s)";
+      }
+
+      exclude = arguments[2];
+      eligible = arguments[3];
+      msg = [ab._MESSAGE_TYPEID_PUBLISH, topicuri, event, exclude, eligible];
+
+   } else if (arguments.length > 2) {
+
+      if (typeof(arguments[2]) === 'boolean') {
+
+         excludeMe = arguments[2];
+         msg = [ab._MESSAGE_TYPEID_PUBLISH, topicuri, event, excludeMe];
+
+      } else if (arguments[2] instanceof Array) {
+
+         exclude = arguments[2];
+         msg = [ab._MESSAGE_TYPEID_PUBLISH, topicuri, event, exclude];
+
+      } else {
+         throw "invalid argument type(s)";
+      }
+
+   } else {
+
+      msg = [ab._MESSAGE_TYPEID_PUBLISH, topicuri, event];
+   }
 
    if (ab._debugpubsub) {
       console.group("WAMP Publish");
       console.info(self._wsuri + "  [" + self._session_id + "]");
       console.log(topicuri);
       console.log(event);
-      console.log(excludeMe);
+
+      if (excludeMe !== null) {
+         console.log(excludeMe);
+      } else {
+         if (exclude !== null) {
+            console.log(exclude);
+            if (eligible !== null) {
+               console.log(eligible);
+            }
+         }
+      }
       console.groupEnd();
    }
 
-   var msg = [ab._MESSAGE_TYPEID_PUBLISH, topicuri, event, excludeMe];
    self._send(msg);
 };
