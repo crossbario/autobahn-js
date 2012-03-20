@@ -1,5 +1,2 @@
-dist
-*~
-*.diff
-*.patch
-/*.html
+.sconsign.dblite
+build
