@@ -307,6 +307,7 @@ ab._MESSAGE_TYPEID_EVENT          = 8;
 ab.CONNECTION_CLOSED = 0;
 ab.CONNECTION_LOST = 1;
 ab.CONNECTION_UNREACHABLE = 2;
+ab.CONNECTION_UNSUPPORTED = 3;
 
 ab.Session = function (wsuri, onopen, onclose, options) {
 
@@ -333,7 +334,12 @@ ab.Session = function (wsuri, onopen, onclose, options) {
       // older versions of Firefox prefix the WebSocket object
       self._websocket = new MozWebSocket(self._wsuri, [ab._subprotocol]);
    } else {
-      throw ab.browserNotSupportedMessage;
+      if (onclose !== undefined) {
+         onclose(ab.CONNECTION_UNSUPPORTED);
+         return;
+      } else {
+         throw ab.browserNotSupportedMessage;
+      }
    }
 
    self._websocket.onmessage = function (e)
