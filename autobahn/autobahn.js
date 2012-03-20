@@ -1,22 +1,31 @@
-/*!
- * AutobahnJS v@VERSION
- * http://autobahn.ws
+/** @license MIT License (c) 2011,2012 Copyright Tavendo GmbH. */
+
+/**
+ * AutobahnJS - http://autobahn.ws
  *
- * Copyright 2011, 2012 Tavendo GmbH.
- * Licensed under the Apache 2.0 License.
- * See license text at http://www.apache.org/licenses/LICENSE-2.0
+ * A lightweight implementation of
  *
- * Date: @DATE
+ *   WAMP (The WebSocket Application Messaging Protocol) - http://wamp.ws
+ *
+ * Provides asynchronous RPC/PubSub over WebSocket.
+ *
+ * Copyright 2011, 2012 Tavendo GmbH. Licensed under the MIT License.
+ * See license text at http://www.opensource.org/licenses/mit-license.php
  */
 
 "use strict";
 
+/** @define {string} */
+var AUTOBAHNJS_VERSION = '?.?.?';
+
+/** @define {boolean} */
+var AUTOBAHNJS_DEBUG = true;
+
+
+
 var ab = window.ab = {};
 
-// version number of Autobahn WebSockets JS is (now) numbered
-// independently of Autobahn Websockets for Python (and others)!
-ab._version = "0.6.0";
-
+ab._version = AUTOBAHNJS_VERSION;
 
 /**
  * Fallbacks for browsers lacking

@@ -17,6 +17,7 @@
 ###############################################################################
 
 import os, sys
+import subprocess
 from SCons.Errors import *
 
 
@@ -31,17 +32,24 @@ def js_builder(target, source, env):
       of.close()
 
    else:
-      java = '"' + os.path.join(env['JAVA_HOME'], 'bin', 'java') + '" '
-      cmd = java + env.subst('-jar $JS_COMPILER --compilation_level $JS_COMPILATION_LEVEL');
+      cmd = []
+      cmd.append(os.path.join(env['JAVA_HOME'], 'bin', 'java'))
 
-      for define in env['JS_DEFINES'].keys():
-         cmd += " --define=\"%s=%s\"" % (define, env['JS_DEFINES'][define])
+      cmd.extend(['-jar', env['JS_COMPILER']])
+
+      for define in env['JS_DEFINES']:
+         cmd.append('--define="%s=%s"' % (define, env['JS_DEFINES'][define]))
 
       for file in source:
-         cmd += " --js " + str(file)
+         cmd.extend(["--js", str(file)])
 
-      cmd += " --js_output_file " + str(target[0])
-      os.system(cmd)
+      cmd.extend(["--js_output_file", str(target[0])])
+
+      #cmd.append("--warning_level=VERBOSE")
+      #cmd.append("--jscomp_warning=missingProperties")
+      #cmd.append("--jscomp_warning=checkTypes")
+
+      subprocess.call(cmd)
 
 
 env = Environment()
@@ -57,9 +65,12 @@ if os.environ.has_key('JS_COMPILER'):
 else:
    raise SCons.Errors.UserError, "Need path to Google Closure Compiler JAR (compiler.jar) in JS_COMPILER environment variable."
 
-env['JS_DEFINES' ] = {}
+env['JS_DEFINES' ] = {
+   'AUTOBAHNJS_VERSION': "'0.6.0'",
+   'AUTOBAHNJS_DEBUG': "false"
+}
 
-sources = ["when/when.js", "autobahn/autobahn.js"]
+sources = ["autobahn/license.js", "when/when.js", "autobahn/autobahn.js"]
 
 # NONE | WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS
 

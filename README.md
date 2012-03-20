@@ -1,6 +1,10 @@
 WebSockets RPC/PubSub for JS
 ============================
 
+  * MIT License
+  * small (12kB minified)
+
+
 What is that?
 -------------
 
