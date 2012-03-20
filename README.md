@@ -2,9 +2,9 @@ AutobahnJS
 ==========
 
   * Asynchronous RPC/PubSub over WebSocket
-  * WAMP compatible implementation (see below)
+  * WAMP compatible implementation (see http://wamp.ws)
+  * tiny size (13kB minified, 5kB compressed)
   * MIT License
-  * small (12kB minified)
 
 
 What is that?
@@ -29,7 +29,8 @@ simple to implement.
 **AutobahnJS** implements **WAMP** in JavaScript to be used in browser
 based applications.
 
-Read more about **WAMP** under http://wamp.ws
+Read more about **WAMP** and other **WAMP** compatible implementations
+on http://wamp.ws
 
 
 Show me the code!
@@ -45,24 +46,38 @@ Include **AutobahnJS**
 
       var sess;
 
+      window.onload = function() {}
+         sess = new ab.Session("ws://localhost:9000", function() {
+
+            sess.subscribe("http://example.com/event#event1", onEvent1);
+         });
+      };
+
       function onEvent1(topic, event) {
          alert("got event: " + event);
       }
 
-      $(document).ready(function() {
-         sess = new ab.Session("ws://localhost:9000", function() {
 
-            sess.prefix("event", "http://example.com/event#");
-            sess.subscribe("event:event1", onEvent1);
-         });
-      });
+.. and publish an event to a topic
 
 
-.. and publish and event to a topic
-
-
-      sess.publish("event:event1", {a: 23, b: "foobar"});
+      sess.publish("http://example.com/event#event1", {a: 23, b: "foobar"});
 
       ...
 
       <button onclick="sendMyEvent();">Publish!</button>
+
+
+More Information
+----------------
+
+For more information, including tutorials and reference, please visit:
+
+   http://autobahn.ws/developers/autobahnjs
+
+
+Contact
+-------
+
+Get in touch on IRC #autobahn on chat.freenode.net or join the mailing
+list on http://groups.google.com/group/autobahnws.
