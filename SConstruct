@@ -49,6 +49,7 @@ def js_builder(target, source, env):
       #cmd.append("--jscomp_warning=missingProperties")
       #cmd.append("--jscomp_warning=checkTypes")
 
+      print ' '.join(cmd)
       subprocess.call(cmd)
 
 
@@ -66,7 +67,7 @@ else:
    raise SCons.Errors.UserError, "Need path to Google Closure Compiler JAR (compiler.jar) in JS_COMPILER environment variable."
 
 env['JS_DEFINES' ] = {
-   'AUTOBAHNJS_VERSION': "'0.6.0'",
+   'AUTOBAHNJS_VERSION': "'%s'" % open('version.txt').read().strip(),
    'AUTOBAHNJS_DEBUG': "false"
 }
 
@@ -74,8 +75,12 @@ sources = ["autobahn/license.js", "when/when.js", "autobahn/autobahn.js"]
 
 # NONE | WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS
 
+## FIXME: Closure Compiler has no mode NONE. We simulate that by dumb file
+## concatenation. However, that does of course not do any var substitutions.
 #env['JS_COMPILATION_LEVEL'] = "NONE"
-env.JavaScript("build/autobahn.js", sources, JS_COMPILATION_LEVEL = "NONE")
+ab = env.JavaScript("build/autobahn.js", sources, JS_COMPILATION_LEVEL = "NONE")
+#Depends(ab, 'version.txt')
 
 #env['JS_COMPILATION_LEVEL'] = "SIMPLE_OPTIMIZATIONS"
-env.JavaScript("build/autobahn.min.js", sources, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+ab_min = env.JavaScript("build/autobahn.min.js", sources, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+Depends(ab_min, 'version.txt')
