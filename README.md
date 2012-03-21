@@ -3,7 +3,8 @@ AutobahnJS
 
   * Asynchronous RPC/PubSub over WebSocket
   * WAMP compatible implementation (see http://wamp.ws)
-  * tiny size (13kB minified, 5kB compressed)
+  * no dependencies
+  * tiny size (47kB, 13kB minified, 5kB compressed)
   * MIT License
 
 
@@ -46,7 +47,7 @@ Include **AutobahnJS**
 
       var sess;
 
-      window.onload = function() {}
+      window.onload = function() {
          sess = new ab.Session("ws://localhost:9000", function() {
 
             sess.subscribe("http://example.com/event#event1", onEvent1);
@@ -61,11 +62,19 @@ Include **AutobahnJS**
 .. and publish an event to a topic
 
 
-      sess.publish("http://example.com/event#event1", {a: 23, b: "foobar"});
+      function publishEvent1() {
+
+         sess.publish("http://example.com/event#event1", {a: 23, b: "foobar"});
+      };
 
       ...
 
-      <button onclick="sendMyEvent();">Publish!</button>
+      <button onclick="publishEvent1();">Publish!</button>
+
+
+You can find a complete app template including proper error handling here
+
+   http://localhost:8080/developers/autobahnjs/reference#apptemplate
 
 
 More Information
