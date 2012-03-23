@@ -315,8 +315,9 @@ ab._MESSAGE_TYPEID_EVENT          = 8;
 
 ab.CONNECTION_CLOSED = 0;
 ab.CONNECTION_LOST = 1;
-ab.CONNECTION_UNREACHABLE = 2;
-ab.CONNECTION_UNSUPPORTED = 3;
+ab.CONNECTION_RETRIES_EXCEEDED = 2;
+ab.CONNECTION_UNREACHABLE = 3;
+ab.CONNECTION_UNSUPPORTED = 4;
 
 ab.Session = function (wsuri, onopen, onclose, options) {
 
@@ -326,9 +327,14 @@ ab.Session = function (wsuri, onopen, onclose, options) {
    self._options = options;
    self._websocket_onopen = onopen;
    self._websocket_onclose = onclose;
+
    self._websocket = null;
    self._websocket_connected = false;
+
    self._session_id = null;
+   self._wamp_version = null;
+   self._server = null;
+
    self._calls = {};
    self._subscriptions = {};
    self._prefixes = new ab.PrefixMap();
@@ -472,7 +478,7 @@ ab.Session = function (wsuri, onopen, onclose, options) {
             // only now that we have received the initial server-to-client
             // welcome message, fire application onopen() hook
             if (self._websocket_onopen !== null) {
-               self._websocket_onopen(self._session_id, self._wamp_version, self._server);
+               self._websocket_onopen();
             }
          } else {
             throw "protocol error (welcome message received more than once)";
@@ -590,11 +596,11 @@ ab.Session.prototype.close = function () {
 
    var self = this;
 
-   if (!self._websocket_connected) {
-      throw "Autobahn not connected";
+   if (self._websocket_connected) {
+      self._websocket.close();
+   } else {
+      //throw "Autobahn not connected";
    }
-
-   self._websocket.close();
 };
 
 
@@ -821,4 +827,132 @@ ab.Session.prototype.publish = function () {
    }
 
    self._send(msg);
+};
+
+
+ab._connect = function (peer) {
+
+   // establish session to WAMP server
+   var sess = new ab.Session(peer.wsuri,
+
+      // fired when session has been opened
+      function() {
+
+         peer.connects += 1;
+         peer.retryCount = 0;
+
+         // we are connected .. do awesome stuff!
+         peer.onConnect(sess);
+      },
+
+      // fired when session has been closed
+      function(code) {
+
+         switch (code) {
+
+            case ab.CONNECTION_CLOSED:
+               // the session was closed by the app
+               peer.onHangup(code, "Connection was closed properly - done.");
+               break;
+
+            case ab.CONNECTION_UNSUPPORTED:
+               // fatal: we miss our WebSocket object!
+               peer.onHangup(code, "Browser does not support WebSocket.");
+               break;
+
+            case ab.CONNECTION_UNREACHABLE:
+
+               peer.retryCount += 1;
+
+               if (peer.connects == 0) {
+
+                  // the connection could not be established in the first place
+                  // which likely means invalid server WS URI or such things
+                  peer.onHangup(code, "Connection could not be established.");
+
+               } else {
+
+                  // the connection was established at least once successfully,
+                  // but now lost .. sane thing is to try automatic reconnects
+                  if (peer.retryCount <= peer.options.maxRetries) {
+
+                     console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
+
+                     // silently reconnect
+                     window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+
+                  } else {
+                     peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Number of connection retries exceeded.");
+                  }
+               }
+               break;
+
+            case ab.CONNECTION_LOST:
+
+               peer.retryCount += 1;
+
+               if (peer.retryCount <= peer.options.maxRetries) {
+
+                  console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
+
+                  // silently reconnect
+                  window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+
+               } else {
+                  peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Connection lost.");
+               }
+               break;
+
+            default:
+               throw "unhandled close code in ab._connect";
+               break;
+         }
+      },
+
+      peer.options // forward options to session class for specific WS/WAMP options
+   );
+};
+
+
+ab.connect = function (wsuri, onconnect, onhangup, options) {
+
+   peer = {};
+   peer.wsuri = wsuri;
+
+   if (!options) {
+      peer.options = {};
+   } else {
+      peer.options = options;
+   }
+
+   if (peer.options.retryDelay == undefined) {
+      peer.options.retryDelay = 1000;
+   }
+
+   if (peer.options.maxRetries == undefined) {
+      peer.options.maxRetries = 3;
+   }
+
+   if (peer.options.skipSubprotocolCheck == undefined) {
+      peer.options.skipSubprotocolCheck = false;
+   }
+
+   if (!onconnect) {
+      throw "onConnect handler required!";
+   } else {
+      peer.onConnect = onconnect;
+   }
+
+   if (!onhangup) {
+      peer.onHangup = function (code, reason) {
+         console.log(reason);
+      }
+   } else {
+      peer.onHangup = onhangup;
+   }
+
+   peer.connects = 0; // total number of successful connects
+   peer.retryCount = 0; // number of retries since last successful connect
+
+   ab._connect(peer);
 };
