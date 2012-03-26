@@ -71,7 +71,7 @@ env['JS_DEFINES' ] = {
    'AUTOBAHNJS_DEBUG': "false"
 }
 
-sources = ["autobahn/license.js", "when/when.js", "autobahn/autobahn.js"]
+sources = ["autobahn/license.js", "when/when.js", "autobahn/useragent.js", "autobahn/autobahn.js"]
 
 # NONE | WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS
 
