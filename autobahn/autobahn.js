@@ -319,6 +319,9 @@ ab.CONNECTION_RETRIES_EXCEEDED = 2;
 ab.CONNECTION_UNREACHABLE = 3;
 ab.CONNECTION_UNSUPPORTED = 4;
 
+ab._Deferred = when.defer;
+//ab._Deferred = jQuery.Deferred;
+
 ab.Session = function (wsuri, onopen, onclose, options) {
 
    var self = this;
@@ -654,7 +657,7 @@ ab.Session.prototype.call = function () {
 
    var self = this;
 
-   var d = new when.defer();
+   var d = new ab._Deferred();
    var callid;
    while (true) {
       callid = ab._newid();
