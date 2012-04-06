@@ -281,15 +281,11 @@ ab.PrefixMap.prototype.shrink = function (uri, pass) {
 
    var self = this;
 
-   // skip if already a CURIE
-   var i = uri.indexOf(":");
-   if (i == -1) {
-      for (var i = uri.length; i > 0; i -= 1) {
-         var u = uri.substring(0, i);
-         var p = self._rindex[u];
-         if (p) {
-            return p + ":" + uri.substring(i);
-         }
+   for (var i = uri.length; i > 0; i -= 1) {
+      var u = uri.substring(0, i);
+      var p = self._rindex[u];
+      if (p) {
+         return p + ":" + uri.substring(i);
       }
    }
 
