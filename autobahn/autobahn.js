@@ -614,6 +614,7 @@ ab.Session.prototype.sessionid = function () {
 ab.Session.prototype.shrink = function (uri, pass) {
 
    var self = this;
+   if (pass === undefined) pass = true;
    return self._prefixes.shrink(uri, pass);
 };
 
@@ -621,6 +622,7 @@ ab.Session.prototype.shrink = function (uri, pass) {
 ab.Session.prototype.resolve = function (curie, pass) {
 
    var self = this;
+   if (pass === undefined) pass = true;
    return self._prefixes.resolve(curie, pass);
 };
 
