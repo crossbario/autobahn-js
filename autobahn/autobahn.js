@@ -400,9 +400,9 @@ ab.Session = function (wsuri, onopen, onclose, options) {
          else if (o[0] === ab._MESSAGE_TYPEID_CALL_ERROR) {
 
             var de = self._calls[o[1]];
-            var uri = o[2];
-            var desc = o[3];
-            var detail = o[4];
+            var uri_ = o[2];
+            var desc_ = o[3];
+            var detail_ = o[4];
 
             if (ab._debugrpc && de._ab_callobj !== undefined) {
                console.group("WAMP Call", de._ab_callobj[2]);
@@ -418,19 +418,19 @@ ab.Session = function (wsuri, onopen, onclose, options) {
                }
                console.groupEnd();
                console.group("Error");
-               console.log(uri);
-               console.log(desc);
-               if (detail !== undefined) {
-                  console.log(detail);
+               console.log(uri_);
+               console.log(desc_);
+               if (detail_ !== undefined) {
+                  console.log(detail_);
                }
                console.groupEnd();
                console.groupEnd();
             }
 
-            if (detail !== undefined) {
-               de.reject(uri, desc, detail);
+            if (detail_ !== undefined) {
+               de.reject({uri: uri_, desc: desc_, detail: detail_});
             } else {
-               de.reject(uri, desc);
+               de.reject({uri: uri_, desc: desc_});
             }
          }
          delete self._calls[o[1]];
