@@ -308,12 +308,13 @@ ab._MESSAGE_TYPEID_UNSUBSCRIBE    = 6;
 ab._MESSAGE_TYPEID_PUBLISH        = 7;
 ab._MESSAGE_TYPEID_EVENT          = 8;
 
-
 ab.CONNECTION_CLOSED = 0;
 ab.CONNECTION_LOST = 1;
 ab.CONNECTION_RETRIES_EXCEEDED = 2;
 ab.CONNECTION_UNREACHABLE = 3;
 ab.CONNECTION_UNSUPPORTED = 4;
+ab.CONNECTION_UNREACHABLE_SCHEDULED_RECONNECT = 5;
+ab.CONNECTION_LOST_SCHEDULED_RECONNECT = 6;
 
 ab._Deferred = when.defer;
 //ab._Deferred = jQuery.Deferred;
@@ -879,10 +880,20 @@ ab._connect = function (peer) {
                   // but now lost .. sane thing is to try automatic reconnects
                   if (peer.retryCount <= peer.options.maxRetries) {
 
-                     console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
+                     // notify the app of scheduled reconnect
+                     var stop = peer.onHangup(ab.CONNECTION_UNREACHABLE_SCHEDULED_RECONNECT,
+                                              "Connection unreachable - scheduled reconnect to occur in " + (peer.options.retryDelay / 1000) + " second(s).",
+                                             {delay: peer.options.retryDelay,
+                                              retries: peer.retryCount,
+                                              maxretries: peer.options.maxRetries});
 
-                     // silently reconnect
-                     window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+                     if (!stop) {
+                        console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
+                        window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+                     } else {
+                        console.log("Connection unreachable - retrying stopped by app");
+                        peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Number of connection retries exceeded.");
+                     }
 
                   } else {
                      peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Number of connection retries exceeded.");
@@ -896,11 +907,20 @@ ab._connect = function (peer) {
 
                if (peer.retryCount <= peer.options.maxRetries) {
 
-                  console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
+                  // notify the app of scheduled reconnect
+                  var stop = peer.onHangup(ab.CONNECTION_LOST_SCHEDULED_RECONNECT,
+                                           "Connection lost - scheduled reconnect to occur in " + (peer.options.retryDelay / 1000) + " second(s).",
+                                          {delay: peer.options.retryDelay,
+                                           retries: peer.retryCount,
+                                           maxretries: peer.options.maxRetries});
 
-                  // silently reconnect
-                  window.setTimeout(ab._connect, peer.options.retryDelay, peer);
-
+                  if (!stop) {
+                     console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
+                     window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+                  } else {
+                     console.log("Connection lost - retrying stopped by app");
+                     peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Connection lost.");
+                  }
                } else {
                   peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Connection lost.");
                }
@@ -929,11 +949,11 @@ ab.connect = function (wsuri, onconnect, onhangup, options) {
    }
 
    if (peer.options.retryDelay == undefined) {
-      peer.options.retryDelay = 1000;
+      peer.options.retryDelay = 5000;
    }
 
    if (peer.options.maxRetries == undefined) {
-      peer.options.maxRetries = 3;
+      peer.options.maxRetries = 10;
    }
 
    if (peer.options.skipSubprotocolCheck == undefined) {
