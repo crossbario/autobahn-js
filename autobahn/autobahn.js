@@ -834,23 +834,18 @@ ab.Session.prototype.publish = function () {
 };
 
 
-// allow both 2-party and 3-party authentication/authorization
-// for 3-party: let C sign, but let both the B and C party authorize
+// 2-party and 3-party authentication/authorization
 
 ab.Session.prototype.authreq = function (appkey, extra) {
-   if (extra) {
-      return this.call("http://api.wamp.ws/procedure#authreq", appkey, extra);
-   } else {
-      return this.call("http://api.wamp.ws/procedure#authreq", appkey);
-   }
+   return this.call("http://api.wamp.ws/procedure#authreq", appkey, extra);
 };
 
-ab.Session.prototype.authsign = function (authinfo, secret) {
-   return Crypto.util.bytesToBase64(Crypto.HMAC(Crypto.SHA256, authinfo, secret, { asBytes: true }));
+ab.Session.prototype.authsign = function (challenge, secret) {
+   return Crypto.util.bytesToBase64(Crypto.HMAC(Crypto.SHA256, challenge, secret, { asBytes: true }));
 };
 
-ab.Session.prototype.auth = function (authid, signature) {
-   return this.call("http://api.wamp.ws/procedure#auth", authid, signature);
+ab.Session.prototype.auth = function (signature) {
+   return this.call("http://api.wamp.ws/procedure#auth", signature);
 };
 
 
