@@ -319,6 +319,18 @@ ab.CONNECTION_LOST_SCHEDULED_RECONNECT = 6;
 ab._Deferred = when.defer;
 //ab._Deferred = jQuery.Deferred;
 
+ab._construct = function (url, protocols) {
+   if ("WebSocket" in window) {
+      // Chrome, MSIE, newer Firefox
+      return new WebSocket(url, protocols);
+   } else if ("MozWebSocket" in window) {
+      // older versions of Firefox prefix the WebSocket object
+      return new MozWebSocket(url, protocols);
+   } else {
+      return null;
+   }
+};
+
 ab.Session = function (wsuri, onopen, onclose, options) {
 
    var self = this;
@@ -342,13 +354,8 @@ ab.Session = function (wsuri, onopen, onclose, options) {
    self._txcnt = 0;
    self._rxcnt = 0;
 
-   if ("WebSocket" in window) {
-      // Chrome, MSIE, newer Firefox
-      self._websocket = new WebSocket(self._wsuri, [ab._subprotocol]);
-   } else if ("MozWebSocket" in window) {
-      // older versions of Firefox prefix the WebSocket object
-      self._websocket = new MozWebSocket(self._wsuri, [ab._subprotocol]);
-   } else {
+   self._websocket = ab._construct(self._wsuri, [ab._subprotocol]);
+   if (!self._websocket) {
       if (onclose !== undefined) {
          onclose(ab.CONNECTION_UNSUPPORTED);
          return;
