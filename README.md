@@ -14,6 +14,14 @@ AutobahnJS is a JavaScript client library that implements **[The WebSocket Appli
  * Open-Source (MIT License)
 
 
+Get it
+------
+
+You can link to the latest prebuilt release hosted on Amazon S3 here
+
+  1. http://autobahn.s3.amazonaws.com/js/autobahn.min.js
+  2. http://autobahn.s3.amazonaws.com/js/autobahn.js
+
 What is that?
 -------------
 
