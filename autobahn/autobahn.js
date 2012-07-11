@@ -965,7 +965,7 @@ ab._connect = function (peer) {
 
 ab.connect = function (wsuri, onconnect, onhangup, options) {
 
-   peer = {};
+   var peer = {};
    peer.wsuri = wsuri;
 
    if (!options) {
