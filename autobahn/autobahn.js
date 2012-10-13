@@ -186,15 +186,15 @@ ab._newid = function () {
    return id;
 };
 
-ab.log = function (o) {
+ab.log = function () {
    if (window.console && console.log) {
       //console.log.apply(console, !!arguments.length ? arguments : [this]);
       if (arguments.length > 1) {
-         console.group("Log Item");
+         if (console.group) console.group("Log Item");
          for (var i = 0; i < arguments.length; i += 1) {
             console.log(arguments[i]);
          }
-         console.groupEnd();
+         if (console.groupEnd) console.groupEnd();
       } else {
          console.log(arguments[0]);
       }
