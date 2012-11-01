@@ -556,7 +556,7 @@ ab.Session = function (wsuri, onopen, onclose, options) {
          if (self._websocket_connected) {
             if (e.wasClean) {
                // connection was closed cleanly (closing HS was performed)
-               self._websocket_onclose(ab.CONNECTION_CLOSED);
+               self._websocket_onclose(ab.CONNECTION_CLOSED, "WS-" + e.code + ": " + e.reason);
             } else {
                // connection was closed uncleanly (lost without closing HS)
                self._websocket_onclose(ab.CONNECTION_LOST);
@@ -876,13 +876,13 @@ ab._connect = function (peer) {
       },
 
       // fired when session has been closed
-      function(code) {
+      function(code, reason) {
 
          switch (code) {
 
             case ab.CONNECTION_CLOSED:
                // the session was closed by the app
-               peer.onHangup(code, "Connection was closed properly - done.");
+               peer.onHangup(code, "Connection was closed properly [" + reason + "]");
                break;
 
             case ab.CONNECTION_UNSUPPORTED:
