@@ -109,3 +109,9 @@ To update the submodules:
 	git add when
 
 To update CryptoJS: needs to be done manually, since they are not on Git.
+
+
+ExtJS Extension
+===============
+
+http://www.sencha.com/legal/open-source-faq/open-source-license-exception-for-development/

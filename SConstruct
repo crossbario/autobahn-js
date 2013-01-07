@@ -89,3 +89,9 @@ ab = env.JavaScript("build/autobahn.js", sources, JS_COMPILATION_LEVEL = "NONE")
 #env['JS_COMPILATION_LEVEL'] = "SIMPLE_OPTIMIZATIONS"
 ab_min = env.JavaScript("build/autobahn.min.js", sources, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
 Depends(ab_min, 'version.txt')
+
+## Autobahn for ExtJS
+##
+sources_extjs = ["autobahnextjs/autobahnextjs.js"]
+ab_extjs = env.JavaScript("build/autobahnextjs.js", sources_extjs, JS_COMPILATION_LEVEL = "NONE")
+ab_extjs_min = env.JavaScript("build/autobahnextjs.min.js", sources_extjs, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
