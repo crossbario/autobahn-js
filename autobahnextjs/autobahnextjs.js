@@ -322,36 +322,36 @@ Ext.define('Ext.form.action.WampSubmit', {
    doSubmit: function() {
 
       var me = this;
-      var params = this.getParams();
+      var params = me.getParams();
 
-      if (this.api.debug) {
-         console.log("Ext.form.action.WampSubmit.doSubmit", this.api, params);
+      if (me.api.debug) {
+         console.log("Ext.form.action.WampSubmit.doSubmit", me.api, params);
       }
 
-      if (!(this.api.session && this.api.session._websocket_connected && this.api.submit)) {
+      if (!(me.api.session && me.api.session._websocket_connected && me.api.submit)) {
 
-         this.failureType = Ext.form.action.Action.CONNECT_FAILURE;
-         this.form.afterAction(this, false);
+         me.failureType = Ext.form.action.Action.CONNECT_FAILURE;
+         me.form.afterAction(me, false);
 
       } else {
 
-         this.api.session.call(this.api.submit, params).then(
+         me.api.session.call(me.api.submit, params).then(
             function (res) {
                if (me.api.debug) {
-                  console.log(res);
+                  console.log('Form Submit Success', res);
                }
-               me.form.afterAction(this, true);
+               me.form.afterAction(me, true);
             },
             function (err) {
                if (me.api.debug) {
-                  console.log(err);
+                  console.log('Form Submit Error', err);
                }
                if (err.details) {
                   // FIXME
                   // form.markInvalid(..);
                }
                me.failureType = Ext.form.action.Action.SERVER_INVALID;
-               me.form.afterAction(this, false);
+               me.form.afterAction(me, false);
             }
          );
       }
@@ -370,34 +370,34 @@ Ext.define('Ext.form.action.WampLoad', {
    run: function() {
 
       var me = this;
-      var params = this.getParams();
+      var params = me.getParams();
 
-      if (this.api.debug) {
-         console.log("Ext.form.action.WampLoad.run", this.api, params);
+      if (me.api.debug) {
+         console.log("Ext.form.action.WampLoad.run", me.api, params);
       }
 
-      if (!(this.api.session && this.api.session._websocket_connected && this.api.load)) {
+      if (!(me.api.session && me.api.session._websocket_connected && me.api.load)) {
 
-         this.failureType = Ext.form.action.Action.CONNECT_FAILURE;
-         this.form.afterAction(this, false);
+         me.failureType = Ext.form.action.Action.CONNECT_FAILURE;
+         me.form.afterAction(me, false);
 
       } else {
 
-         this.api.session.call(this.api.load).then(
+         me.api.session.call(me.api.load, params).then(
             function (res) {
                if (me.api.debug) {
-                  console.log(res);
+                  console.log('Form Load Success', res);
                }
                me.form.clearInvalid();
                me.form.setValues(res);
-               me.form.afterAction(this, true);
+               me.form.afterAction(me, true);
             },
             function (err) {
                if (me.api.debug) {
-                  console.log(err);
+                  console.log('Form Load Error', err);
                }
                me.failureType = Ext.form.action.Action.LOAD_FAILURE;
-               me.form.afterAction(this, false);
+               me.form.afterAction(me, false);
             }
          );
       }
@@ -429,9 +429,7 @@ Ext.override(Ext.form.Basic, {
          if (this.api && this.api.type === 'wamp') {
             config.api = this.api;
          }
-         console.log(action);
          action = Ext.ClassManager.instantiateByAlias('formaction.' + action, Ext.apply({}, options, config));
-         console.log(action);
       }
       if (this.fireEvent('beforeaction', this, action) !== false) {
          this.beforeAction(action);
