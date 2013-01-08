@@ -8,13 +8,15 @@
  * https://market.sencha.com/licenses/77
  */
 
+"use strict";
+
 Ext.define('Ext.data.proxy.WampProxy', {
    extend: 'Ext.data.proxy.Proxy',
    alias : 'proxy.wamp',
 
    batchActions: false,
 
-   constructor: function(config) {
+   constructor: function (config) {
       var me = this;
       config = config || {};
 
@@ -87,7 +89,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
       }
    },
 
-   create: function(operation, callback, scope) {
+   create: function (operation, callback, scope) {
 
       var me = this;
 
@@ -116,7 +118,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setCompleted();
             operation.setSuccessful();
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          },
@@ -131,14 +133,14 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setException(err.desc);
             me.fireEvent('exception', me, err, operation);
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          }
       );
    },
 
-   update: function(operation, callback, scope) {
+   update: function (operation, callback, scope) {
 
       var me = this;
 
@@ -166,7 +168,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setCompleted();
             operation.setSuccessful();
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          },
@@ -180,14 +182,14 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setException(err.desc);
             me.fireEvent('exception', me, err, operation);
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          }
       );
    },
 
-   destroy: function(operation, callback, scope) {
+   destroy: function (operation, callback, scope) {
 
       var me = this;
 
@@ -212,7 +214,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setCompleted();
             operation.setSuccessful();
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          },
@@ -226,16 +228,17 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setException(err.desc);
             me.fireEvent('exception', me, err, operation);
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          }
       );
    },
 
-   read: function(operation, callback, scope) {
+   read: function (operation, callback, scope) {
 
       var me = this;
+      var i;
 
       if (me.debug) {
          console.log("Ext.data.proxy.WampProxy.read", operation);
@@ -255,7 +258,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
       // sorting parameters
       if (operation.sorters && operation.sorters.length > 0) {
          params.sorters = [];
-         for (var i = 0; i < operation.sorters.length; ++i) {
+         for (i = 0; i < operation.sorters.length; ++i) {
             params.sorters.push({property: operation.sorters[i].property,
                                  direction: operation.sorters[i].direction});
          }
@@ -264,7 +267,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
       // filtering parameters
       if (operation.filters && operation.filters.length > 0) {
          params.filters = [];
-         for (var i = 0; i < operation.filters.length; ++i) {
+         for (i = 0; i < operation.filters.length; ++i) {
             params.filters.push({property: operation.filters[i].property,
                                  value: operation.filters[i].value});
          }
@@ -273,7 +276,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
       // grouping parameters
       if (operation.groupers && operation.groupers.length > 0) {
          params.groupers = [];
-         for (var i = 0; i < operation.groupers.length; ++i) {
+         for (i = 0; i < operation.groupers.length; ++i) {
             params.groupers.push({property: operation.groupers[i].property,
                                   direction: operation.groupers[i].direction || 'ASC'});
          }
@@ -291,7 +294,7 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setCompleted();
             operation.setSuccessful();
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          },
@@ -301,25 +304,25 @@ Ext.define('Ext.data.proxy.WampProxy', {
             operation.setException(err.desc);
             me.fireEvent('exception', me, err, operation);
 
-            if (typeof callback == 'function') {
+            if (typeof callback === 'function') {
                callback.call(scope || me, operation);
             }
          }
       );
    }
-}, function() {
+}, function () {
 });
 
 
 Ext.define('Ext.form.action.WampSubmit', {
-   extend:'Ext.form.action.Submit',
+   extend: 'Ext.form.action.Submit',
    requires: ['Ext.direct.Manager'],
    alternateClassName: 'Ext.form.Action.WampSubmit',
    alias: 'formaction.wampsubmit',
 
    type: 'wampsubmit',
 
-   doSubmit: function() {
+   doSubmit: function () {
 
       var me = this;
       var params = me.getParams();
@@ -360,14 +363,14 @@ Ext.define('Ext.form.action.WampSubmit', {
 
 
 Ext.define('Ext.form.action.WampLoad', {
-   extend:'Ext.form.action.Load',
+   extend: 'Ext.form.action.Load',
    requires: ['Ext.direct.Manager'],
    alternateClassName: 'Ext.form.Action.WampLoad',
    alias: 'formaction.wampload',
 
    type: 'wampload',
 
-   run: function() {
+   run: function () {
 
       var me = this;
       var params = me.getParams();
@@ -407,7 +410,7 @@ Ext.define('Ext.form.action.WampLoad', {
 
 Ext.override(Ext.form.Basic, {
 
-   submit: function(options) {
+   submit: function (options) {
       if (this.api && this.api.type === 'wamp') {
          return this.doAction('wampsubmit', options);
       } else {
@@ -415,7 +418,7 @@ Ext.override(Ext.form.Basic, {
       }
    },
 
-   load: function(options) {
+   load: function (options) {
       if (this.api && this.api.type === 'wamp') {
          return this.doAction('wampload', options);
       } else {
@@ -423,7 +426,7 @@ Ext.override(Ext.form.Basic, {
       }
    },
 
-   doAction: function(action, options) {
+   doAction: function (action, options) {
       if (Ext.isString(action)) {
          var config = {form: this};
          if (this.api && this.api.type === 'wamp') {
@@ -437,5 +440,132 @@ Ext.override(Ext.form.Basic, {
          action.run();
       }
       return this;
+   }
+});
+
+
+Ext.define('Ext.data.WampStore', {
+   extend: 'Ext.data.Store',
+
+   // model: has to be specified in the subclass
+
+   // This should be false to prevent the store from reacting on
+   // WAMP events by issuing a RPC call.
+   autoSync: false,
+
+   constructor: function () {
+      this.callParent(arguments);
+      var me = this;
+
+      me.model.proxy.on('oncreate', function (proxy, obj) {
+         var record = me.getById(obj[me.model.prototype.idProperty]);
+         if (record) { // then update the existing
+            var fields  = me.model.prototype.fields.items;
+            for (var i = 0; i < fields.length; ++i) {
+               if (obj[fields[i].name] !== undefined) {
+                  record.set(fields[i].name, obj[fields[i].name]);
+               }
+            }
+            record.dirty = false;
+         } else {
+            var records = [new me.model(obj)];
+            var options = {
+               addRecords: true,
+               start: 0
+            };
+            me.loadRecords(records, options);
+         }
+         // apply configured sort of the store
+         me.sort();
+      });
+
+      me.model.proxy.on('onupdate', function (proxy, obj) {
+         var record = me.getById(obj[me.model.prototype.idProperty]);
+         if (record) {
+            var fields  = me.model.prototype.fields.items;
+            for (var i = 0; i < fields.length; ++i) {
+               if (obj[fields[i].name] !== undefined) {
+                  record.set(fields[i].name, obj[fields[i].name]);
+               }
+            }
+            record.dirty = false;
+         }
+      });
+
+      me.model.proxy.on('ondestroy', function (proxy, obj) {
+         var record = me.getById(obj[me.model.prototype.idProperty]);
+         // record.phantom = true;
+         me.remove(record);
+      });
+   }
+});
+
+
+Ext.define('Ext.data.WampTreeStore', {
+   extend: 'Ext.data.TreeStore',
+   // model: has to be specified in the subclass
+
+   // This should be false to prevent the store from reacting on
+   // WAMP events by issuing a RPC call.
+   autoSync: false,
+
+   constructor: function () {
+      this.callParent(arguments);
+      var me = this;
+
+      me.model.proxy.on('oncreate', function (proxy, obj) {
+
+         if (obj[me.model.prototype.nodeParam] === "") {
+            me.getRootNode().insertChild(0, obj);
+         }
+         else
+         {
+            var node = me.getRootNode().findChild(me.model.prototype.nodeParam, obj[me.model.prototype.nodeParam]);
+            if (node.isExpanded()) {
+               node.insertChild(0, obj);
+            } else {
+               node.expand(); // this loads the inserted child
+            }
+         }
+
+         // apply sort
+         me.sort([
+            {
+               property : 'leaf',
+               direction: 'ASC'
+            }
+         ]);
+      });
+
+      me.model.proxy.on('onupdate', function (proxy, obj) {
+         // do a remove and a create. This presumes all properties of the record in the payload.
+
+         // deep search for node
+         var node = me.getRootNode().findChild(me.model.prototype.idProperty, obj[me.model.prototype.idProperty], true);
+         node.remove();
+
+         // now create
+         if (obj[me.model.prototype.nodeParam] === "") {
+            me.getRootNode().insertChild(0, obj);
+         }
+         else
+         {
+            me.getRootNode().findChild(me.model.prototype.nodeParam, obj[me.model.prototype.nodeParam]).insertChild(0, obj);
+         }
+
+         // apply sort
+         me.sort([
+            {
+               property : 'leaf',
+               direction: 'ASC'
+            }
+         ]);
+      });
+
+      me.model.proxy.on('ondestroy', function (proxy, obj) {
+         // deep search for node
+         var node = me.getRootNode().findChild(me.model.prototype.idProperty, obj[me.model.prototype.idProperty], true);
+         node.remove();
+      });
    }
 });
