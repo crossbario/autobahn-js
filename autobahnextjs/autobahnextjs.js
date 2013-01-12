@@ -55,7 +55,10 @@ Ext.define('Ext.data.proxy.WampProxy', {
          'ondestroy'
       );
 
-      me.callParent([config]);
+      // http://www.sencha.com/forum/showthread.php?229600-Illegal-access-to-a-strict-mode-caller-function
+      // me.callParent([config]);
+      me.superclass.constructor.apply(me, arguments)
+
       me.api = Ext.apply({}, config.api || me.api);
 
       if (me.api.oncreate) {
@@ -343,6 +346,7 @@ Ext.define('Ext.form.action.WampSubmit', {
                if (me.api.debug) {
                   console.log('Form Submit Success', res);
                }
+               me.result = res;
                me.form.afterAction(me, true);
             },
             function (err) {
@@ -354,6 +358,7 @@ Ext.define('Ext.form.action.WampSubmit', {
                   // form.markInvalid(..);
                }
                me.failureType = Ext.form.action.Action.SERVER_INVALID;
+               me.result = err;
                me.form.afterAction(me, false);
             }
          );
@@ -454,8 +459,10 @@ Ext.define('Ext.data.WampStore', {
    autoSync: false,
 
    constructor: function () {
-      this.callParent(arguments);
       var me = this;
+
+      //me.callParent(arguments);
+      Ext.data.WampStore.superclass.constructor.apply(me, arguments);
 
       me.model.proxy.on('oncreate', function (proxy, obj) {
          var record = me.getById(obj[me.model.prototype.idProperty]);
@@ -510,8 +517,10 @@ Ext.define('Ext.data.WampTreeStore', {
    autoSync: false,
 
    constructor: function () {
-      this.callParent(arguments);
       var me = this;
+
+      // me.callParent(arguments);
+      Ext.data.WampTreeStore.superclass.constructor.apply(me, arguments);
 
       me.model.proxy.on('oncreate', function (proxy, obj) {
 
