@@ -530,11 +530,9 @@ Ext.define('Ext.data.WampTreeStore', {
          else
          {
             var node = me.getRootNode().findChild(me.model.prototype.nodeParam, obj[me.model.prototype.nodeParam]);
-            if (node.isExpanded()) {
+            node.expand(true, function() {
                node.insertChild(0, obj);
-            } else {
-               node.expand(); // this loads the inserted child
-            }
+            });
          }
 
          // apply sort
