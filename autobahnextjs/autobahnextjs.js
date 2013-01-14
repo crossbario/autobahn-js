@@ -353,10 +353,10 @@ Ext.define('Ext.form.action.WampSubmit', {
                if (me.api.debug) {
                   console.log('Form Submit Error', err);
                }
-               if (err.details) {
+               //if (err.details) {
                   // FIXME
                   // form.markInvalid(..);
-               }
+               //}
                me.failureType = Ext.form.action.Action.SERVER_INVALID;
                me.result = err;
                me.form.afterAction(me, false);
