@@ -186,6 +186,10 @@ ab._newid = function () {
    return id;
 };
 
+ab._newidFast = function () {
+    return Math.random().toString(36);
+}
+
 ab.log = function () {
    if (window.console && console.log) {
       //console.log.apply(console, !!arguments.length ? arguments : [this]);
@@ -666,7 +670,7 @@ ab.Session.prototype.call = function () {
    var d = new ab._Deferred();
    var callid;
    while (true) {
-      callid = ab._newid();
+      callid = ab._newidFast();
       if (!(callid in self._calls)) {
          break;
       }
