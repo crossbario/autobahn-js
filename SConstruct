@@ -1,6 +1,6 @@
 ###############################################################################
 ##
-##  Copyright 2013 Tavendo GmbH
+##  Copyright 2012-2013 Tavendo GmbH
 ##
 ##  Licensed under the Apache License, Version 2.0 (the "License");
 ##  you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ env['JS_DEFINES' ] = {
 
 sources = ["autobahn/license.js",
            "when/when.js",
-           "cryptojs/components/enc-base64-min.js.js",
+           "cryptojs/components/enc-base64-min.js",
            "cryptojs/rollups/hmac-sha256.js",
            "autobahn/autobahn.js",
            "autobahn/useragent.js"]

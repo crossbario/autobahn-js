@@ -1,4 +1,4 @@
-/** @license MIT License (c) 2011,2012 Copyright Tavendo GmbH. */
+/** @license MIT License (c) 2011-2013 Copyright Tavendo GmbH. */
 
 /**
  * AutobahnJS - http://autobahn.ws
@@ -9,7 +9,7 @@
  *
  * Provides asynchronous RPC/PubSub over WebSocket.
  *
- * Copyright 2011, 2012 Tavendo GmbH. Licensed under the MIT License.
+ * Copyright 2011-2013 Tavendo GmbH. Licensed under the MIT License.
  * See license text at http://www.opensource.org/licenses/mit-license.php
  */
 
