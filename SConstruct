@@ -73,8 +73,10 @@ env['JS_DEFINES' ] = {
 
 sources = ["autobahn/license.js",
            "when/when.js",
-           "cryptojs/components/enc-base64-min.js",
-           "cryptojs/rollups/hmac-sha256.js",
+           "cryptojs/components/core.js",
+           "cryptojs/components/enc-base64.js",
+           "cryptojs/components/hmac.js",
+           "cryptojs/components/sha256.js",
            "autobahn/autobahn.js",
            "autobahn/useragent.js"]
 
