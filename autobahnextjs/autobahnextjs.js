@@ -530,9 +530,15 @@ Ext.define('Ext.data.WampTreeStore', {
          else
          {
             var node = me.getRootNode().findChild(me.model.prototype.nodeParam, obj[me.model.prototype.nodeParam]);
-            node.expand(true, function() {
+            if (node.isExpanded()) {
+               // if the tree is currently expanded, we need to
+               // explicitly insert the child
                node.insertChild(0, obj);
-            });
+            } else {
+               // if the tree is collapsed, we expand it, which
+               // then implicitly loads the new child
+               node.expand();
+            }
          }
 
          // apply sort
