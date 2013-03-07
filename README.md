@@ -114,4 +114,5 @@ To update CryptoJS: needs to be done manually, since they are not on Git.
 ExtJS Extension
 ===============
 
-http://www.sencha.com/legal/open-source-faq/open-source-license-exception-for-development/
+AutobahnExtJS provides and Autobahn/WAMP proxy and support code for ExtJS.
+Please see the `autobahnextjs` folder for code and more information.
