@@ -856,7 +856,8 @@ ab.Session.prototype.authsign = function (challenge, secret) {
    if (!secret) {
       secret = "";
    }
-   return Crypto.util.bytesToBase64(Crypto.HMAC(Crypto.SHA256, challenge, secret, { asBytes: true }));
+
+   return CryptoJS.HmacSHA256(challenge, secret).toString(CryptoJS.enc.Base64);
 };
 
 ab.Session.prototype.auth = function (signature) {

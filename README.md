@@ -104,7 +104,7 @@ To update the submodules:
 
 	cd when
 	git pull
-	git checkout 1.3.0
+	git checkout 1.8.1
 	cd ..
 	git add when
 
