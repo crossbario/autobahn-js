@@ -174,6 +174,20 @@ ab.getBrowser = function () {
 ab.browserNotSupportedMessage = "Browser does not support WebSockets (RFC6455)";
 
 
+// PBKDF2-base key derivation function for salted WAMP-CRA
+ab.deriveKey = function (secret, extra) {
+   if (extra && extra.salt) {
+      var salt = extra.salt;
+      var keylen = extra.keylen || 32;
+      var iterations = extra.iterations || 10000;
+      var key = CryptoJS.PBKDF2(secret, salt, { keySize: keylen / 4, iterations: iterations, hasher: CryptoJS.algo.SHA256 });
+      return key.toString(CryptoJS.enc.Base64);
+   } else {
+      return secret;
+   }
+}
+
+
 ab._idchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 ab._idlen = 16;
 ab._subprotocol = "wamp";
