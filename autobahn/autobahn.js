@@ -326,10 +326,18 @@ ab._Deferred = when.defer;
 ab._construct = function (url, protocols) {
    if ("WebSocket" in window) {
       // Chrome, MSIE, newer Firefox
-      return new WebSocket(url, protocols);
+      if (protocols) {
+         return new WebSocket(url, protocols);
+      } else {
+         return new WebSocket(url);
+      }
    } else if ("MozWebSocket" in window) {
       // older versions of Firefox prefix the WebSocket object
-      return new MozWebSocket(url, protocols);
+      if (protocols) {
+         return new MozWebSocket(url, protocols);
+      } else {
+         return new MozWebSocket(url);
+      }
    } else {
       return null;
    }
@@ -358,7 +366,12 @@ ab.Session = function (wsuri, onopen, onclose, options) {
    self._txcnt = 0;
    self._rxcnt = 0;
 
-   self._websocket = ab._construct(self._wsuri, [ab._subprotocol]);
+   if (self._options && self._options.skipSubprotocolAnnounce) {
+      self._websocket = ab._construct(self._wsuri);
+   } else {
+      self._websocket = ab._construct(self._wsuri, [ab._subprotocol]);
+   }
+
    if (!self._websocket) {
       if (onclose !== undefined) {
          onclose(ab.CONNECTION_UNSUPPORTED);
@@ -989,6 +1002,10 @@ ab.connect = function (wsuri, onconnect, onhangup, options) {
 
    if (peer.options.skipSubprotocolCheck == undefined) {
       peer.options.skipSubprotocolCheck = false;
+   }
+
+   if (peer.options.skipSubprotocolAnnounce == undefined) {
+      peer.options.skipSubprotocolAnnounce = false;
    }
 
    if (!onconnect) {
