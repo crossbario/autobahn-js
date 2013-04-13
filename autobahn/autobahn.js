@@ -616,7 +616,24 @@ ab.Session.prototype._send = function (msg) {
       throw "Autobahn not connected";
    }
 
-   var rmsg = JSON.stringify(msg);
+   var rmsg;
+	switch(true)
+	{
+      // In the event that prototype library is in existance run the toJSON method prototype provides
+      // else run the standard JSON.stringify
+      // this is a very clever problem that causes json to be double-quote-encoded.
+		case window.Prototype && typeof top.window.__prototype_deleted === 'undefined':
+		case typeof msg.toJSON === 'function':
+			rmsg = msg.toJSON();
+			break;
+
+      // we could do instead
+      // msg.toJSON = function(){return msg};
+      // rmsg = JSON.stringify(msg);
+		default:
+			rmsg = JSON.stringify(msg);
+	}
+
    self._websocket.send(rmsg);
    self._txcnt += 1;
 
