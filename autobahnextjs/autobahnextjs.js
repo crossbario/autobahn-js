@@ -461,6 +461,16 @@ Ext.define('Ext.data.WampStore', {
    constructor: function () {
       var me = this;
 
+        me.addEvents(
+        /**
+         * @event afterWampWrite
+         * Fires when remotely triggered write operation (insert, update, delete) on the store was completed.
+         * Fires on update WAMP event only when the record to be updated is in the store.
+         * @param {Ext.data.WampStore} this
+         * @param {Object} obj The payload of the wamp event.
+         */
+        'afterWampWrite');
+
       //me.callParent(arguments);
       Ext.data.WampStore.superclass.constructor.apply(me, arguments);
 
@@ -484,6 +494,7 @@ Ext.define('Ext.data.WampStore', {
          }
          // apply configured sort of the store
          me.sort();
+         me.fireEvent('afterWampWrite', me, obj);
       });
 
       me.model.proxy.on('onupdate', function (proxy, obj) {
@@ -496,6 +507,9 @@ Ext.define('Ext.data.WampStore', {
                }
             }
             record.dirty = false;
+             // apply configured sort of the store
+             me.sort();
+             me.fireEvent('afterWampWrite', me, obj);
          }
       });
 
@@ -503,6 +517,7 @@ Ext.define('Ext.data.WampStore', {
          var record = me.getById(obj[me.model.prototype.idProperty]);
          // record.phantom = true;
          me.remove(record);
+         me.fireEvent('afterWampWrite', me, obj);
       });
    }
 });
@@ -518,6 +533,16 @@ Ext.define('Ext.data.WampTreeStore', {
 
    constructor: function () {
       var me = this;
+
+     me.addEvents(
+     /**
+      * @event afterWampWrite
+      * Fires when remotely triggered write operation (insert, update, delete) on the store was completed.
+      * Fires on update WAMP event only when the record to be updated is in the store.
+      * @param {Ext.data.WampTreeStore} this
+      * @param {Object} obj The payload of the wamp event.
+      */
+     'afterWampWrite');
 
       // me.callParent(arguments);
       Ext.data.WampTreeStore.superclass.constructor.apply(me, arguments);
@@ -541,13 +566,9 @@ Ext.define('Ext.data.WampTreeStore', {
             }
          }
 
-         // apply sort
-         me.sort([
-            {
-               property : 'leaf',
-               direction: 'ASC'
-            }
-         ]);
+            // apply sort
+            me.sort();
+            me.fireEvent('afterWampWrite', me, obj);
       });
 
       me.model.proxy.on('onupdate', function (proxy, obj) {
@@ -566,19 +587,16 @@ Ext.define('Ext.data.WampTreeStore', {
             me.getRootNode().findChild(me.model.prototype.nodeParam, obj[me.model.prototype.nodeParam]).insertChild(0, obj);
          }
 
-         // apply sort
-         me.sort([
-            {
-               property : 'leaf',
-               direction: 'ASC'
-            }
-         ]);
+            // apply sort
+            me.sort();
+            me.fireEvent('afterWampWrite', me, obj);
       });
 
       me.model.proxy.on('ondestroy', function (proxy, obj) {
          // deep search for node
          var node = me.getRootNode().findChild(me.model.prototype.idProperty, obj[me.model.prototype.idProperty], true);
          node.remove();
+         me.fireEvent('afterWampWrite', me, obj);
       });
    }
 });
