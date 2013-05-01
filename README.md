@@ -80,15 +80,42 @@ SCons is a Python based build tool, so you will need [Python](http://python.org/
 
 Set environment variables:
 
-  1. JAVA_HOME pointing to your Java run-time
-  2. JS_COMPILER pointing to the Google Closure compiler.jar
+  1. JAVA_HOME pointing to your Java run-time, e.g.
+   
+  		C:\Program Files\Java\jre7
 
-Now clone the repo, set the appropriate AutobahnJS version and build:
+  2. adding Python & Python scripts to PATH, e.g.  		
+		
+ 		C:\Python27;C:\Python27\Scripts;
 
+  3. JS_COMPILER pointing to the Google Closure compiler.jar
+  
+		C:\Program Files\Google Closure\compiler.jar
+
+ 
+
+Now clone the repo:
 
 	git clone git://github.com/tavendo/AutobahnJS.git
+
+You need to include the submodules (i.e. currenlty when.js):
+
 	cd AutobahnJS
+	git submodule init
+
+and then update them
+
+	git submodule update 
+
+Updating CryptoJS needs to be done manually, since they are not on Git.
+
+
+For  a release version, set the appropriate AutobahnJS version in 'version.txt', e.g 
+
     vi version.txt
+
+Scons currently needs to be run from the Windows shell, so open one, go to the AutobahnJS directory, and run
+
 	scons
 
 This will produce 2 files
@@ -100,15 +127,6 @@ To clean up your build
 
 	scons -uc
 
-To update the submodules:
-
-	cd when
-	git pull
-	git checkout 1.8.1
-	cd ..
-	git add when
-
-To update CryptoJS: needs to be done manually, since they are not on Git.
 
 
 ExtJS Extension

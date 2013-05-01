@@ -1046,8 +1046,8 @@ ab.connect = function (wsuri, onconnect, onhangup, options) {
    }
 
    if (!onhangup) {
-      peer.onHangup = function (code, reason) {
-         console.log(reason);
+      peer.onHangup = function (code, reason, detail) {
+         console.log(code, reason, detail);
       }
    } else {
       peer.onHangup = onhangup;
