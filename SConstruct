@@ -72,6 +72,7 @@ env['JS_DEFINES' ] = {
 }
 
 sources = ["autobahn/license.js",
+           "autobahn/normalizeconsole.js",
            "when/when.js",
            "cryptojs/components/core.js",
            "cryptojs/components/enc-base64.js",

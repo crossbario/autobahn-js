@@ -66,11 +66,11 @@
     */
    ('group' in console) ||
    (console.group = function(msg) {
-      console.info("\n------------\n"+msg+"\n------------");
+      console.info("\n--- "+msg+" ---\n");
    });
    ('groupEnd' in console) ||
    (console.groupEnd = function() {
-      //console.log("\n\n");
+      console.log("\n");
    });
 
    /**
