@@ -32,12 +32,16 @@ ab._version = AUTOBAHNJS_VERSION;
  *
  *    Array.prototype.indexOf
  *    Array.prototype.forEach
+ *    console.group
+ *    console.groupEnd
  *
  * most notably MSIE8.
  *
  * Source:
  *    https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
  *    https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
+ *    https://developer.mozilla.org/en-US/docs/DOM/console.group
+ *    https://developer.mozilla.org/en-US/docs/DOM/console.groupEnd
  */
 (function () {
    if (!Array.prototype.indexOf) {
@@ -128,6 +132,14 @@ ab._version = AUTOBAHNJS_VERSION;
          }
          // 8. return undefined
       };
+   }
+   
+   if (!console['group']) {
+   	console['group'] = function () {};
+   }
+   
+   if (!console['groupEnd']) {
+   	console['groupEnd'] = function () {};
    }
 
 })();
