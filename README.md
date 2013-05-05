@@ -128,9 +128,32 @@ To clean up your build
 	scons -uc
 
 
+Publishing
+----------
+
+Tavendo provides hosting of AutobahnJS on Amazon S3 at:
+
+    https://autobahn.s3.amazonaws.com/js/
+
+Set AWS credentials in `$HOME/.boto` (or `C:\Users\johndoe\.boto` for Windows):
+
+    [Credentials]
+    aws_access_key_id = ABCDEFGHJIKLMNOPQRTUVXYZ
+    aws_secret_access_key = 0123456789ABCDEFGHJIKLMNOPQRTUVXYZ
+    
+You will also need [Boto](http://docs.pythonboto.org) installed:
+
+    easy_install boto
+
+To publish, then do
+
+    scons publish
+
 
 ExtJS Extension
 ===============
 
 AutobahnExtJS provides and Autobahn/WAMP proxy and support code for ExtJS.
 Please see the `autobahnextjs` folder for code and more information.
+
+

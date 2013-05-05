@@ -16,13 +16,24 @@
 ##
 ###############################################################################
 
-import os, sys
+import os, sys, hashlib
 import subprocess
 from SCons.Errors import *
 
+try:
+   from boto.s3.connection import S3Connection
+   from boto.s3.key import Key
+   hasBoto = True
+except:
+   print "Boto missing. Upload to Amazon S3 won't be available."
+   hasBoto = False
+
+
 
 def js_builder(target, source, env):
-
+   """
+   SCons builder for Google Closure.
+   """
    if env['JS_COMPILATION_LEVEL'] == 'NONE':
       outfile = str(target[0])
       of = open(outfile, 'w')
@@ -53,8 +64,81 @@ def js_builder(target, source, env):
       subprocess.call(cmd)
 
 
+def checksumsMD5(target, source, env):
+   """
+   SCons builder for computing a fingerprint file for artifacts.
+   """
+   checksums = {}
+   for s in source:
+      key = Key(s.name)
+      md5 = key.compute_md5(open(s.path, "rb"))[0]
+      checksums[s.name] = md5
+
+   ## MD5 (autobahn.js) = d1ff7ad2c5c4cf0d652566cbc78476ea
+   ##
+   checksumsString = ''.join(["MD5 (%s) = %s\n" % c for c in checksums.items()])
+
+   f = open(target[0].path, 'wb')
+   f.write(checksumsString)
+   f.close()
+
+
+def s3_uploader(target, source, env):
+   """
+   SCons builder for Amazon S3 upload.
+   """
+   ## S3 connection and bucket to upload to
+   ##
+   s3 = S3Connection()
+   bucket = s3.get_bucket("autobahn")
+
+   ## compute MD5s of artifacts to upload
+   ##
+   checksums = {}
+   for s in source:
+      key = Key(s.name)
+      md5 = key.compute_md5(open(s.path, "rb"))[0]
+      checksums[s.name] = md5
+
+   ## determine stuff we need to upload
+   ##
+   uploads = []
+   for s in source:
+      key = bucket.lookup("js/%s" % s.name)
+      if not key or key.etag.replace('"', '') != checksums[s.name]:
+         uploads.append(s)
+      else:
+         print "%s unchanged versus S3" % s.name
+
+   ## actually upload new or changed stuff
+   ##
+   for u in uploads:
+      print "Uploading %s to S3 .." % u.name
+      key = Key(bucket, "js/%s" % u.name)
+      key.set_contents_from_filename(u.path)
+      key.set_acl('public-read')
+
+
+   ## revisit uploaded stuff and get MD5s
+   ##
+   checksumsS3 = {}
+   for s in source:
+      key = bucket.lookup("js/%s" % s.name)
+      md5 = key.etag.replace('"', '')
+      checksumsS3[s.name] = md5
+   checksumsS3String = ''.join(["MD5 (%s) = %s\n" % c for c in checksumsS3.items()])
+
+   ## target produced is checksums as they exist on S3
+   ##
+   f = open(target[0].path, "wb")
+   f.write(checksumsS3String)
+   f.close()
+
+
 env = Environment()
-env.Append(BUILDERS = {'JavaScript': Builder(action = js_builder)})
+env.Append(BUILDERS = {'JavaScript': Builder(action = js_builder),
+                       'MD5': Builder(action = checksumsMD5),
+                       'S3': Builder(action = s3_uploader)})
 
 if os.environ.has_key('JAVA_HOME'):
    env['JAVA_HOME'] = os.environ['JAVA_HOME']
@@ -98,3 +182,24 @@ Depends(ab_min, 'version.txt')
 sources_extjs = ["autobahnextjs/autobahnextjs.js"]
 ab_extjs = env.JavaScript("build/autobahnextjs.js", sources_extjs, JS_COMPILATION_LEVEL = "NONE")
 ab_extjs_min = env.JavaScript("build/autobahnextjs.min.js", sources_extjs, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+
+## List of generated artifacts
+##
+artifacts = [ab,
+             ab_min,
+             ab_extjs,
+             ab_extjs_min]
+
+## Generate MD5 checksums file
+##
+checksums = env.MD5("build/CHECKSUM.MD5", artifacts)
+uploads = artifacts + [checksums]
+
+Default(uploads)
+
+## Upload to Amazon S3
+##
+if hasBoto:
+   publish = env.S3("build/.S3UploadDone", uploads)
+   Depends(publish, uploads)
+   Alias("publish", publish)
