@@ -1,5 +1,4 @@
-AutobahnJS
-==========
+# AutobahnJS
 
 AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol (WAMP)](http://wamp.ws/)**:
 
@@ -10,20 +9,20 @@ AutobahnJS is a JavaScript client library that implements **[The WebSocket Appli
  * flexible, automatic reconnect
  * session authentication (WAMP-CRA)
  * no dependencies
- * tiny size (65kB source, 24kB minified, 7kB compressed)
+ * tiny size (97kB source, 27kB minified, 9kB compressed)
  * Open-Source (MIT License)
 
 
-Get it
-------
+## Get it
 
-You can link to the latest prebuilt release hosted on Amazon S3 here
+You can link to the latest prebuilt AutobahnJS release hosted on Amazon S3 here
 
-  1. http://autobahn.s3.amazonaws.com/js/autobahn.min.js
-  2. http://autobahn.s3.amazonaws.com/js/autobahn.js
+  1. [Production (minimized and gzipped)](http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz)
+  2. [Production (only minimized)](http://autobahn.s3.amazonaws.com/js/autobahn.min.js)
+  3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
-What is that?
--------------
+
+## What is that?
 
 [WebSocket](http://tools.ietf.org/html/rfc6455) is already built into
 modern browsers and provides bidirectional low-latency messaging.
@@ -42,21 +41,22 @@ simple to implement.
 
 AutobahnJS implements WAMP in JavaScript to be used in browser based applications.
 
+**ExtJS Extension**
 
-Where to go
------------
+AutobahnExtJS provides and Autobahn/WAMP proxy and support code for Sencha ExtJS. Please see the `autobahnextjs` folder for code and more information.
+
+
+## Where to go
 
 For more information, including getting started, tutorials and reference documentation, please visit the project's [homepage](http://autobahn.ws/js).
 
 
-Get in touch
-------------
+## Get in touch
 
 Get in touch on IRC #autobahn on chat.freenode.net or join the [mailing list](http://groups.google.com/group/autobahnws).
 
 
-Acknowledgements
-----------------
+## Acknowledgements
 
 AutobahnJS includes code from the following open-source projects
 
@@ -66,8 +66,7 @@ AutobahnJS includes code from the following open-source projects
 Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cujojs.com/) for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
 
 
-Building
---------
+# Building
 
 Building AutobahnJS will create a single file, minimized version of the library.
 
@@ -128,8 +127,7 @@ To clean up your build
 	scons -uc
 
 
-Publishing
-----------
+# Publishing
 
 Tavendo provides hosting of AutobahnJS on Amazon S3 at:
 
@@ -148,12 +146,3 @@ You will also need [Boto](http://docs.pythonboto.org) installed:
 To publish, then do
 
     scons publish
-
-
-ExtJS Extension
-===============
-
-AutobahnExtJS provides and Autobahn/WAMP proxy and support code for ExtJS.
-Please see the `autobahnextjs` folder for code and more information.
-
-

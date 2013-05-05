@@ -16,7 +16,7 @@
 ##
 ###############################################################################
 
-import os, sys, hashlib
+import os, sys, hashlib, gzip
 import subprocess
 from SCons.Errors import *
 
@@ -62,6 +62,16 @@ def js_builder(target, source, env):
 
       print ' '.join(cmd)
       subprocess.call(cmd)
+
+
+def gzipper(target, source, env):
+   if len(source) > 1:
+      raise Exception("cannot GZip multiple files")
+   f_in = open(source[0].path, 'rb')
+   f_out = gzip.open(target[0].path, 'wb')
+   f_out.writelines(f_in)
+   f_out.close()
+   f_in.close()
 
 
 def checksumsMD5(target, source, env):
@@ -115,9 +125,16 @@ def s3_uploader(target, source, env):
    for u in uploads:
       print "Uploading %s to S3 .." % u.name
       key = Key(bucket, "js/%s" % u.name)
+      ##
+      ## Do special stuff for "*.jgz". Note that "set_metadata"
+      ## must be set before uploading!
+      ##
+      if os.path.splitext(u.name)[1].lower() == ".jgz":
+         ## override default chosen by S3 ..
+         key.set_metadata('Content-Type', 'application/x-javascript')
+         key.set_metadata('Content-Encoding', 'gzip')
       key.set_contents_from_filename(u.path)
       key.set_acl('public-read')
-
 
    ## revisit uploaded stuff and get MD5s
    ##
@@ -137,6 +154,7 @@ def s3_uploader(target, source, env):
 
 env = Environment()
 env.Append(BUILDERS = {'JavaScript': Builder(action = js_builder),
+                       'GZip': Builder(action = gzipper),
                        'MD5': Builder(action = checksumsMD5),
                        'S3': Builder(action = s3_uploader)})
 
@@ -176,6 +194,7 @@ ab = env.JavaScript("build/autobahn.js", sources, JS_COMPILATION_LEVEL = "NONE")
 
 #env['JS_COMPILATION_LEVEL'] = "SIMPLE_OPTIMIZATIONS"
 ab_min = env.JavaScript("build/autobahn.min.js", sources, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+ab_min_gz = env.GZip("build/autobahn.min.jgz", ab_min)
 Depends(ab_min, 'version.txt')
 
 ## Autobahn for ExtJS
@@ -183,13 +202,16 @@ Depends(ab_min, 'version.txt')
 sources_extjs = ["autobahnextjs/autobahnextjs.js"]
 ab_extjs = env.JavaScript("build/autobahnextjs.js", sources_extjs, JS_COMPILATION_LEVEL = "NONE")
 ab_extjs_min = env.JavaScript("build/autobahnextjs.min.js", sources_extjs, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+ab_extjs_min_gz = env.GZip("build/autobahnextjs.min.jgz", ab_extjs_min)
 
 ## List of generated artifacts
 ##
 artifacts = [ab,
              ab_min,
+             ab_min_gz,
              ab_extjs,
-             ab_extjs_min]
+             ab_extjs_min,
+             ab_extjs_min_gz]
 
 ## Generate MD5 checksums file
 ##

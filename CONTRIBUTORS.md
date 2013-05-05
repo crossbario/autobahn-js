@@ -5,3 +5,4 @@
 * [Igor Wiedler](https://github.com/igorw)
 * Chris Li
 * Brian Graham
+* [Alexander Goedde](https://github.com/goeddea)
