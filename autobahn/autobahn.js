@@ -205,18 +205,16 @@ ab._newidFast = function () {
 }
 
 ab.log = function () {
-   if (window.console && console.log) {
       //console.log.apply(console, !!arguments.length ? arguments : [this]);
       if (arguments.length > 1) {
-         if (console.group) console.group("Log Item");
+         console.group("Log Item");
          for (var i = 0; i < arguments.length; i += 1) {
             console.log(arguments[i]);
          }
-         if (console.groupEnd) console.groupEnd();
+         console.groupEnd();
       } else {
          console.log(arguments[0]);
       }
-   }
 };
 
 ab._debugrpc = false;

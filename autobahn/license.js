@@ -17,4 +17,11 @@
  * (c) 2009-2012 by Jeff Mott. All rights reserved.
  * Licensed under the New BSD License at:
  * http://code.google.com/p/crypto-js/wiki/License
+ * 
+ * console-normalizer - https://github.com/Zenovations/console-normalizer
+ *
+ * (c) 2012 by Zenovations.
+ * Licensed under the MIT License at:
+ * http://www.opensource.org/licenses/mit-license.php
+ * 
  */
