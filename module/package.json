@@ -1,0 +1,22 @@
+{
+  "name": "autobahn",
+  "version": "0.0.0",
+  "description": "An implementation of The WebSocket Application Messaging Protocol (WAMP).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tavendo/AutobahnJS.git"
+  },
+  "keywords": [
+    "WAMP",
+    "WebSocket",
+    "RPC",
+    "PubSub"
+  ],
+  "author": "Tavendo GmbH",
+  "license": "MIT"
+}
