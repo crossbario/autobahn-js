@@ -220,6 +220,7 @@ ab.log = function () {
 ab._debugrpc = false;
 ab._debugpubsub = false;
 ab._debugws = false;
+ab._debugconnect = true;
 
 ab.debug = function (debugWamp, debugWs) {
    if ("console" in window) {
@@ -961,10 +962,14 @@ ab._connect = function (peer) {
                                               maxretries: peer.options.maxRetries});
 
                      if (!stop) {
-                        console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
+                        if (ab._debugconnect) {
+                            console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
+                        }
                         window.setTimeout(ab._connect, peer.options.retryDelay, peer);
                      } else {
-                        console.log("Connection unreachable - retrying stopped by app");
+                        if (ab._debugconnect) {
+                            console.log("Connection unreachable - retrying stopped by app");
+                        }
                         peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Number of connection retries exceeded.");
                      }
 
@@ -988,10 +993,14 @@ ab._connect = function (peer) {
                                            maxretries: peer.options.maxRetries});
 
                   if (!stop) {
-                     console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
+                     if (ab._debugconnect) {
+                         console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
+                     }
                      window.setTimeout(ab._connect, peer.options.retryDelay, peer);
                   } else {
-                     console.log("Connection lost - retrying stopped by app");
+                     if (ab._debugconnect) {
+                         console.log("Connection lost - retrying stopped by app");
+                     }
                      peer.onHangup(ab.CONNECTION_RETRIES_EXCEEDED, "Connection lost.");
                   }
                } else {
@@ -1045,7 +1054,9 @@ ab.connect = function (wsuri, onconnect, onhangup, options) {
 
    if (!onhangup) {
       peer.onHangup = function (code, reason, detail) {
-         console.log(code, reason, detail);
+         if (ab._debugconnect) {
+             console.log(code, reason, detail);
+         }
       }
    } else {
       peer.onHangup = onhangup;
