@@ -200,19 +200,20 @@ Depends(ab_min, 'version.txt')
 
 ## Autobahn for ExtJS
 ##
-sources_extjs = ["autobahnextjs/autobahnextjs.js"]
-ab_extjs = env.JavaScript("build/autobahnextjs.js", sources_extjs, JS_COMPILATION_LEVEL = "NONE")
-ab_extjs_min = env.JavaScript("build/autobahnextjs.min.js", sources_extjs, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
-ab_extjs_min_gz = env.GZip("build/autobahnextjs.min.jgz", ab_extjs_min)
+#sources_extjs = ["autobahnextjs/autobahnextjs.js"]
+#ab_extjs = env.JavaScript("build/autobahnextjs.js", sources_extjs, JS_COMPILATION_LEVEL = "NONE")
+#ab_extjs_min = env.JavaScript("build/autobahnextjs.min.js", sources_extjs, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+#ab_extjs_min_gz = env.GZip("build/autobahnextjs.min.jgz", ab_extjs_min)
 
 ## List of generated artifacts
 ##
 artifacts = [ab,
              ab_min,
              ab_min_gz,
-             ab_extjs,
-             ab_extjs_min,
-             ab_extjs_min_gz]
+             #ab_extjs,
+             #ab_extjs_min,
+             #ab_extjs_min_gz,
+             ]
 
 ## Generate MD5 checksums file
 ##
