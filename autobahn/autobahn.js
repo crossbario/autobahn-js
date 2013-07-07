@@ -171,6 +171,22 @@ ab.getBrowser = function () {
 };
 
 
+ab.getServerUrl = function (wsPath, fallbackUrl) {
+   if (window.location.protocol === "file:") {
+      if (fallbackUrl) {
+         return fallbackUrl;
+      } else {
+         return "ws://127.0.0.1/ws";
+      }
+   } else {
+      var scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+      var port = window.location.port !== "" ? ':' + window.location.port : '';
+      var path = wsPath ? wsPath : 'ws';
+      return scheme + window.location.hostname + port + "/" + path;
+   }
+};
+
+
 // Logging message for unsupported browser.
 ab.browserNotSupportedMessage = "Browser does not support WebSockets (RFC6455)";
 
