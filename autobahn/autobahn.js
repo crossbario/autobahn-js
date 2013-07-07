@@ -1116,3 +1116,89 @@ ab.connect = function (wsuri, onconnect, onhangup, options) {
 
    ab._connect(peer);
 };
+
+
+ab.launch = function (appConfig, onOpen, onClose) {
+
+   function Rpc(session, uri) {
+      return function() {
+         var args = [uri];
+         for (var j = 0; j < arguments.length; ++j) {
+            args.push(arguments[j]);
+         }
+         //arguments.unshift(uri);
+         return ab.Session.prototype.call.apply(session, args);
+      };
+   }
+
+   function createApi(session, perms) {
+      session.api = {};
+      for (var i = 0; i < perms.rpc.length; ++i) {
+         var uri = perms.rpc[i].uri;
+
+         var _method = uri.split("#")[1];
+         var _class = uri.split("#")[0].split("/");
+         _class = _class[_class.length - 1];
+
+         if (!(_class in session.api)) {
+            session.api[_class] = {};
+         }
+
+         session.api[_class][_method] = new Rpc(session, uri);
+      }
+   }
+
+   ab.connect(appConfig.wsuri,
+
+      // connection established handler
+      function (session) {
+         if (!appConfig.appkey || appConfig.appkey === "") {
+            // Authenticate as anonymous ..
+            session.authreq().then(function () {
+               session.auth().then(function (permissions) {
+                  //createApi(session, permissions);
+                  if (onOpen) {
+                     onOpen(session);
+                  } else if (ab._debugconnect) {
+                     session.log('Session opened.');
+                  }
+               }, session.log);
+            }, session.log);
+         } else {
+            // Authenticate as appkey ..
+            session.authreq(appConfig.appkey, appConfig.appextra).then(function (challenge) {
+
+               var signature = null;
+
+               if (typeof(appConfig.appsecret) === 'function') {
+                  signature = appConfig.appsecret(challenge);
+               } else {
+                  // derive secret if salted WAMP-CRA
+                  var secret = ab.deriveKey(appConfig.appsecret, JSON.parse(challenge).authextra);
+
+                  // direct sign
+                  signature = session.authsign(challenge, secret);
+               }
+
+               session.auth(signature).then(function (permissions) {
+                  //createApi(session, permissions);
+                  if (onOpen) {
+                     onOpen(session);
+                  } else if (ab._debugconnect) {
+                     session.log('Session opened.');
+                  }
+               }, session.log);
+            }, session.log);
+         }
+      },
+
+      // connection lost handler
+      function (code, reason, detail) {
+         if (onClose) {
+            onClose(code, reason, detail);
+         } else if (ab._debugconnect) {
+            ab.log('Session closed.', code, reason, detail);
+         }
+      }
+   );
+};
