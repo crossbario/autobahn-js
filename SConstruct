@@ -174,6 +174,7 @@ env['JS_DEFINES' ] = {
 }
 
 sources = ["autobahn/license.js",
+           "autobahn/loadershim.js",
            "autobahn/normalizeconsole.js",
            "when/when.js",
            "cryptojs/components/core.js",

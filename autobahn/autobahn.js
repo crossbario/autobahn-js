@@ -27,6 +27,7 @@ var ab = window.ab = {};
 
 ab._version = AUTOBAHNJS_VERSION;
 
+
 /**
  * Fallbacks for browsers lacking
  *
@@ -220,13 +221,14 @@ ab.log = function () {
 ab._debugrpc = false;
 ab._debugpubsub = false;
 ab._debugws = false;
-ab._debugconnect = true;
+ab._debugconnect = false;
 
-ab.debug = function (debugWamp, debugWs) {
+ab.debug = function (debugWamp, debugWs, debugConnect) {
    if ("console" in window) {
       ab._debugrpc = debugWamp;
       ab._debugpubsub = debugWamp;
       ab._debugws = debugWs;
+      ab._debugconnect = debugConnect;
    } else {
       throw "browser does not support console object";
    }
@@ -333,8 +335,8 @@ ab.CONNECTION_UNSUPPORTED = 4;
 ab.CONNECTION_UNREACHABLE_SCHEDULED_RECONNECT = 5;
 ab.CONNECTION_LOST_SCHEDULED_RECONNECT = 6;
 
-ab._Deferred = when.defer;
-//ab._Deferred = jQuery.Deferred;
+ab.Deferred = when.defer;
+//ab.Deferred = jQuery.Deferred;
 
 ab._construct = function (url, protocols) {
    if ("WebSocket" in window) {
@@ -665,6 +667,28 @@ ab.Session.prototype.sessionid = function () {
 };
 
 
+ab.Session.prototype.wsuri = function () {
+
+   var self = this;
+   return self._wsuri;
+};
+
+
+ab.Session.prototype.log = function () {
+
+   var self = this;
+   if (self._options.sessionIdent) {
+      console.group("WAMP session '" + self._options.sessionIdent + "' [" + self._session_id + "]");
+   } else {
+      console.group("WAMP session " + "[" + self._session_id + "]");
+   }
+   for (var i = 0; i < arguments.length; ++i) {
+      console.log(arguments[i]);
+   }
+   console.groupEnd();
+};
+
+
 ab.Session.prototype.shrink = function (uri, pass) {
 
    var self = this;
@@ -710,7 +734,7 @@ ab.Session.prototype.call = function () {
 
    var self = this;
 
-   var d = new ab._Deferred();
+   var d = new ab.Deferred();
    var callid;
    while (true) {
       callid = ab._newidFast();
@@ -735,7 +759,12 @@ ab.Session.prototype.call = function () {
       console.info();
    }
 
-   return d;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 
