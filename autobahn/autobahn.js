@@ -696,10 +696,10 @@ ab.Session.prototype.wsuri = function () {
 ab.Session.prototype.log = function () {
 
    var self = this;
-   if (self._options.sessionIdent) {
-      console.group("WAMP session '" + self._options.sessionIdent + "' [" + self._session_id + "]");
+   if (self._options && 'sessionIdent' in self._options) {
+      console.group("WAMP Session '" + self._options.sessionIdent + "' [" + self._session_id + "]");
    } else {
-      console.group("WAMP session " + "[" + self._session_id + "]");
+      console.group("WAMP Session " + "[" + self._session_id + "]");
    }
    for (var i = 0; i < arguments.length; ++i) {
       console.log(arguments[i]);
@@ -1199,6 +1199,9 @@ ab.launch = function (appConfig, onOpen, onClose) {
          } else if (ab._debugconnect) {
             ab.log('Session closed.', code, reason, detail);
          }
-      }
+      },
+
+      // WAMP session config
+      appConfig.sessionConfig
    );
 };
