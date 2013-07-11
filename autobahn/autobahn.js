@@ -625,6 +625,18 @@ ab.Session = function (wsuri, onopen, onclose, options) {
       self._websocket_onclose = null;
       self._websocket = null;
    };
+
+   self.log = function () {
+      if (self._options && 'sessionIdent' in self._options) {
+         console.group("WAMP Session '" + self._options.sessionIdent + "' [" + self._session_id + "]");
+      } else {
+         console.group("WAMP Session " + "[" + self._session_id + "]");
+      }
+      for (var i = 0; i < arguments.length; ++i) {
+         console.log(arguments[i]);
+      }
+      console.groupEnd();
+   };
 };
 
 
@@ -690,21 +702,6 @@ ab.Session.prototype.wsuri = function () {
 
    var self = this;
    return self._wsuri;
-};
-
-
-ab.Session.prototype.log = function () {
-
-   var self = this;
-   if (self._options && 'sessionIdent' in self._options) {
-      console.group("WAMP Session '" + self._options.sessionIdent + "' [" + self._session_id + "]");
-   } else {
-      console.group("WAMP Session " + "[" + self._session_id + "]");
-   }
-   for (var i = 0; i < arguments.length; ++i) {
-      console.log(arguments[i]);
-   }
-   console.groupEnd();
 };
 
 
