@@ -637,6 +637,8 @@ ab.Session = function (wsuri, onopen, onclose, options) {
       }
       console.groupEnd();
    };
+   
+   return self;
 };
 
 
