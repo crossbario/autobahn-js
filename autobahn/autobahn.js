@@ -1003,7 +1003,7 @@ ab._connect = function (peer) {
 
                      // notify the app of scheduled reconnect
                      stop = peer.onHangup(ab.CONNECTION_UNREACHABLE_SCHEDULED_RECONNECT,
-                                          "Connection unreachable - scheduled " + peer.retryCount + "th reconnect to occur in " + (peer.options.retryDelay / 1000) + " second(s).",
+                                          "Connection unreachable - scheduled reconnect to occur in " + (peer.options.retryDelay / 1000) + " second(s) - attempt " + peer.retryCount + " of " + peer.options.maxRetries + ".",
                                           {delay: peer.options.retryDelay,
                                            retries: peer.retryCount,
                                            maxretries: peer.options.maxRetries});
