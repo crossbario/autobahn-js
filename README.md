@@ -1,6 +1,6 @@
 # AutobahnJS
 
-AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol (WAMP)](http://wamp.ws/)**:
+AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol](http://wamp.ws/)**:
 
  * implements WAMP v1, works with any WAMP server
  * provides **asynchronous RPC** and **PubSub messaging patterns**
@@ -43,10 +43,6 @@ simple to implement.
 
 AutobahnJS implements WAMP in JavaScript to be used in browser based applications.
 
-**ExtJS Extension**
-
-AutobahnExtJS provides and Autobahn/WAMP proxy and support code for Sencha ExtJS. Please see the `autobahnextjs` folder for code and more information.
-
 
 ## Where to go
 
@@ -55,7 +51,7 @@ For more information, including getting started, tutorials and reference documen
 
 ## Get in touch
 
-Get in touch on IRC #autobahn on chat.freenode.net or join the [mailing list](http://groups.google.com/group/autobahnws).
+Get in touch on IRC `#autobahn` on `chat.freenode.net` or the [mailing list](http://groups.google.com/group/autobahnws).
 
 
 ## Acknowledgements
@@ -70,14 +66,13 @@ Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cuj
 
 # Building
 
-Building AutobahnJS will create a single file, minimized version of the library.
-
 To build, you will need
 
-  * [Google Closure Compiler](http://closure-compiler.googlecode.com/files/compiler-latest.zip)
   * [SCons](http://www.scons.org/)
+  * [Google Closure Compiler](http://closure-compiler.googlecode.com/files/compiler-latest.zip)
+  * [Taschenmesser](https://github.com/oberstet/taschenmesser)
 
-SCons is a Python based build tool, so you will need [Python](http://python.org/) as well.
+SCons is a Python based build tool, so you will need [Python](http://python.org/) as well. Taschenmesser is an SCons toolbelt also written in Python.
 
 Set environment variables:
 
@@ -93,58 +88,30 @@ Set environment variables:
   
 		C:\Program Files\Google Closure\compiler.jar
 
- 
-
 Now clone the repo:
 
 	git clone git://github.com/tavendo/AutobahnJS.git
-
-You need to include the submodules (i.e. currenlty when.js):
-
 	cd AutobahnJS
+
+You need to get any Git submodules:
+
 	git submodule init
-
-and then update them
-
 	git submodule update 
 
 Updating CryptoJS needs to be done manually, since they are not on Git.
 
+For  a release version, set the appropriate AutobahnJS version in `version.txt`.
 
-For  a release version, set the appropriate AutobahnJS version in 'version.txt', e.g 
-
-    vi version.txt
-
-Scons currently needs to be run from the Windows shell, so open one, go to the AutobahnJS directory, and run
+Then start the build:
 
 	scons
 
-This will produce 2 files
+This will produce 3 files inside the `build` directory:
 
     build/autobahn.js
     build/autobahn.min.js
+    build/autobahn.min.jgz
 
-To clean up your build
+To clean up your build:
 
 	scons -uc
-
-
-# Publishing
-
-Tavendo provides hosting of AutobahnJS on Amazon S3 at:
-
-    https://autobahn.s3.amazonaws.com/js/
-
-Set AWS credentials in `$HOME/.boto` (or `C:\Users\johndoe\.boto` for Windows):
-
-    [Credentials]
-    aws_access_key_id = ABCDEFGHJIKLMNOPQRTUVXYZ
-    aws_secret_access_key = 0123456789ABCDEFGHJIKLMNOPQRTUVXYZ
-    
-You will also need [Boto](http://docs.pythonboto.org) installed:
-
-    easy_install boto
-
-To publish, then do
-
-    scons publish
