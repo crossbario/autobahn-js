@@ -2,10 +2,9 @@
 
 AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol](http://wamp.ws/)**:
 
- * implements WAMP v1, works with any WAMP server
- * provides **asynchronous RPC** and **PubSub messaging patterns**
- * easy to use Promise-based API
- * pluggable promises/deferreds: use [when.js](https://github.com/cujojs/when) (bundled), jQuery, Dojo or others
+ * provides **asynchronous RPC** and **Publish/Subscribe** over **WebSocket**
+ * implements WAMP v1, should work with any [WAMP server](http://wamp.ws/implementations/)
+ * easy to use Deferred-based API ([when.js](https://github.com/cujojs/when) (bundled), [jQuery Deferreds](http://api.jquery.com/category/deferred-object/), ..)
  * flexible, automatic reconnect
  * session authentication (WAMP-CRA)
  * no dependencies
@@ -13,6 +12,78 @@ AutobahnJS is a JavaScript client library that implements **[The WebSocket Appli
  * tiny size (111kB source, 30kB minified, 10kB compressed)
  * open-source (MIT License)
 
+## How does it feel?
+
+### Remote Procedure Calls
+
+``` JavaScript
+	window.onload = function() {
+	 
+	   // WAMP server
+	   var wsuri = "ws://localhost:9000";
+	 
+	   ab.connect(wsuri,
+	 
+	      // WAMP session was established
+	      function (session) {
+	 
+	         // asynchronous RPC, returns promise object
+	         session.call("http://example.com/simple/calc#add",
+	                      23, 7).then(
+	 
+	            // RPC success callback
+	            function (res) {
+	               console.log("got result: " + res);
+	            },
+	 
+	            // RPC error callback
+	            function (error, desc) {
+	               console.log("error: " + desc);
+	            }
+	         );
+	      },
+	 
+	      // WAMP session is gone
+	      function (code, reason) {
+	         console.log(reason);
+	      }
+	   );
+	};
+```
+
+### Publish and Subscribe
+
+``` JavaScript
+window.onload = function() {
+ 
+   // WAMP server
+   var wsuri = "ws://localhost:9000";
+ 
+   ab.connect(wsuri,
+ 
+      // WAMP session was established
+      function (session) {
+ 
+         // subscribe to topic
+         session.subscribe("http://example.com/event#myevent1",
+ 
+            // on event publication callback
+            function (topic, event) {
+               console.log("got event1: " + event);
+         });
+ 
+         // publish event on a topic
+         session.publish("http://example.com/event#myevent1",
+                         {a: 23, b: "foobar"});
+      },
+ 
+      // WAMP session is gone
+      function (code, reason) {
+         console.log(reason);
+      }
+   );
+};
+```
 
 ## Get it
 
