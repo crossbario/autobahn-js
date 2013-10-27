@@ -22,7 +22,7 @@ You can get the latest prebuilt AutobahnJS release from here:
   3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
 > Note: You can use those via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
-> 
+
 ## What is that?
 
 [WebSocket](http://tools.ietf.org/html/rfc6455) is already built into
