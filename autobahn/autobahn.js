@@ -18,28 +18,34 @@
 /** @define {string} */
 var AUTOBAHNJS_VERSION = '?.?.?';
 
-/** @define {boolean} */
-var AUTOBAHNJS_DEBUG = true;
 
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['when'], function (when) {
-            // Also create a global in case some scripts
-            // that are loaded still are looking for
-            // a global even when an AMD loader is in use.
-            return (root.ab = factory(when));
-        });
-    } else {
-        // Browser globals
-        root.ab = factory(root.when);
-    }
-}(this, function (when) {
+   if (typeof define === 'function' && define.amd) {
+      // AMD. Register as an anonymous module.
+      define(['when'], function (when) {
+         // Also create a global in case some scripts
+         // that are loaded still are looking for
+         // a global even when an AMD loader is in use.
+         return (root.ab = factory(when));
+      });
+
+   } else if (typeof exports !== 'undefined') {
+      // Support Node.js specific `module.exports` (which can be a function)
+      if (typeof module != 'undefined' && module.exports) {
+         exports = module.exports = factory(root.when);
+      }
+      // But always support CommonJS module 1.1.1 spec (`exports` cannot be a function)
+      //exports.ab = exports;
+
+   } else {
+      // Browser globals
+      root.ab = factory(root.when);
+   }
+} (this, function (when) {
 
    "use strict";
 
-   var ab = window.ab = {};
-
+   var ab = {};
    ab._version = AUTOBAHNJS_VERSION;
 
    /**
@@ -660,22 +666,22 @@ var AUTOBAHNJS_DEBUG = true;
       }
 
       var rmsg;
-           switch(true)
-           {
+      switch (true)
+      {
          // In the event that prototype library is in existance run the toJSON method prototype provides
          // else run the standard JSON.stringify
          // this is a very clever problem that causes json to be double-quote-encoded.
-                   case window.Prototype && typeof top.window.__prototype_deleted === 'undefined':
-                   case typeof msg.toJSON === 'function':
-                           rmsg = msg.toJSON();
-                           break;
+         case window.Prototype && typeof top.window.__prototype_deleted === 'undefined':
+         case typeof msg.toJSON === 'function':
+            rmsg = msg.toJSON();
+            break;
 
          // we could do instead
          // msg.toJSON = function(){return msg};
          // rmsg = JSON.stringify(msg);
-                   default:
-                           rmsg = JSON.stringify(msg);
-           }
+          default:
+            rmsg = JSON.stringify(msg);
+      }
 
       self._websocket.send(rmsg);
       self._txcnt += 1;
@@ -1215,5 +1221,4 @@ var AUTOBAHNJS_DEBUG = true;
    };
 
    return ab;
-
 }));

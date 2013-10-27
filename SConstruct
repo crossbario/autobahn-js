@@ -27,8 +27,7 @@ env = Environment(tools = ['default', 'taschenmesser'],
 
 
 env['JS_DEFINES' ] = {
-   'AUTOBAHNJS_VERSION': "'%s'" % open('version.txt').read().strip(),
-   'AUTOBAHNJS_DEBUG': "false"
+   'AUTOBAHNJS_VERSION': "'%s'" % open('version.txt').read().strip()
 }
 
 sources = ["autobahn/license.js",
