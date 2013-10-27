@@ -3,14 +3,15 @@
 AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol (WAMP)](http://wamp.ws/)**:
 
  * implements WAMP v1, works with any WAMP server
- * provides asynchronous RPC and PubSub messaging patterns
+ * provides **asynchronous RPC** and **PubSub messaging patterns**
  * easy to use Promise-based API
- * pluggable promises/deferreds: use when.js (built-in), jQuery, Dojo or others
+ * pluggable promises/deferreds: use [when.js](https://github.com/cujojs/when) (bundled), jQuery, Dojo or others
  * flexible, automatic reconnect
  * session authentication (WAMP-CRA)
  * no dependencies
+ * works with AMD/CommonJS module loaders
  * tiny size (111kB source, 30kB minified, 10kB compressed)
- * Open-Source (MIT License)
+ * open-source (MIT License)
 
 
 ## Get it
