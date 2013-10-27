@@ -15,6 +15,12 @@
 
 /*global console: false, MozWebSocket: false, when: false, CryptoJS: false */
 
+/** @define {string} */
+var AUTOBAHNJS_VERSION = '?.?.?';
+
+/** @define {boolean} */
+var AUTOBAHNJS_DEBUG = true;
+
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -32,19 +38,9 @@
 
    "use strict";
 
-
-   /** @define {string} */
-   var AUTOBAHNJS_VERSION = '?.?.?';
-
-   /** @define {boolean} */
-   var AUTOBAHNJS_DEBUG = true;
-
-
-
    var ab = window.ab = {};
 
    ab._version = AUTOBAHNJS_VERSION;
-
 
    /**
     * Fallbacks for browsers lacking
