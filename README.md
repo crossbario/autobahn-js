@@ -1,19 +1,8 @@
 # AutobahnJS
 
-AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol](http://wamp.ws/)**:
+AutobahnJS is a JavaScript client library that implements **[The WebSocket Application Messaging Protocol](http://wamp.ws/)** and provides **asynchronous RPC** and **Publish/Subscribe** over **WebSocket**.
 
- * provides **asynchronous RPC** and **Publish/Subscribe** over **WebSocket**
- * implements WAMP v1, should work with any [WAMP server](http://wamp.ws/implementations/)
- * easy to use Deferred-based API ([when.js](https://github.com/cujojs/when) (bundled), [jQuery Deferreds](http://api.jquery.com/category/deferred-object/), ..)
- * flexible, automatic reconnect
- * session authentication (WAMP-CRA)
- * no dependencies
- * works with AMD/CommonJS module loaders
- * tiny size (111kB source, 30kB minified, 10kB compressed)
- * open-source (MIT License)
-
-
-## What is that?
+## Why?
 
 [WebSocket](http://tools.ietf.org/html/rfc6455) is already built into
 modern browsers and provides bidirectional low-latency messaging.
@@ -21,10 +10,10 @@ modern browsers and provides bidirectional low-latency messaging.
 However, as such, it is quite low-level. Web apps often have a need for
 higher level messaging patterns:
 
-  * Publish & Subscribe
-  * Remote Procedure Calls
+  * **Publish & Subscribe**
+  * **Remote Procedure Calls**
 
-This is where [WAMP](http://wamp.ws/) enters. WAMP runs on top of raw WebSocket and provides *asynchronous RPC and PubSub*.
+This is where [The WebSocket Application Messaging Protocol (WAMP)](http://wamp.ws/) enters. WAMP runs on top of raw WebSocket and provides *asynchronous RPC and PubSub*.
 
 Technically, WAMP is a proper WebSocket *subprotocol* that uses JSON as
 message serialization format. WAMP was designed to be easy to use and
@@ -105,6 +94,18 @@ window.onload = function() {
    );
 };
 ```
+
+## Features
+
+ * provides **asynchronous RPC** and **Publish/Subscribe** over **WebSocket**
+ * implements WAMP v1, should work with any [WAMP server](http://wamp.ws/implementations/)
+ * easy to use Deferred-based API ([when.js](https://github.com/cujojs/when) (bundled), [jQuery Deferreds](http://api.jquery.com/category/deferred-object/), ..)
+ * flexible, automatic reconnect
+ * session authentication (WAMP-CRA)
+ * no dependencies
+ * works with AMD/CommonJS module loaders
+ * tiny size (111kB source, 30kB minified, 10kB compressed)
+ * open-source (MIT License)
 
 ## Get it
 
