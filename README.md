@@ -38,8 +38,7 @@ window.onload = function() {
       function (session) {
  
          // asynchronous RPC, returns promise object
-         session.call("http://example.com/simple/calc#add",
-                      23, 7).then(
+         session.call("http://example.com/simple/calc#add", 23, 7).then(
  
             // RPC success callback
             function (res) {
@@ -80,11 +79,11 @@ window.onload = function() {
             // on event publication callback
             function (topic, event) {
                console.log("got event1: " + event);
-         });
+            }
+         );
  
          // publish event on a topic
-         session.publish("http://example.com/event#myevent1",
-                         {a: 23, b: "foobar"});
+         session.publish("http://example.com/event#myevent1", {a: 23, b: "foobar"});
       },
  
       // WAMP session is gone
