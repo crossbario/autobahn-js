@@ -12,43 +12,64 @@ AutobahnJS is a JavaScript client library that implements **[The WebSocket Appli
  * tiny size (111kB source, 30kB minified, 10kB compressed)
  * open-source (MIT License)
 
-## How does it feel?
+
+## What is that?
+
+[WebSocket](http://tools.ietf.org/html/rfc6455) is already built into
+modern browsers and provides bidirectional low-latency messaging.
+
+However, as such, it is quite low-level. Web apps often have a need for
+higher level messaging patterns:
+
+  * Publish & Subscribe
+  * Remote Procedure Calls
+
+This is where [WAMP](http://wamp.ws/) enters. WAMP runs on top of raw WebSocket and provides *asynchronous RPC and PubSub*.
+
+Technically, WAMP is a proper WebSocket *subprotocol* that uses JSON as
+message serialization format. WAMP was designed to be easy to use and
+simple to implement.
+
+AutobahnJS implements WAMP in JavaScript to be used in browser based applications.
+
+
+## Show me some code!
 
 ### Remote Procedure Calls
 
 ``` JavaScript
-	window.onload = function() {
-	 
-	   // WAMP server
-	   var wsuri = "ws://localhost:9000";
-	 
-	   ab.connect(wsuri,
-	 
-	      // WAMP session was established
-	      function (session) {
-	 
-	         // asynchronous RPC, returns promise object
-	         session.call("http://example.com/simple/calc#add",
-	                      23, 7).then(
-	 
-	            // RPC success callback
-	            function (res) {
-	               console.log("got result: " + res);
-	            },
-	 
-	            // RPC error callback
-	            function (error, desc) {
-	               console.log("error: " + desc);
-	            }
-	         );
-	      },
-	 
-	      // WAMP session is gone
-	      function (code, reason) {
-	         console.log(reason);
-	      }
-	   );
-	};
+window.onload = function() {
+ 
+   // WAMP server
+   var wsuri = "ws://localhost:9000";
+ 
+   ab.connect(wsuri,
+ 
+      // WAMP session was established
+      function (session) {
+ 
+         // asynchronous RPC, returns promise object
+         session.call("http://example.com/simple/calc#add",
+                      23, 7).then(
+ 
+            // RPC success callback
+            function (res) {
+               console.log("got result: " + res);
+            },
+ 
+            // RPC error callback
+            function (error, desc) {
+               console.log("error: " + desc);
+            }
+         );
+      },
+ 
+      // WAMP session is gone
+      function (code, reason) {
+         console.log(reason);
+      }
+   );
+};
 ```
 
 ### Publish and Subscribe
@@ -94,25 +115,6 @@ You can get the latest prebuilt AutobahnJS release from here:
   3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
 > Note: You can use those via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
-
-## What is that?
-
-[WebSocket](http://tools.ietf.org/html/rfc6455) is already built into
-modern browsers and provides bidirectional low-latency messaging.
-
-However, as such, it is quite low-level. Web apps often have a need for
-higher level messaging patterns:
-
-  * Publish & Subscribe
-  * Remote Procedure Calls
-
-This is where [WAMP](http://wamp.ws/) enters. WAMP runs on top of raw WebSocket and provides *asynchronous RPC and PubSub*.
-
-Technically, WAMP is a proper WebSocket *subprotocol* that uses JSON as
-message serialization format. WAMP was designed to be easy to use and
-simple to implement.
-
-AutobahnJS implements WAMP in JavaScript to be used in browser based applications.
 
 
 ## Where to go
