@@ -9,19 +9,20 @@ AutobahnJS is a JavaScript client library that implements **[The WebSocket Appli
  * flexible, automatic reconnect
  * session authentication (WAMP-CRA)
  * no dependencies
- * tiny size (97kB source, 27kB minified, 9kB compressed)
+ * tiny size (111kB source, 30kB minified, 10kB compressed)
  * Open-Source (MIT License)
 
 
 ## Get it
 
-You can link to the latest prebuilt AutobahnJS release hosted on Amazon S3 here
+You can get the latest prebuilt AutobahnJS release from here:
 
   1. [Production (minimized and gzipped)](http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz)
   2. [Production (only minimized)](http://autobahn.s3.amazonaws.com/js/autobahn.min.js)
   3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
-
+> Note: You can use those via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
+> 
 ## What is that?
 
 [WebSocket](http://tools.ietf.org/html/rfc6455) is already built into
