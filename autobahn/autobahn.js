@@ -1079,6 +1079,7 @@ var AUTOBAHNJS_VERSION = '?.?.?';
 
          peer.options // forward options to session class for specific WS/WAMP options
       );
+      return sess;
    };
 
 
@@ -1128,7 +1129,7 @@ var AUTOBAHNJS_VERSION = '?.?.?';
       peer.connects = 0; // total number of successful connects
       peer.retryCount = 0; // number of retries since last successful connect
 
-      ab._connect(peer);
+      return ab._connect(peer);
    };
 
 
