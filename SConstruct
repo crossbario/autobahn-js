@@ -19,8 +19,8 @@
 import os
 import pkg_resources
 
-taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
-#taschenmesser = "../../infrequent/taschenmesser"
+#taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
+taschenmesser = "../../infrequent/taschenmesser"
 env = Environment(tools = ['default', 'taschenmesser'],
                   toolpath = [taschenmesser],
                   ENV = os.environ)
@@ -72,15 +72,28 @@ artifacts = [ab,
              #ab_extjs_min_gz,
              ]
 
-## Generate MD5 checksums file
+## Generate checksum files
 ##
-checksums = env.MD5("build/CHECKSUM.MD5", artifacts)
-uploads = artifacts + [checksums]
+checksums = []
+checksums.append(env.MD5("build/CHECKSUM.MD5", artifacts))
+checksums.append(env.SHA1("build/CHECKSUM.SHA1", artifacts))
+checksums.append(env.SHA256("build/CHECKSUM.SHA256", artifacts))
 
+## The default target consists of all artifacts that
+## would get published
+##
+uploads = artifacts + checksums
 Default(uploads)
 
 ## Upload to Amazon S3
 ##
-publish = env.S3("build/.S3UploadDone", uploads)
+env['S3_BUCKET'] = 'autobahn'
+env['S3_BUCKET_PREFIX'] = 'js/' # note the trailing slash!
+env['S3_OBJECT_ACL'] = 'public-read'
+
+## The uploaded stuff is always considered stale
+##
+publish = AlwaysBuild(env.S3("build/.S3UploadDone", uploads))
+
 Depends(publish, uploads)
 Alias("publish", publish)
