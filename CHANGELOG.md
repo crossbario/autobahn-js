@@ -1,5 +1,9 @@
 # AutobahnJS: Changelog
 
+## v0.8.1
+ * update bundled to [whenjs](https://github.com/cujojs/when) v2.7.0
+ * fix IE8/9 connection timeout handling (relevant when running WebSocket Flash polyfill)
+
 ## v0.8.0
  * support for AMD/CommonJS module loading
  * update bundled to [whenjs](https://github.com/cujojs/when) v2.5.1
