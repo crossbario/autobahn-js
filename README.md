@@ -142,7 +142,7 @@ Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cuj
 To build, you will need
 
   * [SCons](http://www.scons.org/)
-  * [Google Closure Compiler](http://closure-compiler.googlecode.com/files/compiler-latest.zip)
+  * [Google Closure Compiler](http://dl.google.com/closure-compiler/compiler-latest.zip)
   * [Taschenmesser](https://github.com/oberstet/taschenmesser)
 
 SCons is a Python based build tool, so you will need [Python](http://python.org/) as well. Taschenmesser is an SCons toolbelt also written in Python.
