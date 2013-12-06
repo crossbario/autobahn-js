@@ -1029,7 +1029,9 @@ var AUTOBAHNJS_VERSION = '?.?.?';
                            if (ab._debugconnect) {
                                console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
                            }
-                           window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+                           window.setTimeout(function () {
+                                ab._connect(peer);
+                            }, peer.options.retryDelay);
                         } else {
                            if (ab._debugconnect) {
                                console.log("Connection unreachable - retrying stopped by app");
@@ -1060,7 +1062,9 @@ var AUTOBAHNJS_VERSION = '?.?.?';
                         if (ab._debugconnect) {
                             console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
                         }
-                        window.setTimeout(ab._connect, peer.options.retryDelay, peer);
+                        window.setTimeout(function () {
+                                ab._connect(peer);
+                            }, peer.options.retryDelay);
                      } else {
                         if (ab._debugconnect) {
                             console.log("Connection lost - retrying stopped by app");
