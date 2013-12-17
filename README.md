@@ -46,8 +46,18 @@ window.onload = function() {
             },
  
             // RPC error callback
-            function (error, desc) {
-               console.log("error: " + desc);
+            function (error) {
+               console.group("Error");
+               console.group("URI");
+               console.log(error.uri);
+               console.groupEnd();
+               console.group("Description");
+               console.log(error.desc);
+               console.groupEnd();
+               console.group("Detail");
+               console.log(error.detail);
+               console.groupEnd();
+               console.groupEnd();
             }
          );
       },
