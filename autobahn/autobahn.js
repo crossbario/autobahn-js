@@ -13,11 +13,13 @@
  * See license text at http://www.opensource.org/licenses/mit-license.php
  */
 
-/*global console: false, MozWebSocket: false, when: false, CryptoJS: false */
+/* global console: false, MozWebSocket: false, when: false, CryptoJS: false */
 
-/** @define {string} */
+/**
+ * @define {string}
+ */
 var AUTOBAHNJS_VERSION = '?.?.?';
-
+var global = this;
 
 (function (root, factory) {
    if (typeof define === 'function' && define.amd) {
@@ -41,7 +43,7 @@ var AUTOBAHNJS_VERSION = '?.?.?';
       // Browser globals
       root.ab = factory(root.when);
    }
-} (this, function (when) {
+} (global, function (when) {
 
    "use strict";
 
