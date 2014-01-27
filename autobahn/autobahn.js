@@ -9,7 +9,7 @@
  *
  * Provides asynchronous RPC/PubSub over WebSocket.
  *
- * Copyright 2011-2013 Tavendo GmbH. Licensed under the MIT License.
+ * Copyright (C) 2011-2014 Tavendo GmbH. Licensed under the MIT License.
  * See license text at http://www.opensource.org/licenses/mit-license.php
  */
 
@@ -28,22 +28,22 @@ var global = this;
          // Also create a global in case some scripts
          // that are loaded still are looking for
          // a global even when an AMD loader is in use.
-         return (root.ab = factory(when));
+         return (root.ab = factory(root, when));
       });
 
    } else if (typeof exports !== 'undefined') {
       // Support Node.js specific `module.exports` (which can be a function)
       if (typeof module != 'undefined' && module.exports) {
-         exports = module.exports = factory(root.when);
+         exports = module.exports = factory(root, root.when);
       }
       // But always support CommonJS module 1.1.1 spec (`exports` cannot be a function)
       //exports.ab = exports;
 
    } else {
       // Browser globals
-      root.ab = factory(root.when);
+      root.ab = factory(root, root.when);
    }
-} (global, function (when) {
+} (global, function (root, when) {
 
    "use strict";
 
@@ -194,17 +194,17 @@ var global = this;
 
 
    ab.getServerUrl = function (wsPath, fallbackUrl) {
-      if (window.location.protocol === "file:") {
+      if (root.location.protocol === "file:") {
          if (fallbackUrl) {
             return fallbackUrl;
          } else {
             return "ws://127.0.0.1/ws";
          }
       } else {
-         var scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-         var port = window.location.port !== "" ? ':' + window.location.port : '';
+         var scheme = root.location.protocol === 'https:' ? 'wss://' : 'ws://';
+         var port = root.location.port !== "" ? ':' + root.location.port : '';
          var path = wsPath ? wsPath : 'ws';
-         return scheme + window.location.hostname + port + "/" + path;
+         return scheme + root.location.hostname + port + "/" + path;
       }
    };
 
@@ -262,7 +262,7 @@ var global = this;
    ab._debugconnect = false;
 
    ab.debug = function (debugWamp, debugWs, debugConnect) {
-      if ("console" in window) {
+      if ("console" in root) {
          ab._debugrpc = debugWamp;
          ab._debugpubsub = debugWamp;
          ab._debugws = debugWs;
@@ -377,14 +377,14 @@ var global = this;
    //ab.Deferred = jQuery.Deferred;
 
    ab._construct = function (url, protocols) {
-      if ("WebSocket" in window) {
+      if ("WebSocket" in root) {
          // Chrome, MSIE, newer Firefox
          if (protocols) {
             return new WebSocket(url, protocols);
          } else {
             return new WebSocket(url);
          }
-      } else if ("MozWebSocket" in window) {
+      } else if ("MozWebSocket" in root) {
          // older versions of Firefox prefix the WebSocket object
          if (protocols) {
             return new MozWebSocket(url, protocols);
@@ -673,7 +673,7 @@ var global = this;
          // In the event that prototype library is in existance run the toJSON method prototype provides
          // else run the standard JSON.stringify
          // this is a very clever problem that causes json to be double-quote-encoded.
-         case window.Prototype && typeof top.window.__prototype_deleted === 'undefined':
+         case root.Prototype && typeof top.root.__prototype_deleted === 'undefined':
          case typeof msg.toJSON === 'function':
             rmsg = msg.toJSON();
             break;
@@ -1031,7 +1031,7 @@ var global = this;
                            if (ab._debugconnect) {
                                console.log("Connection unreachable - retrying (" + peer.retryCount + ") ..");
                            }
-                           window.setTimeout(function () {
+                           root.setTimeout(function () {
                                 ab._connect(peer);
                             }, peer.options.retryDelay);
                         } else {
@@ -1064,7 +1064,7 @@ var global = this;
                         if (ab._debugconnect) {
                             console.log("Connection lost - retrying (" + peer.retryCount + ") ..");
                         }
-                        window.setTimeout(function () {
+                        root.setTimeout(function () {
                                 ab._connect(peer);
                             }, peer.options.retryDelay);
                      } else {

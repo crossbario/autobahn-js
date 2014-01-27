@@ -1,5 +1,11 @@
 # AutobahnJS: Changelog
 
+## v0.8.2
+ * compatibility with Web workers
+ * fix problem with Require.js
+ * fix RPC error callback
+ * update bundled to [whenjs](https://github.com/cujojs/when) v2.7.1
+
 ## v0.8.1
  * update bundled to [whenjs](https://github.com/cujojs/when) v2.7.0
  * fix IE8/9 connection timeout handling (relevant when running WebSocket Flash polyfill)
