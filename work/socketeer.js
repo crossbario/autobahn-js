@@ -9,17 +9,23 @@
 
 function websocket(root, url, protocols) {
 
-   if (typeof module !== 'undefined' && this.module !== module) {
+   //if (typeof module !== 'undefined' && this.module !== module) {
+   if (!'window' in root) {
       console.log("running on NodeJS");
 
       // our WebSocket shim with W3C API
       var websocket = {};
+
+      // these will get defined by the specific shim
       websocket.protocol = undefined;
       websocket.send = undefined;
       websocket.close = undefined;
-      websocket.onmessage = function (e) {}
-      websocket.onopen = function (e) {}
-      websocket.onclose = function (e) {}
+
+      // these will get called by the shim.
+      // in case user code doesn't override these, provide these NOPs
+      websocket.onmessage = function () {}
+      websocket.onopen = function () {}
+      websocket.onclose = function () {}
 
       // https://github.com/Worlize/WebSocket-Node
       //
@@ -27,7 +33,7 @@ function websocket(root, url, protocols) {
 
          (function() {
 
-            var WebSocketClient = require('websocket').client;
+            //var WebSocketClient = require('websocket').client;
             var client = new WebSocketClient();
 
             client.on('connectFailed', function (error) {
@@ -90,7 +96,11 @@ function websocket(root, url, protocols) {
          (function () {
 
             var WebSocket = require('ws');
-            var client = new WebSocket(url);
+            if (protocols) {
+               var client = new WebSocket(url, protocols);
+            } else {
+               var client = new WebSocket(url);
+            }
 
             websocket.send = function (msg) {
                client.send(msg, {binary: false});

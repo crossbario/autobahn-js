@@ -2,13 +2,13 @@ var when = require('when');
 //var websocket = require('websocket');
 var socketeer = require('./socketeer.js');
 
-var socket = null;
+socket = null;
 var isopen = false;
 
 onload = function() {
 
-   socket = new WebSocket("ws://127.0.0.1:9000");
-   //socket = socketeer.websocket(this, 'ws://127.0.0.1:9000/');
+   //socket = new WebSocket("ws://127.0.0.1:9000");
+   socket = socketeer.websocket(this, 'ws://127.0.0.1:9000/');
    socket.binaryType = "arraybuffer";
 
    socket.onopen = function() {
