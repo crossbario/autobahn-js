@@ -28,7 +28,7 @@ var Subscription = function (session, id) {
    self._session = session;
    self.active = true;
    self.id = id;
-}
+};
 
 
 Subscription.prototype.unsubscribe = function () {
@@ -45,7 +45,7 @@ var Registration = function (session, id) {
    self._session = session;
    self.active = true;
    self.id = id;
-}
+};
 
 
 Registration.prototype.unregister = function () {
@@ -59,7 +59,7 @@ var Publication = function (id) {
 
    var self = this;
    self.id = id;
-}
+};
 
 
 var MSG_TYPE = {
@@ -141,7 +141,7 @@ Session.prototype.connect = function (transport) {
 
    self._protocol_violation = function (reason) {
       console.log("Protocol violation:", reason);
-   }
+   };
 
    self._MESSAGE_MAP = {};
    self._MESSAGE_MAP[MSG_TYPE.ERROR] = {};
@@ -167,12 +167,12 @@ Session.prototype.connect = function (transport) {
          var sub = new Subscription(self, subscription);
          d.resolve(sub);
 
-         delete r;
+         delete self._subscribe_reqs[request];
 
       } else {
          self._protocol_violation("SUBSCRIBED received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.SUBSCRIBED] = self._process_SUBSCRIBED;
 
 
@@ -198,12 +198,12 @@ Session.prototype.connect = function (transport) {
 
          d.reject(error);
 
-         delete r;
+         delete self._subscribe_reqs[request];
 
       } else {
          self._protocol_violation("SUBSCRIBE-ERROR received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.SUBSCRIBE] = self._process_SUBSCRIBE_ERROR;
 
 
@@ -227,12 +227,12 @@ Session.prototype.connect = function (transport) {
          subscription.active = false;
          d.resolve();
 
-         delete r;
+         delete self._unsubscribe_reqs[request];
 
       } else {
          self._protocol_violation("UNSUBSCRIBED received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.UNSUBSCRIBED] = self._process_UNSUBSCRIBED;
 
 
@@ -257,12 +257,12 @@ Session.prototype.connect = function (transport) {
 
          d.reject(error);
 
-         delete r;
+         delete self._unsubscribe_reqs[request];
 
       } else {
          self._protocol_violation("UNSUBSCRIBE-ERROR received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.UNSUBSCRIBE] = self._process_UNSUBSCRIBE_ERROR;
 
 
@@ -283,12 +283,12 @@ Session.prototype.connect = function (transport) {
          var pub = new Publication(publication);
          d.resolve(pub);
 
-         delete r;
+         delete self._publish_reqs[request];
 
       } else {
          self._protocol_violation("PUBLISHED received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.PUBLISHED] = self._process_PUBLISHED;
 
 
@@ -313,12 +313,12 @@ Session.prototype.connect = function (transport) {
 
          d.reject(error);
 
-         delete r;
+         delete self._publish_reqs[request];
 
       } else {
          self._protocol_violation("PUBLISH-ERROR received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.PUBLISH] = self._process_PUBLISH_ERROR;
 
 
@@ -346,7 +346,7 @@ Session.prototype.connect = function (transport) {
       } else {
          self._protocol_violation("EVENT received for non-subscribed subscription ID " + subscription);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.EVENT] = self._process_EVENT;
 
 
@@ -370,12 +370,12 @@ Session.prototype.connect = function (transport) {
          var reg = new Registration(self, registration);
          d.resolve(reg);
 
-         delete r;
+         delete self._register_reqs[request];
 
       } else {
          self._protocol_violation("REGISTERED received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.REGISTERED] = self._process_REGISTERED;
 
 
@@ -401,12 +401,12 @@ Session.prototype.connect = function (transport) {
 
          d.reject(error);
 
-         delete r;
+         delete self._register_reqs[request];
 
       } else {
          self._protocol_violation("REGISTER-ERROR received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.REGISTER] = self._process_REGISTER_ERROR;
 
 
@@ -430,12 +430,12 @@ Session.prototype.connect = function (transport) {
          registration.active = false;
          d.resolve();
 
-         delete r;
+         delete self._unregister_reqs[request];
 
       } else {
          self._protocol_violation("UNREGISTERED received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.UNREGISTERED] = self._process_UNREGISTERED;
 
 
@@ -460,12 +460,12 @@ Session.prototype.connect = function (transport) {
 
          d.reject(error);
 
-         delete r;
+         delete self._unregister_reqs[request];
 
       } else {
          self._protocol_violation("UNREGISTER-ERROR received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.UNREGISTER] = self._process_UNREGISTER_ERROR;
 
 
@@ -494,9 +494,9 @@ Session.prototype.connect = function (transport) {
 
          d.resolve(result);
 
-         delete r;
+         delete self._call_reqs[request];
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.RESULT] = self._process_RESULT;
 
 
@@ -521,12 +521,12 @@ Session.prototype.connect = function (transport) {
 
          d.reject(error);
 
-         delete r;
+         delete self._call_reqs[request];
 
       } else {
          self._protocol_violation("CALL-ERROR received for non-pending request ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.CALL] = self._process_CALL_ERROR;
 
 
@@ -548,17 +548,17 @@ Session.prototype.connect = function (transport) {
 
             // construct YIELD message
             //
-            var msg = [MSG_TYPE.YIELD, request];
+            var reply = [MSG_TYPE.YIELD, request];
             if (false) {
                //msg.push(options);
             } else {
-               msg.push({});
+               reply.push({});
             }
-            msg.push([res]);
+            reply.push([res]);
 
             // send WAMP message
             //
-            self._send_wamp(msg);
+            self._send_wamp(reply);
 
          } catch (e) {
             console.log("Exception raised in procedure endpoint", e);
@@ -567,7 +567,7 @@ Session.prototype.connect = function (transport) {
       } else {
          self._protocol_violation("INVOCATION received for non-registered registration ID " + request);
       }
-   }
+   };
    self._MESSAGE_MAP[MSG_TYPE.INVOCATION] = self._process_INVOCATION;
 
 
@@ -646,7 +646,7 @@ Session.prototype.connect = function (transport) {
 };
 
 
-Session.prototype.call = function (procedure, pargs, kwargs, options) {
+Session.prototype.xcall = function (procedure, pargs, kwargs, options) {
    var self = this;
 
    // create and remember new CALL request
@@ -679,17 +679,32 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
 };
 
 
-Session.prototype.publish = function (topic, pargs, kwargs, options) {
+Session.prototype.call = function () {
+
+   var self = this;
+   var procedure = arguments[0];
+
+   var pargs = [];
+   for (var i = 1; i < arguments.length; i += 1) {
+      pargs.push(arguments[i]);
+   }
+
+   return self.xcall(procedure, pargs);
+};
+
+
+Session.prototype.xpublish = function (topic, pargs, kwargs, options) {
    var self = this;
 
    var ack = options && options.acknowledge;
+   var d = null;
 
    // create and remember new PUBLISH request
    //
    var request = newid();
    if (ack) {
-      var d = when.defer();
-      self._publish_reqs[request] = [d, options];      
+      d = when.defer();
+      self._publish_reqs[request] = [d, options];
    }
 
    // construct PUBLISH message
@@ -712,9 +727,14 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
    //
    self._send_wamp(msg);
 
-   if (ack) {
+   if (d) {
       return d.promise;
    }
+};
+
+
+Session.prototype.publish = function (topic, payload, options) {
+   return this.xpublish(topic, [payload], {}, options);
 };
 
 

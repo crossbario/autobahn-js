@@ -744,12 +744,6 @@ var global = this;
 
       var self = this;
 
-   /*
-      if (self._prefixes.get(prefix) !== undefined) {
-         throw "prefix '" + prefix + "' already defined";
-      }
-   */
-
       self._prefixes.set(prefix, uri);
 
       if (ab._debugrpc || ab._debugpubsub) {

@@ -14,14 +14,28 @@
 
 var session = require('./session.js');
 var websocket = require('./websocket.js');
+var peer = require('./peer.js');
 
-function connect () {
+function connect (options) {
+
+   var _peer = new peer.Peer(options);
+   _peer.onconnect = function () {
+
+   };
+
+   _peer.onhangup = function () {
+
+   };
 
 }
 
 function launch (config, onopen, onclose) {
+   var self = this;
+   var debug = config.debug;
 
 }
+
+exports.version = '?.?.?';
 
 exports.WebSocket = websocket.WebSocket;
 
