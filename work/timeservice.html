@@ -12,6 +12,16 @@
          session.onopen = function () {
             // WAMP session established
 
+            function onevent(i) {
+               console.log("Got event:", i);
+            }
+
+            this.subscribe(onevent, 'com.myapp.topic1').then(
+               function (subscription) {
+                  console.log("Subscribed!", subscription);
+               }
+            );
+
             this.call('com.timeservice.now').then(
                function (now) {
                   document.getElementById("now").innerHTML = now;

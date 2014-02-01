@@ -12,8 +12,6 @@ var _WebSocket = function (browser, url, protocols) {
    //if (typeof module !== 'undefined' && this.module !== module) {
    if (browser) {
 
-      console.log("running in browser");
-
       if ("WebSocket" in window) {
          // Chrome, MSIE, newer Firefox
          if (protocols) {
@@ -33,7 +31,6 @@ var _WebSocket = function (browser, url, protocols) {
       }
 
    } else {
-      console.log("running on NodeJS");
 
       // our WebSocket shim with W3C API
       var websocket = {};
@@ -120,7 +117,6 @@ var _WebSocket = function (browser, url, protocols) {
             var WebSocket = require('ws');
             var client;
             if (protocols) {
-               console.log("with protocols", protocols);
                if (Array.isArray(protocols)) {
                   protocols = protocols.join(',');
                }
