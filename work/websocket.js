@@ -111,7 +111,7 @@ var _WebSocket = function (browser, url, protocols) {
             }
          })();
 
-      // https://github.com/einaros
+      // https://github.com/einaros/ws
       //
       } else {
 
@@ -121,7 +121,10 @@ var _WebSocket = function (browser, url, protocols) {
             var client;
             if (protocols) {
                console.log("with protocols", protocols);
-               client = new WebSocket(url, protocols);
+               if (Array.isArray(protocols)) {
+                  protocols = protocols.join(',');
+               }
+               client = new WebSocket(url, {protocol: protocols});
             } else {
                client = new WebSocket(url);
             }

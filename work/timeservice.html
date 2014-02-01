@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <h1>AutobahnJS Timeservice RPC Client</h1>
+      <p>
+         Current time from Timeservice: <span id="now"></span>
+      </p>
+      <script src="autobahn.bundle.js"></script>
+      <script>
+         var session = new autobahn.Session();
+
+         session.onopen = function () {
+            // WAMP session established
+
+            this.call('com.timeservice.now').then(
+               function (now) {
+                  document.getElementById("now").innerHTML = now;
+               }
+            );
+         };
+
+         session.onclose = function () {
+            // WAMP session closed
+         };
+
+         var transport = autobahn.WebSocket(true, 'ws://127.0.0.1:9000/', ['wamp.2.json']);
+
+         session.connect(transport);
+      </script>
+   </body>
+</html>
