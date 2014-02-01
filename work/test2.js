@@ -16,6 +16,6 @@ session.onclose = function () {
    // WAMP session closed
 };
 
-var transport = autobahn.WebSocket(false, 'ws://127.0.0.1:9000/');
+var transport = autobahn.WebSocket(true, 'ws://127.0.0.1:9000/');
 
 session.connect(transport);

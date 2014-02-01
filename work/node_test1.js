@@ -1,5 +1,5 @@
 var socketeer = require('./socketeer.js');
-var socket = socketeer.websocket(this, 'ws://127.0.0.1:9000/');
+var socket = socketeer.create(this, 'ws://127.0.0.1:9000/');
 
 socket.onmessage = function (evt) {
    console.log(evt.data);

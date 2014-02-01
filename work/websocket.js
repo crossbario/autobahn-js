@@ -7,10 +7,32 @@
    http://addyosmani.com/writing-modular-js/
  */
 
-function websocket(root, url, protocols) {
+var _WebSocket = function (browser, url, protocols) {
 
    //if (typeof module !== 'undefined' && this.module !== module) {
-   if (!'window' in root) {
+   if (browser) {
+
+      console.log("running in browser");
+
+      if ("WebSocket" in window) {
+         // Chrome, MSIE, newer Firefox
+         if (protocols) {
+            return new window.WebSocket(url, protocols);
+         } else {
+            return new window.WebSocket(url);
+         }
+      } else if ("MozWebSocket" in window) {
+         // older versions of Firefox prefix the WebSocket object
+         if (protocols) {
+            return new window.MozWebSocket(url, protocols);
+         } else {
+            return new window.MozWebSocket(url);
+         }
+      } else {
+         return null;
+      }
+
+   } else {
       console.log("running on NodeJS");
 
       // our WebSocket shim with W3C API
@@ -23,9 +45,9 @@ function websocket(root, url, protocols) {
 
       // these will get called by the shim.
       // in case user code doesn't override these, provide these NOPs
-      websocket.onmessage = function () {}
-      websocket.onopen = function () {}
-      websocket.onclose = function () {}
+      websocket.onmessage = function () {};
+      websocket.onopen = function () {};
+      websocket.onclose = function () {};
 
       // https://github.com/Worlize/WebSocket-Node
       //
@@ -55,11 +77,11 @@ function websocket(root, url, protocols) {
                      // sending a Node Buffer
                      //connection.sendBytes(msg);
                   }
-               }
+               };
 
                websocket.close = function (code, reason) {
                   connection.close();
-               }
+               };
 
                websocket.onopen();
           
@@ -91,24 +113,26 @@ function websocket(root, url, protocols) {
 
       // https://github.com/einaros
       //
-      } else if (true) {
+      } else {
 
          (function () {
 
             var WebSocket = require('ws');
+            var client;
             if (protocols) {
-               var client = new WebSocket(url, protocols);
+               console.log("with protocols", protocols);
+               client = new WebSocket(url, protocols);
             } else {
-               var client = new WebSocket(url);
+               client = new WebSocket(url);
             }
 
             websocket.send = function (msg) {
                client.send(msg, {binary: false});
-            }
+            };
 
             websocket.close = function (code, reason) {
                client.close();
-            }
+            };
 
             client.on('open', function () {
                websocket.onopen();
@@ -130,40 +154,11 @@ function websocket(root, url, protocols) {
 
          })();
 
-      } else {
-
       }
 
       return websocket;
-
-   } else if ('window' in root) {
-
-      console.log("running in browser");
-
-      if ("WebSocket" in root) {
-         // Chrome, MSIE, newer Firefox
-         if (protocols) {
-            return new root.WebSocket(url, protocols);
-         } else {
-            return new root.WebSocket(url);
-         }
-      } else if ("MozWebSocket" in root) {
-         // older versions of Firefox prefix the WebSocket object
-         if (protocols) {
-            return new root.MozWebSocket(url, protocols);
-         } else {
-            return new root.MozWebSocket(url);
-         }
-      } else {
-         return null;
-      }
-
-   } else {
-
-      console.log("could not detect environment");
-      return null;
    }
-}
+};
 
 
-exports.websocket = websocket;
+exports.WebSocket = _WebSocket;
