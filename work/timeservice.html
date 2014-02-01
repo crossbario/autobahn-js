@@ -12,21 +12,50 @@
          session.onopen = function () {
             // WAMP session established
 
-            function onevent(i) {
-               console.log("Got event:", i);
+            if (true) {
+               function utcnow() {
+                  console.log("Someone is calling me;)");
+                  now = new Date();
+                  return now.toISOString();
+               }
+
+               this.register(utcnow, 'com.timeservice.now').then(
+                  function (registration) {
+                     console.log("Registered!", registration.id);
+                  },
+                  function (error) {
+                     console.log("Registration failed!", error);
+                  }
+               );
             }
 
-            this.subscribe(onevent, 'com.myapp.topic1').then(
-               function (subscription) {
-                  console.log("Subscribed!", subscription);
-               }
-            );
+            if (true) {
 
-            this.call('com.timeservice.now').then(
-               function (now) {
-                  document.getElementById("now").innerHTML = now;
+               function onevent(i) {
+                  console.log("Got event:", i);
                }
-            );
+
+               this.subscribe(onevent, 'com.myapp.topic1').then(
+                  function (subscription) {
+                     console.log("Subscribed!", subscription.id);
+                  },
+                  function (error) {
+                     console.log("Subscription failed!", error);
+                  }
+               );
+            }
+
+            if (false) {
+
+               this.call('com.timeservice.now').then(
+                  function (now) {
+                     document.getElementById("now").innerHTML = now;
+                  },
+                  function (error) {
+                     console.log("RPC Error:", error);
+                  }
+               );
+            }
          };
 
          session.onclose = function () {

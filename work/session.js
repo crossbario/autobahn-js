@@ -608,7 +608,7 @@ Session.prototype.connect = function (transport) {
                var request_type = msg[1];
                if (request_type in self._MESSAGE_MAP[MSG_TYPE.ERROR]) {
 
-                  self._MESSAGE_MAP[MSG_TYPE.ERROR][msg_type](msg);
+                  self._MESSAGE_MAP[msg_type][request_type](msg);
 
                } else {
 
