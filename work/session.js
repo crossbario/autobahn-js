@@ -1,6 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  AutobahnJS - http://autobahn.ws, http://wamp.ws
+//
+//  A JavaScript library for WAMP ("The Web Application Messaging Protocol").
+//
+//  Copyright (C) 2011-2014 Tavendo GmbH, http://tavendo.com
+//
+//  Licensed under the MIT License.
+//  http://www.opensource.org/licenses/mit-license.php
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
 var when = require('when');
 var websocket = require('./websocket.js');
-var global = this;
 
 
 function newid() {
@@ -130,6 +143,9 @@ Session.prototype.connect = function (transport) {
       console.log("Protocol violation:", reason);
    }
 
+   self._MESSAGE_MAP = {};
+   self._MESSAGE_MAP[MSG_TYPE.ERROR] = {};
+
 
    self._process_SUBSCRIBED = function (msg) {
       //
@@ -157,6 +173,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("SUBSCRIBED received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.SUBSCRIBED] = self._process_SUBSCRIBED;
 
 
    self._process_SUBSCRIBE_ERROR = function (msg) {
@@ -187,6 +204,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("SUBSCRIBE-ERROR received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.SUBSCRIBE] = self._process_SUBSCRIBE_ERROR;
 
 
    self._process_UNSUBSCRIBED = function (msg) {
@@ -215,6 +233,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("UNSUBSCRIBED received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.UNSUBSCRIBED] = self._process_UNSUBSCRIBED;
 
 
    self._process_UNSUBSCRIBE_ERROR = function (msg) {
@@ -244,6 +263,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("UNSUBSCRIBE-ERROR received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.UNSUBSCRIBE] = self._process_UNSUBSCRIBE_ERROR;
 
 
    self._process_PUBLISHED = function (msg) {
@@ -269,6 +289,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("PUBLISHED received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.PUBLISHED] = self._process_PUBLISHED;
 
 
    self._process_PUBLISH_ERROR = function (msg) {
@@ -298,6 +319,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("PUBLISH-ERROR received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.PUBLISH] = self._process_PUBLISH_ERROR;
 
 
    self._process_EVENT = function (msg) {
@@ -325,6 +347,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("EVENT received for non-subscribed subscription ID " + subscription);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.EVENT] = self._process_EVENT;
 
 
    self._process_REGISTERED = function (msg) {
@@ -353,6 +376,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("REGISTERED received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.REGISTERED] = self._process_REGISTERED;
 
 
    self._process_REGISTER_ERROR = function (msg) {
@@ -383,6 +407,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("REGISTER-ERROR received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.REGISTER] = self._process_REGISTER_ERROR;
 
 
    self._process_UNREGISTERED = function (msg) {
@@ -411,6 +436,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("UNREGISTERED received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.UNREGISTERED] = self._process_UNREGISTERED;
 
 
    self._process_UNREGISTER_ERROR = function (msg) {
@@ -440,6 +466,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("UNREGISTER-ERROR received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.UNREGISTER] = self._process_UNREGISTER_ERROR;
 
 
    self._process_RESULT = function (msg) {
@@ -470,6 +497,7 @@ Session.prototype.connect = function (transport) {
          delete r;
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.RESULT] = self._process_RESULT;
 
 
    self._process_CALL_ERROR = function (msg) {
@@ -499,6 +527,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("CALL-ERROR received for non-pending request ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.ERROR][MSG_TYPE.CALL] = self._process_CALL_ERROR;
 
 
    self._process_INVOCATION = function (msg) {
@@ -539,6 +568,7 @@ Session.prototype.connect = function (transport) {
          self._protocol_violation("INVOCATION received for non-registered registration ID " + request);
       }
    }
+   self._MESSAGE_MAP[MSG_TYPE.INVOCATION] = self._process_INVOCATION;
 
 
    self._socket.onmessage = function (evt) {
@@ -571,88 +601,31 @@ Session.prototype.connect = function (transport) {
 
             self._protocol_violation("received HELLO when session is already established");
 
-         } else if (msg_type === MSG_TYPE.GOODBYE) {
+         } else {
 
-            // FIXME
+            if (msg_type === MSG_TYPE.ERROR) {
 
-         } else if (msg_type === MSG_TYPE.HEARTBEAT) {
+               var request_type = msg[1];
+               if (request_type in self._MESSAGE_MAP[MSG_TYPE.ERROR]) {
 
-            // FIXME
+                  self._MESSAGE_MAP[MSG_TYPE.ERROR][msg_type](msg);
 
-         } else if (msg_type === MSG_TYPE.ERROR) {
+               } else {
 
-            // FIXME
-            var request_type = msg[1];
-
-            if (request_type === MSG_TYPE.PUBLISH) {
-
-               self._process_PUBLISH_ERROR(msg);
-
-            } else if (request_type === MSG_TYPE.SUBSCRIBE) {
-               
-               self._process_SUBSCRIBE_ERROR(msg);
-
-            } else if (request_type === MSG_TYPE.UNSUBSCRIBE) {
-               
-               self._process_UNSUBSCRIBE_ERROR(msg);
-
-            } else if (request_type === MSG_TYPE.REGISTER) {
-               
-               self._process_REGISTER_ERROR(msg);
-
-            } else if (request_type === MSG_TYPE.UNREGISTER) {
-               
-               self._process_UNREGISTER_ERROR(msg);
-
-            } else if (request_type === MSG_TYPE.CALL) {
-               
-               self._process_CALL_ERROR(msg);
+                  self._protocol_violation("unexpected ERROR message with request_type " + request_type);
+               }
 
             } else {
 
-               self._protocol_violation("unexpected ERROR");
+               if (msg_type in self._MESSAGE_MAP) {
+
+                  self._MESSAGE_MAP[msg_type](msg);
+
+               } else {
+
+                  self._protocol_violation("unexpected message type " + msg_type);
+               }
             }
-
-         } else if (msg_type === MSG_TYPE.SUBSCRIBED) {
-
-            self._process_SUBSCRIBED(msg);
-
-         } else if (msg_type === MSG_TYPE.UNSUBSCRIBED) {
-
-            self._process_UNSUBSCRIBED(msg);
-
-         } else if (msg_type === MSG_TYPE.PUBLISHED) {
-
-            self._process_PUBLISHED(msg);
-
-         } else if (msg_type === MSG_TYPE.EVENT) {
-
-            self._process_EVENT(msg);
-
-         } else if (msg_type === MSG_TYPE.REGISTERED) {
-
-            self._process_REGISTERED(msg);
-
-         } else if (msg_type === MSG_TYPE.UNREGISTERED) {
-
-            self._process_UNREGISTERED(msg);
-
-         } else if (msg_type === MSG_TYPE.RESULT) {
-
-            self._process_RESULT(msg);
-
-         } else if (msg_type === MSG_TYPE.INVOCATION) {
-
-            self._process_INVOCATION(msg);
-
-         } else if (msg_type === MSG_TYPE.INTERRUPT) {
-
-            // FIXME
-
-         } else {
-
-
-            console.log("not implemented", msg_type);
          }
       }
    };
