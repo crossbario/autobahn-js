@@ -12,19 +12,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/*
-   npm install websocket
-   npm install when
-   npm install -g browserify
+var WebSocket = function (url, protocols) {
 
-   http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html
-   http://addyosmani.com/writing-modular-js/
- */
+   if ('window' in global) {
 
-var _WebSocket = function (browser, url, protocols) {
-
-   //if (typeof module !== 'undefined' && this.module !== module) {
-   if (browser) {
+      //
+      // running in browser
+      //
 
       if ("WebSocket" in window) {
          // Chrome, MSIE, newer Firefox
@@ -45,6 +39,10 @@ var _WebSocket = function (browser, url, protocols) {
       }
 
    } else {
+
+      //
+      // running on nodejs
+      //
 
       // our WebSocket shim with W3C API
       var websocket = {};
@@ -174,4 +172,4 @@ var _WebSocket = function (browser, url, protocols) {
 };
 
 
-exports.WebSocket = _WebSocket;
+exports.WebSocket = WebSocket;

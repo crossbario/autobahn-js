@@ -7,9 +7,16 @@
       </p>
       <script src="autobahn.bundle.js"></script>
       <script>
+         var transport = new autobahn.Transport();
+         //transport.add(new autobahn.WebSocket('ws://127.0.0.1:9000/', ['wamp.2.json']));
+
          var session = new autobahn.Session();
 
-         session.onopen = function () {
+         session.onconnect = function () {
+            this.join("realm1");
+         }
+
+         session.onjoin = function () {
             // WAMP session established
 
             function utcnow() {
@@ -18,7 +25,7 @@
                return now.toISOString();
             }
 
-            if (true) {
+            if (false) {
                this.register(utcnow, 'com.timeservice.now').then(
                   function (registration) {
                      console.log("Registered!", registration.id);
@@ -33,7 +40,7 @@
                console.log("Got event:", i);
             }
 
-            if (true) {
+            if (false) {
                this.subscribe(onevent, 'com.myapp.topic1').then(
                   function (subscription) {
                      console.log("Subscribed!", subscription.id);
@@ -44,10 +51,11 @@
                );
             }
 
-            if (false) {
+            if (true) {
                this.call('com.timeservice.now').then(
                   function (now) {
                      document.getElementById("now").innerHTML = now;
+                     session.leave();
                   },
                   function (error) {
                      console.log("RPC Error:", error);
@@ -56,13 +64,18 @@
             }
          };
 
-         session.onclose = function () {
-            // WAMP session closed
+         session.onleave = function () {
+            console.log("WAMP session closed");
+            this.disconnect();
          };
 
-         var transport = autobahn.WebSocket(true, 'ws://127.0.0.1:9000/', ['wamp.2.json']);
+         session.ondisconnect = function () {
+            console.log("transport closed");
+         };
 
-         session.connect(transport);
+         var transport1 = autobahn.WebSocket('ws://127.0.0.1:9000/', ['wamp.2.json']);
+
+         session.connect(transport1);
       </script>
    </body>
 </html>

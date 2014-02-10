@@ -2,7 +2,11 @@ var autobahn = require('./autobahn.js');
 
 var session = new autobahn.Session();
 
-session.onopen = function () {
+session.onconnect = function () {
+   this.join("realm1");
+};
+
+session.onjoin = function () {
    // WAMP session established
 
    function utcnow() {
@@ -11,7 +15,7 @@ session.onopen = function () {
       return now.toISOString();
    }
 
-   if (false) {
+   if (true) {
       this.register(utcnow, 'com.timeservice.now').then(
          function (registration) {
             console.log("Registered!", registration.id);
@@ -37,7 +41,7 @@ session.onopen = function () {
       );
    }
 
-   if (true) {
+   if (false) {
       this.call('com.timeservice.now').then(
          function (now) {
             console.log("Current time: ", now);
@@ -51,49 +55,14 @@ session.onopen = function () {
    }
 };
 
-session.onclose = function () {
-   // WAMP session closed
+session.onleave = function () {
+   console.log("WAMP session closed");
+   this.disconnect();
 };
 
-var transport = autobahn.WebSocket(false, 'ws://127.0.0.1:9000/', ['wamp.2.json']);
+session.ondisconnect = function () {
+   console.log("transport closed");
+};
+
+var transport = autobahn.WebSocket('ws://127.0.0.1:9000/', ['wamp.2.json']);
 session.connect(transport);
-
-
-
-/*
-function main (session) {
-
-   session.call('com.myapp.time').then(...)
-
-   session.publish('com.myapp.topic1', [1, 2, 'hello'], null, {acknowledge: true});
-
-   session.publish({topic: 'com.myapp.topic1', acknowledge: true}, 'hello');
-   session.publish({topic: 'com.myapp.topic1', acknowledge: true}, [1, 2, 'hello']);
-
-   session.publish('com.myapp.topic1', {acknowledge: true}, [1, 2, 'hello']);
-}
-
-var transport = autobahn.FallbackTransport({appname: 'com.myapp.ultimate'});
-
-transport.add(new autobahn.WebSocket(false, 'ws://127.0.0.1:9000/', ['wamp.2.json']), {retries: 5});
-transport.add(new autobahn.LongPoll(), {retries: 3});
-transport.add(new autobahn.Alert({redirect: 'http://fallback.com/myapp'});
-
-transport.onopen = function (session) {
-   main(session);
-};
-
-transport.onretry = function (retry) {
-   next();
-};
-
-transport.onclose = function (why) {
-
-};
-
-transport.open({username: 'joe'});
-
-transport.next();
-
-transport.close();
-*/

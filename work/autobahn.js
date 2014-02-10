@@ -15,6 +15,8 @@
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var peer = require('./peer.js');
+var transport = require('./transport.js');
+
 
 function connect (options) {
 
@@ -32,15 +34,17 @@ function connect (options) {
 function launch (config, onopen, onclose) {
    var self = this;
    var debug = config.debug;
-
 }
 
 exports.version = '?.?.?';
 
 exports.WebSocket = websocket.WebSocket;
 
-exports.Session = session.Session;
+exports.Transport = transport.Transport;
 
+exports.Session = session.Session;
+exports.Result = session.Result;
+exports.Error = session.Error;
 exports.Subscription = session.Subscription;
 exports.Registration = session.Registration;
 exports.Publication = session.Publication;

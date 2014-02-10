@@ -21,6 +21,25 @@ function newid() {
 }
 
 
+var Result = function (args, kwargs) {
+
+   var self = this;
+
+   self.args = args || [];
+   self.kwargs = kwargs || {};
+}
+
+
+var Error = function (error, args, kwargs) {
+
+   var self = this;
+
+   self.error = error;
+   self.args = args || [];
+   self.kwargs = kwargs || {};
+}
+
+
 var Subscription = function (session, id) {
 
    var self = this;
@@ -64,9 +83,12 @@ var Publication = function (id) {
 
 var MSG_TYPE = {
    HELLO: 1,
-   GOODBYE: 2,
-   HEARTBEAT: 3,
-   ERROR: 4,
+   WELCOME: 2,
+   CHALLENGE: 3,
+   AUTHENTICATE: 4,
+   GOODBYE: 5,
+   HEARTBEAT: 6,
+   ERROR: 7,
    PUBLISH: 16,
    PUBLISHED: 17,
    SUBSCRIBE: 32,
@@ -99,11 +121,14 @@ WAMP_FEATURES = {
 var Session = function (options) {
 
    var self = this;
+
+   // the transport connection (WebSocket object)
    self._socket = null;
 
-   self._my_session_id = null;
-   self._peer_session_id = null;
+   // the WAMP session ID
+   self._session_id = null;
 
+   // 
    self._goodbye_sent = false;
    self._transport_is_closing = false;
 
@@ -123,8 +148,6 @@ var Session = function (options) {
 
    // incoming invocations;
    self._invocations = {};
-
-   self.onopen = null;
 };
 
 
@@ -474,18 +497,20 @@ Session.prototype.connect = function (transport) {
       // process RESULT reply to CALL
       //
       var request = msg[1];
-      var details = msg[2];
-
-      var result = null;
-      if (msg.length > 3) {
-         if (msg.length > 4 || msg[3].length > 1) {
-            // complex result
-         } else {
-            result = msg[3][0];
-         }
-      }
-
       if (request in self._call_reqs) {
+
+         var details = msg[2];
+
+         var result = null;
+         if (msg.length > 3) {
+            if (msg.length > 4 || msg[3].length > 1) {
+               // wrap complex result
+               result = new Result(msg[3], msg[4]);
+            } else {
+               // single positional result
+               result = msg[3][0];
+            }
+         }
 
          var r = self._call_reqs[request];
 
@@ -495,6 +520,9 @@ Session.prototype.connect = function (transport) {
          d.resolve(result);
 
          delete self._call_reqs[request];
+
+      } else {
+         self._protocol_violation("CALL-RESULT received for non-pending request ID " + request);
       }
    };
    self._MESSAGE_MAP[MSG_TYPE.RESULT] = self._process_RESULT;
@@ -505,14 +533,10 @@ Session.prototype.connect = function (transport) {
       // process ERROR reply to CALL
       //
       var request = msg[2];
-      var details = msg[3];
-      var error = msg[4];
-
-      // optional
-      var args = msg[5];
-      var kwargs = msg[6];
-
       if (request in self._call_reqs) {
+
+         var details = msg[3];
+         var error = new Error(msg[4], msg[5], msg[6]);
 
          var r = self._call_reqs[request];
 
@@ -578,28 +602,40 @@ Session.prototype.connect = function (transport) {
 
       // WAMP session handshake not yet finished
       //
-      if (!self._peer_session_id) {
+      if (!self._session_id) {
 
-         // the first message must be HELLO ..
+         // the first message must be WELCOME ..
          //
-         if (msg_type === MSG_TYPE.HELLO) {
+         if (msg_type === MSG_TYPE.WELCOME) {
 
-            self._peer_session_id = msg[1];
-            if (self.onopen) {
-               self.onopen();
+            self._session_id = msg[1];
+            if (self.onjoin) {
+               self.onjoin(msg[2]);
             }
 
          } else {
-            self._protocol_violation("received non-HELLO message when session is not yet established");
+            self._protocol_violation("received non-WELCOME message when session is not yet established");
          }
 
       // WAMP session handshake finished
       //
       } else {
 
-         if (msg_type === MSG_TYPE.HELLO) {
+         if (msg_type === MSG_TYPE.WELCOME) {
 
-            self._protocol_violation("received HELLO when session is already established");
+            self._protocol_violation("received WELCOME when session is already established");
+
+         } else if (msg_type === MSG_TYPE.GOODBYE) {
+
+            if (!self._goodbye_sent) {
+
+               var msg = [MSG_TYPE.GOODBYE, "wamp.close.normal", {}];
+               self._send_wamp(msg);
+            }
+            self._session_id = null;
+            if (self.onleave) {
+               self.onleave();
+            }
 
          } else {
 
@@ -632,21 +668,68 @@ Session.prototype.connect = function (transport) {
 
 
    self._socket.onopen = function () {
-      // send WAMP HELLO message to begin WAMP opening handshake
-      //
-      self._my_session_id = newid();
-      var msg = [MSG_TYPE.HELLO, self._my_session_id, WAMP_FEATURES];
-      self._send_wamp(msg);
+      if (self.onconnect) {
+         self.onconnect();
+      }
    };
 
 
    self._socket.onclose = function (evt) {
-      console.log(evt.reason);
+      //console.log(evt.code, evt.reason);
+      if (self.ondisconnect) {
+         self.ondisconnect();
+      }
    };
 };
 
 
-Session.prototype.xcall = function (procedure, pargs, kwargs, options) {
+Session.prototype.disconnect = function () {
+
+   var self = this;
+
+   self._socket.close(1000);
+};
+
+
+Session.prototype.join = function (realm) {
+
+   var self = this;
+
+   if (self._session_id) {
+      throw "session already established";
+   }
+
+   self._goodbye_sent = false;
+
+   var msg = [MSG_TYPE.HELLO, realm, WAMP_FEATURES];
+   self._send_wamp(msg);
+};
+
+
+Session.prototype.leave = function (reason, message) {
+
+   var self = this;
+
+   if (!self._session_id) {
+      throw "no session currently established";
+   }
+
+   if (!reason) {
+      reason = "wamp.close.normal";
+   }
+
+   var details = {};
+   if (message) {
+      details.message = message;
+   }
+
+   var msg = [MSG_TYPE.GOODBYE, reason, details];
+   self._send_wamp(msg);
+   self._goodbye_sent = true;
+};
+
+
+Session.prototype.call = function (procedure, pargs, kwargs, options) {
    var self = this;
 
    // create and remember new CALL request
@@ -679,7 +762,8 @@ Session.prototype.xcall = function (procedure, pargs, kwargs, options) {
 };
 
 
-Session.prototype.call = function () {
+// old WAMP call
+Session.prototype.call1 = function () {
 
    var self = this;
    var procedure = arguments[0];
@@ -693,7 +777,7 @@ Session.prototype.call = function () {
 };
 
 
-Session.prototype.xpublish = function (topic, pargs, kwargs, options) {
+Session.prototype.publish = function (topic, pargs, kwargs, options) {
    var self = this;
 
    var ack = options && options.acknowledge;
@@ -733,7 +817,8 @@ Session.prototype.xpublish = function (topic, pargs, kwargs, options) {
 };
 
 
-Session.prototype.publish = function (topic, payload, options) {
+// old WAMP publish
+Session.prototype.publish1 = function (topic, payload, options) {
    return this.xpublish(topic, [payload], {}, options);
 };
 
@@ -843,6 +928,8 @@ Session.prototype._unregister = function (registration) {
 
 
 exports.Session = Session;
+exports.Result = Result;
+exports.Error = Error;
 exports.Subscription = Subscription;
 exports.Registration = Registration;
 exports.Publication = Publication;

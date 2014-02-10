@@ -1,3 +1,6 @@
+##   http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html
+##   http://addyosmani.com/writing-modular-js/
+
 all: bundle
 
 bundle:
@@ -10,3 +13,4 @@ install:
 	npm install websocket
 	npm install ws
 	npm install when
+	npm install browserify
