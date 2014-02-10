@@ -7,7 +7,8 @@ bundle:
 	browserify autobahn.js --standalone autobahn -o autobahn.bundle.js
 
 test:
-	node timeservice.js
+	node timeservice2.js
+#	node timeservice.js
 
 install:
 	npm install websocket

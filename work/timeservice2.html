@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <h1>AutobahnJS Timeservice RPC Client</h1>
+      <p>
+         Current time from Timeservice: <span id="now"></span>
+      </p>
+      <script src="autobahn.bundle.js"></script>
+      <script>
+         var transport = new autobahn.Transport();
+         transport.add(new autobahn.WebSocket('ws://127.0.0.1:9000/'));
+         transport.add(new autobahn.LongPoll('http://127.0.0.1:8080/wamp'));
+
+         transport.onopen = function (session) {
+
+            console.log("dsdfsdfs");
+
+            function utcnow() {
+               console.log("Someone is calling me;)");
+               now = new Date();
+               return now.toISOString();
+            }
+
+            if (false) {
+               session.register(utcnow, 'com.timeservice.now').then(
+                  function (registration) {
+                     console.log("Registered!", registration.id);
+                  },
+                  function (error) {
+                     console.log("Registration failed!", error);
+                  }
+               );
+            }
+
+            function onevent(i) {
+               console.log("Got event:", i);
+            }
+
+            if (false) {
+               session.subscribe(onevent, 'com.myapp.topic1').then(
+                  function (subscription) {
+                     console.log("Subscribed!", subscription.id);
+                  },
+                  function (error) {
+                     console.log("Subscription failed!", error);
+                  }
+               );
+            }
+
+            if (true) {
+               session.call('com.timeservice.now').then(
+                  function (now) {
+                     document.getElementById("now").innerHTML = now;
+                     session.leave();
+                  },
+                  function (error) {
+                     console.log("RPC Error:", error);
+                  }
+               );
+            }
+         };
+
+         transport.onclose = function (why) {
+
+         }
+
+         transport.open({realm: 'realm1'});
+      </script>
+   </body>
+</html>

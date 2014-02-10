@@ -11,23 +11,64 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var session = require('./session.js');
+var websocket = require('./websocket.js');
 
-var Transport = function () {
+var Connection = function (options) {
 
    var self = this;
 
-   self._transports = [];
+   self._options = options;
+   self._websocket = new websocket.WebSocket(self._options.url, ['wamp.2.json']);
 };
 
 
-Transport.prototype.add = function (transport, options) {
+Connection.prototype.add = function (transport, options) {
    var self = this;
 
    self._transports.push({transport: transport, options: options});
 };
 
+Connection.prototype.open = function (options) {
 
-exports.Transport = Transport;
+   var self = this;
+
+   var _session = new session.Session(self._websocket.create(), {});
+
+   _session.onconnect = function () {
+      console.log("1");
+      _session.join(self._options.realm);
+   };
+
+   _session.onjoin = function () {
+      console.log("2");
+      if (self.onopen) {
+         self.onopen(_session);
+      }
+   };
+
+   _session.onleave = function () {
+      console.log("dfsd");
+      this.disconnect();
+   }
+
+   _session.ondisconnect = function () {
+      console.log("transport closed");
+      if (self.onclose) {
+         self.onclose();
+      }
+   };
+
+   //console.log(self._transports[0]);
+
+   //_session.connect(self._transports[0].transport.create());
+   //_session.connect(self._websocket.create());
+
+   console.log("5");
+};
+
+
+exports.Connection = Connection;
 
 
 /*
@@ -58,10 +99,9 @@ transport.onretry = function (retry) {
 };
 
 transport.onclose = function (why) {
-
 };
 
-transport.open({username: 'joe'});
+transport.open({realm: 'realm1'});
 
 transport.next();
 

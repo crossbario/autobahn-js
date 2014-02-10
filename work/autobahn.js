@@ -14,8 +14,9 @@
 
 var session = require('./session.js');
 var websocket = require('./websocket.js');
+var longpoll = require('./longpoll.js');
 var peer = require('./peer.js');
-var transport = require('./transport.js');
+var connection = require('./connection.js');
 
 
 function connect (options) {
@@ -31,16 +32,44 @@ function connect (options) {
 
 }
 
-function launch (config, onopen, onclose) {
+function launch (options, onopen, onclose) {
    var self = this;
    var debug = config.debug;
+}
+
+function test () {
+
+   ab.launch(
+      {
+         url: {
+            websocket: "ws://127.0.0.1:9000/ws",
+            longpoll: "http://127.0.0.1/wamp",
+         },
+         realm: 'realm1'
+      },
+      function (session) {
+
+      },
+      function (code, reason, detail) {
+
+      }
+   );
+
+   transport.onopen = function (session) {
+
+   };
+
+   transport.onretry = function (retry) {
+      retry();
+      next();
+   }
 }
 
 exports.version = '?.?.?';
 
 exports.WebSocket = websocket.WebSocket;
 
-exports.Transport = transport.Transport;
+exports.Connection = connection.Connection;
 
 exports.Session = session.Session;
 exports.Result = session.Result;
@@ -48,3 +77,4 @@ exports.Error = session.Error;
 exports.Subscription = session.Subscription;
 exports.Registration = session.Registration;
 exports.Publication = session.Publication;
+exports.LongPoll = longpoll.LongPoll;

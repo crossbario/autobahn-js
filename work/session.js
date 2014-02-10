@@ -118,12 +118,12 @@ WAMP_FEATURES = {
 };
 
 
-var Session = function (options) {
+var Session = function (socket, options) {
 
    var self = this;
 
    // the transport connection (WebSocket object)
-   self._socket = null;
+   self._socket = socket;
 
    // the WAMP session ID
    self._session_id = null;
@@ -148,13 +148,6 @@ var Session = function (options) {
 
    // incoming invocations;
    self._invocations = {};
-};
-
-
-Session.prototype.connect = function (transport) {
-
-   var self = this;
-   self._socket = transport;
 
 
    self._send_wamp = function (msg) {
@@ -680,6 +673,7 @@ Session.prototype.connect = function (transport) {
          self.ondisconnect();
       }
    };
+
 };
 
 
