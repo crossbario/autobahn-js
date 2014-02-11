@@ -1,4 +1,4 @@
-var autobahn = require('./autobahn.js');
+var autobahn = require('./../index.js');  
 
 var connection = new autobahn.Connection({
    url: 'ws://127.0.0.1:9000/',
