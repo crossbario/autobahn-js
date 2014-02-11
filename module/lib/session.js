@@ -13,12 +13,22 @@
 
 
 var when = require('when');
+var when_fn = require("when/function");
 var websocket = require('./websocket.js');
 
 
 function newid() {
    return Math.floor(Math.random() * 9007199254740992);
 }
+
+
+var CallDetails = function (caller, progress) {
+
+   var self = this;
+
+   self.caller = caller;
+   self.progress = progress;
+};
 
 
 var Result = function (args, kwargs) {
@@ -551,51 +561,86 @@ var Session = function (socket, options) {
       //
       // process INVOCATION message
       //
+      // [INVOCATION, Request|id, REGISTERED.Registration|id, Details|dict, CALL.Arguments|list, CALL.ArgumentsKw|dict]
+      //
       var request = msg[1];
       var registration = msg[2];
+
       var details = msg[3];
+      // receive_progress
+      // timeout
+      // caller
 
       if (registration in self._registrations) {
 
-         var fn = self._registrations[registration];
+         var fun = self._registrations[registration];
 
-         try {
+         var args = msg[4] || [];
+         var kwargs = msg[5] || {};
 
-            // FIXME: asynch functions
+         // create progress function for invocation
+         //
+         var progress = null;
+         if (details.receive_progress) {
 
-            //var res = fn.apply(this, msg[4]);
-            var args = msg[4] || [];
-            var kwargs = msg[5] || {};
-            var res = fn.call(this, args, kwargs, details);
+            progress = function (args, kwargs) {
+               var progress_msg = [MSG_TYPE.YIELD, request, {progress: true}];
 
-            // construct YIELD message
-            //
-            var reply = [MSG_TYPE.YIELD, request];
-            if (false) {
-               //msg.push(options); // FIXME
-            } else {
-               reply.push({});
-            }
+               args = args || [];
+               kwargs = kwargs || {};
 
-            if (res instanceof Result) {
-               var kwargs_len = Object.keys(res.kwargs).length;
-               if (res.args.length || kwargs_len) {
-                  reply.push(res.args);
+               var kwargs_len = Object.keys(kwargs).length;
+               if (args.length || kwargs_len) {
+                  progress_msg.push(args);
                   if (kwargs_len) {
-                     reply.push(res.kwargs);
+                     progress_msg.push(kwargs);
                   }
                }
-            } else {
-               reply.push([res]);
+               self._send_wamp(progress_msg);
             }
+         };
 
-            // send WAMP message
-            //
-            self._send_wamp(reply);
+         var cd = new CallDetails(details.caller, progress);
 
-         } catch (e) {
-            console.log("Exception raised in procedure endpoint", e);
-         }
+         when_fn.call(fun, args, kwargs, cd).then(
+
+            function (res) {
+               // construct YIELD message
+               //
+               var reply = [MSG_TYPE.YIELD, request];
+               if (false) {
+                  //msg.push(options); // FIXME
+               } else {
+                  reply.push({});
+               }
+
+               if (res instanceof Result) {
+                  var kwargs_len = Object.keys(res.kwargs).length;
+                  if (res.args.length || kwargs_len) {
+                     reply.push(res.args);
+                     if (kwargs_len) {
+                        reply.push(res.kwargs);
+                     }
+                  }
+               } else {
+                  reply.push([res]);
+               }
+
+               // send WAMP message
+               //
+               self._send_wamp(reply);
+            },
+
+            function (err) {
+               // construct ERROR message
+               // [ERROR, REQUEST.Type|int, REQUEST.Request|id, Details|dict, Error|uri, Arguments|list, ArgumentsKw|dict]
+               var reply = [MSG_TYPE.ERROR, MSG_TYPE.INVOCATION, request, {}, "wamp.error"];
+
+               // send WAMP message
+               //
+               self._send_wamp(reply);
+            }
+         );
 
       } else {
          self._protocol_violation("INVOCATION received for non-registered registration ID " + request);
