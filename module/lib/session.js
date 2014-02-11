@@ -561,17 +561,33 @@ var Session = function (socket, options) {
 
          try {
 
-            var res = fn.apply(this, msg[4]);
+            // FIXME: asynch functions
+
+            //var res = fn.apply(this, msg[4]);
+            var args = msg[4] || [];
+            var kwargs = msg[5] || {};
+            var res = fn.call(this, args, kwargs, details);
 
             // construct YIELD message
             //
             var reply = [MSG_TYPE.YIELD, request];
             if (false) {
-               //msg.push(options);
+               //msg.push(options); // FIXME
             } else {
                reply.push({});
             }
-            reply.push([res]);
+
+            if (res instanceof Result) {
+               var kwargs_len = Object.keys(res.kwargs).length;
+               if (res.args.length || kwargs_len) {
+                  reply.push(res.args);
+                  if (kwargs_len) {
+                     reply.push(res.kwargs);
+                  }
+               }
+            } else {
+               reply.push([res]);
+            }
 
             // send WAMP message
             //

@@ -15,6 +15,7 @@
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var connection = require('./connection.js');
+var when = require('when');
 
 exports.version = '?.?.?';
 
@@ -28,3 +29,4 @@ exports.Error = session.Error;
 exports.Subscription = session.Subscription;
 exports.Registration = session.Registration;
 exports.Publication = session.Publication;
+exports.when = when;
