@@ -27,7 +27,7 @@ var Result = function (args, kwargs) {
 
    self.args = args || [];
    self.kwargs = kwargs || {};
-}
+};
 
 
 var Error = function (error, args, kwargs) {
@@ -37,7 +37,7 @@ var Error = function (error, args, kwargs) {
    self.error = error;
    self.args = args || [];
    self.kwargs = kwargs || {};
-}
+};
 
 
 var Subscription = function (session, id) {
@@ -622,8 +622,8 @@ var Session = function (socket, options) {
 
             if (!self._goodbye_sent) {
 
-               var msg = [MSG_TYPE.GOODBYE, "wamp.close.normal", {}];
-               self._send_wamp(msg);
+               var reply = [MSG_TYPE.GOODBYE, "wamp.close.normal", {}];
+               self._send_wamp(reply);
             }
             self._session_id = null;
             if (self.onleave) {
@@ -813,7 +813,7 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
 
 // old WAMP publish
 Session.prototype.publish1 = function (topic, payload, options) {
-   return this.xpublish(topic, [payload], {}, options);
+   return this.publish(topic, [payload], {}, options);
 };
 
 

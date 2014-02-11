@@ -14,56 +14,7 @@
 
 var session = require('./session.js');
 var websocket = require('./websocket.js');
-var longpoll = require('./longpoll.js');
-var peer = require('./peer.js');
 var connection = require('./connection.js');
-
-
-function connect (options) {
-
-   var _peer = new peer.Peer(options);
-   _peer.onconnect = function () {
-
-   };
-
-   _peer.onhangup = function () {
-
-   };
-
-}
-
-function launch (options, onopen, onclose) {
-   var self = this;
-   var debug = config.debug;
-}
-
-function test () {
-
-   ab.launch(
-      {
-         url: {
-            websocket: "ws://127.0.0.1:9000/ws",
-            longpoll: "http://127.0.0.1/wamp",
-         },
-         realm: 'realm1'
-      },
-      function (session) {
-
-      },
-      function (code, reason, detail) {
-
-      }
-   );
-
-   transport.onopen = function (session) {
-
-   };
-
-   transport.onretry = function (retry) {
-      retry();
-      next();
-   }
-}
 
 exports.version = '?.?.?';
 
@@ -77,4 +28,3 @@ exports.Error = session.Error;
 exports.Subscription = session.Subscription;
 exports.Registration = session.Registration;
 exports.Publication = session.Publication;
-exports.LongPoll = longpoll.LongPoll;

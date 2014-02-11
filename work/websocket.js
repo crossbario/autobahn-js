@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-var _WebSocket = function (url, protocols) {
+var RawWebSocket = function (url, protocols) {
 
    if ('window' in global) {
 
@@ -172,17 +172,16 @@ var _WebSocket = function (url, protocols) {
 };
 
 
-var WebSocket = function (url, options) {
+var _WebSocket = function (url, options) {
    var self = this;
    self._url = url;
    self._options = options;
 };
 
 
-WebSocket.prototype.create = function () {
-   console.log("WebSocket.prototype.create");
+_WebSocket.prototype.create = function () {
    var self = this;
-   return new _WebSocket(self._url, ['wamp.2.json']);
+   return new RawWebSocket(self._url, ['wamp.2.json']);
 };
 
-exports.WebSocket = WebSocket;
+exports.WebSocket = _WebSocket;

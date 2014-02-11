@@ -7,31 +7,22 @@
       </p>
       <script src="autobahn.bundle.js"></script>
       <script>
-         var connection = new autobahn.Connection(
-            {
-               url: 'ws://127.0.0.1:9000/'
-            }
+         var connection = new autobahn.Connection({
+            url: 'ws://127.0.0.1:9000/',
+            realm: 'realm1'}
          );
 
          connection.onopen = function (session) {
 
             session.call('com.timeservice.now').then(
                function (now) {
-                  document.getElementById("now").innerHTML = now;
-                  //session.leave();
-               },
-               function (error) {
-                  console.log("RPC Error:", error);
+                  console.log("Current time: " + now);
+                  session.leave();
                }
             );
          };
 
-         connection.onclose = function (why) {
-            console.log("...", why);
-
-         }
-
-         connection.open({realm: 'realm1'});
+         connection.open();
       </script>
    </body>
 </html>
