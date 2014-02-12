@@ -1,4 +1,10 @@
-# AutobahnJS: Changelog
+# AutobahnJS - Change Log
+
+## v0.9.0
+ * complete new implementation with WAMP v2 only support
+
+
+----------
 
 ## v0.8.2
  * compatibility with Web workers
@@ -43,4 +49,3 @@ Not released.
  * update bundled [whenjs](https://github.com/cujojs/when) to v1.8.1
  * update bundled [CryptoJS](http://code.google.com/p/crypto-js/) to v3.1.2
  * faster ID generation for tracking RPCs
- 

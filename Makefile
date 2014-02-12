@@ -11,6 +11,8 @@ clean:
 	rm -rf ./build
 
 build:
+	mkdir -p build
+	browserify package/lib/autobahn.js --standalone autobahn -o build/autobahn.js
 	scons
 
 publish: clean build

@@ -1,6 +1,6 @@
 ###############################################################################
 ##
-##  Copyright 2012-2013 Tavendo GmbH
+##  Copyright 2012-2014 Tavendo GmbH
 ##
 ##  Licensed under the Apache License, Version 2.0 (the "License");
 ##  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 ###############################################################################
 
 import os
+import json
 import pkg_resources
 
 taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
@@ -25,52 +26,24 @@ env = Environment(tools = ['default', 'taschenmesser'],
                   toolpath = [taschenmesser],
                   ENV = os.environ)
 
-
-env['JS_DEFINES' ] = {
-   'AUTOBAHNJS_VERSION': "'%s'" % open('version.txt').read().strip()
+## Get package version
+##
+#version = json.load(open('package/package.json'))['version']
+env['JS_DEFINES'] = {
+#   'AUTOBAHNJS_VERSION': "'%s'" % version
 }
 
-sources = ["autobahn/license.js",
-           "autobahn/loadershim.js",
-           "autobahn/normalizeconsole.js",
-           "when/when.js",
-           "cryptojs/components/core.js",
-           "cryptojs/components/enc-base64.js",
-           "cryptojs/components/hmac.js",
-           "cryptojs/components/sha256.js",
-           "cryptojs/components/pbkdf2.js",
-           "autobahn/autobahn.js",
-           "autobahn/useragent.js"]
-
-# NONE | WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS
-
-## FIXME: Closure Compiler has no mode NONE. We simulate that by dumb file
-## concatenation. However, that does of course not do any var substitutions.
-#env['JS_COMPILATION_LEVEL'] = "NONE"
-ab = env.JavaScript("build/autobahn.js", sources, JS_COMPILATION_LEVEL = "NONE")
-#Depends(ab, 'version.txt')
-
-#env['JS_COMPILATION_LEVEL'] = "SIMPLE_OPTIMIZATIONS"
-ab_min = env.JavaScript("build/autobahn.min.js", sources, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
-ab_min_gz = env.GZip("build/autobahn.min.jgz", ab_min)
-Depends(ab_min, 'version.txt')
-
-## Autobahn for ExtJS
+## Library variants for browser use
 ##
-#sources_extjs = ["autobahnextjs/autobahnextjs.js"]
-#ab_extjs = env.JavaScript("build/autobahnextjs.js", sources_extjs, JS_COMPILATION_LEVEL = "NONE")
-#ab_extjs_min = env.JavaScript("build/autobahnextjs.min.js", sources_extjs, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
-#ab_extjs_min_gz = env.GZip("build/autobahnextjs.min.jgz", ab_extjs_min)
+ab = ["build/autobahn.js"]
+ab_min = env.JavaScript("build/autobahn.min.js", ab, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+ab_min_gz = env.GZip("build/autobahn.min.jgz", ab_min)
 
 ## List of generated artifacts
 ##
 artifacts = [ab,
              ab_min,
-             ab_min_gz,
-             #ab_extjs,
-             #ab_extjs_min,
-             #ab_extjs_min_gz,
-             ]
+             ab_min_gz]
 
 ## Generate checksum files
 ##
@@ -88,7 +61,7 @@ Default(uploads)
 ## Upload to Amazon S3
 ##
 env['S3_BUCKET'] = 'autobahn'
-env['S3_BUCKET_PREFIX'] = 'js/' # note the trailing slash!
+env['S3_BUCKET_PREFIX'] = 'autobahnjs/latest/' # note the trailing slash!
 env['S3_OBJECT_ACL'] = 'public-read'
 
 ## The uploaded stuff is always considered stale

@@ -1,11 +1,14 @@
-An empty [NPM project](https://npmjs.org/package/autobahn) where we will migrate AutobahnJS.
+# AutobahnJS
 
+AutobahnJS implements **[The Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript.
 
-vi ~/.npmrc
+WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe** for applications in *one* protocol running over WebSocket.
 
-email = tobias.oberstein@tavendo.de
+AutobahnJS runs on both **Web browsers** and **Node.js**, and implements the following WAMP roles:
 
-npm adduser
+1. Publisher
+2. Subscriber
+3. Caller
+4. Callee
 
-
-https://www.npmjs.org/package/autobahn
+AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), MIT licensed, and full source code can be found on [GitHub](https://github.com/tavendo/AutobahnJS/).
