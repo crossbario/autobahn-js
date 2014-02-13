@@ -6,15 +6,17 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 
 AutobahnJS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, and implements the following WAMP roles:
 
-1. Publisher
-2. Subscriber
-3. Caller
-4. Callee
+1. Caller
+2. Callee
+3. Publisher
+4. Subscriber
 
 AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and full source code can be found on [GitHub](https://github.com/tavendo/AutobahnJS/).
 
 
 # Show me some code!
+
+Here is how programming with AutobahnJS looks like (identical code runs in browsers and on NodeJS):
 
 ```javascript
 var autobahn = require('autobahn');
@@ -23,23 +25,23 @@ var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'r
 
 connection.onopen = function (session) {
 
-   // call a remote procedure
+   // 1) call a remote procedure
    session.call('com.myapp.add2', [2, 3]).then(
       function (res) {
          console.log("Result:", res);
       }
    );
 
-   // register a procedure for remoting
+   // 2) register a procedure for remoting
    function add2(args) {
       return args[0] + args[1];
    }
    session.register(add2, 'com.myapp.add2');
 
-   // publish an event
+   // 3) publish an event
    session.publish('com.myapp.hello', ['Hello, world!']);
 
-   // subscribe on a topic
+   // 4) subscribe on a topic
    function onevent(args) {
       console.log("Event:", args[0]);
    }
@@ -101,7 +103,7 @@ Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cuj
 
 # Building
 
-To build, you will need
+To build AutobahnJS for use in browsers, you will need
 
   * [Nodejs](http://nodejs.org/)
   * [Google Closure Compiler](http://dl.google.com/closure-compiler/compiler-latest.zip)
