@@ -31,6 +31,15 @@ var CallDetails = function (caller, progress) {
 };
 
 
+var EventDetails = function (publication, publisher) {
+
+   var self = this;
+
+   self.publication = publication;
+   self.publisher = publisher;
+};
+
+
 var Result = function (args, kwargs) {
 
    var self = this;
@@ -352,19 +361,24 @@ var Session = function (socket, options) {
       //
       // process EVENT message
       //
-      var subscription = msg[1];
-      var publication = msg[2];
-      var details = msg[3];
+      // [EVENT, SUBSCRIBED.Subscription|id, PUBLISHED.Publication|id, Details|dict, PUBLISH.Arguments|list, PUBLISH.ArgumentsKw|dict]
 
+      var subscription = msg[1];
 
       if (subscription in self._subscriptions) {
 
-         var fn = self._subscriptions[subscription];
+         var fun = self._subscriptions[subscription];
+
+         var publication = msg[2];
+         var details = msg[3];
+
+         var args = msg[4] || [];
+         var kwargs = msg[5] || {};
+
+         var ed = new EventDetails(publication, details.publisher);
 
          try {
-
-            fn(msg[4][0]);
-
+            fun(args, kwargs, ed);
          } catch (e) {
             console.log("Exception raised in event handler", e);
          }
@@ -520,10 +534,14 @@ var Session = function (socket, options) {
          var d = r[0];
          var options = r[1];
 
-         d.resolve(result);
-
-         delete self._call_reqs[request];
-
+         if (details.progress) {
+            if (options && options.receive_progress) {
+               d.notify(result);
+            }
+         } else {
+            d.resolve(result);
+            delete self._call_reqs[request];
+         }
       } else {
          self._protocol_violation("CALL-RESULT received for non-pending request ID " + request);
       }
@@ -634,7 +652,24 @@ var Session = function (socket, options) {
             function (err) {
                // construct ERROR message
                // [ERROR, REQUEST.Type|int, REQUEST.Request|id, Details|dict, Error|uri, Arguments|list, ArgumentsKw|dict]
-               var reply = [MSG_TYPE.ERROR, MSG_TYPE.INVOCATION, request, {}, "wamp.error"];
+
+               var reply = [MSG_TYPE.ERROR, MSG_TYPE.INVOCATION, request, {}];
+
+               if (err instanceof Error) {
+
+                  reply.push(err.error);
+
+                  var kwargs_len = Object.keys(err.kwargs).length;
+                  if (err.args.length || kwargs_len) {
+                     reply.push(err.args);
+                     if (kwargs_len) {
+                        reply.push(err.kwargs);
+                     }
+                  }
+               } else {
+                  reply.push('wamp.error.runtime_error');
+                  reply.push([err]);
+               }
 
                // send WAMP message
                //
@@ -796,11 +831,7 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
    // construct CALL message
    //
    var msg = [MSG_TYPE.CALL, request];
-   if (options) {
-      msg.push(options);
-   } else {
-      msg.push({});
-   }
+   msg.push(options || {})
    msg.push(procedure);
    if (pargs) {
       msg.push(pargs);
@@ -983,6 +1014,9 @@ Session.prototype._unregister = function (registration) {
 
 
 exports.Session = Session;
+
+exports.CallDetails = CallDetails;
+exports.EventDetails = EventDetails;
 exports.Result = Result;
 exports.Error = Error;
 exports.Subscription = Subscription;

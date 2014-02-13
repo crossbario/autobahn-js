@@ -29,6 +29,8 @@ exports.WebSocket = websocket.WebSocket;
 exports.Connection = connection.Connection;
 
 exports.Session = session.Session;
+exports.CallDetails = session.CallDetails;
+exports.EventDetails = session.EventDetails;
 exports.Result = session.Result;
 exports.Error = session.Error;
 exports.Subscription = session.Subscription;
