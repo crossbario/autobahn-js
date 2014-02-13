@@ -52,7 +52,18 @@ connection.open();
 ```
 
 
-# Get it
+# Getting started
+
+To use AutobahnJS in your application, you need a WAMP v2 compatible **application router**.
+
+The application router is responsible for call and event routing between your application's components. The router itself will not run any application code.
+
+With AutobahnJS, you can program application components in JavaScript, and those components can be hosted in browsers or NodeJS.
+
+WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible router is included with [**Autobahn**|Python](https://github.com/tavendo/AutobahnPython).
+
+You can find complete examples [here](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic).
+
 
 ## NodeJS
 
