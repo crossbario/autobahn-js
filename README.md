@@ -13,21 +13,37 @@ AutobahnJS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, 
 
 AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and full source code can be found on [GitHub](https://github.com/tavendo/AutobahnJS/).
 
+
 # Show me some code!
 
 ```javascript
 var autobahn = require('autobahn');
 
-var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/',realm: 'realm1'});
+var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
 
 connection.onopen = function (session) {
 
-   session.call('com.mathservice.add2', [2, 3]).then(
+   // call a remote procedure
+   session.call('com.myapp.add2', [2, 3]).then(
       function (res) {
          console.log("Result:", res);
-         connection.close();
       }
    );
+
+   // register a procedure for remoting
+   function add2(args) {
+      return args[0] + args[1];
+   }
+   session.register(add2, 'com.myapp.add2');
+
+   // publish an event
+   session.publish('com.myapp.hello', ['Hello, world!']);
+
+   // subscribe on a topic
+   function onevent(args) {
+      console.log("Event:", args[0]);
+   }
+   session.subscribe(onevent, 'com.myapp.hello');
 };
 
 connection.open();
