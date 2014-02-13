@@ -1,6 +1,6 @@
 ###############################################################################
 ##
-##  Copyright 2012-2014 Tavendo GmbH
+##  Copyright (C) 2012-2014 Tavendo GmbH
 ##
 ##  Licensed under the Apache License, Version 2.0 (the "License");
 ##  you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import os
 import json
 import pkg_resources
 
-taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
-#taschenmesser = "../../infrequent/taschenmesser"
+#taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
+taschenmesser = "../../infrequent/taschenmesser"
 env = Environment(tools = ['default', 'taschenmesser'],
                   toolpath = [taschenmesser],
                   ENV = os.environ)
@@ -33,11 +33,27 @@ env['JS_DEFINES'] = {
 #   'AUTOBAHNJS_VERSION': "'%s'" % version
 }
 
-## Library variants for browser use
+## Source for Autobahn package
 ##
-ab = ["build/autobahn.js"]
-ab_min = env.JavaScript("build/autobahn.min.js", ab, JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
-ab_min_gz = env.GZip("build/autobahn.min.jgz", ab_min)
+sourcedir = 'package/lib'
+sources = [os.path.join(sourcedir, d) for d in os.listdir(sourcedir)]
+
+## browserified
+ab = env.Command("build/autobahn.js",
+                 "package/lib/autobahn.js",
+                 "browserify $SOURCE --standalone autobahn -o $TARGET")
+Depends(ab, sources)
+
+## minimized (with Google Closure)
+ab_min = env.JavaScript("build/autobahn.min.js",
+                        ab,
+                        JS_COMPILATION_LEVEL = "ADVANCED_OPTIMIZATIONS")
+                        #JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+
+## minimized & compressed
+ab_min_gz = env.GZip("build/autobahn.min.jgz",
+                     ab_min)
+
 
 ## List of generated artifacts
 ##

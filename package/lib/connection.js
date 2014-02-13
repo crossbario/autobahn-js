@@ -58,42 +58,5 @@ Connection.prototype.close = function () {
    self._websocket.close();
 };
 
+
 exports.Connection = Connection;
-
-
-/*
-function main (session) {
-
-   session.call('com.myapp.time').then(...)
-
-   session.publish('com.myapp.topic1', [1, 2, 'hello'], null, {acknowledge: true});
-
-   session.publish({topic: 'com.myapp.topic1', acknowledge: true}, 'hello');
-   session.publish({topic: 'com.myapp.topic1', acknowledge: true}, [1, 2, 'hello']);
-
-   session.publish('com.myapp.topic1', {acknowledge: true}, [1, 2, 'hello']);
-}
-
-var transport = autobahn.FallbackTransport({appname: 'com.myapp.ultimate'});
-
-transport.add(new autobahn.WebSocket(false, 'ws://127.0.0.1:9000/', ['wamp.2.json']), {retries: 5});
-transport.add(new autobahn.LongPoll(), {retries: 3});
-transport.add(new autobahn.Alert({redirect: 'http://fallback.com/myapp'});
-
-transport.onopen = function (session) {
-   main(session);
-};
-
-transport.onretry = function (retry) {
-   next();
-};
-
-transport.onclose = function (why) {
-};
-
-transport.open({realm: 'realm1'});
-
-transport.next();
-
-transport.close();
-*/
