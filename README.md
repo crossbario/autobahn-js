@@ -105,7 +105,27 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
 # API
 
-## Library Version
+1. [Library](#library)
+    * [Library Version](#library-version)
+2. [Connections](#connections)
+3. [Sessions](#sessions)
+4. [Subscribe](#subscribe)
+    * [Unsubscribing](#unsubscribing)
+5. [Publish](#publish)
+    * [Acknowledgement](#acknowledgement)
+    * [Receiver Black-/Whitelisting](#receiver-black-whitelisting)
+    * [Publisher Exclusion](#publisher-exclusion)
+    * [Publisher Identification](#publisher-identification)
+6. [Register](#register)
+    * [Unregistering](#unregistering)
+7. [Call](#call)
+    * [Errors](#errors)
+    * [Progressive Results](#progressive-results)
+
+
+## Library
+
+### Library Version
 
 **Autobahn**|JS library version is available (read-only):
 
@@ -157,11 +177,11 @@ and
 
 ```javascript
 autobahn.Connection.onclose = function () {
-   // underyling connection to WAMP router closed
+   // underlying connection to WAMP router closed
 };
 ```
 
-A connection is opened:
+To open a connection:
 
 ```javascript
 autobahn.Connection.open();
