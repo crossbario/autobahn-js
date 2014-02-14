@@ -105,11 +105,31 @@ var d = session.publish(<topic>, <args>, <kwargs>, <options>);
 where
 
  1. `<topic>` is the URI of the topic to publish to
- 2. `<args>` is application event payload (list giving the positional arguments)
- 3. `<kwargs>` is application event payload (dictionary giving the keyword arguments)
+ 2. `<args>` is application event payload (a *list* giving the positional arguments)
+ 3. `<kwargs>` is application event payload (a *dictionary* giving the keyword arguments)
  4. `<options>` specifies options for publication.
  
-and returns either nothing or a promise if `options.acknowledge` is set. The latter promise returned will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful. 
+and returns either nothing or a *promise* if `options.acknowledge` is set.
+
+The latter promise returned will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful. 
+
+*Example* Unacknowledged publish.
+
+```javascript
+session.publish('com.myapp.hello', ['Hello, world!']);
+```
+
+*Example* Acknowledged publish.
+
+```javascript
+session.publish('com.myapp.hello', ['Hello, world!']).then(
+   function (publication) {
+      // publish was successful
+   },
+   function (error) {
+      // publish failed
+   };
+```
 
 
 
