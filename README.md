@@ -111,15 +111,86 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
     autobahn.version
 
-## Session ID
 
-A Session's ID is available (read-only):
+## Connections
+
+A new connection is created by
+
+```javascript
+var connection = new autobahn.Connection(<options|dict>);
+```
+
+Here, `options` provides additional connection options:
+
+ 1. `url|string` (required): the WebSocket URL of the WAMP router to connect to
+ 2. `realm|string` (required): the WAMP realm to join 
+
+Example: **Create a connection**
+
+```javascript
+try {
+   // for NodeJS
+   var autobahn = require('autobahn');
+} catch (e) {
+   // for browsers (where AutobahnJS is available globally)
+}
+
+var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
+```
+
+`autobahn.Connection` provides two callbacks:
+
+ * `autobahn.Connection.onopen`
+ * `autobahn.Connection.onclose`
+
+where
+
+```javascript
+autobahn.Connection.onopen = function (session) {
+   // Underlying connection to WAMP router established
+   // and new WAMP session started.
+   // session is an instance of autobahn.Session
+};
+```
+
+and
+
+```javascript
+autobahn.Connection.onclose = function () {
+   // underyling connection to WAMP router closed
+};
+```
+
+A connection is opened:
+
+```javascript
+autobahn.Connection.open();
+```
+
+To close a connection:
+
+```javascript
+autobahn.Connection.close();
+```
+
+
+## Sessions
+
+### Session Open
+
+To check if a session is open (that is, successfully joined to a realm):
+
+    Session.isOpen
+
+### Session ID
+
+A Session's ID is available (read-only) when the session is open:
 
     Session.id
 
-## Session Realm
+### Session Realm
 
-A Session's realm is available (read-only):
+A Session's realm is available (read-only) when the session is open:
 
     Session.realm
 

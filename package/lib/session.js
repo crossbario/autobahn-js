@@ -786,6 +786,13 @@ Session.prototype.disconnect = function () {
 };
 
 
+Object.defineProperty(Session.prototype, "isOpen", {
+   get: function () {
+      return this.id !== null;
+   }
+});
+
+
 Session.prototype.join = function (realm) {
 
    var self = this;
