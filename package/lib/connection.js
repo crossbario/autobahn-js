@@ -24,12 +24,12 @@ var Connection = function (options) {
 };
 
 
-Connection.prototype.open = function (options) {
+Connection.prototype.open = function () {
 
    var self = this;
    self._websocket = self._websocket_factory.create();
 
-   var _session = new session.Session(self._websocket, {});
+   var _session = new session.Session(self._websocket, self._options);
 
    _session.onconnect = function () {
       _session.join(self._options.realm);

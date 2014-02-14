@@ -168,6 +168,11 @@ Here, `options` provides additional connection options:
 
  1. `url|string` (required): the WebSocket URL of the WAMP router to connect to
  2. `realm|string` (required): the WAMP realm to join 
+ 3. `use_es6_promises|bool` (optional): use deferreds based on ES6 promises *
+ 4. `use_deferred|callable` (optional): if provided, use this deferred constructor, e.g. `jQuery.Deferred` or `Q.defer`
+
+> *: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
+> 
 
 Example: **Create a connection**
 
@@ -237,6 +242,14 @@ A Session's ID is available (read-only) when the session is open:
 A Session's realm is available (read-only) when the session is open:
 
     Session.realm
+
+### Deferreds
+
+Create a new Deferred of the same class as used by the library itself:
+
+	Session.defer()
+
+This returns a new deferred, e.g. a whenjs deferred or a deferred based on ES6 promises.
 
 
 ## Subscribe

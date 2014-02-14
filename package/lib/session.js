@@ -175,6 +175,36 @@ var Session = function (socket, options) {
    self._invocations = {};
 
 
+   // deferred factory
+   if (options && options.use_es6_promises && ('Promise' in global)) {
+
+      // ES6-based deferred factory
+      //
+      self.defer = function () {
+         var deferred = {};
+
+         deferred.promise = new Promise(function (resolve, reject) {
+            deferred.resolve = resolve;
+            deferred.reject = reject;
+         });
+
+         return deferred;
+      };
+
+   } else if (options && options.use_deferred) {
+
+      // use explicit deferred factory, e.g. jQuery.Deferred or Q.defer
+      //
+      self.defer = options.use_deferred;
+
+   } else {
+
+      // whenjs-based deferred factory
+      //
+      self.defer = when.defer;
+   }
+
+
    self._send_wamp = function (msg) {
       self._socket.send(JSON.stringify(msg));
    };
@@ -628,6 +658,11 @@ var Session = function (socket, options) {
 
          var cd = new CallDetails(details.caller, progress);
 
+         // We use the following whenjs call wrapper, which automatically
+         // wraps a plain, non-promise value in a (immediately resolved) promise
+         //
+         // See: https://github.com/cujojs/when/blob/master/docs/api.md#fncall
+         //
          when_fn.call(endpoint, args, kwargs, cd).then(
 
             function (res) {
@@ -866,7 +901,7 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
    // create and remember new CALL request
    //
    var request = newid();
-   var d = when.defer();
+   var d = self.defer();
    self._call_reqs[request] = [d, options];
 
    // construct CALL message
@@ -914,7 +949,7 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
    //
    var request = newid();
    if (ack) {
-      d = when.defer();
+      d = self.defer();
       self._publish_reqs[request] = [d, options];
    }
 
@@ -956,7 +991,7 @@ Session.prototype.subscribe = function (handler, topic, options) {
    // create an remember new SUBSCRIBE request
    //
    var request = newid();
-   var d = when.defer();
+   var d = self.defer();
    self._subscribe_reqs[request] = [d, handler, options];
 
    // construct SUBSCRIBE message
@@ -983,7 +1018,7 @@ Session.prototype.register = function (endpoint, procedure, options) {
    // create an remember new REGISTER request
    //
    var request = newid();
-   var d = when.defer();
+   var d = self.defer();
    self._register_reqs[request] = [d, endpoint, options];
 
    // construct REGISTER message
@@ -1014,7 +1049,7 @@ Session.prototype._unsubscribe = function (subscription) {
    // create and remember new UNSUBSCRIBE request
    //
    var request = newid();
-   var d = when.defer();
+   var d = self.defer();
    self._unsubscribe_reqs[request] = [d, subscription];
 
    // construct UNSUBSCRIBE message
@@ -1039,7 +1074,7 @@ Session.prototype._unregister = function (registration) {
    // create and remember new UNREGISTER request
    //
    var request = newid();
-   var d = when.defer();
+   var d = self.defer();
    self._unregister_reqs[request] = [d, registration];
 
    // construct UNREGISTER message
