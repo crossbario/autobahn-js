@@ -1,22 +1,22 @@
-# AutobahnJS
+# **Autobahn**|JS
 
-AutobahnJS implements **[The Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript.
+**Autobahn**|JS implements **[The Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript.
 
 WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe** for applications in *one* protocol running over [WebSocket](http://tools.ietf.org/html/rfc6455).
 
-AutobahnJS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, and implements the following WAMP roles:
+**Autobahn**|JS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, and implements the following WAMP roles:
 
 1. Caller
 2. Callee
 3. Publisher
 4. Subscriber
 
-AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and full source code can be found on [GitHub](https://github.com/tavendo/AutobahnJS/).
+**Autobahn**|JS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and full source code can be found on [GitHub](https://github.com/tavendo/**Autobahn**|JS/).
 
 
 # Show me some code!
 
-Here is how programming with AutobahnJS looks like (identical code runs in browsers and on NodeJS):
+Here is how programming with **Autobahn**|JS looks like (identical code runs in browsers and on NodeJS):
 
 ```javascript
 var autobahn = require('autobahn');
@@ -54,11 +54,11 @@ connection.open();
 
 # Getting started
 
-To use AutobahnJS in your application, you need a WAMP v2 compatible **application router**.
+To use **Autobahn**|JS in your application, you need a WAMP v2 compatible **application router**.
 
 The application router is responsible for call and event routing between your application's components. The router itself will not run any application code.
 
-With AutobahnJS, you can program application components in JavaScript, and those components can be hosted in browsers or NodeJS.
+With **Autobahn**|JS, you can program application components in JavaScript, and those components can be hosted in browsers or NodeJS.
 
 WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible router is included with [**Autobahn**|Python](https://github.com/tavendo/AutobahnPython).
 
@@ -67,7 +67,7 @@ You can find complete examples [here](https://github.com/tavendo/AutobahnPython/
 
 ## NodeJS
 
-You can get AutobahnJS for NodeJS using the Node Package Manager:
+You can get **Autobahn**|JS for NodeJS using the Node Package Manager:
 
 	npm install autobahn
 
@@ -77,11 +77,11 @@ and then, in your code
 
 ## Browsers
 
-You can get the **latest** (= WAMPv2 only) prebuilt AutobahnJS release from here:
+You can get the **latest** (= WAMPv2 only) prebuilt **Autobahn**|JS release from here:
 
-  1. [Production (minimized and gzipped)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
-  2. [Production (only minimized)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
-  3. [Development](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
+  1. [Production (minimized and gzipped)](https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.min.jgz)
+  2. [Production (only minimized)](https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.min.js)
+  3. [Development](https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.js)
 
 and use in your HTML
 
@@ -89,14 +89,14 @@ and use in your HTML
 <!DOCTYPE html>
 <html>
    <body>
-      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+      <script src="https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.min.jgz"></script>
    </body>
 </html>
 ```
 
 > You can use above via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
 
-The **old** AutobahnJS for WAMPv1 is still available from here:
+The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
   1. [Production (minimized and gzipped)](http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz)
   2. [Production (only minimized)](http://autobahn.s3.amazonaws.com/js/autobahn.min.js)
@@ -104,6 +104,9 @@ The **old** AutobahnJS for WAMPv1 is still available from here:
 
 
 # API
+
+* version
+* session ID
 
 ## Subscribe
 
@@ -124,8 +127,8 @@ Example: **Subscribe to a topic**
 
 ```javascript
 function on_event1(args, kwargs, details) {
-   // args is the event payload (positional based)
-   // kwargs is the event payload (keyword based)
+   // args is the (positional) event payload
+   // kwargs is the (keyword) event payload
    // details provides event metadata
 }
 
@@ -141,10 +144,10 @@ session.subscribe(on_event1, 'com.myapp.topic1').then(
 
 ### Unsubscribing
 
-You can unsubscribe a previsouly established `subscription`
+You can unsubscribe a previously established `subscription`
 
 ```javascript
-var d = subscription.unsubscribe();
+var d = <autobahn.Subscription>.unsubscribe();
 ```
 
 which returns a *promise* that resolves (with no result value) when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
@@ -173,6 +176,10 @@ sub1.unsubscribe().then(
 );
 ```
 
+Complete Examples:
+
+ * [PubSub Unsubscribe](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe)
+
 
 ## Publish
 
@@ -199,8 +206,8 @@ session.publish('com.myapp.hello', ['Hello, world!']);
 
 Complete Examples:
 
- * [Basic](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic)
- * [Complex Payload](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex)
+ * [PubSub Basic](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic)
+ * [PubSub Complex Payload](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex)
 
 
 ### Acknowledgement
@@ -287,30 +294,77 @@ function on_event(args, kwargs, details) {
 session.subscribe(on_event, 'com.myapp.topic1');
 ```
 
+## Register
 
-# Where to go
+To register a procedure on a `session` for remoting:
 
-For more information, including getting started, tutorials and reference documentation, please visit the project's [homepage](http://autobahn.ws/js).
+```javascript
+var d = session.register(<endpoint|callable>, <procedure|uri>, <options|dict>);
+```
+
+where
+
+1. `endpoint` (required): the function that provides the procedure implementation
+2. `procedure` (required): the URI of the procedure to register
+3. `options` (optional): specifies options for registration (see below)
+
+and returns a *promise* that resolves to an instance of `autobahn.Registration` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
+
+Example: **Register a procedure**
+
+```javascript
+function myproc1(args, kwargs, details) {
+   // args are the (positional) call arguments
+   // kwargs are the (keyword) call arguments
+   // details provides call metadata
+   ...
+   // return a plain value or a promise ..
+}
+
+session.register(myproc1, 'com.myapp.proc1').then(
+   function (registration) {
+      // registration succeeded, registration is an instance of autobahn.Registration
+   },
+   function (error) {
+      // registration failed, error is an isntance of autobahn.Error
+   }
+);
+```
+
+Complete Examples:
+
+ * [RPC Time Service](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice)
+ * [RPC Arguments](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments)
+ * [RPC Complex Result](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex)
+ * [RPC Slow Square](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare)
+
+### Unregistering
+
+Write me.
+
+### Progressive Results
+
+Write me.
+
+Complete Examples:
+
+ * [RPC Progress](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress)
+
+### Errors
+
+Write me.
+
+Complete Examples:
+
+ * [RPC Errors](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/errors)
 
 
-# Get in touch
-
-Get in touch on IRC `#autobahn` on `chat.freenode.net` or the [mailing list](http://groups.google.com/group/autobahnws).
-
-
-# Acknowledgements
-
-AutobahnJS includes code from the following open-source projects
-
-  * [when.js](https://github.com/cujojs/when)
-  * [CryptoJS](http://code.google.com/p/crypto-js/)
-
-Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cujojs.com/) for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
+## Call
 
 
 # Building
 
-To build AutobahnJS for use in browsers, you will need
+To build **Autobahn**|JS for use in browsers, you will need
 
   * [Nodejs](http://nodejs.org/)
   * [Google Closure Compiler](http://dl.google.com/closure-compiler/compiler-latest.zip)
@@ -335,8 +389,8 @@ Set environment variables:
 
 Now clone the repo:
 
-	git clone git://github.com/tavendo/AutobahnJS.git
-	cd AutobahnJS
+	git clone git://github.com/tavendo/**Autobahn**|JS.git
+	cd **Autobahn**|JS
 
 Then start the build:
 
@@ -351,3 +405,24 @@ This will produce 3 files inside the `build` directory:
 To clean up your build:
 
 	scons -uc
+
+
+# Where to go
+
+For more information, including getting started, tutorials and reference documentation, please visit the project's [homepage](http://autobahn.ws/js).
+
+
+# Get in touch
+
+Get in touch on IRC `#autobahn` on `chat.freenode.net` or the [mailing list](http://groups.google.com/group/autobahnws).
+
+
+# Acknowledgements
+
+**Autobahn**|JS includes code from the following open-source projects
+
+  * [when.js](https://github.com/cujojs/when)
+  * [ws: a node.js websocket library](https://github.com/einaros/ws)
+  * [CryptoJS](http://code.google.com/p/crypto-js/)
+
+Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cujojs.com/) for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
