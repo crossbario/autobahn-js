@@ -105,6 +105,75 @@ The **old** AutobahnJS for WAMPv1 is still available from here:
 
 # API
 
+## Subscribe
+
+To subscribe to a topic on a `session`:
+
+```javascript
+var d = session.subscribe(<handler|callable>, <topic|uri>, <options|dict>);
+```
+where
+
+ 1. `handler` (required): is the event handler that should consume events
+ 1. `topic` (required): is the URI of the topic to subscribe to
+ 4. `options` (optional) specifies options for subscription (see below).
+ 
+and returns a *promise* that resolves to an instance of `autobahn.Subscription` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
+
+Example: **Subscribe to a topic**
+
+```javascript
+function on_event1(args, kwargs, details) {
+   // args is the event payload (positional based)
+   // kwargs is the event payload (keyword based)
+   // details provides event metadata
+}
+
+session.subscribe(on_event1, 'com.myapp.topic1').then(
+   function (subscription) {
+      // subscription succeeded, subscription is an instance of autobahn.Subscription
+   },
+   function (error) {
+      // subscription failed, error is an instance of autobahn.Error
+   }
+);
+```
+
+### Unsubscribing
+
+You can unsubscribe a previsouly established `subscription`
+
+```javascript
+var d = subscription.unsubscribe();
+```
+
+which returns a *promise* that resolves (with no result value) when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
+
+
+Example: **Unsubscribing a subscription**
+
+```javascript
+var sub1;
+
+session.subscribe(on_event1, 'com.myapp.topic1').then(
+   function (subscription) {
+      sub1 = subscription;
+   }
+);
+
+...
+
+sub1.unsubscribe().then(
+   function () {
+      // successfully unsubscribed sub1
+   },
+   function (error) {
+      // unsubscribe failed
+   }
+);
+```
+
+
 ## Publish
 
 To publish an event on a `session`:
@@ -115,18 +184,24 @@ var d = session.publish(<topic|uri>, <args|list>, <kwargs|dict>, <options|dict>)
 
 where
 
- 1. `<topic>` is the URI of the topic to publish to
- 2. `<args>` is application event payload (a *list* giving the positional arguments)
- 3. `<kwargs>` is application event payload (a *dictionary* giving the keyword arguments)
- 4. `<options>` specifies options for publication.
+ 1. `topic` (required): is the URI of the topic to publish to
+ 2. `args` (optional): is application event payload (a *list* giving the positional arguments)
+ 3. `kwargs` (optional): is application event payload (a *dictionary* giving the keyword arguments)
+ 4. `options` (optional) specifies options for publication (see below).
  
 and returns either nothing or a *promise* if `options.acknowledge` is set.
 
-Example: **Publish without acknowledge**
+Example: **Publish an event**
 
 ```javascript
 session.publish('com.myapp.hello', ['Hello, world!']);
 ```
+
+Complete Examples:
+
+ * [Basic](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic)
+ * [Complex Payload](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex)
+
 
 ### Acknowledgement
 
@@ -146,6 +221,7 @@ session.publish('com.myapp.hello', ['Hello, world!'], {}, {acknowledge: true}).t
    function (error) {
       // publish failed
    };
+);
 ```
 
 ### Receiver Black-/Whitelisting
