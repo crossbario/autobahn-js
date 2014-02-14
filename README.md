@@ -110,6 +110,7 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 2. [Connections](#connections)
 3. [Sessions](#sessions)
 4. [Subscribe](#subscribe)
+    * [Active Subscriptions](#active-subscriptions) 
     * [Unsubscribing](#unsubscribing)
 5. [Publish](#publish)
     * [Acknowledgement](#acknowledgement)
@@ -117,6 +118,7 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
     * [Publisher Exclusion](#publisher-exclusion)
     * [Publisher Identification](#publisher-identification)
 6. [Register](#register)
+    * [Active Registrations](#active-registrations) 
     * [Unregistering](#unregistering)
 7. [Call](#call)
     * [Errors](#errors)
@@ -270,6 +272,18 @@ session.subscribe(on_event1, 'com.myapp.topic1').then(
    }
 );
 ```
+
+### Active Subscriptions
+
+A list of subscriptions (in no particular order) currently active on a `session` may be accessed like this:
+
+    autobahn.Session.subscriptions
+
+This returns a list of `autobahn.Subscription` objects.
+
+> Caution: this should be considered read-only. DO NOT MODIFY.
+> 
+
 
 ### Unsubscribing
 
@@ -481,6 +495,19 @@ Complete Examples:
  * [RPC Arguments](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments)
  * [RPC Complex Result](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex)
  * [RPC Slow Square](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare)
+
+
+### Active Registrations
+
+A list of registrations (in no particular order) currently active on a `session` may be accessed like this:
+
+    autobahn.Session.registrations
+
+This returns a list of `autobahn.Registration` objects.
+
+> Caution: this should be considered read-only. DO NOT MODIFY.
+> 
+
 
 ### Unregistering
 

@@ -59,10 +59,11 @@ var Error = function (error, args, kwargs) {
 };
 
 
-var Subscription = function (session, id) {
+var Subscription = function (handler, session, id) {
 
    var self = this;
 
+   self._handler = handler;
    self._session = session;
    self.active = true;
    self.id = id;
@@ -76,10 +77,11 @@ Subscription.prototype.unsubscribe = function () {
 };
 
 
-var Registration = function (session, id) {
+var Registration = function (endpoint, session, id) {
 
    var self = this;
 
+   self._endpoint = endpoint;
    self._session = session;
    self.active = true;
    self.id = id;
@@ -198,12 +200,13 @@ var Session = function (socket, options) {
          var r = self._subscribe_reqs[request];
 
          var d = r[0];
-         var fn = r[1];
+         var handler = r[1];
          var options = r[2];
 
-         self._subscriptions[subscription] = fn;
+         var sub = new Subscription(handler, self, subscription);
 
-         var sub = new Subscription(self, subscription);
+         self._subscriptions[subscription] = sub;
+
          d.resolve(sub);
 
          delete self._subscribe_reqs[request];
@@ -371,7 +374,7 @@ var Session = function (socket, options) {
 
       if (subscription in self._subscriptions) {
 
-         var fun = self._subscriptions[subscription];
+         var handler = self._subscriptions[subscription]._handler;
 
          var publication = msg[2];
          var details = msg[3];
@@ -382,7 +385,7 @@ var Session = function (socket, options) {
          var ed = new EventDetails(publication, details.publisher);
 
          try {
-            fun(args, kwargs, ed);
+            handler(args, kwargs, ed);
          } catch (e) {
             console.log("Exception raised in event handler", e);
          }
@@ -406,12 +409,13 @@ var Session = function (socket, options) {
          var r = self._register_reqs[request];
 
          var d = r[0];
-         var fn = r[1];
+         var endpoint = r[1];
          var options = r[2];
 
-         self._registrations[registration] = fn;
+         var reg = new Registration(endpoint, self, registration);
 
-         var reg = new Registration(self, registration);
+         self._registrations[registration] = reg;
+
          d.resolve(reg);
 
          delete self._register_reqs[request];
@@ -595,7 +599,7 @@ var Session = function (socket, options) {
 
       if (registration in self._registrations) {
 
-         var fun = self._registrations[registration];
+         var endpoint = self._registrations[registration]._endpoint;
 
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
@@ -624,7 +628,7 @@ var Session = function (socket, options) {
 
          var cd = new CallDetails(details.caller, progress);
 
-         when_fn.call(fun, args, kwargs, cd).then(
+         when_fn.call(endpoint, args, kwargs, cd).then(
 
             function (res) {
                // construct YIELD message
@@ -789,6 +793,30 @@ Session.prototype.disconnect = function () {
 Object.defineProperty(Session.prototype, "isOpen", {
    get: function () {
       return this.id !== null;
+   }
+});
+
+
+Object.defineProperty(Session.prototype, "subscriptions", {
+   get: function () {
+      var keys = Object.keys(this._subscriptions);
+      var vals = [];
+      for (var i = 0; i < keys.length; ++i) {
+         vals.push(this._subscriptions[keys[i]]);
+      }
+      return vals;
+   }
+});
+
+
+Object.defineProperty(Session.prototype, "registrations", {
+   get: function () {
+      var keys = Object.keys(this._registrations);
+      var vals = [];
+      for (var i = 0; i < keys.length; ++i) {
+         vals.push(this._registrations[keys[i]]);
+      }
+      return vals;
    }
 });
 
