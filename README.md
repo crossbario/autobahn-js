@@ -25,27 +25,27 @@ var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'r
 
 connection.onopen = function (session) {
 
-   // 1) call a remote procedure
-   session.call('com.myapp.add2', [2, 3]).then(
-      function (res) {
-         console.log("Result:", res);
-      }
-   );
+   // 1) subscribe on a topic
+   function onevent(args) {
+      console.log("Event:", args[0]);
+   }
+   session.subscribe(onevent, 'com.myapp.hello');
 
-   // 2) register a procedure for remoting
+   // 2) publish an event
+   session.publish('com.myapp.hello', ['Hello, world!']);
+
+   // 3) register a procedure for remoting
    function add2(args) {
       return args[0] + args[1];
    }
    session.register(add2, 'com.myapp.add2');
 
-   // 3) publish an event
-   session.publish('com.myapp.hello', ['Hello, world!']);
-
-   // 4) subscribe on a topic
-   function onevent(args) {
-      console.log("Event:", args[0]);
-   }
-   session.subscribe(onevent, 'com.myapp.hello');
+   // 4) call a remote procedure
+   session.call('com.myapp.add2', [2, 3]).then(
+      function (res) {
+         console.log("Result:", res);
+      }
+   );
 };
 
 connection.open();
@@ -90,6 +90,27 @@ The **old** AutobahnJS for WAMPv1 is still available from here:
   3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
 > You can use above via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
+
+
+# API
+
+## Publish
+
+To publish an event on a `session`:
+
+```javascript
+var d = session.publish(<topic>, <args>, <kwargs>, <options>);
+```
+
+where
+
+ 1. `<topic>` is the URI of the topic to publish to
+ 2. `<args>` is application event payload (list giving the positional arguments)
+ 3. `<kwargs>` is application event payload (dictionary giving the keyword arguments)
+ 4. `<options>` specifies options for publication.
+ 
+and returns either nothing or a promise if `options.acknowledge` is set. The latter promise returned will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful. 
+
 
 
 # Where to go
