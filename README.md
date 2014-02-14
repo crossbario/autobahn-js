@@ -83,13 +83,24 @@ You can get the **latest** (= WAMPv2 only) prebuilt AutobahnJS release from here
   2. [Production (only minimized)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
   3. [Development](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
 
+and use in your HTML
+
+```javascript
+<!DOCTYPE html>
+<html>
+   <body>
+      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+   </body>
+</html>
+```
+
+> You can use above via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
+
 The **old** AutobahnJS for WAMPv1 is still available from here:
 
   1. [Production (minimized and gzipped)](http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz)
   2. [Production (only minimized)](http://autobahn.s3.amazonaws.com/js/autobahn.min.js)
   3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
-
-> You can use above via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
 
 
 # API
@@ -99,7 +110,7 @@ The **old** AutobahnJS for WAMPv1 is still available from here:
 To publish an event on a `session`:
 
 ```javascript
-var d = session.publish(<topic>, <args>, <kwargs>, <options>);
+var d = session.publish(<topic|uri>, <args|list>, <kwargs|dict>, <options|dict>);
 ```
 
 where
@@ -111,18 +122,24 @@ where
  
 and returns either nothing or a *promise* if `options.acknowledge` is set.
 
-The latter promise returned will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful. 
-
-*Example* Unacknowledged publish.
+Example: **Publish without acknowledge**
 
 ```javascript
 session.publish('com.myapp.hello', ['Hello, world!']);
 ```
 
-*Example* Acknowledged publish.
+### Acknowledgement
+
+By default, a publish is not acknowledged by the *Broker*, and the *Publisher* receives no feedback whether the publish was indeed successful or not.
+
+If supported by the *Broker*, a *Publisher* may request acknowledgement of a publish via the option `acknowledge|bool`.
+
+With acknowledged publish, the publish method will return a promise that will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful. 
+
+Example: **Publish with acknowledge**
 
 ```javascript
-session.publish('com.myapp.hello', ['Hello, world!']).then(
+session.publish('com.myapp.hello', ['Hello, world!'], {}, {acknowledge: true}).then(
    function (publication) {
       // publish was successful
    },
@@ -130,6 +147,31 @@ session.publish('com.myapp.hello', ['Hello, world!']).then(
       // publish failed
    };
 ```
+
+### Receiver Black-/Whitelisting
+
+### Publisher Exclusion
+
+By default, a *Publisher* of an event will not itself receive an event published, even when subscribed to the topic the *Publisher* is publishing to.
+
+If supported by the *Broker*, this behavior can be overridden via the option `exclude_me|bool`.
+
+Example: **Publish without excluding publisher**
+
+```javascript
+session.publish('com.myapp.hello', ['Hello, world!'], {}, {exclude_me: false});
+```
+
+### Publisher Identification
+
+If the feature is supported by the *Broker*, a *Publisher* may request the disclosure of it's identity (it's WAMP session ID) to receivers of a published event via the option `disclose_me|bool`.
+
+Example: **Publish with publisher disclosure**
+
+```javascript
+session.publish('com.myapp.hello', ['Hello, world!'], {}, {disclose_me: true});
+```
+
 
 
 
