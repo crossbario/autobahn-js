@@ -150,6 +150,34 @@ session.publish('com.myapp.hello', ['Hello, world!'], {}, {acknowledge: true}).t
 
 ### Receiver Black-/Whitelisting
 
+If the feature is supported by the *Broker*, a *Publisher* may restrict the actual receivers of an event beyond those subscribed via the options
+
+ * `exclude|list`
+ * `eligible|list`
+
+`exclude` is a list of WAMP session IDs providing an explicit list of (potential) *Subscribers* that won't receive a published event, even though they might be subscribed. In other words, `exclude` is a blacklist of (potential) *Subscribers*.
+
+`eligible` is a list of WAMP session IDs providing an explicit list of (potential) *Subscribers* that are allowed to receive a published event. In other words, `eligible` is a whitelist of (potential) *Subscribers*.
+
+The *Broker* will dispatch events published only to *Subscribers+ that are not explicitly excluded via `exclude` **and** which are explicitly eligible via `eligible`.
+
+Example: **Publish with exclude**
+
+```javascript
+session.publish('com.myapp.hello', ['Hello, world!'], {}, {exclude: [123, 456]});
+```
+
+The event will be received by all *Subscribers* to topic `com.myapp.hello`, but not the sessions with IDs `123` and `456` (if those sessions are subscribed anyway).
+
+Example: **Publish with eligible**
+
+```javascript
+session.publish('com.myapp.hello', ['Hello, world!'], {}, {eligible: [123, 456]});
+```
+
+The event will be received by the sessions with IDs `123` and `456`, if those sessions are subscribed to topic `com.myapp.hello`.
+
+
 ### Publisher Exclusion
 
 By default, a *Publisher* of an event will not itself receive an event published, even when subscribed to the topic the *Publisher* is publishing to.
@@ -172,7 +200,16 @@ Example: **Publish with publisher disclosure**
 session.publish('com.myapp.hello', ['Hello, world!'], {}, {disclose_me: true});
 ```
 
+If the *Broker* allows the disclosure, receivers can consume the *Publisher's* session ID like this:
 
+```javascript
+function on_event(args, kwargs, details) {
+  // details.publisher provides the Publisher's WAMP session ID
+  // details.publication provides the event ID
+}
+
+session.subscribe(on_event, 'com.myapp.topic1');
+```
 
 
 # Where to go
