@@ -21,42 +21,89 @@ var Connection = function (options) {
 
    self._options = options;
    self._websocket_factory = new websocket.WebSocket(self._options.url, ['wamp.2.json']);
+   self._websocket = null;
+   self._retry = false;
+   self._retry_count = 0;
+   self._session = null;
+   self._is_open = false;
 };
 
 
 Connection.prototype.open = function () {
 
    var self = this;
-   self._websocket = self._websocket_factory.create();
 
-   var _session = new session.Session(self._websocket, self._options);
+   self._retry = true;
+   self._retry_count = 0;
 
-   _session.onconnect = function () {
-      _session.join(self._options.realm);
-   };
+   function retry () {
 
-   _session.onjoin = function () {
-      if (self.onopen) {
-         self.onopen(_session);
+      self._websocket = self._websocket_factory.create();
+      self._session = new session.Session(self._websocket, self._options);
+
+      self._websocket.onopen = function () {
+         self._session.join(self._options.realm);
+      };
+
+      self._session.onjoin = function () {
+         self._is_open = true;
+         if (self.onopen) {
+            self.onopen(self._session);
+         }
+      };
+
+      // session is open.
+
+      self._session.onleave = function () {
+         self._session = null;
+         self._is_open = false;
+         if (self.onclose) {
+            self.onclose();
+         }
+
+         self._websocket.close(1000);
+      };
+
+      self._websocket.onclose = function () {
+         if (self._session) {
+            self._session = null;
+            self._is_open = false;
+            if (self.onclose) {
+               self.onclose();
+            }
+         }
+         self._websocket = null;
+
+         self._retry_count += 1;
+         if (self._retry && self._retry_count < self._options.max_retries) {
+            setTimeout(retry, self._options.retry_delay);
+         }
       }
-   };
+   }
 
-   _session.onleave = function () {
-      this.disconnect();
-   };
-
-   _session.ondisconnect = function () {
-      if (self.onclose) {
-         self.onclose();
-      }
-   };
+   retry();
 };
 
 
 Connection.prototype.close = function () {
    var self = this;
+   self._retry = false;
    self._websocket.close();
 };
+
+
+Object.defineProperty(Connection.prototype, "session", {
+   get: function () {
+      return this._session;
+   }
+});
+
+
+Object.defineProperty(Connection.prototype, "isOpen", {
+   get: function () {
+      return this._is_open;
+   }
+});
 
 
 exports.Connection = Connection;

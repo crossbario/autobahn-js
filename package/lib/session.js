@@ -58,7 +58,7 @@ function auth_sign (challenge, secret) {
 }
 
 
-var CallDetails = function (caller, progress) {
+var Invocation = function (caller, progress) {
 
    var self = this;
 
@@ -67,7 +67,7 @@ var CallDetails = function (caller, progress) {
 };
 
 
-var EventDetails = function (publication, publisher) {
+var Event = function (publication, publisher) {
 
    var self = this;
 
@@ -448,7 +448,7 @@ var Session = function (socket, options) {
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
 
-         var ed = new EventDetails(publication, details.publisher);
+         var ed = new Event(publication, details.publisher);
 
          try {
             handler(args, kwargs, ed);
@@ -692,7 +692,7 @@ var Session = function (socket, options) {
             }
          };
 
-         var cd = new CallDetails(details.caller, progress);
+         var cd = new Invocationdetails.caller, progress);
 
          // We use the following whenjs call wrapper, which automatically
          // wraps a plain, non-promise value in a (immediately resolved) promise
@@ -834,30 +834,6 @@ var Session = function (socket, options) {
          }
       }
    };
-
-
-   self._socket.onopen = function () {
-      if (self.onconnect) {
-         self.onconnect();
-      }
-   };
-
-
-   self._socket.onclose = function (evt) {
-      //console.log(evt.code, evt.reason);
-      if (self.ondisconnect) {
-         self.ondisconnect();
-      }
-   };
-
-};
-
-
-Session.prototype.disconnect = function () {
-
-   var self = this;
-
-   self._socket.close(1000);
 };
 
 
@@ -1127,8 +1103,8 @@ Session.prototype._unregister = function (registration) {
 
 exports.Session = Session;
 
-exports.CallDetails = CallDetails;
-exports.EventDetails = EventDetails;
+exports.Invocation = Invocation;
+exports.Event = Event;
 exports.Result = Result;
 exports.Error = Error;
 exports.Subscription = Subscription;
