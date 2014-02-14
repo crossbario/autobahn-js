@@ -25,7 +25,7 @@ var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'r
 
 connection.onopen = function (session) {
 
-   // 1) subscribe on a topic
+   // 1) subscribe to a topic
    function onevent(args) {
       console.log("Event:", args[0]);
    }
@@ -124,6 +124,28 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
 
 ## Library
+
+The library can be included
+
+```javascript
+try {
+   // for NodeJS
+   var autobahn = require('autobahn');
+} catch (e) {
+   // for browsers (where AutobahnJS is available globally)
+}
+```
+
+Autobahn bundles whenjs, and the bundled whenjs can be accessed like this
+
+```javascript
+try {
+   var autobahn = require('autobahn');
+   var when = require('when');
+} catch (e) {
+   var when = autobahn.when;
+}
+```
 
 ### Library Version
 
@@ -464,13 +486,44 @@ Complete Examples:
 
 Write me.
 
-### Progressive Results
 
-Write me.
+## Call
+
+To call a remote procedure from a `session`:
+
+```javascript
+var d = session.call(<procedure|uri>, <args|list>, <kwargs|dict>, <options|dict>);
+```
+
+where
+
+ 1. `topic` (required): is the URI of the procedure to call
+ 2. `args` (optional): are (positional) call arguments
+ 3. `kwargs` (optional): are (keyword) call arguments
+ 4. `options` (optional) specifies options for the call (see below).
+ 
+and returns a *promise* that will resolve to the call result if successful (either a plain value or an instance of `autobahn.Result`) or reject with an instance of `autobahn.Error`.
+
+Example: **Call a procedure**
+
+```javascript
+session.call('com.arguments.add2', [2, 3]).then(
+   function (result) {
+      // call was successful
+   },
+   function (error) {
+      // call failed
+   }
+);
+```
 
 Complete Examples:
 
- * [RPC Progress](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress)
+ * [RPC Time Service](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice)
+ * [RPC Arguments](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments)
+ * [RPC Complex Result](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex)
+ * [RPC Slow Square](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare)
+
 
 ### Errors
 
@@ -481,7 +534,14 @@ Complete Examples:
  * [RPC Errors](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/errors)
 
 
-## Call
+### Progressive Results
+
+Write me.
+
+Complete Examples:
+
+ * [RPC Progress](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress)
+
 
 
 # Building
