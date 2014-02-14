@@ -89,7 +89,7 @@ and use in your HTML
 <!DOCTYPE html>
 <html>
    <body>
-      <script src="https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.min.jgz"></script>
+      <script src=""https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
    </body>
 </html>
 ```
@@ -310,6 +310,21 @@ where
 
 and returns a *promise* that resolves to an instance of `autobahn.Registration` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
 
+The `endpoint` must be a callable
+
+   function (args, kwargs, details) => result
+
+where
+
+1. `args` are the (positional) call arguments
+2. `kwargs` are the (keyword) call arguments
+3. `details` provides call metadata
+
+and which returns either a plain value or a promise, and the value is serializable or an instance of `autobahn.Result`.
+
+The `autobahn.Result` wrapper is used when returning a complex value (multiple positional return values and/or keyword return values).
+
+
 Example: **Register a procedure**
 
 ```javascript
@@ -389,8 +404,8 @@ Set environment variables:
 
 Now clone the repo:
 
-	git clone git://github.com/tavendo/**Autobahn**|JS.git
-	cd **Autobahn**|JS
+	git clone git@github.com:tavendo/AutobahnJS.git
+	cd autobahnjs
 
 Then start the build:
 
