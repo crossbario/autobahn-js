@@ -89,7 +89,7 @@ and use in your HTML
 <!DOCTYPE html>
 <html>
    <body>
-      <script src=""https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
    </body>
 </html>
 ```
@@ -105,8 +105,24 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
 # API
 
-* version
-* session ID
+## Library Version
+
+**Autobahn**|JS library version is available (read-only):
+
+    autobahn.version
+
+## Session ID
+
+A Session's ID is available (read-only):
+
+    Session.id
+
+## Session Realm
+
+A Session's realm is available (read-only):
+
+    Session.realm
+
 
 ## Subscribe
 

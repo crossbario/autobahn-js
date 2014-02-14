@@ -127,6 +127,7 @@ var MSG_TYPE = {
    YIELD: 70
 };
 
+
 WAMP_FEATURES = {
    roles: {
       caller: {},
@@ -145,9 +146,12 @@ var Session = function (socket, options) {
    self._socket = socket;
 
    // the WAMP session ID
-   self._session_id = null;
+   self.id = null;
 
-   // 
+   // the WAMP realm joined
+   self.realm = null;
+
+   // closing state
    self._goodbye_sent = false;
    self._transport_is_closing = false;
 
@@ -691,13 +695,13 @@ var Session = function (socket, options) {
 
       // WAMP session handshake not yet finished
       //
-      if (!self._session_id) {
+      if (!self.id) {
 
          // the first message must be WELCOME ..
          //
          if (msg_type === MSG_TYPE.WELCOME) {
 
-            self._session_id = msg[1];
+            self.id = msg[1];
             if (self.onjoin) {
                self.onjoin(msg[2]);
             }
@@ -721,7 +725,8 @@ var Session = function (socket, options) {
                var reply = [MSG_TYPE.GOODBYE, "wamp.close.normal", {}];
                self._send_wamp(reply);
             }
-            self._session_id = null;
+            self.id = null;
+            self.realm = null;
             if (self.onleave) {
                self.onleave();
             }
@@ -785,11 +790,12 @@ Session.prototype.join = function (realm) {
 
    var self = this;
 
-   if (self._session_id) {
+   if (self.id) {
       throw "session already established";
    }
 
    self._goodbye_sent = false;
+   self.realm = realm;
 
    var msg = [MSG_TYPE.HELLO, realm, WAMP_FEATURES];
    self._send_wamp(msg);
@@ -800,7 +806,7 @@ Session.prototype.leave = function (reason, message) {
 
    var self = this;
 
-   if (!self._session_id) {
+   if (!self.id) {
       throw "no session currently established";
    }
 
