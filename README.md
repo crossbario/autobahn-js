@@ -254,13 +254,22 @@ where
  
 and returns a *promise* that resolves to an instance of `autobahn.Subscription` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
 
+The `handler` must be a callable
+
+    function (args, kwargs, details)
+
+where
+
+1. `args` is the (positional) event payload
+2. `kwargs` is the (keyword) event payload
+3. `details` provides event metadata
+
+
 Example: **Subscribe to a topic**
 
 ```javascript
 function on_event1(args, kwargs, details) {
-   // args is the (positional) event payload
-   // kwargs is the (keyword) event payload
-   // details provides event metadata
+   // event received, do something ..
 }
 
 session.subscribe(on_event1, 'com.myapp.topic1').then(
@@ -455,7 +464,7 @@ and returns a *promise* that resolves to an instance of `autobahn.Registration` 
 
 The `endpoint` must be a callable
 
-   function (args, kwargs, details) => result
+    function (args, kwargs, details) => result
 
 where
 
@@ -472,11 +481,7 @@ Example: **Register a procedure**
 
 ```javascript
 function myproc1(args, kwargs, details) {
-   // args are the (positional) call arguments
-   // kwargs are the (keyword) call arguments
-   // details provides call metadata
-   ...
-   // return a plain value or a promise ..
+   // invocation .. do something and return a plain value or a promise ..
 }
 
 session.register(myproc1, 'com.myapp.proc1').then(
