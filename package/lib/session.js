@@ -14,11 +14,47 @@
 
 var when = require('when');
 var when_fn = require("when/function");
+
+var crypto = require('crypto-js');
+
 var websocket = require('./websocket.js');
 
 
-function newid() {
+// generate a WAMP ID
+//
+function newid () {
    return Math.floor(Math.random() * 9007199254740992);
+}
+
+
+// PBKDF2-base key derivation function for salted WAMP-CRA
+//
+function derive_key (secret, extra) {
+   if (extra && extra.salt) {
+      var salt = extra.salt;
+      var keylen = extra.keylen || 32;
+      var iterations = extra.iterations || 10000;
+      var key = crypto.PBKDF2(secret,
+                              salt,
+                              {
+                                 keySize: keylen / 4,
+                                 iterations: iterations,
+                                 hasher: CryptoJS.algo.SHA256
+                              }
+      );
+      return key.toString(crypto.enc.Base64);
+   } else {
+      return secret;
+   }
+}
+
+
+function auth_sign (challenge, secret) {
+   if (!secret) {
+      secret = "";
+   }
+
+   return crypto.HmacSHA256(challenge, secret).toString(crypto.enc.Base64);
 }
 
 

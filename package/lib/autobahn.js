@@ -18,6 +18,7 @@ var connection = require('./connection.js');
 
 var when = require('when');
 //var fn = require("when/function");
+var crypto = require('crypto-js');
 
 var pjson = require('../package.json');
 
@@ -39,3 +40,4 @@ exports.Publication = session.Publication;
 
 exports.when = when;
 //exports.fn = fn;
+exports.crypto = crypto;

@@ -138,14 +138,16 @@ try {
 }
 ```
 
-Autobahn bundles whenjs, and the bundled whenjs can be accessed like this
+Autobahn bundles whenjs and cryptojs, and the bundled libraries can be accessed like this
 
 ```javascript
 try {
    var autobahn = require('autobahn');
    var when = require('when');
+   var crypto = require('crypto-js');
 } catch (e) {
    var when = autobahn.when;
+   var crypto = autobahn.crypto;
 }
 ```
 
@@ -170,6 +172,10 @@ Here, `options` provides additional connection options:
  2. `realm|string` (required): the WAMP realm to join 
  3. `use_es6_promises|bool` (optional): use deferreds based on ES6 promises *
  4. `use_deferred|callable` (optional): if provided, use this deferred constructor, e.g. `jQuery.Deferred` or `Q.defer`
+ 5. `max_retries`: Not yet implemented.
+ 6. `retry_delay`: Not yet implemented.
+ 7. `skip_subprotocol_check`: Not yet implemented.
+ 8. `skip_subprotocol_announce`: Not yet implemented.
 
 > *: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
 > 
