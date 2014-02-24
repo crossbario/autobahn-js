@@ -212,6 +212,9 @@ var Session = function (socket, options) {
    // the WAMP realm joined
    self.realm = null;
 
+   // the WAMP features in use
+   self._features = null;
+
    // closing state
    self._goodbye_sent = false;
    self._transport_is_closing = false;
@@ -796,7 +799,52 @@ var Session = function (socket, options) {
          if (msg_type === MSG_TYPE.WELCOME) {
 
             self.id = msg[1];
-            console.log("WELCOME", msg[2]);
+
+            // determine actual set of advanced features that can be used
+            //
+            var rf = msg[2];
+            self._features = {};
+
+            if (rf.roles.broker) {
+               // "Basic Profile" is mandatory
+               self._features.subscriber = {};
+               self._features.publisher = {};
+
+               // fill in features that both peers support
+               if (rf.roles.broker.features) {
+
+                  for (var att in WAMP_FEATURES.roles.publisher.features) {
+                     self._features.publisher[att] = WAMP_FEATURES.roles.publisher.features[att] &&
+                                                     rf.roles.broker.features[att];
+                  }
+
+                  for (var att in WAMP_FEATURES.roles.subscriber.features) {
+                     self._features.subscriber[att] = WAMP_FEATURES.roles.subscriber.features[att] &&
+                                                      rf.roles.broker.features[att];
+                  }
+               }
+            }
+
+            if (rf.roles.dealer) {
+               // "Basic Profile" is mandatory
+               self._features.caller = {};
+               self._features.callee = {};
+
+               // fill in features that both peers support
+               if (rf.roles.dealer.features) {
+
+                  for (var att in WAMP_FEATURES.roles.caller.features) {
+                     self._features.caller[att] = WAMP_FEATURES.roles.caller.features[att] &&
+                                                  rf.roles.dealer.features[att];
+                  }
+
+                  for (var att in WAMP_FEATURES.roles.callee.features) {
+                     self._features.callee[att] = WAMP_FEATURES.roles.callee.features[att] &&
+                                                  rf.roles.dealer.features[att];
+                  }
+               }
+            }
+
             if (self.onjoin) {
                self.onjoin(msg[2]);
             }
@@ -829,6 +877,7 @@ var Session = function (socket, options) {
 
             self.id = null;
             self.realm = null;
+            self._features = null;
 
             if (self.onleave) {
                self.onleave();
@@ -868,6 +917,13 @@ var Session = function (socket, options) {
 Object.defineProperty(Session.prototype, "isOpen", {
    get: function () {
       return this.id !== null;
+   }
+});
+
+
+Object.defineProperty(Session.prototype, "features", {
+   get: function () {
+      return this._features;
    }
 });
 
@@ -1025,7 +1081,7 @@ Session.prototype.publish1 = function (topic, payload, options) {
 };
 
 
-Session.prototype.subscribe = function (handler, topic, options) {
+Session.prototype.subscribe = function (topic, handler, options) {
    var self = this;
 
    // create an remember new SUBSCRIBE request
@@ -1052,7 +1108,7 @@ Session.prototype.subscribe = function (handler, topic, options) {
 };
 
 
-Session.prototype.register = function (endpoint, procedure, options) {
+Session.prototype.register = function (procedure, endpoint, options) {
    var self = this;
 
    // create an remember new REGISTER request

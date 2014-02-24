@@ -1,5 +1,8 @@
 # AutobahnJS - Change Log
 
+## v0.9.1
+ * compatibility with latest WAMP v2 spec ("RC-2, 2014/02/22")
+
 ## v0.9.0
  * complete new implementation with WAMP v2 only support
 

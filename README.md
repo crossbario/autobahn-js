@@ -29,7 +29,7 @@ connection.onopen = function (session) {
    function onevent(args) {
       console.log("Event:", args[0]);
    }
-   session.subscribe(onevent, 'com.myapp.hello');
+   session.subscribe('com.myapp.hello', onevent);
 
    // 2) publish an event
    session.publish('com.myapp.hello', ['Hello, world!']);
@@ -38,7 +38,7 @@ connection.onopen = function (session) {
    function add2(args) {
       return args[0] + args[1];
    }
-   session.register(add2, 'com.myapp.add2');
+   session.register('com.myapp.add2', add2);
 
    // 4) call a remote procedure
    session.call('com.myapp.add2', [2, 3]).then(
@@ -249,6 +249,12 @@ A Session's realm is available (read-only) when the session is open:
 
     Session.realm
 
+### Supported Roles & Features
+
+All roles and features supported by both peers of a session can be accessed:
+
+	Session.features
+
 ### Deferreds
 
 Create a new Deferred of the same class as used by the library itself:
@@ -263,13 +269,13 @@ This returns a new deferred, e.g. a whenjs deferred or a deferred based on ES6 p
 To subscribe to a topic on a `session`:
 
 ```javascript
-var d = session.subscribe(<handler|callable>, <topic|uri>, <options|dict>);
+var d = session.subscribe(<topic|uri>, <handler|callable>, <options|dict>);
 ```
 where
 
- 1. `handler` (required): is the event handler that should consume events
  1. `topic` (required): is the URI of the topic to subscribe to
- 4. `options` (optional) specifies options for subscription (see below).
+ 2. `handler` (required): is the event handler that should consume events
+ 3. `options` (optional) specifies options for subscription (see below).
  
 and returns a *promise* that resolves to an instance of `autobahn.Subscription` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
 
@@ -291,7 +297,7 @@ function on_event1(args, kwargs, details) {
    // event received, do something ..
 }
 
-session.subscribe(on_event1, 'com.myapp.topic1').then(
+session.subscribe('com.myapp.topic1', on_event1).then(
    function (subscription) {
       // subscription succeeded, subscription is an instance of autobahn.Subscription
    },
@@ -329,7 +335,7 @@ Example: **Unsubscribing a subscription**
 ```javascript
 var sub1;
 
-session.subscribe(on_event1, 'com.myapp.topic1').then(
+session.subscribe('com.myapp.topic1', on_event1).then(
    function (subscription) {
       sub1 = subscription;
    }
@@ -470,13 +476,13 @@ session.subscribe(on_event, 'com.myapp.topic1');
 To register a procedure on a `session` for remoting:
 
 ```javascript
-var d = session.register(<endpoint|callable>, <procedure|uri>, <options|dict>);
+var d = session.register(<procedure|uri>, <endpoint|callable>, <options|dict>);
 ```
 
 where
 
-1. `endpoint` (required): the function that provides the procedure implementation
-2. `procedure` (required): the URI of the procedure to register
+1. `procedure` (required): the URI of the procedure to register
+2. `endpoint` (required): the function that provides the procedure implementation
 3. `options` (optional): specifies options for registration (see below)
 
 and returns a *promise* that resolves to an instance of `autobahn.Registration` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
@@ -503,7 +509,7 @@ function myproc1(args, kwargs, details) {
    // invocation .. do something and return a plain value or a promise ..
 }
 
-session.register(myproc1, 'com.myapp.proc1').then(
+session.register('com.myapp.proc1', myproc1).then(
    function (registration) {
       // registration succeeded, registration is an instance of autobahn.Registration
    },
