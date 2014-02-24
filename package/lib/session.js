@@ -20,6 +20,37 @@ var crypto = require('crypto-js');
 var websocket = require('./websocket.js');
 
 
+// WAMP "Advanced Profile" support in AutobahnJS:
+//
+WAMP_FEATURES = {
+   roles: {
+      caller: {
+         features: {
+            caller_identification: true,
+            progressive_call_results: true
+         }
+      },
+      callee: {
+         features: {
+            progressive_call_results: true
+         }
+      },
+      publisher: {
+         features: {
+            subscriber_blackwhite_listing: true,
+            publisher_exclusion: true,
+            publisher_identification: true
+         }
+      },
+      subscriber: {
+         features: {
+            publisher_identification: true
+         }
+      }
+   }
+};
+
+
 // generate a WAMP ID
 //
 function newid () {
@@ -141,11 +172,12 @@ var Publication = function (id) {
 var MSG_TYPE = {
    HELLO: 1,
    WELCOME: 2,
-   CHALLENGE: 3,
-   AUTHENTICATE: 4,
-   GOODBYE: 5,
-   HEARTBEAT: 6,
-   ERROR: 7,
+   ABORT: 3,
+   CHALLENGE: 4,
+   AUTHENTICATE: 5,
+   GOODBYE: 6,
+   HEARTBEAT: 7,
+   ERROR: 8,
    PUBLISH: 16,
    PUBLISHED: 17,
    SUBSCRIBE: 32,
@@ -165,15 +197,6 @@ var MSG_TYPE = {
    YIELD: 70
 };
 
-
-WAMP_FEATURES = {
-   roles: {
-      caller: {},
-      callee: {},
-      publisher: {},
-      subscriber: {}
-   }
-};
 
 
 var Session = function (socket, options) {
@@ -692,7 +715,7 @@ var Session = function (socket, options) {
             }
          };
 
-         var cd = new Invocationdetails.caller, progress);
+         var cd = new Invocation(details.caller, progress);
 
          // We use the following whenjs call wrapper, which automatically
          // wraps a plain, non-promise value in a (immediately resolved) promise
@@ -703,13 +726,9 @@ var Session = function (socket, options) {
 
             function (res) {
                // construct YIELD message
+               // FIXME: Options
                //
-               var reply = [MSG_TYPE.YIELD, request];
-               if (false) {
-                  //msg.push(options); // FIXME
-               } else {
-                  reply.push({});
-               }
+               var reply = [MSG_TYPE.YIELD, request, {}];
 
                if (res instanceof Result) {
                   var kwargs_len = Object.keys(res.kwargs).length;
@@ -768,40 +787,49 @@ var Session = function (socket, options) {
       var msg = JSON.parse(evt.data);
       var msg_type = msg[0];
 
-      // WAMP session handshake not yet finished
+      // WAMP session not yet open
       //
       if (!self.id) {
 
-         // the first message must be WELCOME ..
+         // the first message must be WELCOME, ABORT or CHALLENGE ..
          //
          if (msg_type === MSG_TYPE.WELCOME) {
 
             self.id = msg[1];
+            console.log("WELCOME", msg[2]);
             if (self.onjoin) {
                self.onjoin(msg[2]);
             }
 
+         } else if (msg_type === MSG_TYPE.ABORT) {
+
+            // FIXME
+            console.log("Unhandled ABORT message", msg);
+
+         } else if (msg_type === MSG_TYPE.CHALLENGE) {
+
+            // FIXME
+            console.log("Unhandled CHALLENGE message", msg);
+
          } else {
-            self._protocol_violation("received non-WELCOME message when session is not yet established");
+            self._protocol_violation("unexpected message type " + msg_type);
          }
 
-      // WAMP session handshake finished
+      // WAMP session is open
       //
       } else {
 
-         if (msg_type === MSG_TYPE.WELCOME) {
-
-            self._protocol_violation("received WELCOME when session is already established");
-
-         } else if (msg_type === MSG_TYPE.GOODBYE) {
+         if (msg_type === MSG_TYPE.GOODBYE) {
 
             if (!self._goodbye_sent) {
 
-               var reply = [MSG_TYPE.GOODBYE, "wamp.close.normal", {}];
+               var reply = [MSG_TYPE.GOODBYE, {}, "wamp.error.goodbye_and_out"];
                self._send_wamp(reply);
             }
+
             self.id = null;
             self.realm = null;
+
             if (self.onleave) {
                self.onleave();
             }
@@ -901,7 +929,7 @@ Session.prototype.leave = function (reason, message) {
       details.message = message;
    }
 
-   var msg = [MSG_TYPE.GOODBYE, reason, details];
+   var msg = [MSG_TYPE.GOODBYE, details, reason];
    self._send_wamp(msg);
    self._goodbye_sent = true;
 };

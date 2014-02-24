@@ -60,112 +60,108 @@ var RawWebSocket = function (url, protocols) {
 
       // https://github.com/Worlize/WebSocket-Node
       //
-      if (false) {
+/*      
+      (function() {
 
-         (function() {
+         //var WebSocketClient = require('websocket').client;
+         var client = new WebSocketClient();
 
-            //var WebSocketClient = require('websocket').client;
-            var client = new WebSocketClient();
+         client.on('connectFailed', function (error) {
+            // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+            websocket.onclose({code: 1000, reason: error.toString(), wasClean: false});
+         });
 
-            client.on('connectFailed', function (error) {
-               // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
-               websocket.onclose({code: 1000, reason: error.toString(), wasClean: false});
-            });
+         client.on('connect', function (connection) {
 
-            client.on('connect', function (connection) {
-
-               websocket.protocol = connection.protocol;
-
-               websocket.send = function (msg) {
-                  if (connection.connected) {
-                     // sending a string that gets encoded as UTF8
-                     // https://github.com/Worlize/WebSocket-Node/blob/master/lib/WebSocketConnection.js#L587
-                     connection.sendUTF(msg);
-
-                     // https://github.com/Worlize/WebSocket-Node/blob/master/lib/WebSocketConnection.js#L594
-                     // sending a Node Buffer
-                     //connection.sendBytes(msg);
-                  }
-               };
-
-               websocket.close = function (code, reason) {
-                  connection.close();
-               };
-
-               websocket.onopen();
-          
-               connection.on('error', function (error) {
-                  // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
-                  websocket.onclose({code: 1000, reason: error.toString(), wasClean: true});
-               });
-
-               connection.on('close', function (code, reason) {
-                  // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
-                  websocket.onclose({code: code, reason: reason, wasClean: true});
-               });
-
-               connection.on('message', function (message) {
-                  // https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent
-                  if (message.type === 'utf8') {
-                     websocket.onmessage({data: message.utf8Data});
-                  }
-               });
-
-            });
-
-            if (protocols) {
-               client.connect(url, protocols);
-            } else {
-               client.connect(url);
-            }
-         })();
-
-      // https://github.com/einaros/ws
-      //
-      } else {
-
-         (function () {
-
-            var WebSocket = require('ws');
-            var client;
-            if (protocols) {
-               if (Array.isArray(protocols)) {
-                  protocols = protocols.join(',');
-               }
-               client = new WebSocket(url, {protocol: protocols});
-            } else {
-               client = new WebSocket(url);
-            }
+            websocket.protocol = connection.protocol;
 
             websocket.send = function (msg) {
-               client.send(msg, {binary: false});
+               if (connection.connected) {
+                  // sending a string that gets encoded as UTF8
+                  // https://github.com/Worlize/WebSocket-Node/blob/master/lib/WebSocketConnection.js#L587
+                  connection.sendUTF(msg);
+
+                  // https://github.com/Worlize/WebSocket-Node/blob/master/lib/WebSocketConnection.js#L594
+                  // sending a Node Buffer
+                  //connection.sendBytes(msg);
+               }
             };
 
             websocket.close = function (code, reason) {
-               client.close();
+               connection.close();
             };
 
-            client.on('open', function () {
-               websocket.onopen();
+            websocket.onopen();
+       
+            connection.on('error', function (error) {
+               // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+               websocket.onclose({code: 1000, reason: error.toString(), wasClean: true});
             });
 
-            client.on('message', function (data, flags) {
-               if (flags.binary) {
+            connection.on('close', function (code, reason) {
+               // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+               websocket.onclose({code: code, reason: reason, wasClean: true});
+            });
 
-               } else {
-                  websocket.onmessage({data: data});
+            connection.on('message', function (message) {
+               // https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent
+               if (message.type === 'utf8') {
+                  websocket.onmessage({data: message.utf8Data});
                }
             });
 
-            client.on('close', function () {
-            });
+         });
 
-            client.on('error', function () {
-            });
+         if (protocols) {
+            client.connect(url, protocols);
+         } else {
+            client.connect(url);
+         }
+      })();
+*/
 
-         })();
+      // https://github.com/einaros/ws
+      //
+      (function () {
 
-      }
+         var WebSocket = require('ws');
+         var client;
+         if (protocols) {
+            if (Array.isArray(protocols)) {
+               protocols = protocols.join(',');
+            }
+            client = new WebSocket(url, {protocol: protocols});
+         } else {
+            client = new WebSocket(url);
+         }
+
+         websocket.send = function (msg) {
+            client.send(msg, {binary: false});
+         };
+
+         websocket.close = function (code, reason) {
+            client.close();
+         };
+
+         client.on('open', function () {
+            websocket.onopen();
+         });
+
+         client.on('message', function (data, flags) {
+            if (flags.binary) {
+
+            } else {
+               websocket.onmessage({data: data});
+            }
+         });
+
+         client.on('close', function () {
+         });
+
+         client.on('error', function () {
+         });
+
+      })();
 
       return websocket;
    }
