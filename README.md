@@ -311,7 +311,7 @@ session.subscribe('com.myapp.topic1', on_event1).then(
 
 A list of subscriptions (in no particular order) currently active on a `session` may be accessed like this:
 
-    autobahn.Session.subscriptions
+    <autobahn.Session>.subscriptions
 
 This returns a list of `autobahn.Subscription` objects.
 
