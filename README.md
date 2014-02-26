@@ -79,9 +79,9 @@ and then, in your code
 
 You can get the **latest** (= WAMPv2 only) prebuilt **Autobahn**|JS release from here:
 
-  1. [Production (minimized and gzipped)](https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.min.jgz)
-  2. [Production (only minimized)](https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.min.js)
-  3. [Development](https://autobahn.s3.amazonaws.com/**Autobahn**|JS/latest/autobahn.js)
+  1. [Production (minimized and gzipped)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
+  2. [Production (only minimized)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
+  3. [Development](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
 
 and use in your HTML
 
