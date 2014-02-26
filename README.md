@@ -233,35 +233,45 @@ autobahn.Connection.close();
 
 ### Session Open
 
-To check if a session is open (that is, successfully joined to a realm):
+A read-only property that signal if the session is open and attached to a realm.
 
     Session.isOpen
 
 ### Session ID
 
-A Session's ID is available (read-only) when the session is open:
+A read-only property with the sessions ID.
 
     Session.id
 
 ### Session Realm
 
-A Session's realm is available (read-only) when the session is open:
+A read-only property with the realm the session is attached to.
 
     Session.realm
 
 ### Supported Roles & Features
 
-All roles and features supported by both peers of a session can be accessed:
+A read-only property with all roles and features supported by both peers of the session.
 
 	Session.features
 
 ### Deferreds
 
-Create a new Deferred of the same class as used by the library itself:
+A factory function to create new Deferred of the same class as used by the library itself.
 
-	Session.defer()
+	Session.defer
 
-This returns a new deferred, e.g. a whenjs deferred or a deferred based on ES6 promises.
+### Active Subscriptions
+
+A read-only property with a list of all subscriptions currently active on the session.
+
+    Session.subscriptions
+
+### Active Registrations
+
+A read-only property with a list of all registrations currently active on the session.
+
+    Session.registrations
 
 
 ## Subscribe
