@@ -313,9 +313,14 @@ A list of subscriptions (in no particular order) currently active on a `session`
 
     <autobahn.Session>.subscriptions
 
-This returns a list of `autobahn.Subscription` objects.
+This returns a list of `autobahn.Subscription` objects. E.g.
 
-> Caution: this should be considered read-only. DO NOT MODIFY.
+	var subs = session.subscriptions;
+	for (var i = 0; i < subs.length; ++i) {
+		console.log("Active subscription with ID " + subs[i].id);
+	}
+
+> Caution: This property should be considered read-only. DO NOT MODIFY.
 > 
 
 
