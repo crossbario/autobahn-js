@@ -322,7 +322,7 @@ for (var i = 0; i < subs.length; ++i) {
 }
 ```
 
-> Caution: This property should be considered read-only. DO NOT MODIFY.
+> Caution: This property and the subscription objects returned should be considered read-only. DO NOT MODIFY.
 > 
 
 
@@ -334,7 +334,7 @@ You can unsubscribe a previously established `subscription`
 var d = <autobahn.Subscription>.unsubscribe();
 ```
 
-which returns a *promise* that resolves (with no result value) when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
+which returns a *promise* that resolves with no result value when successful or rejects with an instance of `autobahn.Error` when unsuccessful.
 
 
 Example: **Unsubscribing a subscription**
@@ -538,11 +538,18 @@ Complete Examples:
 
 A list of registrations (in no particular order) currently active on a `session` may be accessed like this:
 
-    autobahn.Session.registrations
+    <autobahn.Session>.registrations
 
-This returns a list of `autobahn.Registration` objects.
+This returns a list of `autobahn.Registration` objects. E.g.
 
-> Caution: this should be considered read-only. DO NOT MODIFY.
+```javascript
+var regs = session.registrations;
+for (var i = 0; i < regs.length; ++i) {
+	console.log("Active registration with ID " + regs[i].id);
+}
+```
+
+> Caution: This property and the registration objects returned should be considered read-only. DO NOT MODIFY.
 > 
 
 
