@@ -91,7 +91,8 @@ and use in your HTML
 <!DOCTYPE html>
 <html>
    <body>
-      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+	  </script>
       <script>
 	      console.log("Ok, Autobahn loaded", autobahn.version);
       </script>
