@@ -90,6 +90,9 @@ and use in your HTML
 <html>
    <body>
       <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+      <script>
+	      console.log("Ok, Autobahn loaded", autobahn.version);
+      </script>
    </body>
 </html>
 ```
@@ -102,6 +105,35 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
   2. [Production (only minimized)](http://autobahn.s3.amazonaws.com/js/autobahn.min.js)
   3. [Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
+### AMD and RequireJS
+
+If you are using a module system like [RequireJS](http://requirejs.org/), you can use **Autobahn**|JS like so:
+
+```javascript
+<!DOCTYPE html>
+<html>
+<body>
+<script src="http://requirejs.org/docs/release/2.1.11/minified/require.js"></script>
+<script>
+    require.config({
+        baseUrl: ".",
+        paths: {
+            "autobahn": "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min",
+            "when": "https://cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when"
+        },
+        shim: {
+            "autobahn": {
+                deps: ["when"]
+            }
+        }
+    });
+    require(["autobahn"], function(autobahn) {
+        console.log("Ok, Autobahn loaded", autobahn.version);
+    });
+</script>
+</body>
+</html>
+```
 
 # API
 
