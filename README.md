@@ -85,7 +85,7 @@ You can get the **latest** (= WAMPv2 only) prebuilt **Autobahn**|JS release from
 
 and use in your HTML
 
-```javascript
+```html
 <!DOCTYPE html>
 <html>
    <body>
@@ -109,7 +109,7 @@ The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
 If you are using a module system like [RequireJS](http://requirejs.org/), you can use **Autobahn**|JS like so:
 
-```javascript
+```html
 <!DOCTYPE html>
 <html>
 <body>
