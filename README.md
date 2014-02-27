@@ -73,7 +73,9 @@ You can get **Autobahn**|JS for NodeJS using the Node Package Manager:
 
 and then, in your code
 
-	var autobahn = require('autobahn')
+```javascript
+var autobahn = require('autobahn')
+```
 
 ## Browsers
 
