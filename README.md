@@ -54,13 +54,19 @@ connection.open();
 
 # Getting started
 
-To use **Autobahn**|JS in your application, you need a WAMP v2 compatible **application router**.
+With **Autobahn**|JS, you can develop application components in JavaScript, and those components can be hosted inside browsers and NodeJS as well as PostgreSQL in a future release.
 
-The application router is responsible for call and event routing between your application's components. The router itself will not run any application code.
+To provide the communication between the components of your application, you need a WAMP v2 compatible **application router**.
 
-With **Autobahn**|JS, you can program application components in JavaScript, and those components can be hosted in browsers or NodeJS.
+> The application router is responsible for call and event routing between your application's components. The router itself will not run any application code.
+> 
+> WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible routers are [**Autobahn**|Python](https://github.com/tavendo/AutobahnPython) and [**Crossbar**.io.](https://github.com/crossbario/crossbar)
+> 
 
-WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible router is included with [**Autobahn**|Python](https://github.com/tavendo/AutobahnPython).
+**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see here.
+
+
+## Example Code
 
 You can find complete examples [here](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic).
 
