@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="http://requirejs.org/docs/release/2.1.11/minified/require.js"></script>
+<script>
+    require.config({
+        baseUrl: ".",
+        paths: {
+            "autobahn": "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min",
+            "when": "https://cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when"
+        },
+        shim: {
+            "autobahn": {
+                deps: ["when"]
+            }
+        }
+    });
+    require(["autobahn"], function(autobahn) {
+        console.log("Ok, Autobahn loaded", autobahn.version);
+    });
+</script>
+</body>
+</html>
