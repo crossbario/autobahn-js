@@ -711,7 +711,7 @@ Set environment variables (here shown for Ubuntu):
 
 Now clone the repo:
 
-	git clone git@github.com:tavendo/AutobahnJS.git
+   git clone git@github.com:tavendo/AutobahnJS.git
 	cd autobahnjs
 
 To install JavaScript dependencies
