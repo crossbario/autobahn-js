@@ -680,8 +680,15 @@ To build **Autobahn**|JS for use in browsers, you will need
   * [ws](http://einaros.github.io/ws/)
   * [crypto-js](https://www.npmjs.org/package/crypto-js)
 
+To install NodeJS (here shown for Ubuntu):
 
-SCons is a Python based build tool, so you will need [Python](http://python.org/) as well. Taschenmesser is an SCons toolbelt also written in Python.
+   sudo apt-get install nodejs nodejs-legacy npm
+
+SCons is a Python based build tool, so you will need [Python](http://python.org/) as well.
+
+Taschenmesser is an SCons toolbelt also written in Python. To install Taschenmesser:
+
+   sudo pip install --upgrade taschenmesser[aws,svg]
 
 Set environment variables (here shown for Windows):
 
@@ -697,10 +704,19 @@ Set environment variables (here shown for Windows):
 
 		C:\Program Files\Google Closure\compiler.jar
 
+Set environment variables (here shown for Ubuntu):
+
+   export JS_COMPILER=$HOME/compiler.jar
+   export JAVA_HOME=/usr/lib/jvm/default-java
+
 Now clone the repo:
 
 	git clone git@github.com:tavendo/AutobahnJS.git
 	cd autobahnjs
+
+To install JavaScript dependencies
+
+   npm install ws when crypto-js
 
 Then start the build:
 
