@@ -711,28 +711,28 @@ Set environment variables (here shown for Ubuntu):
 
 Now clone the repo:
 
-    git clone git@github.com:tavendo/AutobahnJS.git
-	 cd autobahnjs
+   git clone git@github.com:tavendo/AutobahnJS.git
+	cd autobahnjs
 
 To install JavaScript dependencies
 
-    npm install ws when crypto-js
+   npm install ws when crypto-js
 
 Then start the build:
 
-    scons
+   scons
 
 > When using a bash shell under Windows (e.g. git shell), use 'scons.py'.
 
 This will produce 3 files inside the `build` directory:
 
-    build/autobahn.js
-    build/autobahn.min.js
-    build/autobahn.min.jgz
+   build/autobahn.js
+   build/autobahn.min.js
+   build/autobahn.min.jgz
 
 To clean up your build:
 
-	 scons -uc
+   scons -uc
 
 
 # Where to go
