@@ -11,12 +11,12 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 3. Publisher
 4. Subscriber
 
-**Autobahn**|JS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and full source code can be found on [GitHub](https://github.com/tavendo/**Autobahn**|JS/).
+**Autobahn**|JS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and the full source code can be found on [GitHub](https://github.com/tavendo/**Autobahn**|JS/).
 
 
 # Show me some code!
 
-Here is how programming with **Autobahn**|JS looks like (identical code runs in browsers and on NodeJS):
+Here is what programming with **Autobahn**|JS looks like (identical code runs in browsers and on Node.js):
 
 ```javascript
 var autobahn = require('autobahn');
@@ -54,26 +54,26 @@ connection.open();
 
 # Getting started
 
-With **Autobahn**|JS, you can develop application components in JavaScript, and those components can be hosted inside browsers and NodeJS as well as PostgreSQL in a future release.
+With **Autobahn**|JS, you can develop application components in JavaScript, and those components can be hosted inside browsers and Node.js as well as PostgreSQL in a future release.
 
 To provide the communication between the components of your application, you need a WAMP v2 compatible **application router**.
 
 > The application router is responsible for call and event routing between your application's components. The router itself will not run any application code.
-> 
+>
 > WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible routers are [**Autobahn**|Python](https://github.com/tavendo/AutobahnPython) and [**Crossbar**.io.](https://github.com/crossbario/crossbar)
-> 
+>
 
-**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see here.
+**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see the [project GitHub wiki](https://github.com/crossbario/crossbar/wiki/Getting-Started).
 
 
 ## Example Code
 
-You can find complete examples [here](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic).
+You can find complete examples for code running in both the browser and Node.js, using an AutobahnPython application router, [here](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic).
 
 
-## NodeJS
+## Node.js
 
-You can get **Autobahn**|JS for NodeJS using the Node Package Manager:
+You can get **Autobahn**|JS for Node.js using the Node Package Manager:
 
 	npm install autobahn
 
@@ -83,6 +83,8 @@ and then, in your code
 var autobahn = require('autobahn')
 ```
 
+> Ignore any potential error messages regarding missing Visual C++ components. These have no influence on the actual result of the install.
+
 ## Browsers
 
 You can get the **latest** (= WAMPv2 only) prebuilt **Autobahn**|JS release from here:
@@ -91,7 +93,7 @@ You can get the **latest** (= WAMPv2 only) prebuilt **Autobahn**|JS release from
   2. [Production (only minimized)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
   3. [Development](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
 
-and use in your HTML
+and use it in your HTML like so
 
 ```html
 <!DOCTYPE html>
@@ -106,7 +108,7 @@ and use in your HTML
 </html>
 ```
 
-> You can use above via direct linking for *development purposes*, but please do not hotlink for production. It won't work anyway, since we restrictions on HTTP referer.
+> You can use above via direct linking for *development purposes*, but do not hotlink for production. This will not work, since we place restrictions on HTTP referers.
 
 The **old** **Autobahn**|JS for WAMPv1 is still available from here:
 
@@ -151,7 +153,7 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
 2. [Connections](#connections)
 3. [Sessions](#sessions)
 4. [Subscribe](#subscribe)
-    * [Active Subscriptions](#active-subscriptions) 
+    * [Active Subscriptions](#active-subscriptions)
     * [Unsubscribing](#unsubscribing)
 5. [Publish](#publish)
     * [Acknowledgement](#acknowledgement)
@@ -159,7 +161,7 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
     * [Publisher Exclusion](#publisher-exclusion)
     * [Publisher Identification](#publisher-identification)
 6. [Register](#register)
-    * [Active Registrations](#active-registrations) 
+    * [Active Registrations](#active-registrations)
     * [Unregistering](#unregistering)
 7. [Call](#call)
     * [Errors](#errors)
@@ -172,7 +174,7 @@ The library can be included
 
 ```javascript
 try {
-   // for NodeJS
+   // for Node.js
    var autobahn = require('autobahn');
 } catch (e) {
    // for browsers (where AutobahnJS is available globally)
@@ -210,7 +212,7 @@ var connection = new autobahn.Connection(<options|dict>);
 Here, `options` provides additional connection options:
 
  1. `url|string` (required): the WebSocket URL of the WAMP router to connect to
- 2. `realm|string` (required): the WAMP realm to join 
+ 2. `realm|string` (required): the WAMP realm to join
  3. `use_es6_promises|bool` (optional): use deferreds based on ES6 promises *
  4. `use_deferred|callable` (optional): if provided, use this deferred constructor, e.g. `jQuery.Deferred` or `Q.defer`
  5. `max_retries`: Not yet implemented.
@@ -219,13 +221,13 @@ Here, `options` provides additional connection options:
  8. `skip_subprotocol_announce`: Not yet implemented.
 
 > *: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
-> 
+>
 
 Example: **Create a connection**
 
 ```javascript
 try {
-   // for NodeJS
+   // for Node.js
    var autobahn = require('autobahn');
 } catch (e) {
    // for browsers (where AutobahnJS is available globally)
@@ -274,13 +276,13 @@ autobahn.Connection.close();
 
 ### Session Open
 
-A read-only property that signal if the session is open and attached to a realm.
+A read-only property that signals if the session is open and attached to a realm.
 
     Session.isOpen
 
 ### Session ID
 
-A read-only property with the sessions ID.
+A read-only property with the session's ID.
 
     Session.id
 
@@ -298,7 +300,7 @@ A read-only property with all roles and features supported by both peers of the 
 
 ### Deferreds
 
-A factory function to create new Deferred of the same class as used by the library itself.
+A factory function to create new Deferreds of the same class as used by the library itself.
 
 	Session.defer
 
@@ -327,7 +329,7 @@ where
  1. `topic` (required): is the URI of the topic to subscribe to
  2. `handler` (required): is the event handler that should consume events
  3. `options` (optional) specifies options for subscription (see below).
- 
+
 and returns a *promise* that resolves to an instance of `autobahn.Subscription` when successful, or rejects with an instance of `autobahn.Error` when unsuccessful.
 
 The `handler` must be a callable
@@ -374,7 +376,7 @@ for (var i = 0; i < subs.length; ++i) {
 ```
 
 > Caution: This property and the subscription objects returned should be considered read-only. DO NOT MODIFY.
-> 
+>
 
 
 ### Unsubscribing
@@ -430,7 +432,7 @@ where
  2. `args` (optional): is application event payload (a *list* giving the positional arguments)
  3. `kwargs` (optional): is application event payload (a *dictionary* giving the keyword arguments)
  4. `options` (optional) specifies options for publication (see below).
- 
+
 and returns either nothing or a *promise* if `options.acknowledge` is set.
 
 Example: **Publish an event**
@@ -451,7 +453,7 @@ By default, a publish is not acknowledged by the *Broker*, and the *Publisher* r
 
 If supported by the *Broker*, a *Publisher* may request acknowledgement of a publish via the option `acknowledge|bool`.
 
-With acknowledged publish, the publish method will return a promise that will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful. 
+With acknowledged publish, the publish method will return a promise that will resolve to an instance of `autobahn.Publication` when the publish was successful, or reject with an `autobahn.Error` when the publish was unsuccessful.
 
 Example: **Publish with acknowledge**
 
@@ -510,7 +512,7 @@ session.publish('com.myapp.hello', ['Hello, world!'], {}, {exclude_me: false});
 
 ### Publisher Identification
 
-If the feature is supported by the *Broker*, a *Publisher* may request the disclosure of it's identity (it's WAMP session ID) to receivers of a published event via the option `disclose_me|bool`.
+If the feature is supported by the *Broker*, a *Publisher* may request the disclosure of its identity (it's WAMP session ID) to receivers of a published event via the option `disclose_me|bool`.
 
 Example: **Publish with publisher disclosure**
 
@@ -601,7 +603,7 @@ for (var i = 0; i < regs.length; ++i) {
 ```
 
 > Caution: This property and the registration objects returned should be considered read-only. DO NOT MODIFY.
-> 
+>
 
 
 ### Unregistering
@@ -623,7 +625,7 @@ where
  2. `args` (optional): are (positional) call arguments
  3. `kwargs` (optional): are (keyword) call arguments
  4. `options` (optional) specifies options for the call (see below).
- 
+
 and returns a *promise* that will resolve to the call result if successful (either a plain value or an instance of `autobahn.Result`) or reject with an instance of `autobahn.Error`.
 
 Example: **Call a procedure**
@@ -670,25 +672,29 @@ Complete Examples:
 
 To build **Autobahn**|JS for use in browsers, you will need
 
-  * [Nodejs](http://nodejs.org/)
+  * [Node.js](http://nodejs.org/)
   * [Google Closure Compiler](http://dl.google.com/closure-compiler/compiler-latest.zip)
   * [SCons](http://www.scons.org/)
   * [Taschenmesser](https://github.com/oberstet/taschenmesser)
+  * [browserify](http://browserify.org/)
+  * [ws](http://einaros.github.io/ws/)
+  * [crypto-js](https://www.npmjs.org/package/crypto-js)
+
 
 SCons is a Python based build tool, so you will need [Python](http://python.org/) as well. Taschenmesser is an SCons toolbelt also written in Python.
 
-Set environment variables:
+Set environment variables (here shown for Windows):
 
   1. `JAVA_HOME` pointing to your Java run-time
-   
+
   		C:\Program Files\Java\jre7
 
   2. Add Python and Python script to `PATH`
-		
+
  		C:\Python27;C:\Python27\Scripts;
 
   3. Set `JS_COMPILER` pointing to the Google Closure `compiler.jar`
-  
+
 		C:\Program Files\Google Closure\compiler.jar
 
 Now clone the repo:
@@ -699,6 +705,8 @@ Now clone the repo:
 Then start the build:
 
 	scons
+
+> When using a bash shell under Windows (e.g. git shell), use 'scons.py'.
 
 This will produce 3 files inside the `build` directory:
 
