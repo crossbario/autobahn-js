@@ -861,10 +861,10 @@ var Session = function (socket, options) {
 
             if (self._options.onchallenge) {
 
-               var challenge = msg[1];
+               var method = msg[1];
                var extra = msg[2];
 
-               when_fn.call(self._options.onchallenge, challenge, extra).then(
+               when_fn.call(self._options.onchallenge, self, method, extra).then(
                   function (signature) {
                      var msg = [MSG_TYPE.AUTHENTICATE, signature, {}];
                      self._send_wamp(msg);

@@ -15,6 +15,7 @@
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var connection = require('./connection.js');
+var persona = require('./persona.js');
 
 var when = require('when');
 //var fn = require("when/function");
@@ -37,6 +38,8 @@ exports.Error = session.Error;
 exports.Subscription = session.Subscription;
 exports.Registration = session.Registration;
 exports.Publication = session.Publication;
+
+exports.auth_persona = persona.auth;
 
 exports.when = when;
 //exports.fn = fn;

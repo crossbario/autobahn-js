@@ -45,10 +45,10 @@ Connection.prototype.open = function () {
          self._session.join(self._options.realm);
       };
 
-      self._session.onjoin = function () {
+      self._session.onjoin = function (details) {
          self._is_open = true;
          if (self.onopen) {
-            self.onopen(self._session);
+            self.onopen(self._session, details);
          }
       };
 
