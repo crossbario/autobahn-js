@@ -20,8 +20,8 @@ import os
 import json
 import pkg_resources
 
-#taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
-taschenmesser = "../../infrequent/taschenmesser"
+taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
+#taschenmesser = "../../infrequent/taschenmesser"
 env = Environment(tools = ['default', 'taschenmesser'],
                   toolpath = [taschenmesser],
                   ENV = os.environ)
