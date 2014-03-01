@@ -206,6 +206,9 @@ var Session = function (socket, options) {
    // the transport connection (WebSocket object)
    self._socket = socket;
 
+   // options
+   self._options = options;
+
    // the WAMP session ID
    self.id = null;
 
@@ -856,8 +859,23 @@ var Session = function (socket, options) {
 
          } else if (msg_type === MSG_TYPE.CHALLENGE) {
 
-            // FIXME
-            console.log("Unhandled CHALLENGE message", msg);
+            if (self._options.onchallenge) {
+
+               var challenge = msg[1];
+               var extra = msg[2];
+
+               when_fn.call(self._options.onchallenge, challenge, extra).then(
+                  function (signature) {
+                     var msg = [MSG_TYPE.AUTHENTICATE, signature, {}];
+                     self._send_wamp(msg);
+                  },
+                  function (err) {
+                     console.log("onchallenge() raised:", err);
+                  }
+               );
+            } else {
+               console.log("received WAMP challenge, but no onchallenge() handler set");
+            }
 
          } else {
             self._protocol_violation("unexpected message type " + msg_type);
