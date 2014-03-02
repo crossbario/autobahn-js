@@ -15,6 +15,13 @@
 var when = require('when');
 var when_fn = require("when/function");
 
+// workaround for crypto-js on IE11
+// http://code.google.com/p/crypto-js/issues/detail?id=81
+if ('window' in global) {
+   if (!('Uint8ClampedArray' in window)) {
+      window.Uint8ClampedArray = Uint8Array;
+   }
+}
 var crypto = require('crypto-js');
 
 var websocket = require('./websocket.js');

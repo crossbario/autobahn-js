@@ -16,7 +16,11 @@ var when_fn = require("when/function");
 
 
 function auth(session, user, extra) {
+
+   // Persona Issues:
+   //
    // Chrome: https://github.com/mozilla/persona/issues/4083
+   // IE11: https://groups.google.com/forum/#!topic/mozilla.dev.identity/keEkVpvfLA8
 
    var d = when.defer();
 
