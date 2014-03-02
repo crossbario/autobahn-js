@@ -33,7 +33,9 @@ function auth(session, user, extra) {
          // Tear down the user's session by redirecting the user or making a call to your backend.
          // Also, make sure loggedInUser will get set to null on the next page load.
          // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
-         session.leave();
+         console.log('onlogout', user);
+         user = null;
+         //session.leave("wamp.close.logout");
       }
    });
 
