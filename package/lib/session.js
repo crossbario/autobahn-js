@@ -217,10 +217,10 @@ var Session = function (socket, options) {
    self._options = options;
 
    // the WAMP session ID
-   self.id = null;
+   self._id = null;
 
    // the WAMP realm joined
-   self.realm = null;
+   self._realm = null;
 
    // the WAMP features in use
    self._features = null;
@@ -802,13 +802,13 @@ var Session = function (socket, options) {
 
       // WAMP session not yet open
       //
-      if (!self.id) {
+      if (!self._id) {
 
          // the first message must be WELCOME, ABORT or CHALLENGE ..
          //
          if (msg_type === MSG_TYPE.WELCOME) {
 
-            self.id = msg[1];
+            self._id = msg[1];
 
             // determine actual set of advanced features that can be used
             //
@@ -900,8 +900,8 @@ var Session = function (socket, options) {
                self._send_wamp(reply);
             }
 
-            self.id = null;
-            self.realm = null;
+            self._id = null;
+            self._realm = null;
             self._features = null;
 
             if (self.onleave) {
@@ -937,6 +937,20 @@ var Session = function (socket, options) {
       }
    };
 };
+
+
+Object.defineProperty(Session.prototype, "id", {
+   get: function () {
+      return this._id;
+   }
+});
+
+
+Object.defineProperty(Session.prototype, "realm", {
+   get: function () {
+      return this._realm;
+   }
+});
 
 
 Object.defineProperty(Session.prototype, "isOpen", {
@@ -986,7 +1000,7 @@ Session.prototype.join = function (realm) {
    }
 
    self._goodbye_sent = false;
-   self.realm = realm;
+   self._realm = realm;
 
    var msg = [MSG_TYPE.HELLO, realm, WAMP_FEATURES];
    self._send_wamp(msg);
