@@ -27,32 +27,30 @@ var crypto = require('crypto-js');
 var websocket = require('./websocket.js');
 
 
-// WAMP "Advanced Profile" support in AutobahnJS:
+// WAMP "Advanced Profile" support in AutobahnJS per role
 //
 WAMP_FEATURES = {
-   roles: {
-      caller: {
-         features: {
-            caller_identification: true,
-            progressive_call_results: true
-         }
-      },
-      callee: {
-         features: {
-            progressive_call_results: true
-         }
-      },
-      publisher: {
-         features: {
-            subscriber_blackwhite_listing: true,
-            publisher_exclusion: true,
-            publisher_identification: true
-         }
-      },
-      subscriber: {
-         features: {
-            publisher_identification: true
-         }
+   caller: {
+      features: {
+         caller_identification: true,
+         progressive_call_results: true
+      }
+   },
+   callee: {
+      features: {
+         progressive_call_results: true
+      }
+   },
+   publisher: {
+      features: {
+         subscriber_blackwhite_listing: true,
+         publisher_exclusion: true,
+         publisher_identification: true
+      }
+   },
+   subscriber: {
+      features: {
+         publisher_identification: true
       }
    }
 };
@@ -823,13 +821,13 @@ var Session = function (socket, options) {
                // fill in features that both peers support
                if (rf.roles.broker.features) {
 
-                  for (var att in WAMP_FEATURES.roles.publisher.features) {
-                     self._features.publisher[att] = WAMP_FEATURES.roles.publisher.features[att] &&
+                  for (var att in WAMP_FEATURES.publisher.features) {
+                     self._features.publisher[att] = WAMP_FEATURES.publisher.features[att] &&
                                                      rf.roles.broker.features[att];
                   }
 
-                  for (var att in WAMP_FEATURES.roles.subscriber.features) {
-                     self._features.subscriber[att] = WAMP_FEATURES.roles.subscriber.features[att] &&
+                  for (var att in WAMP_FEATURES.subscriber.features) {
+                     self._features.subscriber[att] = WAMP_FEATURES.subscriber.features[att] &&
                                                       rf.roles.broker.features[att];
                   }
                }
@@ -843,13 +841,13 @@ var Session = function (socket, options) {
                // fill in features that both peers support
                if (rf.roles.dealer.features) {
 
-                  for (var att in WAMP_FEATURES.roles.caller.features) {
-                     self._features.caller[att] = WAMP_FEATURES.roles.caller.features[att] &&
+                  for (var att in WAMP_FEATURES.caller.features) {
+                     self._features.caller[att] = WAMP_FEATURES.caller.features[att] &&
                                                   rf.roles.dealer.features[att];
                   }
 
-                  for (var att in WAMP_FEATURES.roles.callee.features) {
-                     self._features.callee[att] = WAMP_FEATURES.roles.callee.features[att] &&
+                  for (var att in WAMP_FEATURES.callee.features) {
+                     self._features.callee[att] = WAMP_FEATURES.callee.features[att] &&
                                                   rf.roles.dealer.features[att];
                   }
                }
@@ -991,7 +989,7 @@ Object.defineProperty(Session.prototype, "registrations", {
 });
 
 
-Session.prototype.join = function (realm) {
+Session.prototype.join = function (realm, authmethods) {
 
    var self = this;
 
@@ -1002,7 +1000,14 @@ Session.prototype.join = function (realm) {
    self._goodbye_sent = false;
    self._realm = realm;
 
-   var msg = [MSG_TYPE.HELLO, realm, WAMP_FEATURES];
+   var details = {};
+   details.roles = WAMP_FEATURES;
+
+   if (authmethods) {
+      details.authmethods = authmethods;
+   }
+
+   var msg = [MSG_TYPE.HELLO, realm, details];
    self._send_wamp(msg);
 };
 

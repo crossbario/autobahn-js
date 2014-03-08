@@ -42,7 +42,7 @@ Connection.prototype.open = function () {
       self._session = new session.Session(self._websocket, self._options);
 
       self._websocket.onopen = function () {
-         self._session.join(self._options.realm);
+         self._session.join(self._options.realm, self._options.authmethods);
       };
 
       self._session.onjoin = function (details) {
