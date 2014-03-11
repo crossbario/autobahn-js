@@ -149,7 +149,7 @@ var Subscription = function (topic, handler, options, session, id) {
 Subscription.prototype.unsubscribe = function () {
 
    var self = this;
-   return self._session._unsubscribe(self);
+   return self._session.unsubscribe(self);
 };
 
 
@@ -169,7 +169,7 @@ var Registration = function (procedure, endpoint, options, session, id) {
 Registration.prototype.unregister = function () {
 
    var self = this;
-   return self._session._unregister(self);
+   return self._session.unregister(self);
 };
 
 
@@ -1255,9 +1255,9 @@ Session.prototype.register = function (procedure, endpoint, options) {
 };
 
 
-Session.prototype._unsubscribe = function (subscription) {
+Session.prototype.unsubscribe = function (subscription) {
 
-   console.assert(subscription instanceof Subscription, "Session._unsubscribe: <subscription> must be an instance of class autobahn.Subscription");
+   console.assert(subscription instanceof Subscription, "Session.unsubscribe: <subscription> must be an instance of class autobahn.Subscription");
 
    var self = this;
 
@@ -1288,9 +1288,9 @@ Session.prototype._unsubscribe = function (subscription) {
 };
 
 
-Session.prototype._unregister = function (registration) {
+Session.prototype.unregister = function (registration) {
 
-   console.assert(registration instanceof Registration, "Session._unregister: <registration> must be an instance of class autobahn.Registration");
+   console.assert(registration instanceof Registration, "Session.unregister: <registration> must be an instance of class autobahn.Registration");
 
    var self = this;
 
