@@ -22,7 +22,7 @@ function auth(session, user, extra) {
    // Chrome: https://github.com/mozilla/persona/issues/4083
    // IE11: https://groups.google.com/forum/#!topic/mozilla.dev.identity/keEkVpvfLA8
 
-   var d = when.defer();
+   var d = session.defer();
 
    navigator.id.watch({
       loggedInUser: user,
@@ -41,7 +41,12 @@ function auth(session, user, extra) {
       }
    });
 
-   return d.promise;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 }
 
 exports.auth = auth;

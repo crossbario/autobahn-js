@@ -156,7 +156,12 @@ _RawLongPoll.prototype.request = function (url, data) {
       req.send();
    }
 
-   return d.promise;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 

@@ -255,20 +255,29 @@ var Session = function (socket, options) {
 
 
    // deferred factory
-   if (options && options.use_es6_promises && ('Promise' in global)) {
+   if (options && options.use_es6_promises) {
 
-      // ES6-based deferred factory
-      //
-      self.defer = function () {
-         var deferred = {};
+      if ('Promise' in global) {        
+         // ES6-based deferred factory
+         //
+         self.defer = function () {
+            var deferred = {};
 
-         deferred.promise = new Promise(function (resolve, reject) {
-            deferred.resolve = resolve;
-            deferred.reject = reject;
-         });
+            deferred.promise = new Promise(function (resolve, reject) {
+               deferred.resolve = resolve;
+               deferred.reject = reject;
+            });
 
-         return deferred;
-      };
+            return deferred;
+         };
+      } else {
+
+         self.log("Warning: ES6 promises requested, but not found! Falling back to whenjs.");
+
+         // whenjs-based deferred factory
+         //
+         self.defer = when.defer;
+      }
 
    } else if (options && options.use_deferred) {
 
@@ -1009,7 +1018,12 @@ Session.prototype.log = function () {
          now = Date.now() - self._created;
       }
 
-      var header = "Session " + self._id + " on '" + self._realm + "' at " + Math.round(now * 1000) / 1000 + " ms";
+      var header = null;
+      if (self._id) {
+         header = "Session " + self._id + " on '" + self._realm + "' at " + Math.round(now * 1000) / 1000 + " ms";
+      } else {
+         header = "Session (unconnected) at " + Math.round(now * 1000) / 1000 + " ms";
+      }
 
       if ('group' in console) {
          console.group(header);
@@ -1099,7 +1113,13 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
    //
    self._send_wamp(msg);
 
-   return d.promise;
+   // whenjs has the actual user promise in an attribute
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 
@@ -1138,7 +1158,12 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
    self._send_wamp(msg);
 
    if (d) {
-      return d.promise;
+      if (d.promise.then) {
+         // whenjs has the actual user promise in an attribute
+         return d.promise;
+      } else {
+         return d;
+      }
    }
 };
 
@@ -1166,7 +1191,12 @@ Session.prototype.subscribe = function (topic, handler, options) {
    //
    self._send_wamp(msg);
 
-   return d.promise;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 
@@ -1193,7 +1223,12 @@ Session.prototype.register = function (procedure, endpoint, options) {
    //
    self._send_wamp(msg);
 
-   return d.promise;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 
@@ -1218,7 +1253,12 @@ Session.prototype._unsubscribe = function (subscription) {
    //
    self._send_wamp(msg);
 
-   return d.promise;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 
@@ -1243,7 +1283,12 @@ Session.prototype._unregister = function (registration) {
    //
    self._send_wamp(msg);
 
-   return d.promise;
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
 };
 
 
