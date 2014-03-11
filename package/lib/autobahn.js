@@ -12,16 +12,25 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+var pjson = require('../package.json');
+
+var when = require('when');
+//var fn = require("when/function");
+
+if ('DEBUG_AUTOBAHN' in global && DEBUG_AUTOBAHN) {
+   // https://github.com/cujojs/when/blob/master/docs/api.md#whenmonitor
+   require('when/monitor/console');
+   if ('console' in global) {
+      console.log("AutobahnJS debug enabled");
+   }
+}
+
+var crypto = require('crypto-js');
+
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var connection = require('./connection.js');
 var persona = require('./persona.js');
-
-var when = require('when');
-//var fn = require("when/function");
-var crypto = require('crypto-js');
-
-var pjson = require('../package.json');
 
 
 exports.version = pjson.version;
