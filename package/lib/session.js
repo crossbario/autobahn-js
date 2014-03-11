@@ -244,6 +244,9 @@ var Session = function (socket, options) {
    // incoming invocations;
    self._invocations = {};
 
+   // prefix shortcuts for URIs
+   self._prefixes = {};
+
 
    // deferred factory
    if (options && options.use_es6_promises && ('Promise' in global)) {
@@ -1048,7 +1051,7 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
    //
    var msg = [MSG_TYPE.CALL, request];
    msg.push(options || {})
-   msg.push(procedure);
+   msg.push(self.resolve(procedure));
    if (pargs) {
       msg.push(pargs);
       if (kwargs) {
@@ -1061,21 +1064,6 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
    self._send_wamp(msg);
 
    return d.promise;
-};
-
-
-// old WAMP call
-Session.prototype.call1 = function () {
-
-   var self = this;
-   var procedure = arguments[0];
-
-   var pargs = [];
-   for (var i = 1; i < arguments.length; i += 1) {
-      pargs.push(arguments[i]);
-   }
-
-   return self.xcall(procedure, pargs);
 };
 
 
@@ -1101,7 +1089,7 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
    } else {
       msg.push({});
    }
-   msg.push(topic);
+   msg.push(self.resolve(topic));
    if (pargs) {
       msg.push(pargs);
       if (kwargs) {
@@ -1116,12 +1104,6 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
    if (d) {
       return d.promise;
    }
-};
-
-
-// old WAMP publish
-Session.prototype.publish1 = function (topic, payload, options) {
-   return this.publish(topic, [payload], {}, options);
 };
 
 
@@ -1142,7 +1124,7 @@ Session.prototype.subscribe = function (topic, handler, options) {
    } else {
       msg.push({});
    }
-   msg.push(topic);
+   msg.push(self.resolve(topic));
 
    // send WAMP message
    //
@@ -1169,7 +1151,7 @@ Session.prototype.register = function (procedure, endpoint, options) {
    } else {
       msg.push({});
    }
-   msg.push(procedure);
+   msg.push(self.resolve(procedure));
 
    // send WAMP message
    //
@@ -1226,6 +1208,35 @@ Session.prototype._unregister = function (registration) {
    self._send_wamp(msg);
 
    return d.promise;
+};
+
+
+Session.prototype.prefix = function (prefix, uri) {
+   var self = this;
+
+   if (uri) {
+      self._prefixes[prefix] = uri;
+   } else {
+      if (prefix in self._prefixes) {
+         delete self._prefixes[prefix];
+      }
+   }
+};
+
+
+Session.prototype.resolve = function (curie) {
+   var self = this;
+
+   // skip if not a CURIE
+   var i = curie.indexOf(":");
+   if (i >= 0) {
+      var prefix = curie.substring(0, i);
+      if (prefix in self._prefixes) {
+         return self._prefixes[prefix] + '.' + curie.substring(i + 1);
+      }
+   } else {
+      return curie;
+   }
 };
 
 
