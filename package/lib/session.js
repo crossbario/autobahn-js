@@ -208,6 +208,12 @@ var Session = function (socket, options) {
 
    var self = this;
 
+   if ('performance' in global) {
+      self._created = performance.now();
+   } else {
+      self._created = Date.now();
+   }
+
    // the transport connection (WebSocket object)
    self._socket = socket;
 
@@ -990,6 +996,36 @@ Object.defineProperty(Session.prototype, "registrations", {
       return vals;
    }
 });
+
+
+Session.prototype.log = function () {
+   var self = this;
+
+   if ('console' in global) {
+      var now = null;
+      if ('performance' in global) {
+         now = performance.now() - self._created;
+      } else {
+         now = Date.now() - self._created;
+      }
+
+      var header = "Session " + self._id + " on '" + self._realm + "' at " + Math.round(now * 1000) / 1000 + " ms";
+
+      if ('group' in console) {
+         console.group(header);
+         for (var i = 0; i < arguments.length; i += 1) {
+            console.log(arguments[i]);
+         }
+         console.groupEnd();
+      } else {
+         var items = [header + ": "];
+         for (var i = 0; i < arguments.length; i += 1) {
+            items.push(arguments[i]);
+         }         
+         console.log.apply(this, items);
+      }
+   }
+};
 
 
 Session.prototype.join = function (realm, authmethods) {

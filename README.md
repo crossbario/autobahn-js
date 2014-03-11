@@ -152,18 +152,19 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
     * [Library Version](#library-version)
 2. [Connections](#connections)
 3. [Sessions](#sessions)
-4. [Subscribe](#subscribe)
+4. [URIs](#uris)
+5. [Subscribe](#subscribe)
     * [Active Subscriptions](#active-subscriptions)
     * [Unsubscribing](#unsubscribing)
-5. [Publish](#publish)
+6. [Publish](#publish)
     * [Acknowledgement](#acknowledgement)
     * [Receiver Black-/Whitelisting](#receiver-black-whitelisting)
     * [Publisher Exclusion](#publisher-exclusion)
     * [Publisher Identification](#publisher-identification)
-6. [Register](#register)
+7. [Register](#register)
     * [Active Registrations](#active-registrations)
     * [Unregistering](#unregistering)
-7. [Call](#call)
+8. [Call](#call)
     * [Errors](#errors)
     * [Progressive Results](#progressive-results)
 
@@ -315,6 +316,33 @@ A read-only property with a list of all subscriptions currently active on the se
 A read-only property with a list of all registrations currently active on the session.
 
     Session.registrations
+
+
+## URIs
+
+Establish a prefix:
+
+```javascript
+session.prefix('api', 'com.myapp.service');
+```
+
+You can then use CURIEs in addition to URIs:
+
+```javascript
+session.call('api:add2').then(...);
+```
+
+To remove a prefix:
+
+```javascript
+session.prefix('api', null);
+```
+
+To resolve a prefix (normally not needed in user code):
+
+```javascript
+session.resolve('api:add2');
+```
 
 
 ## Subscribe
