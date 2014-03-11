@@ -25,8 +25,6 @@ if ('DEBUG_AUTOBAHN' in global && DEBUG_AUTOBAHN) {
    }
 }
 
-var crypto = require('crypto-js');
-
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var connection = require('./connection.js');
@@ -51,5 +49,3 @@ exports.Publication = session.Publication;
 exports.auth_persona = persona.auth;
 
 exports.when = when;
-//exports.fn = fn;
-exports.crypto = crypto;

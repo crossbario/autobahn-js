@@ -12,9 +12,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-var when = require('when');
-var when_fn = require("when/function");
-
 // workaround for crypto-js on IE11
 // http://code.google.com/p/crypto-js/issues/detail?id=81
 if ('window' in global) {
@@ -23,6 +20,9 @@ if ('window' in global) {
    }
 }
 var crypto = require('crypto-js');
+
+var when = require('when');
+var when_fn = require("when/function");
 
 var websocket = require('./websocket.js');
 
@@ -131,12 +131,14 @@ var Error = function (error, args, kwargs) {
 };
 
 
-var Subscription = function (handler, session, id) {
+var Subscription = function (topic, handler, options, session, id) {
 
    var self = this;
 
    self._handler = handler;
    self._session = session;
+   self.topic = topic;
+   self.options = options || {};
    self.active = true;
    self.id = id;
 };
@@ -149,12 +151,14 @@ Subscription.prototype.unsubscribe = function () {
 };
 
 
-var Registration = function (endpoint, session, id) {
+var Registration = function (procedure, endpoint, options, session, id) {
 
    var self = this;
 
    self._endpoint = endpoint;
    self._session = session;
+   self.procedure = procedure;
+   self.options = options || {};
    self.active = true;
    self.id = id;
 };
@@ -318,10 +322,11 @@ var Session = function (socket, options) {
          var r = self._subscribe_reqs[request];
 
          var d = r[0];
-         var handler = r[1];
-         var options = r[2];
+         var topic = r[1];
+         var handler = r[2];
+         var options = r[3];
 
-         var sub = new Subscription(handler, self, subscription);
+         var sub = new Subscription(topic, handler, options, self, subscription);
 
          self._subscriptions[subscription] = sub;
 
@@ -353,8 +358,6 @@ var Session = function (socket, options) {
          var r = self._subscribe_reqs[request];
 
          var d = r[0];
-         var fn = r[1];
-         var options = r[2];
 
          d.reject(error);
 
@@ -527,10 +530,11 @@ var Session = function (socket, options) {
          var r = self._register_reqs[request];
 
          var d = r[0];
-         var endpoint = r[1];
-         var options = r[2];
+         var procedure = r[1];
+         var endpoint = r[2];
+         var options = r[3];
 
-         var reg = new Registration(endpoint, self, registration);
+         var reg = new Registration(procedure, endpoint, options, self, registration);
 
          self._registrations[registration] = reg;
 
@@ -562,8 +566,6 @@ var Session = function (socket, options) {
          var r = self._register_reqs[request];
 
          var d = r[0];
-         var fn = r[1];
-         var options = r[2];
 
          d.reject(error);
 
@@ -1175,7 +1177,7 @@ Session.prototype.subscribe = function (topic, handler, options) {
    //
    var request = newid();
    var d = self.defer();
-   self._subscribe_reqs[request] = [d, handler, options];
+   self._subscribe_reqs[request] = [d, topic, handler, options];
 
    // construct SUBSCRIBE message
    //
@@ -1207,7 +1209,7 @@ Session.prototype.register = function (procedure, endpoint, options) {
    //
    var request = newid();
    var d = self.defer();
-   self._register_reqs[request] = [d, endpoint, options];
+   self._register_reqs[request] = [d, procedure, endpoint, options];
 
    // construct REGISTER message
    //
