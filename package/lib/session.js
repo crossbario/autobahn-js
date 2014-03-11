@@ -11,6 +11,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// require('assert') would be nice .. but it does not
+// work with Google Closure after Browserify
 
 // workaround for crypto-js on IE11
 // http://code.google.com/p/crypto-js/issues/detail?id=81
@@ -1046,6 +1048,9 @@ Session.prototype.log = function () {
 
 Session.prototype.join = function (realm, authmethods) {
 
+   console.assert(typeof realm === 'string', "Session.join: <realm> must be a string");
+   console.assert(!authmethods || authmethods instanceof Array, "Session.join: <authmethods> must be an array []");
+
    var self = this;
 
    if (self.id) {
@@ -1069,6 +1074,9 @@ Session.prototype.join = function (realm, authmethods) {
 
 Session.prototype.leave = function (reason, message) {
 
+   console.assert(typeof reason === 'string', "Session.leave: <reason> must be a string");
+   console.assert(typeof message === 'string', "Session.leave: <message> must be a string");
+
    var self = this;
 
    if (!self.id) {
@@ -1090,7 +1098,13 @@ Session.prototype.leave = function (reason, message) {
 };
 
 
-Session.prototype.call = function (procedure, pargs, kwargs, options) {
+Session.prototype.call = function (procedure, args, kwargs, options) {
+
+   console.assert(typeof procedure === 'string', "Session.call: <procedure> must be a string");
+   console.assert(!args || args instanceof Array, "Session.call: <args> must be an array []");
+   console.assert(!kwargs || kwargs instanceof Object, "Session.call: <kwargs> must be an object {}");
+   console.assert(!options || options instanceof Object, "Session.call: <options> must be an object {}");
+
    var self = this;
 
    // create and remember new CALL request
@@ -1101,11 +1115,9 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
 
    // construct CALL message
    //
-   var msg = [MSG_TYPE.CALL, request];
-   msg.push(options || {})
-   msg.push(self.resolve(procedure));
-   if (pargs) {
-      msg.push(pargs);
+   var msg = [MSG_TYPE.CALL, request, options || {}, self.resolve(procedure)];
+   if (args) {
+      msg.push(args);
       if (kwargs) {
          msg.push(kwargs);
       }
@@ -1115,7 +1127,6 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
    //
    self._send_wamp(msg);
 
-   // whenjs has the actual user promise in an attribute
    if (d.promise.then) {
       // whenjs has the actual user promise in an attribute
       return d.promise;
@@ -1125,7 +1136,13 @@ Session.prototype.call = function (procedure, pargs, kwargs, options) {
 };
 
 
-Session.prototype.publish = function (topic, pargs, kwargs, options) {
+Session.prototype.publish = function (topic, args, kwargs, options) {
+
+   console.assert(typeof topic === 'string', "Session.publish: <topic> must be a string");
+   console.assert(!args || args instanceof Array, "Session.publish: <args> must be an array []");
+   console.assert(!kwargs || kwargs instanceof Object, "Session.publish: <kwargs> must be an object {}");
+   console.assert(!options || options instanceof Object, "Session.publish: <options> must be an object {}");
+
    var self = this;
 
    var ack = options && options.acknowledge;
@@ -1141,15 +1158,9 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
 
    // construct PUBLISH message
    //
-   var msg = [MSG_TYPE.PUBLISH, request];
-   if (options) {
-      msg.push(options);
-   } else {
-      msg.push({});
-   }
-   msg.push(self.resolve(topic));
-   if (pargs) {
-      msg.push(pargs);
+   var msg = [MSG_TYPE.PUBLISH, request, options || {}, self.resolve(topic)];
+   if (args) {
+      msg.push(args);
       if (kwargs) {
          msg.push(kwargs);
       }
@@ -1171,6 +1182,11 @@ Session.prototype.publish = function (topic, pargs, kwargs, options) {
 
 
 Session.prototype.subscribe = function (topic, handler, options) {
+
+   console.assert(typeof topic === 'string', "Session.subscribe: <topic> must be a string");
+   console.assert(typeof handler === 'function', "Session.subscribe: <handler> must be a function");
+   console.assert(!options || options instanceof Object, "Session.subscribe: <options> must be an object {}");
+
    var self = this;
 
    // create an remember new SUBSCRIBE request
@@ -1203,6 +1219,11 @@ Session.prototype.subscribe = function (topic, handler, options) {
 
 
 Session.prototype.register = function (procedure, endpoint, options) {
+
+   console.assert(typeof procedure === 'string', "Session.register: <procedure> must be a string");
+   console.assert(typeof endpoint === 'function', "Session.register: <endpoint> must be a function");
+   console.assert(!options || options instanceof Object, "Session.register: <options> must be an object {}");
+
    var self = this;
 
    // create an remember new REGISTER request
@@ -1235,6 +1256,9 @@ Session.prototype.register = function (procedure, endpoint, options) {
 
 
 Session.prototype._unsubscribe = function (subscription) {
+
+   console.assert(subscription instanceof Subscription, "Session._unsubscribe: <subscription> must be an instance of class autobahn.Subscription");
+
    var self = this;
 
    if (!subscription.active || !(subscription.id in self._subscriptions)) {
@@ -1265,6 +1289,9 @@ Session.prototype._unsubscribe = function (subscription) {
 
 
 Session.prototype._unregister = function (registration) {
+
+   console.assert(registration instanceof Registration, "Session._unregister: <registration> must be an instance of class autobahn.Registration");
+
    var self = this;
 
    if (!registration.active || !(registration.id in self._registrations)) {
@@ -1295,6 +1322,10 @@ Session.prototype._unregister = function (registration) {
 
 
 Session.prototype.prefix = function (prefix, uri) {
+
+   console.assert(typeof prefix === 'string', "Session.prefix: <prefix> must be a string");
+   console.assert(!uri || typeof uri === 'string', "Session.prefix: <uri> must be a string or falsy");
+
    var self = this;
 
    if (uri) {
@@ -1308,6 +1339,9 @@ Session.prototype.prefix = function (prefix, uri) {
 
 
 Session.prototype.resolve = function (curie) {
+
+   console.assert(typeof curie === 'string', "Session.resolve: <curie> must be a string");
+
    var self = this;
 
    // skip if not a CURIE
