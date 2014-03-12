@@ -936,8 +936,11 @@ var Session = function (socket, options) {
             self._realm = null;
             self._features = null;
 
+            var details = msg[1];
+            var reason = msg[2];
+
             if (self.onleave) {
-               self.onleave();
+               self.onleave(reason, details.message);
             }
 
          } else {
@@ -1067,8 +1070,8 @@ Session.prototype.join = function (realm, authmethods) {
 
    var self = this;
 
-   if (self.id) {
-      throw "session already established";
+   if (self.isOpen) {
+      throw "session already open";
    }
 
    self._goodbye_sent = false;
@@ -1088,13 +1091,13 @@ Session.prototype.join = function (realm, authmethods) {
 
 Session.prototype.leave = function (reason, message) {
 
-   console.assert(typeof reason === 'string', "Session.leave: <reason> must be a string");
-   console.assert(typeof message === 'string', "Session.leave: <message> must be a string");
+   console.assert(!reason || typeof reason === 'string', "Session.leave: <reason> must be a string");
+   console.assert(!message || typeof message === 'string', "Session.leave: <message> must be a string");
 
    var self = this;
 
-   if (!self.id) {
-      throw "no session currently established";
+   if (!self.isOpen) {
+      throw "session not open";
    }
 
    if (!reason) {
@@ -1120,6 +1123,10 @@ Session.prototype.call = function (procedure, args, kwargs, options) {
    console.assert(!options || options instanceof Object, "Session.call: <options> must be an object {}");
 
    var self = this;
+
+   if (!self.isOpen) {
+      throw "session not open";
+   }
 
    // create and remember new CALL request
    //
@@ -1158,6 +1165,10 @@ Session.prototype.publish = function (topic, args, kwargs, options) {
    console.assert(!options || options instanceof Object, "Session.publish: <options> must be an object {}");
 
    var self = this;
+
+   if (!self.isOpen) {
+      throw "session not open";
+   }
 
    var ack = options && options.acknowledge;
    var d = null;
@@ -1203,6 +1214,10 @@ Session.prototype.subscribe = function (topic, handler, options) {
 
    var self = this;
 
+   if (!self.isOpen) {
+      throw "session not open";
+   }
+
    // create an remember new SUBSCRIBE request
    //
    var request = newid();
@@ -1240,6 +1255,10 @@ Session.prototype.register = function (procedure, endpoint, options) {
 
    var self = this;
 
+   if (!self.isOpen) {
+      throw "session not open";
+   }
+
    // create an remember new REGISTER request
    //
    var request = newid();
@@ -1274,6 +1293,10 @@ Session.prototype.unsubscribe = function (subscription) {
    console.assert(subscription instanceof Subscription, "Session.unsubscribe: <subscription> must be an instance of class autobahn.Subscription");
 
    var self = this;
+
+   if (!self.isOpen) {
+      throw "session not open";
+   }
 
    if (!subscription.active || !(subscription.id in self._subscriptions)) {
       throw "subscription not active";
@@ -1328,6 +1351,10 @@ Session.prototype.unregister = function (registration) {
    console.assert(registration instanceof Registration, "Session.unregister: <registration> must be an instance of class autobahn.Registration");
 
    var self = this;
+
+   if (!self.isOpen) {
+      throw "session not open";
+   }
 
    if (!registration.active || !(registration.id in self._registrations)) {
       throw "registration not active";
