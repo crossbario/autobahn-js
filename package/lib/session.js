@@ -137,39 +137,42 @@ var Subscription = function (topic, handler, options, session, id) {
 
    var self = this;
 
-   self._handler = handler;
-   self._session = session;
    self.topic = topic;
+   self.handler = handler;
    self.options = options || {};
-   self.active = true;
+   self.session = session;
    self.id = id;
+
+   self.active = true;
 };
 
 
 Subscription.prototype.unsubscribe = function () {
 
    var self = this;
-   return self._session.unsubscribe(self);
+   return self.session.unsubscribe(self);
 };
+
 
 
 var Registration = function (procedure, endpoint, options, session, id) {
 
    var self = this;
 
-   self._endpoint = endpoint;
-   self._session = session;
    self.procedure = procedure;
+   self.endpoint = endpoint;
    self.options = options || {};
-   self.active = true;
+   self.session = session;
    self.id = id;
+
+   self.active = true;
 };
 
 
 Registration.prototype.unregister = function () {
 
    var self = this;
-   return self._session.unregister(self);
+   return self.session.unregister(self);
 };
 
 
@@ -328,9 +331,11 @@ var Session = function (socket, options) {
          var handler = r[2];
          var options = r[3];
 
+         if (!(subscription in self._subscriptions)) {
+            self._subscriptions[subscription] = [];
+         }
          var sub = new Subscription(topic, handler, options, self, subscription);
-
-         self._subscriptions[subscription] = sub;
+         self._subscriptions[subscription].push(sub);
 
          d.resolve(sub);
 
@@ -385,12 +390,17 @@ var Session = function (socket, options) {
          var d = r[0];
          var subscription = r[1];
 
-         if (subscription.id in self._subscriptions) {
-            delete self._subscriptions[subscription.id];
+         if (subscription in self._subscriptions) {
+            var subs = self._subscriptions[subscription];
+            // the following should actually be NOP, since UNSUBSCRIBE was
+            // only sent when subs got empty
+            for (var i = 0; i < subs.length; ++i) {
+               subs[i].active = false;
+            }
+            delete self._subscriptions[subscription];
          }
 
-         subscription.active = false;
-         d.resolve();
+         d.resolve(true);
 
          delete self._unsubscribe_reqs[request];
 
@@ -497,8 +507,6 @@ var Session = function (socket, options) {
 
       if (subscription in self._subscriptions) {
 
-         var handler = self._subscriptions[subscription]._handler;
-
          var publication = msg[2];
          var details = msg[3];
 
@@ -507,10 +515,14 @@ var Session = function (socket, options) {
 
          var ed = new Event(publication, details.publisher);
 
-         try {
-            handler(args, kwargs, ed);
-         } catch (e) {
-            console.log("Exception raised in event handler", e);
+         var subs = self._subscriptions[subscription];
+
+         for (var i = 0; i < subs.length; ++i) {
+            try {
+               subs[i].handler(args, kwargs, ed);
+            } catch (e) {
+               console.log("Exception raised in event handler", e);
+            }
          }
 
       } else {
@@ -721,7 +733,7 @@ var Session = function (socket, options) {
 
       if (registration in self._registrations) {
 
-         var endpoint = self._registrations[registration]._endpoint;
+         var endpoint = self._registrations[registration].endpoint;
 
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
@@ -1015,18 +1027,20 @@ Session.prototype.log = function () {
    var self = this;
 
    if ('console' in global) {
-      var now = null;
-      if ('performance' in global) {
-         now = performance.now() - self._created;
-      } else {
-         now = Date.now() - self._created;
-      }
 
       var header = null;
-      if (self._id) {
-         header = "Session " + self._id + " on '" + self._realm + "' at " + Math.round(now * 1000) / 1000 + " ms";
+      if (self._id && self._created) {
+
+         var now = null;
+         if ('performance' in global) {
+            now = performance.now() - self._created;
+         } else {
+            now = Date.now() - self._created;
+         }
+
+         header = "WAMP session " + self._id + " on '" + self._realm + "' at " + Math.round(now * 1000) / 1000 + " ms";
       } else {
-         header = "Session (unconnected) at " + Math.round(now * 1000) / 1000 + " ms";
+         header = "WAMP session";
       }
 
       if ('group' in console) {
@@ -1265,19 +1279,40 @@ Session.prototype.unsubscribe = function (subscription) {
       throw "subscription not active";
    }
 
-   // create and remember new UNSUBSCRIBE request
-   //
-   var request = newid();
+   var subs = self._subscriptions[subscription.id];
+   var i = subs.indexOf(subscription);
+
+   if (i === -1) {
+      throw "subscription not active";
+   }
+
+   // remove handler subscription
+   subs.splice(i, 1);
+   subscription.active = false;
+
    var d = self.defer();
-   self._unsubscribe_reqs[request] = [d, subscription];
 
-   // construct UNSUBSCRIBE message
-   //
-   var msg = [MSG_TYPE.UNSUBSCRIBE, request, subscription.id];
+   if (subs.length) {
+      // there are still handlers on the subscription ..
+      d.resolve(false);
 
-   // send WAMP message
-   //
-   self._send_wamp(msg);
+   } else {
+
+      // no handlers left ..
+
+      // create and remember new UNSUBSCRIBE request
+      //
+      var request = newid();
+      self._unsubscribe_reqs[request] = [d, subscription.id];
+
+      // construct UNSUBSCRIBE message
+      //
+      var msg = [MSG_TYPE.UNSUBSCRIBE, request, subscription.id];
+
+      // send WAMP message
+      //
+      self._send_wamp(msg);
+   }
 
    if (d.promise.then) {
       // whenjs has the actual user promise in an attribute
