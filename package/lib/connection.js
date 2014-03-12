@@ -182,7 +182,7 @@ Connection.prototype.open = function () {
                }
 
                log.debug("retrying in " + self._retry_delay + " ms");
-               setTimeout(retry, self._options.retry_delay);
+               setTimeout(retry, self._retry_delay);
 
                // retry delay growth for next retry cycle
                if (self._retry_delay_growth) {
