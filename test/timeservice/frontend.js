@@ -28,8 +28,8 @@ connection1.onopen = function (new_session) {
    );
 };
 
-connection1.onclose = function (details) {
-   console.log("connection 1", details);
+connection1.onclose = function (reason, details) {
+   console.log("connection 1", reason, details);
 }
 
 connection1.open();

@@ -27,6 +27,7 @@ var when = require('when');
 var when_fn = require("when/function");
 
 var websocket = require('./websocket.js');
+var log = require('./log.js');
 
 
 // WAMP "Advanced Profile" support in AutobahnJS per role
@@ -308,7 +309,8 @@ var Session = function (socket, options) {
 
 
    self._protocol_violation = function (reason) {
-      console.log("Protocol violation:", reason);
+      log.debug("failing transport due to protocol violation: " + reason);
+      self._socket.close(1002, "protocol violation: " + reason);
    };
 
    self._MESSAGE_MAP = {};
@@ -521,7 +523,7 @@ var Session = function (socket, options) {
             try {
                subs[i].handler(args, kwargs, ed);
             } catch (e) {
-               console.log("Exception raised in event handler", e);
+               log.debug("Exception raised in event handler", e);
             }
          }
 
@@ -893,8 +895,12 @@ var Session = function (socket, options) {
 
          } else if (msg_type === MSG_TYPE.ABORT) {
 
-            // FIXME
-            console.log("Unhandled ABORT message", msg);
+            var details = msg[1];
+            var reason = msg[2];
+
+            if (self.onleave) {
+               self.onleave(reason, details);
+            }
 
          } else if (msg_type === MSG_TYPE.CHALLENGE) {
 
@@ -909,11 +915,19 @@ var Session = function (socket, options) {
                      self._send_wamp(msg);
                   },
                   function (err) {
-                     console.log("onchallenge() raised:", err);
+                     log.debug("onchallenge() raised:", err);
+
+                     var msg = [MSG_TYPE.ABORT, {message: "sorry, I cannot authenticate (onchallenge handler raised an exception)"}, "wamp.error.cannot_authenticate"];
+                     self._send_wamp(msg);
+                     self._socket.close(1000);
                   }
                );
             } else {
-               console.log("received WAMP challenge, but no onchallenge() handler set");
+               log.debug("received WAMP challenge, but no onchallenge() handler set");
+
+               var msg = [MSG_TYPE.ABORT, {message: "sorry, I cannot authenticate (no onchallenge handler set)"}, "wamp.error.cannot_authenticate"];
+               self._send_wamp(msg);
+               self._socket.close(1000);
             }
 
          } else {
@@ -940,7 +954,7 @@ var Session = function (socket, options) {
             var reason = msg[2];
 
             if (self.onleave) {
-               self.onleave(reason, details.message);
+               self.onleave(reason, details);
             }
 
          } else {
@@ -1057,7 +1071,7 @@ Session.prototype.log = function () {
          for (var i = 0; i < arguments.length; i += 1) {
             items.push(arguments[i]);
          }         
-         console.log.apply(this, items);
+         console.log.apply(console, items);
       }
    }
 };

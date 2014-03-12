@@ -26,6 +26,7 @@ if ('DEBUG_AUTOBAHN' in global && DEBUG_AUTOBAHN) {
 }
 
 var util = require('./util.js');
+var log = require('./log.js');
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var connection = require('./connection.js');
@@ -52,3 +53,4 @@ exports.auth_persona = persona.auth;
 exports.when = when;
 
 exports.util = util;
+exports.log = log;

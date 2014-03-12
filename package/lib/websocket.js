@@ -12,14 +12,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-var RawWebSocket = function (url, protocols) {
+var _create_websocket = function (url, protocols) {
 
    if ('window' in global) {
 
       //
       // running in browser
       //
-
       if ("WebSocket" in window) {
          // Chrome, MSIE, newer Firefox
          if (protocols) {
@@ -168,16 +167,16 @@ var RawWebSocket = function (url, protocols) {
 };
 
 
-var _WebSocket = function (url, options) {
+var _WebSocket = function (url, protocols) {
    var self = this;
    self._url = url;
-   self._options = options;
+   self._protocols = protocols;
 };
 
 
 _WebSocket.prototype.create = function () {
    var self = this;
-   return new RawWebSocket(self._url, ['wamp.2.json']);
+   return _create_websocket(self._url, self._protocols);
 };
 
 exports.WebSocket = _WebSocket;

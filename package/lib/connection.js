@@ -14,6 +14,7 @@
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var util = require('./util.js');
+var log = require('./log.js');
 
 
 var Connection = function (options) {
@@ -85,8 +86,18 @@ Connection.prototype.open = function () {
 
    function retry () {
 
+      // let the WebSocket factory produce a new WebSocket connection
+      // which will automatically connect
       self._websocket = self._websocket_factory.create();
+      if (!self._websocket) {
+         self._retry = false;
+         if (self.onclose) {
+            self.onclose("unsupported", "WebSocket transport unsupported");
+         }
+         return;
+      }
 
+      // create a new WAMP session using the WebSocket connection as transport
       self._session = new session.Session(self._websocket, self._options);
       self._session_close_reason = null;
       self._session_close_message = null;
@@ -112,60 +123,75 @@ Connection.prototype.open = function () {
       // ... WAMP session is now attached to realm.
       //
 
-      self._session.onleave = function (reason, message) {
+      self._session.onleave = function (reason, details) {
          self._session_close_reason = reason;
-         self._session_close_message = message;
+         self._session_close_message = details.message;
+         self._retry = false;
          self._websocket.close(1000);
       };
 
-      self._websocket.onclose = function (e) {
+      self._websocket.onclose = function (evt) {
+
+         self._websocket = null;
+
+         var reason = null;
+         if (self._connect_successes === 0) {
+            reason = "unreachable";
+            self._retry = false;
+
+         } else if (!evt.wasClean) {
+            reason = "lost";
+
+         } else {
+            reason = "closed";
+         }
+
+         var stop_retrying = false;
+
+         if (self.onclose) {
+            var details = {
+               reason: self._session_close_reason,
+               message: self._session_close_message
+            };
+            stop_retrying = self.onclose(reason, details);
+         }
 
          if (self._session) {
             self._session._id = null;
             self._session = null;
-
-            if (self.onclose) {
-               var close_details = {
-                  reason: self._session_close_reason,
-                  message: self._session_close_message,
-                  transport: {
-                     code: e.code,
-                     reason: e.reason,
-                     wasClean: e.wasClean
-                  }
-               };
-               self.onclose(close_details);
-            }
+            self._session_close_reason = null;
+            self._session_close_message = null;
          }
-         self._websocket = null;
 
          // automatic reconnection
          //
-         self._retry_count += 1;
-         if (self._retry && self._retry_count <= self._max_retries) {
+         if (self._retry && !stop_retrying) {
+            self._retry_count += 1;
+            if (self._retry_count <= self._max_retries) {
 
-            self._is_retrying = true;
+               self._is_retrying = true;
 
-            // jitter retry delay
-            if (self._retry_delay_jitter) {
-               self._retry_delay = util.rand_normal(self._retry_delay, self._retry_delay * self._retry_delay_jitter);
-            }
+               // jitter retry delay
+               if (self._retry_delay_jitter) {
+                  self._retry_delay = util.rand_normal(self._retry_delay, self._retry_delay * self._retry_delay_jitter);
+               }
 
-            // cap the retry delay
-            if (self._retry_delay > self._max_retry_delay) {
-               self._retry_delay = self._max_retry_delay;
-            }
+               // cap the retry delay
+               if (self._retry_delay > self._max_retry_delay) {
+                  self._retry_delay = self._max_retry_delay;
+               }
 
-            console.log("retrying in " + self._retry_delay + " ms");
-            setTimeout(retry, self._options.retry_delay);
+               log.debug("retrying in " + self._retry_delay + " ms");
+               setTimeout(retry, self._options.retry_delay);
 
-            // retry delay growth for next retry cycle
-            if (self._retry_delay_growth) {
-               self._retry_delay = self._retry_delay * self._retry_delay_growth;
-            }
+               // retry delay growth for next retry cycle
+               if (self._retry_delay_growth) {
+                  self._retry_delay = self._retry_delay * self._retry_delay_growth;
+               }
 
-         } else {
-            console.log("giving up");
+            } else {
+               log.debug("giving up trying to reconnect");
+            }            
          }
       }
    }
