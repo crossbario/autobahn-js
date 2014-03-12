@@ -72,7 +72,8 @@ checksums.append(env.SHA256("build/CHECKSUM.SHA256", artifacts))
 ## would get published
 ##
 uploads = artifacts + checksums
-Default(uploads)
+#Default(uploads)
+Default(ab)
 
 ## Upload to Amazon S3
 ##

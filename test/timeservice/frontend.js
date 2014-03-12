@@ -5,20 +5,20 @@ try {
    // be included without a module system
 }
 
-var connection = new autobahn.Connection({
+var connection1 = new autobahn.Connection({
    url: 'ws://127.0.0.1:8080/ws',
    realm: 'realm1'}
 );
 
-var session = null;
+var session1 = null;
 
-connection.onopen = function (new_session) {
+connection1.onopen = function (new_session) {
 
-   session = new_session;
+   session1 = new_session;
 
-   session.call('com.timeservice.now').then(
+   session1.call('com.timeservice.now').then(
       function (now) {
-         console.log("Current time:", now);
+         console.log("S1 Current time:", now);
          //connection.close();
       },
       function (error) {
@@ -28,4 +28,41 @@ connection.onopen = function (new_session) {
    );
 };
 
-connection.open();
+connection1.onclose = function (details) {
+   console.log("connection 1", details);
+}
+
+connection1.open();
+
+
+
+/*
+var connection2 = new autobahn.Connection({
+   url: 'ws://127.0.0.1:8080/ws',
+   realm: 'realm1'}
+);
+
+var session2 = null;
+
+connection2.onopen = function (new_session) {
+
+   session2 = new_session;
+
+   session2.call('com.timeservice.now').then(
+      function (now) {
+         console.log("S2 Current time:", now);
+         //connection.close();
+      },
+      function (error) {
+         console.log("Call failed:", error);
+         //connection.close();
+      }
+   );
+};
+
+connection2.onclose = function (details) {
+   console.log("connection 2", details);
+}
+
+connection2.open();
+*/
