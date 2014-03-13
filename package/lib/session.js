@@ -1400,6 +1400,8 @@ Session.prototype.resolve = function (curie) {
       var prefix = curie.substring(0, i);
       if (prefix in self._prefixes) {
          return self._prefixes[prefix] + '.' + curie.substring(i + 1);
+      } else {
+         throw "cannot resolve CURIE prefix '" + prefix + "'";
       }
    } else {
       return curie;
