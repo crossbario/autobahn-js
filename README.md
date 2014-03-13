@@ -348,7 +348,7 @@ Options that control **WebSocket subprotocol handling**:
 
 A read-only property with an instance of `autobahn.Session` if there is a session currently running over the connection:
 
-    **Connection.session**|<instance of autobahn.Session>
+    Connection.session|<instance of autobahn.Session>
 
 A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use with the connection:
 
@@ -386,27 +386,27 @@ Session objects provide a number of properties.
 
 A read-only property with the WAMP **session ID**:
 
-    Session.id
+    Session.id|int
 
 A read-only property with the **realm** the session is attached to:
 
-    Session.realm
+    Session.realm|string
 
 A read-only property that signals if the **session is open** and attached to a realm:
 
-    Session.isOpen
+    Session.isOpen|bool
 
 A read-only property with the **features** from the WAMP Advanced Profile available on this session (supported by both peers):
 
-    Session.features
+    Session.features|dict
 
 A read-only property with a list of all currently **active subscriptions** on this session:
 
-    Session.subscriptions
+    Session.subscriptions|list
 
 A read-only property with a list of all currently **active registrations** on this session:
 
-    Session.registrations
+    Session.registrations|list
 
 A property with the **Deferred factory** in use on this session:
 
@@ -487,7 +487,7 @@ session.subscribe('com.myapp.topic1', on_event1).then(
 
 A list of subscriptions (in no particular order) currently active on a `session` may be accessed like this:
 
-    <autobahn.Session>.subscriptions
+    autobahn.Session.subscriptions
 
 This returns a list of `autobahn.Subscription` objects. E.g.
 
@@ -507,11 +507,13 @@ for (var i = 0; i < subs.length; ++i) {
 You can unsubscribe a previously established `subscription`
 
 ```javascript
-var d = <autobahn.Subscription>.unsubscribe();
+var d = session.unsubscribe(<instance of autobahn.Subscription>);
 ```
 
-which returns a *promise* that resolves with no result value when successful or rejects with an instance of `autobahn.Error` when unsuccessful.
+which returns a *promise* that resolves with a boolean value when successful or rejects with an instance of `autobahn.Error` when unsuccessful.
 
+> If successful, the boolean returned indicates whether the underlying WAMP subscription was actually ended (`true`) or not, since there still are application handlers in place.
+> 
 
 Example: **Unsubscribing a subscription**
 
@@ -526,8 +528,8 @@ session.subscribe('com.myapp.topic1', on_event1).then(
 
 ...
 
-sub1.unsubscribe().then(
-   function () {
+session.unsubscribe(sub1).then(
+   function (gone) {
       // successfully unsubscribed sub1
    },
    function (error) {
