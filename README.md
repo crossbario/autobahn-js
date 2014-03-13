@@ -13,11 +13,10 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 
 **Autobahn**|JS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and the full source code can be found on [GitHub](https://github.com/tavendo/**Autobahn**|JS/).
 
-**Contents**
-
-1. [Getting started](#getting-started)
-1. [API Documentation](#api-documentation)
-1. [Building](#building)
+* [Show me some code!](#show-me-some-code)
+* [Getting started](#getting-started)
+* [API Documentation](#api-documentation)
+* [Building](#building)
 
 
 # Show me some code!
@@ -157,13 +156,16 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
 
 1. [Library](#library)
     * [Library Version](#library-version)
+    * [Debug Mode](#debug-mode)
 2. [Connections](#connections)
     * [Connection Methods](#connection-methods)
     * [Connection Callbacks](#connection-callbacks)
     * [Connection Options](#connection-options)
     * [Connection Properties](#connection-properties)
 3. [Sessions](#sessions)
-4. [URIs](#uris)
+    * [Session Properties](#session-properties)
+    * [Session Logging](#session-logging)
+    * [URI Shortcuts](#uri-shortcuts)
 5. [Subscribe](#subscribe)
     * [Active Subscriptions](#active-subscriptions)
     * [Unsubscribing](#unsubscribing)
@@ -420,7 +422,36 @@ A property with the **Deferred factory** in use on this session:
     Session.defer
 
 
-## URIs
+### Session Logging
+
+**Autobahn**|JS includes a logging method for convenient logging from sessions.
+
+For example:
+
+```javascript
+connection.onopen = function (session) {
+
+   session.log("Session open.");
+
+   session.call('com.timeservice.now').then(
+      function (now) {
+         session.log(now);
+      }
+   );
+};
+```
+
+which will log to the console:
+
+```
+WAMP session 2838853860563188 on 'realm1' at 3.902 ms
+   Session open.
+WAMP session 2838853860563188 on 'realm1' at 4.679 ms
+   2014-03-13T14:09:07Z
+```
+
+
+### URI Shortcuts
 
 Establish an URI prefix to be used as a shortcut:
 

@@ -15,10 +15,11 @@ var session1 = null;
 connection1.onopen = function (new_session) {
 
    session1 = new_session;
+   session1.log("Session open.");
 
    session1.call('com.timeservice.now').then(
       function (now) {
-         console.log("S1 Current time:", now);
+         session1.log(now);
          //connection.close();
       },
       function (error) {
