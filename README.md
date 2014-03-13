@@ -348,7 +348,7 @@ Options that control **WebSocket subprotocol handling**:
 
 A read-only property with an instance of `autobahn.Session` if there is a session currently running over the connection:
 
-    Connection.session
+    **Connection.session**|<instance of autobahn.Session>
 
 A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use with the connection:
 
@@ -356,11 +356,11 @@ A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use w
 
 To check whether the connection (the transport underlying) is established:
 
-	Connection.isOpen
+	Connection.isOpen|bool
 
 To check whether the connection is currently in a "try to reconnect" cycle:
 
-	Connection.isRetrying
+	Connection.isRetrying|bool
 
 
 
