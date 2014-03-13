@@ -11,6 +11,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var when = require('when');
+
 var session = require('./session.js');
 var websocket = require('./websocket.js');
 var util = require('./util.js');
@@ -22,6 +24,47 @@ var Connection = function (options) {
    var self = this;
 
    self._options = options;
+
+
+   // Deferred factory
+   //
+   if (options && options.use_es6_promises) {
+
+      if ('Promise' in global) {        
+         // ES6-based deferred factory
+         //
+         self._defer = function () {
+            var deferred = {};
+
+            deferred.promise = new Promise(function (resolve, reject) {
+               deferred.resolve = resolve;
+               deferred.reject = reject;
+            });
+
+            return deferred;
+         };
+      } else {
+
+         log.debug("Warning: ES6 promises requested, but not found! Falling back to whenjs.");
+
+         // whenjs-based deferred factory
+         //
+         self._defer = when.defer;
+      }
+
+   } else if (options && options.use_deferred) {
+
+      // use explicit deferred factory, e.g. jQuery.Deferred or Q.defer
+      //
+      self._defer = options.use_deferred;
+
+   } else {
+
+      // whenjs-based deferred factory
+      //
+      self._defer = when.defer;
+   }
+
 
    // WAMP transport
    //
@@ -73,6 +116,7 @@ var Connection = function (options) {
 };
 
 
+
 Connection.prototype.open = function () {
 
    var self = this;
@@ -98,7 +142,7 @@ Connection.prototype.open = function () {
       }
 
       // create a new WAMP session using the WebSocket connection as transport
-      self._session = new session.Session(self._websocket, self._options);
+      self._session = new session.Session(self._websocket, self._defer, self._options.onchallenge);
       self._session_close_reason = null;
       self._session_close_message = null;
 
@@ -207,14 +251,26 @@ Connection.prototype.close = function (reason, message) {
       throw "connection already closed";
    }
 
+   // the app wants to close .. don't retry
    self._retry = false;
 
    if (self._session && self._session.isOpen) {
+      // if there is an open session, close that first.
       self._session.leave(reason, message);
    } else if (self._websocket) {
+      // no session active: just close the transport
       self._websocket.close(1000);
    }
 };
+
+
+
+Object.defineProperty(Connection.prototype, "defer", {
+   get: function () {
+      return this._defer;
+   }
+});
+
 
 
 Object.defineProperty(Connection.prototype, "session", {
@@ -224,11 +280,25 @@ Object.defineProperty(Connection.prototype, "session", {
 });
 
 
+
 Object.defineProperty(Connection.prototype, "isOpen", {
    get: function () {
-      return this._is_open;
+      if (self._websocket) {
+         return true;
+      } else {
+         return false;
+      }
    }
 });
+
+
+
+Object.defineProperty(Connection.prototype, "isRetrying", {
+   get: function () {
+      return self._is_retrying;
+   }
+});
+
 
 
 exports.Connection = Connection;

@@ -214,7 +214,7 @@ var MSG_TYPE = {
 
 
 
-var Session = function (socket, options) {
+var Session = function (socket, defer, onchallenge) {
 
    var self = this;
 
@@ -227,8 +227,11 @@ var Session = function (socket, options) {
    // the transport connection (WebSocket object)
    self._socket = socket;
 
-   // options
-   self._options = options;
+   // the Deferred factory to use
+   self._defer = defer;
+
+   // the WAMP authentication challenge handler
+   self._onchallenge = onchallenge;
 
    // the WAMP session ID
    self._id = null;
@@ -263,44 +266,6 @@ var Session = function (socket, options) {
    // prefix shortcuts for URIs
    self._prefixes = {};
 
-
-   // deferred factory
-   if (options && options.use_es6_promises) {
-
-      if ('Promise' in global) {        
-         // ES6-based deferred factory
-         //
-         self.defer = function () {
-            var deferred = {};
-
-            deferred.promise = new Promise(function (resolve, reject) {
-               deferred.resolve = resolve;
-               deferred.reject = reject;
-            });
-
-            return deferred;
-         };
-      } else {
-
-         self.log("Warning: ES6 promises requested, but not found! Falling back to whenjs.");
-
-         // whenjs-based deferred factory
-         //
-         self.defer = when.defer;
-      }
-
-   } else if (options && options.use_deferred) {
-
-      // use explicit deferred factory, e.g. jQuery.Deferred or Q.defer
-      //
-      self.defer = options.use_deferred;
-
-   } else {
-
-      // whenjs-based deferred factory
-      //
-      self.defer = when.defer;
-   }
 
 
    self._send_wamp = function (msg) {
@@ -904,12 +869,12 @@ var Session = function (socket, options) {
 
          } else if (msg_type === MSG_TYPE.CHALLENGE) {
 
-            if (self._options.onchallenge) {
+            if (self._onchallenge) {
 
                var method = msg[1];
                var extra = msg[2];
 
-               when_fn.call(self._options.onchallenge, self, method, extra).then(
+               when_fn.call(self._onchallenge, self, method, extra).then(
                   function (signature) {
                      var msg = [MSG_TYPE.AUTHENTICATE, signature, {}];
                      self._send_wamp(msg);
@@ -1145,7 +1110,7 @@ Session.prototype.call = function (procedure, args, kwargs, options) {
    // create and remember new CALL request
    //
    var request = newid();
-   var d = self.defer();
+   var d = self._defer();
    self._call_reqs[request] = [d, options];
 
    // construct CALL message
@@ -1191,7 +1156,7 @@ Session.prototype.publish = function (topic, args, kwargs, options) {
    //
    var request = newid();
    if (ack) {
-      d = self.defer();
+      d = self._defer();
       self._publish_reqs[request] = [d, options];
    }
 
@@ -1235,7 +1200,7 @@ Session.prototype.subscribe = function (topic, handler, options) {
    // create an remember new SUBSCRIBE request
    //
    var request = newid();
-   var d = self.defer();
+   var d = self._defer();
    self._subscribe_reqs[request] = [d, topic, handler, options];
 
    // construct SUBSCRIBE message
@@ -1276,7 +1241,7 @@ Session.prototype.register = function (procedure, endpoint, options) {
    // create an remember new REGISTER request
    //
    var request = newid();
-   var d = self.defer();
+   var d = self._defer();
    self._register_reqs[request] = [d, procedure, endpoint, options];
 
    // construct REGISTER message
@@ -1327,7 +1292,7 @@ Session.prototype.unsubscribe = function (subscription) {
    subs.splice(i, 1);
    subscription.active = false;
 
-   var d = self.defer();
+   var d = self._defer();
 
    if (subs.length) {
       // there are still handlers on the subscription ..
@@ -1377,7 +1342,7 @@ Session.prototype.unregister = function (registration) {
    // create and remember new UNREGISTER request
    //
    var request = newid();
-   var d = self.defer();
+   var d = self._defer();
    self._unregister_reqs[request] = [d, registration];
 
    // construct UNREGISTER message

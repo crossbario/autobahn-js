@@ -201,6 +201,30 @@ try {
 
     autobahn.version
 
+### Debug Mode
+
+To enable *debug mode*, define a global variable
+
+```
+AUTOBAHN_DEBUG = true;
+```
+
+*before* including **Autobahn**|JS. E.g.
+
+```html
+<!DOCTYPE html>
+<html>
+   <body>
+      <script>
+         AUTOBAHN_DEBUG = true;
+      </script>
+      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+	  </script>
+   </body>
+</html>
+```
+
+
 
 ## Connections
 
@@ -210,7 +234,82 @@ A new connection is created by
 var connection = new autobahn.Connection(<options|dict>);
 ```
 
-Here, `options` provides additional connection options:
+Here, `options` provides additional connection options (see below).
+
+Example: **Create a new connection**
+
+```javascript
+try {
+   // for Node.js
+   var autobahn = require('autobahn');
+} catch (e) {
+   // for browsers (where AutobahnJS is available globally)
+}
+
+var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
+```
+
+### Methods
+
+To **open a connection**:
+
+```javascript
+autobahn.Connection.open();
+```
+Starts the connection, which will establish a transport and create a new session running over the transport. If the transport is lost, automatic reconnection will be done. The latter can be configured using the `options` provided to the constructor of the `Connection` (see below).
+
+To **close a connection**:
+
+```javascript
+autobahn.Connection.close(<reason|string>, <message|string>);
+```
+
+where
+
+ * `reason` is an optional WAMP URI providing a closing reason, e.g. `com.myapp.close.signout`.
+ * `message` is an optional (human readable) closing message.
+
+When a connection was closed explicitly, no automatic reconnection will happen.
+
+
+### Callbacks
+
+`autobahn.Connection` provides two callbacks:
+
+ * `autobahn.Connection.onopen`
+ * `autobahn.Connection.onclose`
+
+The **connection open callback**
+
+```javascript
+autobahn.Connection.onopen = function (session) {
+   // Underlying connection to WAMP router established
+   // and new WAMP session started.
+   // session is an instance of autobahn.Session
+};
+```
+
+is fired when the connection has been established and a new session was created. This is the main callback where application code will hook into.
+
+The **connection close callback**
+
+```javascript
+autobahn.Connection.onclose = function (<reason|string>, <details|dict>) {
+   // connection closed, lost or unable to connect
+};
+```
+
+is fired when the connection has been closed explicitly, was lost or could not be established in the first place.
+
+Here, the possible values for *reason* are:
+
+ * `"closed"`: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
+ * `"lost"`: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
+ * `"unreachable"`: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
+
+
+
+### Options
 
  1. `url|string` (required): the WebSocket URL of the WAMP router to connect to
  2. `realm|string` (required): the WAMP realm to join
@@ -224,53 +323,25 @@ Here, `options` provides additional connection options:
 > *: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
 >
 
-Example: **Create a connection**
 
-```javascript
-try {
-   // for Node.js
-   var autobahn = require('autobahn');
-} catch (e) {
-   // for browsers (where AutobahnJS is available globally)
-}
+### Properties
 
-var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
-```
+A read-only property with an instance of `autobahn.Session` if there is a session currently running over the connection:
 
-`autobahn.Connection` provides two callbacks:
+    Connection.session
 
- * `autobahn.Connection.onopen`
- * `autobahn.Connection.onclose`
+A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use with the connection:
 
-where
+	Connection.defer
 
-```javascript
-autobahn.Connection.onopen = function (session) {
-   // Underlying connection to WAMP router established
-   // and new WAMP session started.
-   // session is an instance of autobahn.Session
-};
-```
+To check whether the connection (the transport underlying) is established:
 
-and
+	Connection.isOpen
 
-```javascript
-autobahn.Connection.onclose = function () {
-   // underlying connection to WAMP router closed
-};
-```
+To check whether the connection is currently in a "try to reconnect" cycle:
 
-To open a connection:
+	Connection.isRetrying
 
-```javascript
-autobahn.Connection.open();
-```
-
-To close a connection:
-
-```javascript
-autobahn.Connection.close();
-```
 
 
 ## Sessions
