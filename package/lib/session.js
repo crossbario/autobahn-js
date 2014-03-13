@@ -953,6 +953,13 @@ var Session = function (socket, defer, onchallenge) {
 };
 
 
+Object.defineProperty(Session.prototype, "defer", {
+   get: function () {
+      return this._defer;
+   }
+});
+
+
 Object.defineProperty(Session.prototype, "id", {
    get: function () {
       return this._id;

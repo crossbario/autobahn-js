@@ -151,6 +151,10 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
 1. [Library](#library)
     * [Library Version](#library-version)
 2. [Connections](#connections)
+    * [Connection Methods](#connection-methods)
+    * [Connection Callbacks](#connection-callbacks)
+    * [Connection Options](#connection-options)
+    * [Connection Properties](#connection-properties)
 3. [Sessions](#sessions)
 4. [URIs](#uris)
 5. [Subscribe](#subscribe)
@@ -249,7 +253,7 @@ try {
 var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
 ```
 
-### Methods
+### Connection Methods
 
 To **open a connection**:
 
@@ -274,7 +278,7 @@ where
 When a connection was closed explicitly, no automatic reconnection will happen.
 
 
-### Callbacks
+### Connection Callbacks
 
 `autobahn.Connection` provides two callbacks:
 
@@ -309,16 +313,16 @@ Here, the possible values for *reason* are:
  * `"unreachable"`: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
 
 
-### Options
+### Connection Options
 
 The constructor of `autobahn.Connection` provides various options.
 
-Required options:
+**Required** options:
 
- * `url|string` (required): the WebSocket URL of the WAMP router to connect to
- * `realm|string` (required): the WAMP realm to join
+ * `url|string`: The WebSocket URL of the WAMP router to connect to, e.g. `ws://myserver.com:8080/ws`
+ * `realm|string`: The WAMP realm to join, e.g. `realm1`
 
-Options that control what kind of Deferreds to use:
+Options that control what **kind of Deferreds** to use:
 
  * `use_es6_promises|bool` (optional): use deferreds based on ES6 promises *
  * `use_deferred|callable` (optional): if provided, use this deferred constructor, e.g. `jQuery.Deferred` or `Q.defer`
@@ -326,7 +330,7 @@ Options that control what kind of Deferreds to use:
 > *: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
 >
 
-Options that control automatic reconnection:
+Options that control **automatic reconnection**:
 
  * `max_retries|int`: Maximum number of reconnection attempts (default: **15**)
  * `initial_retry_delay|float`: Initial delay for reconnection attempt in seconds (default: **1.5**).
@@ -334,13 +338,13 @@ Options that control automatic reconnection:
  * `retry_delay_growth|float`: The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).
  * `retry_delay_jitter|float`: The standard deviation of a Gaussian to jitter the delay on each retry cycle as a fraction of the mean (default: **0.1**).
 
-Options that control WebSocket subprotocol handling:
+Options that control **WebSocket subprotocol handling**:
 
  * `skip_subprotocol_check`: Not yet implemented.
  * `skip_subprotocol_announce`: Not yet implemented.
 
 
-### Properties
+### Connection Properties
 
 A read-only property with an instance of `autobahn.Session` if there is a session currently running over the connection:
 
@@ -362,58 +366,62 @@ To check whether the connection is currently in a "try to reconnect" cycle:
 
 ## Sessions
 
-### Session Open
+WAMP sessions are instances of `autobahn.Session` that are created by connections:
 
-A read-only property that signals if the session is open and attached to a realm.
+```javascript
+var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
 
-    Session.isOpen
+connection.onopen = function (session) {
 
-### Session ID
+   // session is an instance of autobahn.Session
 
-A read-only property with the session's ID.
+};
+
+connection.open();
+```
+
+### Session Properties
+
+Session objects provide a number of properties.
+
+A read-only property with the WAMP **session ID**:
 
     Session.id
 
-### Session Realm
-
-A read-only property with the realm the session is attached to.
+A read-only property with the **realm** the session is attached to:
 
     Session.realm
 
-### Supported Roles & Features
+A read-only property that signals if the **session is open** and attached to a realm:
 
-A read-only property with all roles and features supported by both peers of the session.
+    Session.isOpen
 
-	Session.features
+A read-only property with the **features** from the WAMP Advanced Profile available on this session (supported by both peers):
 
-### Deferreds
+    Session.features
 
-A factory function to create new Deferreds of the same class as used by the library itself.
-
-	Session.defer
-
-### Active Subscriptions
-
-A read-only property with a list of all subscriptions currently active on the session.
+A read-only property with a list of all currently **active subscriptions** on this session:
 
     Session.subscriptions
 
-### Active Registrations
-
-A read-only property with a list of all registrations currently active on the session.
+A read-only property with a list of all currently **active registrations** on this session:
 
     Session.registrations
+
+A property with the **Deferred factory** in use on this session:
+
+    Session.defer
 
 
 ## URIs
 
-Establish a prefix:
+Establish an URI prefix to be used as a shortcut:
 
 ```javascript
 session.prefix('api', 'com.myapp.service');
 ```
 
-You can then use CURIEs in addition to URIs:
+You can then use [CURIEs](http://en.wikipedia.org/wiki/CURIE) in addition to URIs:
 
 ```javascript
 session.call('api:add2').then(...);
