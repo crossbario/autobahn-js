@@ -2,7 +2,7 @@
 
 **Autobahn**|JS implements **[The Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript.
 
-WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe** for applications in *one* protocol running over [WebSocket](http://tools.ietf.org/html/rfc6455).
+WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe** for applications in *one* protocol running over [WebSocket](http://tools.ietf.org/html/rfc6455) (and fallback transports for old browsers).
 
 **Autobahn**|JS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, and implements the following WAMP roles:
 
@@ -13,10 +13,16 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 
 **Autobahn**|JS is part of the [Autobahn project](http://autobahn.ws/), [MIT licensed](/LICENSE), and the full source code can be found on [GitHub](https://github.com/tavendo/**Autobahn**|JS/).
 
+**Contents**
+
+1. [Getting started](#getting-started)
+1. [API Documentation](#api-documentation)
+1. [Building](#building)
+
 
 # Show me some code!
 
-Here is what programming with **Autobahn**|JS looks like (identical code runs in browsers and on Node.js):
+Here is what programming with **Autobahn**|JS looks like (**identical code runs in browsers and on Node.js!**):
 
 ```javascript
 var autobahn = require('autobahn');
@@ -54,7 +60,7 @@ connection.open();
 
 # Getting started
 
-With **Autobahn**|JS, you can develop application components in JavaScript, and those components can be hosted inside browsers and Node.js as well as PostgreSQL in a future release.
+With **Autobahn**|JS, you can develop application components in JavaScript, and those components can be hosted inside **browsers**, **Node.js** and **PostgreSQL** (*under development*).
 
 To provide the communication between the components of your application, you need a WAMP v2 compatible **application router**.
 
@@ -68,7 +74,7 @@ To provide the communication between the components of your application, you nee
 
 ## Example Code
 
-You can find complete examples for code running in both the browser and Node.js, using an AutobahnPython application router, [here](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic).
+You can find complete examples for code running in both the browser and Node.js [here](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic).
 
 
 ## Node.js
@@ -83,7 +89,8 @@ and then, in your code
 var autobahn = require('autobahn')
 ```
 
-> Ignore any potential error messages regarding missing Visual C++ components. These have no influence on the actual result of the install.
+> On Windows, ignore any potential error messages regarding missing Visual C++ components. **Autobahn**|JS depends on packages which try to build native extensions for higher performance - but that is not strictly necessary for running.
+
 
 ## Browsers
 
@@ -146,7 +153,7 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
 </html>
 ```
 
-# API
+# API Documentation
 
 1. [Library](#library)
     * [Library Version](#library-version)
@@ -716,7 +723,7 @@ Complete Examples:
 
 A list of registrations (in no particular order) currently active on a `session` may be accessed like this:
 
-    <autobahn.Session>.registrations
+    autobahn.Session.registrations
 
 This returns a list of `autobahn.Registration` objects. E.g.
 
@@ -733,7 +740,37 @@ for (var i = 0; i < regs.length; ++i) {
 
 ### Unregistering
 
-Write me.
+You can unregister a previously established `registration`
+
+```javascript
+var d = session.unregister(<instance of autobahn.Registration>);
+```
+
+which returns a *promise* that resolves with no value when successful or rejects with an instance of `autobahn.Error` when unsuccessful.
+
+
+Example: **Unregistering a registration**
+
+```javascript
+var reg1;
+
+session.register('com.myapp.proc1', myproc1).then(
+   function (registration) {
+      reg1 = registration;
+   }
+);
+
+...
+
+session.unregister(reg1).then(
+   function () {
+      // successfully unregistered reg1
+   },
+   function (error) {
+      // unregister failed
+   }
+);
+```
 
 
 ## Call
