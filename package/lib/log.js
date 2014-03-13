@@ -14,7 +14,7 @@
 
 var debug = function () {};
 
-if (AUTOBAHN_DEBUG && ('console' in global)) {
+if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
    debug = function () {
       console.log.apply(console, arguments);
    }

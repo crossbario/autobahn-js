@@ -17,7 +17,7 @@ var pjson = require('../package.json');
 var when = require('when');
 //var fn = require("when/function");
 
-if ('DEBUG_AUTOBAHN' in global && DEBUG_AUTOBAHN) {
+if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG) {
    // https://github.com/cujojs/when/blob/master/docs/api.md#whenmonitor
    require('when/monitor/console');
    if ('console' in global) {
