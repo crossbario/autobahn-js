@@ -450,6 +450,8 @@ WAMP session 2838853860563188 on 'realm1' at 4.679 ms
    2014-03-13T14:09:07Z
 ```
 
+The log method will log the WAMP session ID and the realm of the session, as well as a timestamp that provides the time elapsed since the *construction* of the `autobahn.Session` object.
+
 
 ### URI Shortcuts
 

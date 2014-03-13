@@ -218,12 +218,6 @@ var Session = function (socket, defer, onchallenge) {
 
    var self = this;
 
-   if ('performance' in global) {
-      self._created = performance.now();
-   } else {
-      self._created = Date.now();
-   }
-
    // the transport connection (WebSocket object)
    self._socket = socket;
 
@@ -950,6 +944,14 @@ var Session = function (socket, defer, onchallenge) {
          }
       }
    };
+
+   // session object constructed .. track creation time
+   //
+   if ('performance' in global) {
+      self._created = performance.now();
+   } else {
+      self._created = Date.now();
+   }
 };
 
 
