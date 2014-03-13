@@ -256,7 +256,9 @@ To **open a connection**:
 ```javascript
 autobahn.Connection.open();
 ```
-Starts the connection, which will establish a transport and create a new session running over the transport. If the transport is lost, automatic reconnection will be done. The latter can be configured using the `options` provided to the constructor of the `Connection` (see below).
+This will establish an underlying transport (like WebSocket or long-poll) and create a new session running over the transport.
+
+When the transport is lost, automatic reconnection will be done. The latter can be configured using the `options` provided to the constructor of the `Connection` (see below).
 
 To **close a connection**:
 
@@ -266,7 +268,7 @@ autobahn.Connection.close(<reason|string>, <message|string>);
 
 where
 
- * `reason` is an optional WAMP URI providing a closing reason, e.g. `com.myapp.close.signout`.
+ * `reason` is an optional WAMP URI providing a closing reason, e.g. `com.myapp.close.signout` to the server-side.
  * `message` is an optional (human readable) closing message.
 
 When a connection was closed explicitly, no automatic reconnection will happen.
@@ -283,8 +285,7 @@ The **connection open callback**
 
 ```javascript
 autobahn.Connection.onopen = function (session) {
-   // Underlying connection to WAMP router established
-   // and new WAMP session started.
+   // Underlying transport to WAMP router established and new WAMP session started.
    // session is an instance of autobahn.Session
 };
 ```
@@ -308,20 +309,35 @@ Here, the possible values for *reason* are:
  * `"unreachable"`: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
 
 
-
 ### Options
 
- 1. `url|string` (required): the WebSocket URL of the WAMP router to connect to
- 2. `realm|string` (required): the WAMP realm to join
- 3. `use_es6_promises|bool` (optional): use deferreds based on ES6 promises *
- 4. `use_deferred|callable` (optional): if provided, use this deferred constructor, e.g. `jQuery.Deferred` or `Q.defer`
- 5. `max_retries`: Not yet implemented.
- 6. `retry_delay`: Not yet implemented.
- 7. `skip_subprotocol_check`: Not yet implemented.
- 8. `skip_subprotocol_announce`: Not yet implemented.
+The constructor of `autobahn.Connection` provides various options.
+
+Required options:
+
+ * `url|string` (required): the WebSocket URL of the WAMP router to connect to
+ * `realm|string` (required): the WAMP realm to join
+
+Options that control what kind of Deferreds to use:
+
+ * `use_es6_promises|bool` (optional): use deferreds based on ES6 promises *
+ * `use_deferred|callable` (optional): if provided, use this deferred constructor, e.g. `jQuery.Deferred` or `Q.defer`
 
 > *: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
 >
+
+Options that control automatic reconnection:
+
+ * `max_retries|int`: Maximum number of reconnection attempts (default: **15**)
+ * `initial_retry_delay|float`: Initial delay for reconnection attempt in seconds (default: **1.5**).
+ * `max_retry_delay|float`: Maximum delay for reconnection attempts in seconds (default: **300**).
+ * `retry_delay_growth|float`: The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).
+ * `retry_delay_jitter|float`: The standard deviation of a Gaussian to jitter the delay on each retry cycle as a fraction of the mean (default: **0.1**).
+
+Options that control WebSocket subprotocol handling:
+
+ * `skip_subprotocol_check`: Not yet implemented.
+ * `skip_subprotocol_announce`: Not yet implemented.
 
 
 ### Properties

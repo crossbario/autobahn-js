@@ -84,10 +84,10 @@ var Connection = function (options) {
    self._max_retries = self._options.max_retries || 15;
 
    // initial retry delay in seconds
-   self._initial_retry_delay = self._options.initial_retry_delay || (1.5 * 1000);
+   self._initial_retry_delay = self._options.initial_retry_delay || 1.5;
 
    // maximum seconds between reconnection attempts
-   self._max_retry_delay = self._options.max_retry_delay || (5 * 60 * 1000);
+   self._max_retry_delay = self._options.max_retry_delay || 300;
 
    // the growth factor applied to the retry delay on each retry cycle
    self._retry_delay_growth = self._options.retry_delay_growth || 1.5;
@@ -225,8 +225,8 @@ Connection.prototype.open = function () {
                   self._retry_delay = self._max_retry_delay;
                }
 
-               log.debug("retrying in " + self._retry_delay + " ms");
-               setTimeout(retry, self._retry_delay);
+               log.debug("retrying in " + self._retry_delay + " s");
+               setTimeout(retry, self._retry_delay * 1000);
 
                // retry delay growth for next retry cycle
                if (self._retry_delay_growth) {
