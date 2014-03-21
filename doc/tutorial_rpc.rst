@@ -11,11 +11,9 @@ RPC, as the name suggests, means calling a procedure remotely. The remote proced
 
 The result of the called procedure is received in the call return. Examples of RPCs are a request to a server to send some current weather data when a weather app starts up, or the sending of some form input to be verified on a server.
 
-In |ab|, RPC is implemented based on WAMP, an open protocol that does both RPC and Publish & Subscribe (PubSub) over WebSocket. There's also a tutorial for how to do PubSub using |ab|.
+In |ab|, RPC is implemented based on the `Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_ an open protocol that does both RPC and Publish & Subscribe (PubSub) over WebSocket. There's also a :ref:`tutorial for how to do PubSub <tutorial_pubsub>` using |ab|.
 
-In this tutorial we will create a small web app that consists of two clients which connect to a WAMP router. One of the clients provides an RPC endpoint (the 'backend') while the other calls this procedure and logs its result (the 'frontend'). The WAMP router routes the calls and results.
-
-We will create both the 'frontend' and the 'backend' ready to run in a browser, but the JavaScript can equally be executed in Node.js.
+In this tutorial we will create a small web app that consists of two clients which connect to a WAMP router. Clients can run either in the browser or on Node.js. One of the clients provides an RPC endpoint (the 'callee') while the other calls this procedure and logs its result (the 'caller'). The WAMP router routes the calls and results. The calls and received results are logged in the respective browser consoles or command shells.
 
 Download links for all code are provided with the explanations for the respective parts.
 
@@ -25,14 +23,16 @@ Prerequisites
 
 For this tutorial, you will need
 
-* a modern Web Browser with WebSockets to run the clients, and
+* a modern Web Browser with WebSockets to run the clients **or** Node.js
 * `Crossbar.io <http://crossbar.io>`_, a WAMP application router to provide the RPC routing
 
 
 The WAMP RPC router
 -------------------
 
-Browsers can only act as WebSockets clients, so we need something external to the browser to act as a router. For this we use Crossbar.io, an open source application router.
+Callers should not have to know about callees. With a single callee providing an endpoint for a procedure, this is clean design. With more advanced deployments, e.g. load-balancing across several callees, it becomes essential. The decoupling is achieved via a WAMP router. Callees register with the router, and it then routes calls by callers to the callee(s).
+
+For this tutorial we use Crossbar.io, an open source application router. (We could also use the basic router functionality which is provided by Autobahn|Python.)
 
 For the installation of Crossbar.io, see the `detailed instructions <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_ at the project GitHub repo.
 
@@ -47,31 +47,30 @@ Once you've installed Crossbar.io, open a command shell, create a test directory
 
 That's it - Crossbar.io is running, ready to route our RPCs. (It runs until you break out from the Python interpreter - Ctrl-C/D/Z depending on your platform).
 
-With this we have all the non-JavaScript stuff out of the way. From now on it's web technologies only.
+With this we have all the non-JavaScript stuff out of the way. From now on it's Web technologies only.
 
 The HTML
 --------
 
-The HTML is very simple for both the 'frontend' and the 'backend'.
-
-For the 'backend', we want something which identifies the browser tab to us, plus, of course, we need to load the WAMP library, |ab| .
+Since we want to be able to run the clients in either the browser or Node.js, we'll keep the the HTML very simple for both the caller and the callee. We basically just want something which identifies the browser tab to us, plus, of course, we need to load the WAMP library, |ab| and our JavaScript.
 
 .. code-block:: html
 
    <!DOCTYPE html>
    <head>
       <meta charset="UTF-8">
-      <title>AutobahnJS RPC Backend</title>
+      <title>AutobahnJS RPC Callee</title>
    </head>
    <html>
       <body>
-         <h1>AutobahnJS RPC Backend</h1>
+         <h1>AutobahnJS RPC Callee</h1>
          <p>Open JavaScript console to watch output.</p>
          <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script src="autobahnjs_rpc_callee.js"></script>
       </body>
    </html>
 
-For the 'frontend', all that changes are the title strings, i.e. "AutobahnJS RPC Backend" is now "AutobahnJS RPC Frontend".
+and for the caller:
 
 .. code-block:: html
    :emphasize-lines: 4, 8
@@ -79,33 +78,38 @@ For the 'frontend', all that changes are the title strings, i.e. "AutobahnJS RPC
    <!DOCTYPE html>
    <head>
       <meta charset="UTF-8">
-      <title>AutobahnJS RPC Frontend</title>
+      <title>AutobahnJS RPC Caller</title>
    </head>
    <html>
       <body>
-         <h1>AutobahnJS RPC Frontend</h1>
+         <h1>AutobahnJS RPC Caller</h1>
          <p>Open JavaScript console to watch output.</p>
          <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script src="autobahnjs_rpc_caller.js"></script>
       </body>
    </html>
+
+Download the HTML (right click + 'save as'):
+
+* :download:`Callee </_static/autobahnjs_rpc_callee.html>`
+* :download:`Caller </_static/autobahnjs_rpc_caller.html>`
 
 
 The JavaScript
 --------------
 
-To make the demo quick to run in the browser, the JavaScript is included as an inline script in the frontend and backend client HTML files. Download:
+Download the JavaScript (right click + 'save as'):
 
-* :download:`Backend <link to download goes here>`
-* :download:`Frontend <link to download goes here>`
+* :download:`Callee </_static/autobahnjs_rpc_callee.js>`
+* :download:`Caller </_static/autobahnjs_rpc_caller.js>`
 
-The JavaScript on its own can, however, also be run in Node.js. In this case, use
 
-* :download:`Backend <link to download goes here>`
-* :download:`Frontend <link to download goes here>`
+Running in the browser vs. Node.js
+++++++++++++++++++++++++++++++++++
 
-The only difference is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via node's dependency management.
+The only difference between running the JavaScript for our demo application in the browser and in Node.js is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via Node's dependency management.
 
-In order to be freely movable, we can add code which covers both use cases:
+In order for the same JavaScript to load in both cases, we do:
 
 .. code-block:: javascript
 
@@ -118,29 +122,31 @@ In order to be freely movable, we can add code which covers both use cases:
 
 
 Connecting to the Server
-------------------------
+++++++++++++++++++++++++
 
-The first thing we need to do if we want to use RPC over WebSockets is to establish a WebSocket connection. WebSocket is built into modern browsers, so in principle we could use the built-in API for this.
+The first thing we need to do if we want to use RPC over WebSockets is to establish a WebSocket connection.
 
-Establishing the connection itself is quite straight forward, but WebSockets is a low-level protocol. It does not provide any in-built features for Remote Procedure calls. For these we use WAMP.
+|ab| provides some comfort features for handling WebSocket connections. Because of this all our interaction for the connection is via |ab| .
 
-|ab| not only implements WAMP, but also some comfort features for handling WebSocket connections. Because of this all our interaction for the connection is via |ab| .
-
-The code to establish a WAMP/WebSocket connection is the same for both the frontend and the backend.
+The code to establish a WAMP/WebSocket connection is the same for both the publisher and the subscriber.
 
 .. code-block:: javascript
    :linenos:
-   :emphasize-lines: 2, 8, 13
+   :emphasize-lines: 2, 10, 17
 
    // Set up WAMP connection to router
    var connection = new autobahn.Connection({
+
       url: 'ws://localhost:8080/ws',
-      realm: 'tutorialrpc'}
+      realm: 'tutorialpubsub'}
+
    );
 
    // Set up 'onopen' handler
    connection.onopen = function (session) {
+
       // code to execute on connection open goes here
+
    };
 
    // Open connection
@@ -153,8 +159,8 @@ What we do here is:
    * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the server on.
    * The WAMP realm to connect to. Realms are used to group connections to a WAMP server together, and to e.g. apply permissions to them. With our demo server, we are free to chose a realm name.
 
-* We set up an 'onopen' handler, i.e. a function to execute once a connection has been established (starting at line 8). This is passed an object through which we can interact with the established WAMP/WebSocket session.
-* We open the WAMP/WebSocket connection (line 13).
+* We set up an 'onopen' handler, i.e. a function to execute once a connection has been established (starting at line 10). This is passed an object through which we can interact with the established WAMP/WebSocket session.
+* We open the WAMP/WebSocket connection (line 17).
 
 The options dictionary for the connection accepts further optional arguments. For this tutorial, none of these are relevant.
 
@@ -261,6 +267,8 @@ This is actually somewhat easier than the reverse chaining of functions that con
 Summary & Beyond
 ----------------
 
-This gave an overview how simple RPCs are with |ab| - no more than a line of code each
+This gave an overview how simple RPCs are with |ab| - no more than a line of code each.
 
-If you're interested, the :ref:`tutorial_pubsub` tutorial shows you an equally quick and easy start into publish & subscribe with |ab|.
+We encourage you to play around with the demo app. Run it on different machines. Add more complex (and useful) remote procedures. Use the received results in functions that do more than just log things.
+
+If you're interested, the :ref:`tutorial_pubsub` tutorial shows you can equally quick and easy start into publish & subscribe with |ab|.

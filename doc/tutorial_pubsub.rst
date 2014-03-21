@@ -18,7 +18,9 @@ It scales well, and the fact that subscriptions need not be handled by publisher
 
 In |ab| , PubSub is implemented based on the `Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_, an open protocol that enables both PubSub and Remote Procedure Calls (RPC) over WebSocket. There is also a :ref:`tutorial for how to do RPC <tutorial_rpc>` using |ab| .
 
-In this tutorial well will create a small web app that consists of two clients which connect to a WAMP server. One of the clients publishes to a topic to which the other client subscribes himself. The sent and received events are logged in the respective browser consoles.
+In this tutorial well will create a small JavaScript application that consists of two clients which connect to a WAMP router. Clients can run either in the browser or on Node.js. One of the clients publishes to a topic to which the other client subscribes himself. The sent and received events are logged in the respective browser consoles or command shells.
+
+Download links for all code are provided with the explanations for the respective parts.
 
 
 Prerequisites
@@ -26,14 +28,16 @@ Prerequisites
 
 For this tutorial, you will need
 
-* a modern Web Browser with WebSockets to run the clients, and
-* Crossbar.io, a WAMP application router to provide the RPC routing.
+* a modern Web Browser with WebSockets to run the clients **or** Node.js
+* `Crossbar.io <http://crossbar.io>`_, a WAMP application router to provide the RPC routing.
 
 
-The WAMP RPC router
--------------------
+The WAMP router
+---------------
 
-Browsers can only act as WebSockets clients, so we need something external to the browser to act as a router. For this we use Crossbar.io, an open source application router.
+The PubSub pattern is about decoupling publishers and subscribers. A publisher has no need to know of subscribers, and a subscriber (usally) does not care who the publisher is. This decoupling is done via the router: Publishers publish on a topic to the router, and subscribers register their interest in a topic with the router.
+
+For this tutorial we use Crossbar.io, an open source application router. (We could also use the basic router functionality which is provided by Autobahn|Python.)
 
 For the installation of Crossbar.io, see the `detailed instructions <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_ at the project GitHub repo.
 
@@ -46,17 +50,17 @@ Once you've installed Crossbar.io, open a command shell, create a test directory
    crossbar init
    crossbar start
 
-That's it - Crossbar.io is running, ready to route our PubSub events. (It runs until you break out from the Python interpreter - Ctrl-C/D/Z depending on your platform).
+That's it. Crossbar.io is running, ready to route our PubSub events. (It runs until you break out from the Python interpreter - Ctrl-C/D/Z depending on your platform).
 
-With this we have all the non-JavaScript stuff out of the way. From now on it's web technologies only.
+With this we have all the non-JavaScript stuff out of the way. From now on it's Web technologies only.
 
 
 The HTML
 --------
 
-The HTML is very simple for both the publisher and the subscriber.
+Since we want to be able to run the clients in either the browser or Node.js, we'll keep the the HTML very simple for both the publisher and the subscriber. We basically just want something which identifies the browser tab to us, plus, of course, we need to load the WAMP library, |ab| and our JavaScript.
 
-For the publisher, we want something which identifies the browser tab to us, plus, of course, we need to load the WAMP library, |ab| .
+For the publisher, we use:
 
 .. code-block:: html
 
@@ -70,13 +74,13 @@ For the publisher, we want something which identifies the browser tab to us, plu
          <h1>AutobahnJS PubSub Publisher</h1>
          <p>Open JavaScript console to watch output.</p>
          <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script src="autobahnjs_pubsub_publisher.js"></script>
       </body>
    </html>
 
-For the subscriber, all that changes are the title strings, i.e. "AutobahnJS PubSub Publisher" is now "AutobahnJS PubSub Subscriber".
+and for the subscriber:
 
 .. code-block:: html
-   :emphasize-lines: 4, 8
 
    <!DOCTYPE html>
    <head>
@@ -88,26 +92,31 @@ For the subscriber, all that changes are the title strings, i.e. "AutobahnJS Pub
          <h1>AutobahnJS PubSub Subscriber</h1>
          <p>Open JavaScript console to watch output.</p>
          <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script src="autobahnjs_pubsub_subscriber.js"></script>
       </body>
    </html>
+
+Download the HTML (right click + 'save as'):
+
+* :download:`Publisher </_static/autobahnjs_pubsub_publisher.html>`
+* :download:`Subscriber </_static/autobahnjs_pubsub_subscriber.html>`
 
 
 The JavaScript
 --------------
 
-To make the demo quick to run in the browser, the JavaScript is included as an inline script in the publisher and subscriber client HTML files.
+Download the JavaScript (right click + 'save as'):
 
-* :download:`Publisher <link to download goes here>`
-* :download:`Subscriber <link to download goes here>`
+* :download:`Publisher </_static/autobahnjs_pubsub_publisher.js>`
+* :download:`Subscriber </_static/autobahnjs_pubsub_subscriber.js>`
 
-The JavaScript on its own can, however, also be run in Node.js. In this case, use
 
-* :download:`Publisher <link to download goes here>`
-* :download:`Subscriber <link to download goes here>`
+Running in the browser vs. Node.js
+++++++++++++++++++++++++++++++++++
 
-The only difference is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via node's dependency management.
+The only difference between running the JavaScript for our demo application in the browser and in Node.js is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via Node's dependency management.
 
-In order to be freely movable, we can add code which covers both use cases:
+In order for the same JavaScript to load in both cases, we do:
 
 .. code-block:: javascript
 
@@ -121,13 +130,11 @@ In order to be freely movable, we can add code which covers both use cases:
 
 
 Connecting to the Server
-------------------------
+++++++++++++++++++++++++
 
-The first thing we need to do if we want to use PubSub over WebSockets is to establish a WebSocket connection. WebSocket is built into modern browsers, so in principle we could use the built-in API for this.
+The first thing we need to do if we want to use PubSub over WebSockets is to establish a WebSocket connection.
 
-Establishing the connection itself is quite straight forward, but WebSockets is a low-level protocol. It does not provide any in-built features for publish and subscribe. For these we use WAMP.
-
-|ab| not only implements WAMP, but also some comfort features for handling WebSocket connections. Because of this all our interaction for the connection is via |ab| .
+|ab| provides some comfort features for handling WebSocket connections. Because of this all our interaction for the connection is via |ab| .
 
 The code to establish a WAMP/WebSocket connection is the same for both the publisher and the subscriber.
 
@@ -153,8 +160,8 @@ What we do here is:
 
 * We define (line 2) a WAMP/WebSocket connection with the minimum amount of necessary parameters
 
-   * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the server on.
-   * The WAMP realm to connect to. Realms are used to group connections to a WAMP server together, and to e.g. apply permissions to them. With our demo server, we are free to chose a realm name.
+   * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the router on.
+   * The WAMP realm to connect to. Realms are used to group connections to a WAMP router together, and to e.g. apply permissions to them. With our demo router, we are free to chose a realm name.
 
 * We set up an 'onopen' handler, i.e. a function to execute once a connection has been established (starting at line 8). This is passed an object through which we can interact with the established WAMP/WebSocket session.
 * We open the WAMP/WebSocket connection (line 13).
@@ -163,11 +170,11 @@ The options dictionary for the connection accepts further optional arguments. Fo
 
 
 On connect
-----------
+++++++++++
 
 Once the connection is established, the code in the 'onopen' handler is executed.
 
-For the publisher this is:
+For the **publisher** this is:
 
 .. code-block:: javascript
    :linenos:
@@ -176,37 +183,108 @@ For the publisher this is:
    // Start publishing events
    var counter = 0;
 
-   setInterval(function () {
-      console.log("publishing to topic 'com.myapp.topic1': " + counter);
-      session.publish('com.myapp.topic1', [counter]);
+   setInterval ( function () {
+
+      session.publish ('com.myapp.topic1', [ counter ], {}, { acknowledge: true}).then(
+
+         function(publication) {
+            console.log("published to topic 'com.myapp.topic1', publication ID is ", publication);
+         },
+
+         function(error) {
+            console.log("publication error", error);
+         }
+
+      );
+
       counter += 1;
-   }, 1000);
+
+   }, 1000 );
 
 What we do here is:
 
-* The publication of the event itself if just a single line (line 6). The publication is for a topic, 'com.myapp.topic1'. WAMP uses URIs (with the notation following the Java package naming conventions) to identify topics. * The publication also has an optional payload
-* The payload here is a counter, which we've defined in line 2 and which we increment after each publish (line 7).
-* We want to publish more than once, so we create an interval time to wrap the publication.
-* Since we want some output in the publisher's console, we log the fact that we're publishing as well as the current counter value (line 5).
+* The publication of the event itself if just a single line (line 6). The publication is for a topic, 'com.myapp.topic1'. WAMP uses URIs (with the notation following the Java package naming conventions) to identify topics.
+* The publication also has an optional payload.
+* The payload here is a counter, which we've defined in line 2 and which we increment after each publish (line 18).
+* We want to publish more than once, so we create an interval time to wrap the publication (line 4).
+* We want feedback that the publication was successfull. As a default, publications are not acknowledged by the router. We change this by adding an options dictionary and passing 'acknowledge' as 'true'.
+* The publish creates a promise, which is resolved when the acknowledge returns as either successful or failed. We attach a handler for either outcome to the promise (that's the `.then()`). For more on promises see below.
+* The first handler function we attach (starting in line 8) is called on success, i.e. if the publish is received and allowed. It logs the received publication ID for the publish.
+* The second handler function (starting in line 12) is called on failure. It logs the received error code.
 
-For the subscriber this is:
+For the **subscriber** this is:
 
 .. code-block:: javascript
    :linenos:
-   :emphasize-lines: 7
+   :emphasize-lines: 4, 9, 25
+
+   var currentSubscription = null;
 
    // Define an event handler
-   function onEvent(args) {
-      console.log("Event received ", args);
+   function onEvent(args, kwargs, details) {
+
+      console.log("Event received ", args, kwargs, details);
+
+      if ( args[0] > 20 ) {
+         session.unsubscribe(subscription).then(
+
+            function(gone) {
+               console.log("unsubscribe successfull");
+            },
+
+            function(error) {
+               console.log("unsubscribe failed", error);
+            }
+
+         );
+      }
+
    }
 
    // Subscribe to a topic
-   session.subscribe('com.myapp.topic1', onEvent);
+   session.subscribe('com.myapp.topic1', onEvent).then(
+
+      function(subscription) {
+         console.log("subscription successfull", subscription);
+         currentSubscription = subscription;
+      },
+
+      function(error) {
+         console.log("subscription failed", error);
+      }
+
+   );
 
 What we do here is:
 
-* We define a handler for subscription events (line 2). Here, this just logs the fact that we have received an event plus the event payload.
-* We then subscribe to the topic (line 7). Arguments are the subscription topic (identified by a URI) and the subscription event handler (the function we've just defined).
+* We subbscribe to a topic (line 25). Arguments are the subscription topic (identified by a URI) and the subscription event handler.
+* The subscribe creates a promise, which is resolved when the subscribe either succeeds or fails. We attach a handler for either outcome to the promise (that's the `.then()`). For more on promises see below.
+* The first handler is called when the subscribe succeeds (line 27). It logs the received subscription object. We also store this object, since it is needed to unsubscribe.
+* The second handler is called when the subscribe fails (line 32). It logs the received error code.
+* We define a handler for subscription events (line 4). This first of all logs the fact that we have received an event plus the event payload.
+* The payload is an array and/or a dictionary (sent by the publisher) and publication details (created by the router).
+* The subscription event handler also checks the current value of the counter that the publisher sent as the sole content of the array (line 8). Once this exceeds 20, we unsubscribe (line 9), using the previoulsy stored subscription object.
+* Just like the subscribe, the unsubscribe creates a promise. We attach two handlers to this (lines 11, 15), which log success or failure.
+
+
+Using Promises to handle deferred outcomes
+------------------------------------------
+
+With all networking events, the outcome of a process involves network latencies. Quite often the connection will be one over the web (we are using WebSockets, after all). With this the accumulated round trip times for actions like publishes and subscriptions will be several orders of magnitude above what they would be if executed towards a local component.
+
+Conventional synchronous programming in JavaScript, in which the program blocks until there is a function result, is not an option if apps are to remain speedy.
+
+To handle this problem, the |ab| library implements a form of promises. This means that together with the publish or subscribe, you pass at least one function to handle the result of the action, e.g.
+
+.. code-block:: javascript
+
+   session.subscribe('com.myapp.topic1', onEvent).then(session.log);
+
+The execution of this function is then deferred until the result has been received (the 'promise' has been fulfilled).
+
+In the above example, only a single function is passed as an argument, which is called when the action is successful. In our demo, we also pass a second function which is executed if the action fails, e.g. if the subscription is not allowe.
+
+There's no need for you to manage anything regarding the passed functions - reception of the result and execution of the function for handling the result, or calling of the error function, are fully automatic in the background. All it may take is a little rethinking of some of the habits from synchronous programming - but you gain an extremely powerful and flexible tool.
 
 
 Summary & Beyond
