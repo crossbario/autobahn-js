@@ -4,8 +4,6 @@
 API Reference
 =============
 
-.. |ab| replace:: **Autobahn**\|JS
-
 
 Library
 -------

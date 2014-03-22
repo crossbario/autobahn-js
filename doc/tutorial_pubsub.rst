@@ -4,8 +4,6 @@
 Publish & Subscribe with **Autobahn**\|JS
 =========================================
 
-.. |ab| replace:: **Autobahn**\|JS
-
 The goal of this tutorial is to introduce publish and subscribe (PubSub) messaging with |ab| .
 
 Publish & Subscribe is a messaging pattern in which publishers send events to a server, and this server distributes the events to subscribers. Publishers and subscribers are decoupled through the server: they don't have any knowledge about each other. The connection between the two is only established via the topics.
@@ -29,7 +27,7 @@ Prerequisites
 For this tutorial, you will need
 
 * a modern Web Browser with WebSockets to run the clients **or** Node.js
-* `Crossbar.io <http://crossbar.io>`_, a WAMP application router to provide the RPC routing.
+* `Crossbar.io <http://crossbar.io>`_, an open source WAMP application router to provide the RPC routing.
 
 
 The WAMP router
@@ -126,6 +124,13 @@ In order for the same JavaScript to load in both cases, we do:
       // when running in browser, AutobahnJS will
       // be included without a module system
    }
+
+You need to have |ab| installed for Node.js. To do so, in a shell do
+
+::
+
+   npm install autobahn
+   npm install when
 
 
 
@@ -294,4 +299,6 @@ This tutorial gave an overview how simple PubSub messaging is with |ab| - no mor
 
 We encourage you to play around with the demo app. Run it on different machines. Add more event data. Use the received events to trigger functions that do more than just log things.
 
-If you're interested, the :ref:`tutorial_rpc` tutorial shows you an equally quick and easy start into remote procedure calls (RPC) with |ab|.
+The :ref:`examples overview page <examples_overview>` lists available examples which demonstrate additional features of WAMP.
+
+The :ref:`tutorial_rpc` tutorial shows you an equally quick and easy start into remote procedure calls (RPC) with |ab|.

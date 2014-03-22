@@ -3,8 +3,6 @@
 Getting Started
 ===============
 
-.. |ab| replace:: **Autobahn**\|JS
-
 With |ab|, you can develop application components in JavaScript, and those components can be hosted inside **browsers**, **Node.js** and **PostgreSQL** (*under development*).
 
 To provide the communication between the components of your application, you need a WAMP v2 compatible **application router**.

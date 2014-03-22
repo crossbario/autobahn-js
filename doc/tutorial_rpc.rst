@@ -3,8 +3,6 @@
 Remote Procedure Calls with **Autobahn**\|JS
 ============================================
 
-.. |ab| replace:: **Autobahn**\|JS
-
 The goal of this tutorial is to introduce remote procedure calls (RPC) with |ab|.
 
 RPC, as the name suggests, means calling a procedure remotely. The remote procedure endpoint is most usually on a server, but with WAMP, the protocol which |ab| implements, it can also be within a JavaScript client.
@@ -24,7 +22,7 @@ Prerequisites
 For this tutorial, you will need
 
 * a modern Web Browser with WebSockets to run the clients **or** Node.js
-* `Crossbar.io <http://crossbar.io>`_, a WAMP application router to provide the RPC routing
+* `Crossbar.io <http://crossbar.io>`_, an open source WAMP application router to provide the RPC routing
 
 
 The WAMP RPC router
@@ -119,6 +117,13 @@ In order for the same JavaScript to load in both cases, we do:
       // when running in browser, AutobahnJS will
       // be included without a module system
    }
+
+You need to have |ab| installed for Node.js. To do so, in a shell do
+
+::
+
+   npm install autobahn
+   npm install when
 
 
 Connecting to the Server
@@ -270,5 +275,7 @@ Summary & Beyond
 This gave an overview how simple RPCs are with |ab| - no more than a line of code each.
 
 We encourage you to play around with the demo app. Run it on different machines. Add more complex (and useful) remote procedures. Use the received results in functions that do more than just log things.
+
+The :ref:`examples overview page <examples_overview>` lists available examples which demonstrate additional features of WAMP.
 
 If you're interested, the :ref:`tutorial_pubsub` tutorial shows you can equally quick and easy start into publish & subscribe with |ab|.

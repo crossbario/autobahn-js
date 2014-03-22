@@ -12,11 +12,8 @@
 .. _WAMPv2: https://github.com/tavendo/WAMP/blob/master/spec/README.md
 .. _AutobahnTestsuite: http://autobahn.ws/testsuite
 
-.. |ab| replace:: **Autobahn**\|JS
+Overview   -   :ref:`Getting Started <gettingstarted>`   -   :ref:`Tutorials <tutorials>`   -    :ref:`Examples <examples_overview>`   -   :ref:`API Reference <reference>` - :ref:`Table of Contents <table_of_contents>`
 
---- horizontal basic nav goes here ---
-- Overview - Gettting Started - Tutorials - API Reference
-----------------xx-------------------
 
 |ab| is a subproject of `Autobahn`_ and provides an open-source implementation of `The Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_ .
 
@@ -29,6 +26,8 @@ It is ideal for distributed, multi-client and server applications, such as multi
 WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Code can be in run in either the browser or Node.js  - wherever it makes most sense in a specific use case.
 
 Since WAMP implementations exist for mutliple languages, WAMP applications can be polyglott.
+
+.. note:: The materials here are for the current version of |ab|, which implements version 2 of WAMP. For versions of |ab| <= 0.8.2, see the :ref:`legacy documentation <reference_wampv1>`.
 
 Show me some code
 -----------------
@@ -97,14 +96,14 @@ Where to go from here
 
 The :ref:`tutorials` take you step-by-step through simple sample applications that introduce core WAMP functionality and concepts.
 
-The `Examples <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic>`_ contain code covering a broader range of uses cases and advanced WAMP features. (The examples are presented both in JavaScript and Python.)
+The :ref:`examples overview page <examples_overview>` lists code examples covering a broader range of uses cases and advanced WAMP features.
 
 The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some live sample applciations made using |ab| and `Crossbar.io <http://crossbar.io/>`_, an application router which uses WAMP.
 
 The :ref:`reference` provides details for the entire API.
 
 
-.. note:: The documentation for older versions of |ab|, which implement WAMP v1, can be accessed here. The current version of |ab| no longer supports WAMP v1. WAMP v2 adds a multitude of features, so consider upgrading.
+.. note:: The documentation for older versions of |ab|, which implement WAMP v1, can be accessed here. The current version of |ab| no longer supports WAMP v1. WAMP v2 adds a lot of features and some completely new capabilities, so consider upgrading.
 
 
 Acknowledgements
@@ -112,22 +111,25 @@ Acknowledgements
 
 |ab| includes code from the following open-source projects
 
-  * [when.js](https://github.com/cujojs/when)
-  * [ws: a node.js websocket library](https://github.com/einaros/ws)
-  * [CryptoJS](http://code.google.com/p/crypto-js/)
+  * `when.js <https://github.com/cujojs/when>`_
+  * `ws: a node.js websocket library <https://github.com/einaros/ws>`_
+  * `CryptoJS <http://code.google.com/p/crypto-js/>`_
 
-Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cujojs.com/) for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
+Special thanks to the 'Coders with an Unhealthy Javascript Obsession <http://cujojs.com/>`_ for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
 
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
    gettingstarted
    tutorial
+   examples_overview
    building
    reference
+   table_of_contents
 
 
 Indices and tables
