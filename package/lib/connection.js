@@ -30,7 +30,7 @@ var Connection = function (options) {
    //
    if (options && options.use_es6_promises) {
 
-      if ('Promise' in global) {        
+      if ('Promise' in global) {
          // ES6-based deferred factory
          //
          self._defer = function () {
@@ -235,7 +235,7 @@ Connection.prototype.open = function () {
 
             } else {
                log.debug("giving up trying to reconnect");
-            }            
+            }
          }
       }
    }
@@ -283,7 +283,7 @@ Object.defineProperty(Connection.prototype, "session", {
 
 Object.defineProperty(Connection.prototype, "isOpen", {
    get: function () {
-      if (self._websocket) {
+      if (this._websocket) {
          return true;
       } else {
          return false;
@@ -295,7 +295,7 @@ Object.defineProperty(Connection.prototype, "isOpen", {
 
 Object.defineProperty(Connection.prototype, "isRetrying", {
    get: function () {
-      return self._is_retrying;
+      return this._is_retrying;
    }
 });
 
