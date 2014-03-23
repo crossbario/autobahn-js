@@ -16,9 +16,13 @@ The following files have been modified:
 * _templates/side-secondary.html
 * conf.py
 
+## Keeping changes in sync
+
 'make copycustom' has bee added, which copies all of the above to the other Autobahn repositories, except for
 
 * _templates/side-secondary.html
 * conf.py
 
 which contain content specific to their respective repos.
+
+** Any future changes to the layout should be made in Autobahn|JS and then synced from here. **

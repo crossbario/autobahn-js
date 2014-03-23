@@ -89,15 +89,15 @@ Features
 Where to go from here
 ---------------------
 
-:ref:`gettingstarted` gives a brief overview of requirements,  how to get |ab|, and where to get an application router which you need to route the application traffic of your JavaScript application.
+:doc:`gettingstarted` gives a brief overview of requirements,  how to get |ab|, and where to get an application router which you need to route the application traffic of your JavaScript application.
 
-The :ref:`tutorials` take you step-by-step through simple sample applications that introduce core WAMP functionality and concepts.
+The :doc:`tutorial` take you step-by-step through simple sample applications that introduce core WAMP functionality and concepts.
 
-The :ref:`examples overview page <examples_overview>` lists code examples covering a broader range of uses cases and advanced WAMP features.
+The :doc:`examples overview page <examples_overview>` lists code examples covering a broader range of uses cases and advanced WAMP features.
 
 The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some live sample applciations made using |ab| and `Crossbar.io <http://crossbar.io/>`_, an application router which uses WAMP.
 
-The :ref:`reference` provides details for the entire API.
+The :doc:`reference` provides details for the entire API.
 
 
 .. note:: The documentation for older versions of |ab|, which implement WAMP v1, can be accessed here. The current version of |ab| no longer supports WAMP v1. WAMP v2 adds a lot of features and some completely new capabilities, so consider upgrading.
@@ -118,7 +118,6 @@ Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cuj
    :maxdepth: 2
    :hidden:
 
-   index
    gettingstarted
    tutorial
    examples_overview
