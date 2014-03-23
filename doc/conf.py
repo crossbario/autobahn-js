@@ -158,9 +158,9 @@ html_static_path = ['_static']
 #html_sidebars = {}
 
 html_sidebars = {
-    'index':    ['side-primary.html', 'localtoc.html', 'searchbox.html'],
-    '**':       ['side-secondary.html', 'localtoc.html',
-                 'relations.html', 'searchbox.html']
+    # 'index':    ['side-primary.html', 'localtoc.html', 'searchbox.html'],
+    '**':       ['side-secondary.html', 'stay_informed.html', 'sidetoc.html',
+                 'previous_next.html', 'searchbox.html' ]
 }
 
 # Additional templates that should be rendered to pages, maps page names to
@@ -171,7 +171,7 @@ html_sidebars = {
 #html_domain_indices = True
 
 # If false, no index is generated.
-#html_use_index = True
+# html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
 #html_split_index = False
@@ -282,4 +282,10 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 
 rst_epilog = """
 .. |ab| replace:: **Autobahn**\|JS
+"""
+rst_prolog = """
+.. container:: topnav
+
+   :doc:`Overview <index>`   :doc:`gettingstarted`  :doc:`tutorial`   :doc:`Examples <examples_overview>`  :doc:`reference` :doc:`table_of_contents`
+
 """

@@ -174,12 +174,12 @@ Connect to WAMP server, establishing new session. High level function with auto-
       },
       // session open handler
       function (newSession) {
-         session = newSession;
-         main(session);
+         sess = newSession;
+         main(sess);
       },
       // session close handler
       function (code, reason, detail) {
-         session = null;
+         sess = null;
       }
    );
 
@@ -188,14 +188,14 @@ session.sessionid
 
 Return the WAMP session ID of for this session.
 
-.. js:function:: Session.sessionid ( )
+.. js:function:: wampSession.sessionid ( )
 
    :returns: (*string*) - The ID of this session or null if session is not open.
 
 
 .. code-block:: javascript
 
-   var mySessionId = sess.sessionid();
+   var mySessionId = wampSession.sessionid();
 
 The session ID is used for sending published events to specific recipients, or to exclude recipients from receiving an event.
 
@@ -206,7 +206,7 @@ session.close
 
 Close the session.
 
-.. js:function:: session.close ( )
+.. js:function:: wampSession.close ( )
 
 .. code-block:: javascript
 
@@ -224,7 +224,7 @@ session.authreq
 
 Issues an authentication request.
 
-.. js:function:: session.authreq ( authkey, extra )
+.. js:function:: wampSession.authreq ( authkey, extra )
 
    :param string authkey: Authentication key, i.e. user or application name. If undefined, anonymous authentication is performed.
    :param object extra: Authentication extra information - optional.
@@ -266,12 +266,12 @@ session.authsign
 
 Signs an authentication challenge.
 
-.. js:function:: session.authsign ( challenge, secret )
+.. js:function:: wampSession.authsign ( challenge, secret )
 
    :param string challenge: Authentication challenge as returned by the WAMP server upon a authentication request.
    :param string secret: Authentication secret.
 
-   :returns: (*string*) Authentication signature. This is then given to Session.auth to finish the authentication handshake.
+   :returns: (*string*) Authentication signature. This is then given to wampSession.auth to finish the authentication handshake.
 
 
 .. code-block:: javascript
@@ -287,7 +287,7 @@ In these cases the challenge string contains the salt the server used.
 
    var secret = ab.deriveKey(authsecret, JSON.parse(challenge).authextra);
 
-   var signature = session.authsign(challenge, secret);
+   var signature = sess.authsign(challenge, secret);
 
 Signing may also be via a third party, e.g. the Web server that the application is served from and to which it already is authenticated.
 
@@ -327,7 +327,7 @@ session.auth
 
 Authenticate, finishing the authentication handshake.
 
-.. js:function:: session.auth ( signature )
+.. js:function:: wampSession.auth ( signature )
 
    :param string signature: A authentication signature.
 
@@ -351,7 +351,7 @@ session.subscribe
 
 Subscribe to a given topic, subsequently receive events published under the topic.
 
-.. js:function:: session.subscribe(topic, callback)
+.. js:function:: wampSession.subscribe(topic, callback)
 
    :param string topic: An URI or CURIE of the topic to subscribe to.
    :param function callback: The event handler to fire when receiving an event under the subscribed topic.
@@ -417,7 +417,7 @@ session.unsubscribe
 
 Unsubscribe any callback(s) currently subscribed from the given topic.
 
-.. js:function:: session.unsubscribe ( topic )
+.. js:function:: wampSession.unsubscribe ( topic )
 
    :param string topic: The URI or CURIE of the topic to unsubscribe from.
 
@@ -439,7 +439,7 @@ session.unsubscribe
 
 Unsubscribe only the given callback currently subscribed from the given topic.
 
-.. js:function:: session.unsubscribe ( topic, callback )
+.. js:function:: wampSession.unsubscribe ( topic, callback )
 
    :param string topic: The URI or CURIE of the topic to unsubscribe from.
    :param function callback: The event handler for which to remove the subscription.
@@ -461,7 +461,7 @@ session.publish
 
 Publish the given event (which may be of simple type, or any JSON serializable object) to the given topic.
 
-.. js:function:: session.publish(topic, event)
+.. js:function:: wampSession.publish(topic, event)
 
    :param string topic: The URI or CURIE of the topic to publish to.
    :param object event: The event to be published.
@@ -480,7 +480,7 @@ session.publish
 
 Publish the given event (which may be of simple type, or any JSON serializable object) to the given topic, specifying whether to exclude myself or not.
 
-.. js:function:: session.publish(topic, event, excludeMe)
+.. js:function:: wampSession.publish(topic, event, excludeMe)
 
    :param string topic: The URI or CURIE of the topic to publish to.
    :param object event: The event to be published.
@@ -490,12 +490,12 @@ Publish the given event (which may be of simple type, or any JSON serializable o
 
    var myEvent1Topic = "http://example.com/event#myevent1";
 
-   session.subscribe(myEvent1Topic, function(topic, event){
+   sess.subscribe(myEvent1Topic, function(topic, event){
       console.log(topic, event);
    });
 
-   session.publish(myEvent1Topic, "Hello world!", true);
-   session.publish(myEvent1Topic, "Foobar!", false);
+   sess.publish(myEvent1Topic, "Hello world!", true);
+   sess.publish(myEvent1Topic, "Foobar!", false);
 
 In the above example, only the publication of "Foobar" is sent to the publisher and logged.
 
@@ -505,7 +505,7 @@ session.publish
 
 Publish the given event (which may be of simple type, or any JSON serializable object) to the given topic, specifying a group of clients that do not receive the event, or a group that receives the event.
 
-.. js:function:: session.publish(topic, event, exclude, eligible)
+.. js:function:: wampSession.publish(topic, event, exclude, eligible)
 
    :param string topic: The URI or CURIE of the topic to publish to.
    :param object event: The event to be published.
@@ -538,7 +538,7 @@ session.call
 
 Publish the given event (which may be of simple type, or any JSON serializable object) to the given topic.
 
-.. js:function:: session.call ( method, ... )
+.. js:function:: wampSession.call ( method, ... )
 
    :param string method: The URI or CURIE of the remote procedure to call.
    :param varargs of object(s) ...: Remote procedure call arguments, zero or more values.
@@ -548,7 +548,7 @@ Publish the given event (which may be of simple type, or any JSON serializable o
 
 .. code-block:: javascript
 
-   session.call("http://example.com/rpc1", arg1, arg2, arg3).then(function (result) {
+   sess.call("http://example.com/rpc1", arg1, arg2, arg3).then(function (result) {
       // do stuff with the result
    }, function(error) {
       // handle the error
@@ -570,18 +570,18 @@ session.prefix
 
 Establish the given prefix for use in CURIEs in the session.
 
-.. js:function:: session.prefix ( prefix, uri )
+.. js:function:: wampSession.prefix ( prefix, uri )
 
    :param string prefix: The prefix to be established for subsequent use in CURIEs.
    :param string uri: The fully qualified URI to establish a CURIE prefix for.
 
 .. code-block:: javascript
 
-   session.prefix("myEvents", "http://example.com/events/");
-   session.prefix("myRPCs", "http://example.com/rpcs#");
+   sess.prefix("myEvents", "http://example.com/events/");
+   sess.prefix("myRPCs", "http://example.com/rpcs#");
 
-   session.subscribe("myEvents:foo");
-   session.call("myRPCs:bar").then(barSuccess, barError);
+   sess.subscribe("myEvents:foo");
+   sess.call("myRPCs:bar").then(barSuccess, barError);
 
 In the above, *"myEvents:foo"* is equivalent to *"http://example.com/events/foo"* and *"myRPCs:bar"* to *"http://example.com/rpcs#bar"*.
 
@@ -592,16 +592,16 @@ session.shrink
 
 Shrink the given fully qualified URI to a CURIE. A CURIE prefix must have been previously defined in this session.
 
-.. js:function:: session.shrink ( uri, pass )
+.. js:function:: wampSession.shrink ( uri, pass )
 
    :param string uri: The fully qualified URI to be shrinked to CURIE.
    :param bool pass: If argument present and true, return the unmodified URI when no prefix was defined previously in this session to shrink the URI.
 
 .. code-block:: javascript
 
-   session.prefix("myEvents", "http://example.com/events/");
+   sess.prefix("myEvents", "http://example.com/events/");
 
-   var foobar = session.shrink("http://example.com/events/foobar");
+   var foobar = sess.shrink("http://example.com/events/foobar");
 
 In the above, **"foobar"** is assigned as *"myEvents:foobar"*.
 
@@ -612,16 +612,16 @@ session.resolve
 
 Resolves the given CURIE to a fully qualified URI. The CURIE prefix must have been previously defined in this session.
 
-.. js:function:: session.resolve ( curie, pass )
+.. js:function:: wampSession.resolve ( curie, pass )
 
    :param string curie: Resolves the The fully qualified URI to establish a CURIE prefix for.
    :param bool pass: If argument persent and true, return the unmodified URI when no prefix was defined to.
 
 .. code-block:: javascript
 
-   session.prefix("myEvents", "http://example.com/events/");
+   sessi.prefix("myEvents", "http://example.com/events/");
 
-   var foobar = session.resolve("myEvents:foobar");
+   var foobar = sess.resolve("myEvents:foobar");
 
 In the above, **"foobar"** is assigned as *"http://example.com/events/foobar"*.
 

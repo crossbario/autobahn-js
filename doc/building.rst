@@ -3,9 +3,6 @@
 Building
 ========
 
-.. |ab| replace:: **Autobahn**\|JS
-
-
 To build |ab| for use in browsers, you will need
 
   * `Node.js <http://nodejs.org/>`_

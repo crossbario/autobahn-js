@@ -175,3 +175,12 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+copycustom:
+	cp _templates/sidetoc.html ../../AutobahnPython/doc/_templates/
+	cp _templates/stay_informed.html ../../AutobahnPython/doc/_templates/
+	cp _themes/kr/static/autobahn.css ../../AutobahnPython/doc/_themes/kr/static
+	cp _themes/kr/static/flasky.css_t ../../AutobahnPython/doc/_themes/kr/static
+	cp _themes/kr/previous_next.html ../../AutobahnPython/doc/_themes/kr/
+	cp _themes/kr/layout.html ../../AutobahnPython/doc/_themes/kr/
+

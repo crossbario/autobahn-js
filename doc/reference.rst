@@ -39,9 +39,10 @@ Library Version
 
 |ab| library version is available (read-only):
 
-::
+.. js:function:: autobahn.version
 
-    autobahn.version
+   :returns: *string* - version number of loaded library
+
 
 Debug Mode
 ++++++++++
@@ -71,26 +72,22 @@ To enable *debug mode*, define a global variable
 Connections
 +++++++++++
 
-A new connection is created by
+A new connection is created using
 
-.. code-block:: javascript
+.. js:function:: autobahn.Connection(options)
 
-   var connection = new autobahn.Connection(<options|dict>);
+   :param object options: connection options
 
-Here, ``options`` provides additional connection options (see below).
+   :returns: *object* - autobahn connection object
 
 Example: **Create a new connection**
 
 .. code-block:: javascript
 
-   try {
-      // for Node.js
-      var autobahn = require('autobahn');
-   } catch (e) {
-      // for browsers (where AutobahnJS is available globally)
-   }
-
-   var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
+   var connection = new autobahn.Connection({
+                              url: 'ws://127.0.0.1:9000/',
+                              realm: 'realm1'
+                           });
 
 
 Connection Methods
@@ -98,9 +95,7 @@ Connection Methods
 
 To **open a connection**:
 
-.. code-block:: javascript
-
-   autobahn.Connection.open();
+.. js:function:: autobahn.Connection.open
 
 This will establish an underlying transport (like WebSocket or long-poll) and create a new session running over the transport.
 
@@ -108,14 +103,12 @@ When the transport is lost, automatic reconnection will be done. The latter can 
 
 To **close a connection**:
 
-.. code-block:: javascript
+.. js:function::   autobahn.Connection.close(reason, message)
 
-   autobahn.Connection.close(<reason|string>, <message|string>);
+   :param uri reason: optional WAMP URI providing a closing reason, e.g. ``com.myapp.close.signout`` to the server-side
+   :param string message: optional (human readable) closing message
 
-where
-
- * ``reason`` is an optional WAMP URI providing a closing reason, e.g. ``com.myapp.close.signout`` to the server-side.
- * ``message`` is an optional (human readable) closing message.
+   :returns: *string* on connection close error, else *undefined*
 
 When a connection has been closed explicitly, no automatic reconnection will happen.
 
@@ -128,7 +121,7 @@ Connection Callbacks
  * ``autobahn.Connection.onopen``
  * ``autobahn.Connection.onclose``
 
-The **connection open callback**
+The **connection open callback** is fired when the connection has been established and a new session was created. This is the main callback which application code will hook into.
 
 .. code-block:: javascript
 
@@ -137,49 +130,50 @@ The **connection open callback**
       // session is an instance of autobahn.Session
    };
 
-is fired when the connection has been established and a new session was created. This is the main callback where application code will hook into.
+The **connection open callback** is passed the ``autobahn.Session`` object which has been created on opening the connection.
 
-The **connection close callback**
+The **connection close callback** is fired when the connection has been closed explicitly, was lost or could not be established in the first place.
 
 .. code-block:: javascript
 
-   autobahn.Connection.onclose = function (<reason|string>, <details|dict>) {
+   autobahn.Connection.onclose = function (reason, details) {
       // connection closed, lost or unable to connect
    };
 
-is fired when the connection has been closed explicitly, was lost or could not be established in the first place.
-
-Here, the possible values for *reason* are:
+``reason`` is a string with the possible values
 
  * ``"closed"``: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
  * ``"lost"``: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
  * ``"unreachable"``: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
 
+``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`
 
 Connection Options
 ++++++++++++++++++
 
-The constructor of ``autobahn.Connection`` provides various options.
+The constructor of :js:func:`autobahn.Connection` provides various options.
 
 **Required** options:
 
- * ``url|string``: The WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws``
- * ``realm|string``: The WAMP realm to join, e.g. ``realm1``
+ * ``url``: *string* - the WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws``
+ * ``realm``: *string* - The WAMP realm to join, e.g. ``realm1``
+
+**Optional** options:
 
 Options that control what **kind of Deferreds** to use:
 
- * ``use_es6_promises|bool`` (optional): use deferreds based on ES6 promises
- * ``use_deferred|callable`` (optional): if provided, use this deferred constructor, e.g. ``jQuery.Deferred`` or ``Q.defer``
+ * ``use_es6_promises``: *boolean* - use deferreds based on ES6 promises
+ * ``use_deferred``: *callable* - if provided, use this deferred constructor, e.g. ``jQuery.Deferred`` or ``Q.defer``
 
 .. note:: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
 
 Options that control **automatic reconnection**:
 
- * ``max_retries|int``: Maximum number of reconnection attempts (default: **15**)
- * ``initial_retry_delay|float``: Initial delay for reconnection attempt in seconds (default: **1.5**).
- * ``max_retry_delay|float``: Maximum delay for reconnection attempts in seconds (default: **300**).
- * ``retry_delay_growth|float``: The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).
- * ``retry_delay_jitter|float``: The standard deviation of a Gaussian to jitter the delay on each retry cycle as a fraction of the mean (default: **0.1**).
+ * ``max_retries``: *integer* - Maximum number of reconnection attempts (default: **15**)
+ * ``initial_retry_delay``: *float* - Initial delay for reconnection attempt in seconds (default: **1.5**).
+ * ``max_retry_delay``: *float* - Maximum delay for reconnection attempts in seconds (default: **300**).
+ * ``retry_delay_growth``: *float* - The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).
+ * ``retry_delay_jitter``: *float* - The standard deviation of a Gaussian to jitter the delay on each retry cycle as a fraction of the mean (default: **0.1**).
 
 Options that control **WebSocket subprotocol handling**:
 
@@ -190,30 +184,37 @@ Options that control **WebSocket subprotocol handling**:
 Connection Properties
 +++++++++++++++++++++
 
-A read-only property with an instance of ``autobahn.Session`` if there is a session currently running over the connection:
+To get the session oject if there is a session currently running over the connection:
 
-::
+.. js:attribute:: Connection.session
 
-   Connection.session|<instance of autobahn.Session>
-
-A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use with the connection:
-
-::
-
-   Connection.defer
+   Returns an instance of ``autobahn.Session`` if there is a session currently running on the connection.
 
 To check whether the connection (the transport underlying) is established:
 
-::
+.. js:attribute:: Connection.isOpen
 
-   Connection.isOpen|bool
+   Returns ``true`` if the Connection is open.
 
 To check whether the connection is currently in a "try to reconnect" cycle:
 
-::
+.. js:attribute:: Connection.isRetrying
 
-   Connection.isRetrying|bool
+   Returns ``true`` if reconnects are being attempted.
 
+
+A property with the **Deferred factory** in use on this connection:
+
+.. js:attribute:: Connection.defer
+
+   Returns the Deferred factory function in use on the connection.
+
+
+A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use with the connection:
+
+.. js:function:: Connection.defer
+
+   :returns: a Deferred of the type specified in the call to the connection constructor :js:func:`autobahn.Connection`
 
 
 Sessions
@@ -223,7 +224,10 @@ WAMP sessions are instances of ``autobahn.Session`` that are created by connecti
 
 .. code-block:: javascript
 
-   var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
+   var connection = new autobahn.Connection({
+                              url: 'ws://127.0.0.1:9000/',
+                              realm: 'realm1'
+                           });
 
    connection.onopen = function (session) {
 
@@ -241,51 +245,65 @@ Session objects provide a number of properties.
 
 A read-only property with the WAMP **session ID**:
 
-::
+.. js:attribute:: Session.id
 
-    Session.id|int
+   Returns the session ID as an integer.
 
 A read-only property with the **realm** the session is attached to:
 
-::
+.. js:attribute:: Session.realm
 
-    Session.realm|string
+   Returns the realm the session is attached to as an integer.
 
 A read-only property that signals if the **session is open** and attached to a realm:
 
-::
+.. js:attribute:: Session.isOpen
 
-    Session.isOpen|bool
+   Returns ``true`` if the session is open.
 
 A read-only property with the **features** from the WAMP Advanced Profile available on this session (supported by both peers):
 
-::
+.. js:attribute:: Session.features
 
-    Session.features|dict
+   Returns an object with the roles the client implements and the available advanced features for each role.
 
-A read-only property with a list of all currently **active subscriptions** on this session:
+A read-only property with an array of all currently **active subscriptions** on this session:
 
-::
+.. js:attribute:: Session.subscriptions
 
-    Session.subscriptions|list
+   :value: array
 
-A read-only property with a list of all currently **active registrations** on this session:
+A read-only property with an array of all currently **active registrations** on this session:
 
-::
+.. js:attribute:: Session.registrations
 
-    Session.registrations|list
+   Returns an array with the subscription objects for all currently active subscriptions.
 
 A property with the **Deferred factory** in use on this session:
 
-::
+.. js:attribute:: Session.defer
 
-    Session.defer
+   Returns the Deferred factory function in use on the session.
+
+A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use with the session:
+
+.. js:function:: Session.defer
+
+   :returns: a Deferred of the type specified in the call to the connection constructor :js:func:`autobahn.Connection`
+
 
 
 Session Logging
 +++++++++++++++
 
 |ab| includes a logging method for convenient logging from sessions.
+
+
+.. js:function:: session.log(output)
+
+   :param any output: *optional* the output to log - any JavaScript data type
+
+``session.log`` can be used without an ``output`` argument when it is assigned as an event handler.
 
 For example:
 
@@ -296,9 +314,7 @@ For example:
       session.log("Session open.");
 
       session.call('com.timeservice.now').then(
-         function (now) {
             session.log(now);
-         }
       );
    };
 
@@ -319,6 +335,16 @@ URI Shortcuts
 
 Establish an URI prefix to be used as a shortcut:
 
+.. js:function:: session.prefix(shortcut, prefix)
+
+   :param string shortcut: the shortcut for the provided prefix URI
+   :param URI prefix: an URI prefix
+
+..note:: URI prefixes must only contain full URI components, i.e. stop at a '.' separation of an URI. 'com.myapp.topics' is a valid prefix if it is to be used as part of full URI 'com.myapp.topics.one', but invalid if it is intended to be combined with a suffix to form 'com.myapp.topicsnew'.
+
+
+**Example**:
+
 .. code-block:: javascript
 
    session.prefix('api', 'com.myapp.service');
@@ -328,6 +354,12 @@ You can then use `CURIEs <http://en.wikipedia.org/wiki/CURIE>`_ in addition to U
 .. code-block:: javascript
 
    session.call('api:add2').then(...);
+
+which is equivalent to
+
+.. code-block:: javascript
+
+   session.call('com.myapp.service.add2').then(...);
 
 To remove a prefix:
 
@@ -347,17 +379,14 @@ Subscribe
 
 To subscribe to a topic on a `session`:
 
-.. code-block:: javascript
+.. js:function:: session.subscribe(topic, handler, options)
 
-   var d = session.subscribe(<topic|uri>, <handler|callable>, <options|dict>);
+   :param URI topic: is the URI of the topic to subscribe to
+   :param callable handler: the event handler that should consume events
+   :param object options: *optional* - options for subscription (see below)
 
-where
+   :returns: *promise* that resolves to an instance of ``autobahn.Subscription`` when successful, or rejects with an instance of ``autobahn.Error`` when unsuccessful
 
- 1. ``topic`` (required): is the URI of the topic to subscribe to
- 2. ``handler`` (required): is the event handler that should consume events
- 3. ``options`` (optional) specifies options for subscription (see below).
-
-and returns a *promise* that resolves to an instance of ``autobahn.Subscription`` when successful, or rejects with an instance of ``autobahn.Error`` when unsuccessful.
 
 The ``handler`` must be a callable
 
@@ -367,9 +396,9 @@ The ``handler`` must be a callable
 
 where
 
-1. ``args`` is the (positional) event payload
-2. ``kwargs`` is the (keyword) event payload
-3. ``details`` provides event metadata
+1. ``args`` is an array with event payload
+2. ``kwargs`` is an object with event payload
+3. ``details`` is an object which provides event metadata
 
 
 Example: **Subscribe to a topic**
@@ -389,17 +418,28 @@ Example: **Subscribe to a topic**
       }
    );
 
+or, differently notated, but functionally equivalent
+
+.. code-block:: javascript
+
+   var d = session.subscribe('com.myapp.topic1', on_event1);
+
+   d.then(
+      function (subscription) {
+         // subscription succeeded, subscription is an instance of autobahn.Subscription
+      },
+      function (error) {
+         // subscription failed, error is an instance of autobahn.Error
+      }
+   );
+
 
 Active Subscriptions
 ++++++++++++++++++++
 
-A list of subscriptions (in no particular order) currently active on a ``session`` may be accessed like this:
+A list of subscriptions (in no particular order) currently active on a ``session`` may be accessed via :js:attr:`Session.subscriptions`.
 
-::
-
-    autobahn.Session.subscriptions
-
-This returns a list of ``autobahn.Subscription`` objects. E.g.
+This returns an array of ``autobahn.Subscription`` objects. E.g.
 
 .. code-block:: javascript
 
@@ -416,13 +456,13 @@ Unsubscribing
 
 You can unsubscribe a previously established ``subscription``
 
-.. code-block:: javascript
+.. js:function:: session.unsubscribe(subscription)
 
-   var d = session.unsubscribe(<instance of autobahn.Subscription>);
+   :param object subscription: an instance of autobahn.Subscription
 
-which returns a *promise* that resolves with a boolean value when successful or rejects with an instance of ``autobahn.Error`` when unsuccessful.
+   :returns: a *promise* that resolves with a boolean value when successful or rejects with an instance of ``autobahn.Error`` when unsuccessful.
 
-.. note:: If successful, the boolean returned indicates whether the underlying WAMP subscription was actually ended (``true``) or not, since there still are application handlers in place.
+.. note:: If successful, the boolean returned indicates whether the underlying WAMP subscription was actually ended (``true``) or not, since there still are application handlers in place due to multiple client-side subscriptions for the same WAMP subscription to the broker.
 
 
 Example: **Unsubscribing a subscription**
@@ -459,24 +499,24 @@ Publish
 
 To publish an event on a ``session``:
 
-.. code-block:: javascript
+.. js:function:: session.publish(topic, args, kwargs, options)
 
-   var d = session.publish(<topic|uri>, <args|list>, <kwargs|dict>, <options|dict>);
+   :param URI topic: the URI of the topic to publish to
+   :param array args: *optional* - application event payload
+   :param object kwargs: *optional* - application event payload
+   :param object options: *optional* - specifies options for publication (see below)
 
-where
+   :returns: a *promise* if ``options.acknowledge`` is set, else nothing
 
- 1. ``topic`` (required): is the URI of the topic to publish to
- 2. ``args`` (optional): is application event payload (a *list* giving the positional arguments)
- 3. ``kwargs`` (optional): is application event payload (a *dictionary* giving the keyword arguments)
- 4. ``options`` (optional) specifies options for publication (see below).
-
-and returns either nothing or a *promise* if ``options.acknowledge`` is set.
-
-Example: **Publish an event**
+Examples: **Publish an event**
 
 .. code-block:: javascript
 
    session.publish('com.myapp.hello', ['Hello, world!']);
+
+.. code-block:: javascript
+
+   session.publish('com.myapp.hello', [], { text: 'Hello, world' })
 
 Complete Examples:
 
@@ -489,7 +529,7 @@ Acknowledgement
 
 By default, a publish is not acknowledged by the *Broker*, and the *Publisher* receives no feedback whether the publish was indeed successful or not.
 
-If supported by the *Broker*, a *Publisher* may request acknowledgement of a publish via the option ``acknowledge|bool``.
+If supported by the *Broker*, a *Publisher* may request acknowledgement of a publish via the option ``acknowledge`` set to ``true``.
 
 With acknowledged publish, the publish method will return a promise that will resolve to an instance of ``autobahn.Publication`` when the publish was successful, or reject with an ``autobahn.Error`` when the publish was unsuccessful.
 
@@ -512,12 +552,12 @@ Receiver Black-/Whitelisting
 
 If the feature is supported by the *Broker*, a *Publisher* may restrict the actual receivers of an event beyond those subscribed via the options
 
- * ``exclude|list``
- * ``eligible|list``
+ * ``exclude``
+ * ``eligible``
 
-``exclude`` is a list of WAMP session IDs providing an explicit list of (potential) *Subscribers* that won't receive a published event, even though they might be subscribed. In other words, ``exclude`` is a blacklist of (potential) *Subscribers*.
+``exclude`` is an array of WAMP session IDs providing an explicit list of (potential) *Subscribers* that won't receive a published event, even though they might be subscribed. In other words, ``exclude`` is a blacklist of (potential) *Subscribers*.
 
-``eligible`` is a list of WAMP session IDs providing an explicit list of (potential) *Subscribers* that are allowed to receive a published event. In other words, ``eligible`` is a whitelist of (potential) *Subscribers*.
+``eligible`` is an array of WAMP session IDs providing an explicit list of (potential) *Subscribers* that are allowed to receive a published event. In other words, ``eligible`` is a whitelist of (potential) *Subscribers*.
 
 The *Broker* will dispatch events published only to *Subscribers* that are not explicitly excluded via ``exclude`` **and** which are explicitly eligible via ``eligible``.
 
@@ -543,7 +583,7 @@ Publisher Exclusion
 
 By default, a *Publisher* of an event will not itself receive an event published, even when subscribed to the topic the *Publisher* is publishing to.
 
-If supported by the *Broker*, this behavior can be overridden via the option ``exclude_me|bool``.
+If supported by the *Broker*, this behavior can be overridden via the option ``exclude_me`` set to ``true``.
 
 Example: **Publish without excluding publisher**
 
@@ -555,7 +595,7 @@ Example: **Publish without excluding publisher**
 Publisher Identification
 ++++++++++++++++++++++++
 
-If the feature is supported by the *Broker*, a *Publisher* may request the disclosure of its identity (its WAMP session ID) to receivers of a published event via the option ``disclose_me|bool``.
+If the feature is supported by the *Broker*, a *Publisher* may request the disclosure of its identity (its WAMP session ID) to receivers of a published event via the option ``disclose_me`` set to ``true``.
 
 Example: **Publish with publisher disclosure**
 
@@ -580,29 +620,23 @@ Register
 
 To register a procedure on a ``session`` for remoting:
 
-.. code-block:: javascript
+.. js:function:: session.register(procedure, endpoint, options)
 
-   var d = session.register(<procedure|uri>, <endpoint|callable>, <options|dict>);
+   :param URI procedure: the URI of the procedure to register
+   :param callable endpoint: the function that provides the procedure implementation
+   :param object options: *optional* - specifies options for registration (see below)
 
-where
-
- 1. ``procedure`` (required): the URI of the procedure to register
- 2. ``endpoint`` (required): the function that provides the procedure implementation
- 3. ``options`` (optional): specifies options for registration (see below)
-
-and returns a *promise* that resolves to an instance of ``autobahn.Registration`` when successful, or rejects with an instance of ``autobahn.Error`` when unsuccessful.
+   :returns: a *promise* that resolves to an instance of ``autobahn.Registration`` when successful, or rejects with an instance of ``autobahn.Error`` when unsuccessful.
 
 The ``endpoint`` must be a callable
 
-::
-
-    function (args, kwargs, details) => result
+    function (args, kwargs, details)
 
 where
 
- 1. ``args`` are the (positional) call arguments
- 2. ``kwargs`` are the (keyword) call arguments
- 3. ``details`` provides call metadata
+1. ``args`` is an array with call arguments
+2. ``kwargs`` is an object with call arguments
+3. ``details`` is an object which provides call metadata
 
 and which returns either a plain value or a promise, and the value is serializable or an instance of ``autobahn.Result``.
 
@@ -630,7 +664,7 @@ Example: **Register a procedure**
 Complete Examples:
 
  * `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
- * `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments)>`_
+ * `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
  * `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
  * `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
@@ -638,13 +672,9 @@ Complete Examples:
 Active Registrations
 ++++++++++++++++++++
 
-A list of registrations (in no particular order) currently active on a ``session`` may be accessed like this:
+A list of registrations (in no particular order) currently active on a ``session`` may be accessed like via :js:attr:`Session.registrations`.
 
-::
-
-    autobahn.Session.registrations
-
-This returns a list of ``autobahn.Registration`` objects. E.g.
+This returns an array of ``autobahn.Registration`` objects. E.g.
 
 .. code-block:: javascript
 
@@ -661,11 +691,11 @@ Unregistering
 
 You can unregister a previously established ``registration``
 
-.. code-block:: javascript
+.. js:function:: session.unregister(registration)
 
-   var d = session.unregister(<instance of autobahn.Registration>);
+   :param object registration: instance of autobahn.Registration
 
-which returns a *promise* that resolves with no value when successful or rejects with an instance of ``autobahn.Error`` when unsuccessful.
+   :returns: a *promise* that resolves with no value when successful or rejects with an instance of ``autobahn.Error`` when unsuccessful.
 
 
 Example: **Unregistering a registration**
@@ -698,18 +728,14 @@ Call
 
 To call a remote procedure from a ``session``:
 
-.. code-block:: javascript
+.. js:function:: session.call(procedure, args, kwargs, options)
 
-   var d = session.call(<procedure|uri>, <args|list>, <kwargs|dict>, <options|dict>);
+   :param URI procedure: the URI of the procedure to call
+   :param array args: *optional* - call arguments
+   :param object kwargs: *optional* - call arguments
+   :param object options: *optional* - options for the call (see below)
 
-where
-
- 1. ``topic`` (required): is the URI of the procedure to call
- 2. ``args`` (optional): are (positional) call arguments
- 3. ``kwargs`` (optional): are (keyword) call arguments
- 4. ``options`` (optional) specifies options for the call (see below).
-
-and returns a *promise* that will resolve to the call result if successful (either a plain value or an instance of ``autobahn.Result``) or reject with an instance of ``autobahn.Error``.
+   :returns: a *promise* that will resolve to the call result if successful (either a plain value or an instance of ``autobahn.Result``) or reject with an instance of ``autobahn.Error``.
 
 Example: **Call a procedure**
 
@@ -729,8 +755,8 @@ Complete Examples:
 
  * `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
  * `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
- * `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex)>`_
- * `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare)>`_
+ * `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
+ * `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
 
 Errors

@@ -12,9 +12,6 @@
 .. _WAMPv2: https://github.com/tavendo/WAMP/blob/master/spec/README.md
 .. _AutobahnTestsuite: http://autobahn.ws/testsuite
 
-Overview   -   :ref:`Getting Started <gettingstarted>`   -   :ref:`Tutorials <tutorials>`   -    :ref:`Examples <examples_overview>`   -   :ref:`API Reference <reference>` - :ref:`Table of Contents <table_of_contents>`
-
-
 |ab| is a subproject of `Autobahn`_ and provides an open-source implementation of `The Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_ .
 
 WAMP runs on top of `WebSocket <http://tools.ietf.org/html/rfc6455>`_ and adds `asynchronous Remote Procedure Calls and Publish & Subscribe <http://wamp.ws/why/>`_.
@@ -107,7 +104,7 @@ The :ref:`reference` provides details for the entire API.
 
 
 Acknowledgements
-================
+----------------
 
 |ab| includes code from the following open-source projects
 
@@ -115,26 +112,16 @@ Acknowledgements
   * `ws: a node.js websocket library <https://github.com/einaros/ws>`_
   * `CryptoJS <http://code.google.com/p/crypto-js/>`_
 
-Special thanks to the 'Coders with an Unhealthy Javascript Obsession <http://cujojs.com/>`_ for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
-
-
-Contents:
+Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cujojs.com/>`_ for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
 
 .. toctree::
    :maxdepth: 2
    :hidden:
 
+   index
    gettingstarted
    tutorial
    examples_overview
    building
    reference
    table_of_contents
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
-

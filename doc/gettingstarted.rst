@@ -11,7 +11,7 @@ To provide the communication between the components of your application, you nee
 
 WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible routers are `Autobahn|Python <https://github.com/tavendo/AutobahnPython>`_ and `Crossbar.io <https://github.com/crossbario/crossbar>`_
 
-**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see the `project GitHub wiki <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_.
+**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see the XXX `project GitHub wiki <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_.
 
 Example Code
 ------------
@@ -51,8 +51,9 @@ and use it in your HTML like so
    <!DOCTYPE html>
    <html>
       <body>
-         <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
-        </script>
+         <script
+            src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+         </script>
          <script>
             console.log("Ok, Autobahn loaded", autobahn.version);
          </script>
@@ -64,9 +65,9 @@ and use it in your HTML like so
 
 The **old** |ab| for WAMPv1 is still available from here:
 
-  1. `Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
-  2. `Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
-  3. `Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
+  1. `0.8.2 Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
+  2. `0.8.2 Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
+  3. `0.8.2 Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
 
 
 AMD and RequireJS
@@ -84,7 +85,8 @@ If you are using a module system like `RequireJS <http://requirejs.org/>`_, you 
        require.config({
            baseUrl: ".",
            paths: {
-               "autobahn": "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min",
+               "autobahn":
+                  "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min",
                "when": "https://cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when"
            },
            shim: {
@@ -110,4 +112,4 @@ Doing so allows you to use forks of |ab|, e.g. ones which may implement features
 
 It also allows you to hack on |ab| yourself.
 
-To build |ab|, follow :ref:`these instructions <building>`
+To build |ab|, follow :doc:`these instructions <building>`

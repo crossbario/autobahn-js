@@ -5,11 +5,11 @@ Remote Procedure Calls with **Autobahn**\|JS
 
 The goal of this tutorial is to introduce remote procedure calls (RPC) with |ab|.
 
-RPC, as the name suggests, means calling a procedure remotely. The remote procedure endpoint is most usually on a server, but with WAMP, the protocol which |ab| implements, it can also be within a JavaScript client.
+RPC, as the name suggests, means calling a procedure remotely. The remote procedure endpoint is most usually on a server, but with `WAMP <http://wamp.ws/>`_, the protocol which |ab| implements and which implements RPCs, it can also be within a JavaScript client.
 
 The result of the called procedure is received in the call return. Examples of RPCs are a request to a server to send some current weather data when a weather app starts up, or the sending of some form input to be verified on a server.
 
-In |ab|, RPC is implemented based on the `Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_ an open protocol that does both RPC and Publish & Subscribe (PubSub) over WebSocket. There's also a :ref:`tutorial for how to do PubSub <tutorial_pubsub>` using |ab|.
+WAMP, the 'Web Application Messaging Protocol', is an open protocol that does both RPC and Publish & Subscribe (PubSub), as a default via WebSocket. There's also a :ref:`tutorial for how to do PubSub <tutorial_pubsub>` using |ab|.
 
 In this tutorial we will create a small web app that consists of two clients which connect to a WAMP router. Clients can run either in the browser or on Node.js. One of the clients provides an RPC endpoint (the 'callee') while the other calls this procedure and logs its result (the 'caller'). The WAMP router routes the calls and results. The calls and received results are logged in the respective browser consoles or command shells.
 
@@ -21,7 +21,7 @@ Prerequisites
 
 For this tutorial, you will need
 
-* a modern Web Browser with WebSockets to run the clients **or** Node.js
+* a `modern Web Browser <http://caniuse.com/#search=websocket>`_ with WebSockets to run the clients **or** Node.js
 * `Crossbar.io <http://crossbar.io>`_, an open source WAMP application router to provide the RPC routing
 
 
@@ -63,7 +63,9 @@ Since we want to be able to run the clients in either the browser or Node.js, we
       <body>
          <h1>AutobahnJS RPC Callee</h1>
          <p>Open JavaScript console to watch output.</p>
-         <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script
+            src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+         </script>
          <script src="autobahnjs_rpc_callee.js"></script>
       </body>
    </html>
@@ -71,7 +73,6 @@ Since we want to be able to run the clients in either the browser or Node.js, we
 and for the caller:
 
 .. code-block:: html
-   :emphasize-lines: 4, 8
 
    <!DOCTYPE html>
    <head>
@@ -82,7 +83,9 @@ and for the caller:
       <body>
          <h1>AutobahnJS RPC Caller</h1>
          <p>Open JavaScript console to watch output.</p>
-         <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script
+            src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+         </script>
          <script src="autobahnjs_rpc_caller.js"></script>
       </body>
    </html>
@@ -107,7 +110,7 @@ Running in the browser vs. Node.js
 
 The only difference between running the JavaScript for our demo application in the browser and in Node.js is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via Node's dependency management.
 
-In order for the same JavaScript to load in both cases, we do:
+In order for the same JavaScript to run in both cases, we do:
 
 .. code-block:: javascript
 
@@ -202,10 +205,10 @@ What we do here is:
 
 * We define the function to be executed as a remote procedure (starting line 2). This simply logs the fact that it has been called to the console, and returns the current time in ISO format.
 * We register this function as a remote procedure with the WAMP router we're connected to (line 9). The registration itself has two arguments:
-   * The name of the function to register ('utcnow')
+   * The name of the function to register (``utcnow``)
    * The identifier which a caller needs to use for calling the procedure. For this, WAMP uses URIs following the Java package naming convention.
-* The registration creates a promise, which is resolved when the registration either succeeds or fails. We attach a handler for either outcome to the promise (that's the '.then()'). For more on promises see below.
-* The first function (starting in line 10) is called if the registration succeeds and logs the registration ID that the server has created. (This is need in case of de-registration of the procedure.)
+* The registration creates a promise, which is resolved when the registration either succeeds or fails. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
+* The first function (starting in line 10) is called if the registration succeeds and logs the registration ID that the server has created. In case we want to de-register the procedure later, we'd need to store the registration object here.
 * The second function (starting in line 13) is called if the registration fails and just logs the received error code.
 
 For the frontend this is:
@@ -231,7 +234,7 @@ What we do here is:
 
 * We want to call the timeservice remote procedure once per second, so we wrap the actual call in an interval timer.
 * The call to the remote procedure occurs in line 2. All we need here is the identifier of the procedure. With a procedure which requires input, there would additionally be call arguments. For possible call argument types, see the reference.
-* The call creates a promise, which is resolved when the call either succeeds or fails. We attach a handler for either outcome to the promise (that's the '.then()'). For more on promises see below.
+* The call creates a promise, which is resolved when the call either succeeds or fails. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
 * The first function (starting in line 4) is called if the call succeeds and logs the ISO time string that the procedure has returned.
 * The second function (starting in line 8) is called if the call fails and just logs the received error code.
 

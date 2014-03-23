@@ -10,7 +10,7 @@ Publish & Subscribe is a messaging pattern in which publishers send events to a 
 
 Sending and receiving of events are asynchronous.
 
-Publish & Subscribe can be used for a huge variety of applications, e.g. chat, news updates, or, with low-latency implementations, distribution of real-time data.
+Publish & Subscribe can be used for a large variety of applications, e.g. chat, news updates, or, with low-latency implementations, distribution of real-time data.
 
 It scales well, and the fact that subscriptions need not be handled by publishers means that publishing is a light-weight process that can easily be added to applications.
 
@@ -26,7 +26,7 @@ Prerequisites
 
 For this tutorial, you will need
 
-* a modern Web Browser with WebSockets to run the clients **or** Node.js
+* a `modern Web Browser <http://caniuse.com/#search=websocket>`_ supporting WebSockets to run the clients **or** Node.js
 * `Crossbar.io <http://crossbar.io>`_, an open source WAMP application router to provide the RPC routing.
 
 
@@ -71,7 +71,9 @@ For the publisher, we use:
       <body>
          <h1>AutobahnJS PubSub Publisher</h1>
          <p>Open JavaScript console to watch output.</p>
-         <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script
+            src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+         </script>
          <script src="autobahnjs_pubsub_publisher.js"></script>
       </body>
    </html>
@@ -89,7 +91,9 @@ and for the subscriber:
       <body>
          <h1>AutobahnJS PubSub Subscriber</h1>
          <p>Open JavaScript console to watch output.</p>
-         <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+         <script
+            src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+         </script>
          <script src="autobahnjs_pubsub_subscriber.js"></script>
       </body>
    </html>
@@ -114,7 +118,7 @@ Running in the browser vs. Node.js
 
 The only difference between running the JavaScript for our demo application in the browser and in Node.js is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via Node's dependency management.
 
-In order for the same JavaScript to load in both cases, we do:
+In order for the same JavaScript to run in both cases, we do:
 
 .. code-block:: javascript
 
@@ -193,7 +197,7 @@ For the **publisher** this is:
       session.publish ('com.myapp.topic1', [ counter ], {}, { acknowledge: true}).then(
 
          function(publication) {
-            console.log("published to topic 'com.myapp.topic1', publication ID is ", publication);
+            console.log("published, publication ID is ", publication);
          },
 
          function(error) {
@@ -213,7 +217,7 @@ What we do here is:
 * The payload here is a counter, which we've defined in line 2 and which we increment after each publish (line 18).
 * We want to publish more than once, so we create an interval time to wrap the publication (line 4).
 * We want feedback that the publication was successfull. As a default, publications are not acknowledged by the router. We change this by adding an options dictionary and passing 'acknowledge' as 'true'.
-* The publish creates a promise, which is resolved when the acknowledge returns as either successful or failed. We attach a handler for either outcome to the promise (that's the `.then()`). For more on promises see below.
+* The publish creates a promise, which is resolved when the acknowledge returns as either successful or failed. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
 * The first handler function we attach (starting in line 8) is called on success, i.e. if the publish is received and allowed. It logs the received publication ID for the publish.
 * The second handler function (starting in line 12) is called on failure. It logs the received error code.
 
@@ -263,7 +267,7 @@ For the **subscriber** this is:
 What we do here is:
 
 * We subbscribe to a topic (line 25). Arguments are the subscription topic (identified by a URI) and the subscription event handler.
-* The subscribe creates a promise, which is resolved when the subscribe either succeeds or fails. We attach a handler for either outcome to the promise (that's the `.then()`). For more on promises see below.
+* The subscribe creates a promise, which is resolved when the subscribe either succeeds or fails. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
 * The first handler is called when the subscribe succeeds (line 27). It logs the received subscription object. We also store this object, since it is needed to unsubscribe.
 * The second handler is called when the subscribe fails (line 32). It logs the received error code.
 * We define a handler for subscription events (line 4). This first of all logs the fact that we have received an event plus the event payload.

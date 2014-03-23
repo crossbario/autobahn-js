@@ -4,8 +4,6 @@
 Overview of Examples
 ====================
 
-.. |ab| replace:: **Autobahn**\|JS
-
 The examples give an overview of the features of WAMP by providing working code.
 
 Read, run, and modify as you like!
@@ -20,8 +18,7 @@ Publish & Subscribe (PubSub)
 
 `Complex <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex>`_ - Demonstrates publish and subscribe with complex events.
 
-
-`Options <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/options>`_ - Using options with PubSub.
+`Options <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/options>`__ - Using options with PubSub.
 
 `Unsubscribe <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_ - Cancel a subscription to a topic.
 
