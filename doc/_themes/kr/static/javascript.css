@@ -1,0 +1,33 @@
+/*.function {
+   background-color: #E1E9F8;
+   border: 1px solid #ddd;
+   padding: 5px;
+}*/
+
+.function,
+.attribute {
+   display: inline-block;
+   margin: 6px 0;
+   font-size: 90%;
+   line-height: normal;
+   background: #e7f2fa;
+   color: #2980b9;
+   border-top: solid 3px #6ab0de;
+   padding: 6px;
+   position: relative;
+   width: 100%;
+}
+
+.function dd,
+.attribute dd {
+   font-size: 1.1em;
+   color: #3e4349;
+}
+
+/*.attribute {
+   background-color: #E1E9F8;
+   border: 1px solid #ddd;
+   padding: 5px;
+}*/
+
+

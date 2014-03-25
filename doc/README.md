@@ -12,7 +12,6 @@ The following files have been added:
 The following files have been modified:
 
 * _themes/kr/static/flasky.css_t ../../AutobahnPython/doc/_themes/kr/static
-* _themes/kr/layout.html ../../AutobahnPython/doc/_themes/kr/
 * _templates/side-secondary.html
 * conf.py
 
@@ -20,6 +19,7 @@ The following files have been modified:
 
 'make copycustom' has bee added, which copies all of the above to the other Autobahn repositories, except for
 
+* _themes/kr/layout.html ../../AutobahnPython/doc/_themes/kr/
 * _templates/side-secondary.html
 * conf.py
 
