@@ -1,6 +1,3 @@
-.. _index:
-
-dd
 |ab| Documentation
 ======================================
 .. _Autobahn: http://autobahn.ws
@@ -21,9 +18,7 @@ WAMP runs on top of `WebSocket <http://tools.ietf.org/html/rfc6455>`_ and adds `
 
 It is ideal for distributed, multi-client and server applications, such as multi-user database-drive business applications, sensor networks (IoT), instant messaging or MMOGs (massively multi-player online games) .
 
-WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Code can be in run in either the browser or Node.js  - wherever it makes most sense in a specific use case.
-
-Since WAMP implementations exist for mutliple languages, WAMP applications can be polyglott.
+WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Since WAMP implementations exist for multiple languages, WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case.
 
 .. note:: The materials here are for the current version of |ab|, which implements version 2 of WAMP. For versions of |ab| <= 0.8.2, see the :ref:`legacy documentation <reference_wampv1>`.
 
@@ -119,6 +114,7 @@ Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cuj
    :maxdepth: 2
    :hidden:
 
+   self
    gettingstarted
    tutorial
    examples_overview

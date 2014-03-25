@@ -195,3 +195,8 @@ copycustom:
 	cp _themes/kr/static/flasky.css_t ../../AutobahnTestsuite/doc/_themes/kr/static
 	cp _themes/kr/previous_next.html ../../AutobahnTestsuite/doc/_themes/kr/
 
+	cp _templates/sidetoc.html ../../AutobahnCpp/doc/_templates/
+	cp _templates/stay_informed.html ../../AutobahnCpp/doc/_templates/
+	cp _themes/kr/static/autobahn.css ../../AutobahnCpp/doc/_themes/kr/static
+	cp _themes/kr/static/flasky.css_t ../../AutobahnCpp/doc/_themes/kr/static
+	cp _themes/kr/previous_next.html ../../AutobahnCpp/doc/_themes/kr/

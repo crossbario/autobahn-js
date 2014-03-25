@@ -1,7 +1,7 @@
 .. _building:
 
-Building
-========
+Building Autobahn|JS
+====================
 
 To build |ab| for use in browsers, you will need
 
