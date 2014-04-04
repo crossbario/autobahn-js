@@ -20,8 +20,6 @@ It is ideal for distributed, multi-client and server applications, such as multi
 
 WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Since WAMP implementations exist for multiple languages, WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case.
 
-.. note:: The materials here are for the current version of |ab|, which implements version 2 of WAMP. For versions of |ab| <= 0.8.2, see the :ref:`legacy documentation <reference_wampv1>`.
-
 Show me some code
 -----------------
 
@@ -96,7 +94,7 @@ The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some
 The :doc:`reference` provides details for the entire API.
 
 
-.. note:: The documentation for older versions of |ab|, which implement WAMP v1, can be accessed here. The current version of |ab| no longer supports WAMP v1. WAMP v2 adds a lot of features and some completely new capabilities, so consider upgrading.
+.. note:: The documentation for older versions of |ab|, which implement WAMP v1, is still available as :doc:`legacy documentation <reference_wampv1>`. The current version of |ab| no longer supports WAMP v1. WAMP v2 adds a lot of features and some completely new capabilities, so consider upgrading.
 
 
 Acknowledgements

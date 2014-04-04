@@ -11,7 +11,7 @@ To provide the communication between the components of your application, you nee
 
 WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible routers are `Autobahn|Python <https://github.com/tavendo/AutobahnPython>`_ and `Crossbar.io <https://github.com/crossbario/crossbar>`_
 
-**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see the XXX `project GitHub wiki <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_.
+**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see the `project GitHub wiki <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_.
 
 Example Code
 ------------

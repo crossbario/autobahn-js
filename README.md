@@ -10,14 +10,58 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 
 WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Since WAMP implementations exist for multiple languages, WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case.
 
+## Show me some code
+
+The following example implements all four roles that **Autobahn**|JS offers
+
+ * Publisher
+ * Subscriber
+ * Caller (calls a remote procedure)
+ * Callee (offers a remote procedure)
+
+**The code runs unaltered in the browser or Node.js!**
+
+```javascript
+var autobahn = require('autobahn');
+
+var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
+
+connection.onopen = function (session) {
+
+   // 1) subscribe to a topic
+   function onevent(args) {
+      console.log("Event:", args[0]);
+   }
+   session.subscribe('com.myapp.hello', onevent);
+
+   // 2) publish an event
+   session.publish('com.myapp.hello', ['Hello, world!']);
+
+   // 3) register a procedure for remoting
+   function add2(args) {
+      return args[0] + args[1];
+   }
+   session.register('com.myapp.add2', add2);
+
+   // 4) call a remote procedure
+   session.call('com.myapp.add2', [2, 3]).then(
+      function (res) {
+         console.log("Result:", res);
+      }
+   );
+};
+
+connection.open();
+```
+
 ## More information
 
 For more information, take a look at the [project documentation](http://autobahn.ws/js). This provides:
 
-* [a quick 'Getting Started'](http://autobahn.ws/js/gettingstarted)
-* [tutorials on RPC and PubSub](http://autobahn.ws/js/tutorial)
-* [a list of all examples in this repo](http://autobahn.ws/js/examples_overview)
-* [a full API reference](http://autobahn.ws/js/reference)
+* [a quick 'Getting Started'](http://autobahn.ws/js/gettingstarted.html)
+* [tutorials on RPC and PubSub](http://autobahn.ws/js/tutorial.html)
+* [a list of all examples in this repo](http://autobahn.ws/js/examples_overview.html)
+* [a full API reference](http://autobahn.ws/js/reference.html)
 
 
 ## Get in touch
