@@ -947,7 +947,7 @@ var Session = function (socket, defer, onchallenge) {
 
    // session object constructed .. track creation time
    //
-   if ('performance' in global) {
+   if ('performance' in global && 'now' in performance) {
       self._created = performance.now();
    } else {
       self._created = Date.now();
