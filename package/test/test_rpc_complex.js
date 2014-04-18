@@ -29,17 +29,24 @@ exports.testComplex = function (testcase) {
    connection.onopen = function (session) {
 
       function add_complex(args, kwargs) {
-         test.log("Someone is calling me;)");
+         test.log("add_complex()", args, kwargs);
          return new autobahn.Result([], {c: args[0] + args[2], ci: args[1] + args[3]});
       }
 
       function split_name(args) {
+         test.log("split_name()", args);
          return new autobahn.Result(args[0].split(" "));
+      }
+
+      function echo_complex(args, kwargs) {
+         test.log("echo_complex()", args, kwargs);
+         return new autobahn.Result(args, kwargs);
       }
 
       var endpoints = {
          'com.myapp.add_complex': add_complex,
-         'com.myapp.split_name': split_name
+         'com.myapp.split_name': split_name,
+         'com.myapp.echo_complex': echo_complex
       };
 
       var pl1 = [];
@@ -65,6 +72,28 @@ exports.testComplex = function (testcase) {
                   test.log("Forename: " + res.args[0] + ", Surname: " + res.args[1]);
                }
             ));
+
+            var params = [
+               [null, null],
+               [null, {a: 23, b: "hello"}],
+               [[1, 2, 3], null],
+               [[], {}],
+               [[], {a: 23, b: "hello"}],
+               [[1, 2, 3], {}],
+               [[1, 2, 3], {a: 23, b: "hello"}],
+               [[1, 2, 3, {a: 23, b: "hello"}], {a: 23, b: "hello", c: [1, 2, 3]}],
+            ];
+
+            for (var i = 0; i < params.length; ++i) {
+               pl2.push(session.call('com.myapp.echo_complex', params[i][0], params[i][1]).then(
+                  function (res) {
+                     test.log("Complex echo", res);
+                  },
+                  function () {
+                     test.log(arguments);
+                  }
+               ));
+            }
 
             autobahn.when.all(pl2).then(function () {
                test.log("All finished.");
