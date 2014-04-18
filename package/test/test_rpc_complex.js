@@ -17,6 +17,8 @@ var testutil = require('./testutil.js');
 
 exports.testComplex = function (testcase) {
 
+   testcase.expect(1);
+
    var test = new testutil.Testlog("test/test_rpc_complex.txt");
 
 

@@ -11,6 +11,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// this works via https://github.com/caolan/nodeunit
+
 var complex = require('./test_rpc_complex.js');
 var arguments = require('./test_arguments.js');
 
