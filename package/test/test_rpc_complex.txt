@@ -1,0 +1,5 @@
+0 "All registered."
+1 "Someone is calling me;)"
+2 "Result: 6 + 8i"
+3 "Forename: Homer, Surname: Simpson"
+4 "All finished."

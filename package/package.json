@@ -4,7 +4,7 @@
    "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
    "main": "index.js",
    "scripts": {
-      "test": "node test/test_arguments.js"
+      "test": "nodeunit test/test.js"
    },
    "dependencies": {
       "when": ">= 2.8.0",
