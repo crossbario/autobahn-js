@@ -17,8 +17,10 @@ var rpc_complex = require('./test_rpc_complex.js');
 var rpc_arguments = require('./test_rpc_arguments.js');
 var rpc_error = require('./test_rpc_error.js');
 var rpc_options = require('./test_rpc_options.js');
+var rpc_progress = require('./test_rpc_progress.js');
 
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
 exports.testRpcComplex = rpc_complex.testRpcComplex;
 exports.testRpcError = rpc_error.testRpcError;
 exports.testRpcOptions = rpc_options.testRpcOptions;
+exports.testRpcProgress = rpc_progress.testRpcProgress;

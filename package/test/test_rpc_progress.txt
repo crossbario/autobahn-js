@@ -1,0 +1,10 @@
+0 "Connected"
+1 "All registered."
+2 "longop()" [3] {}
+3 "Progress:" 0
+4 "longop() - progress" 1
+5 "Progress:" 1
+6 "longop() - progress" 2
+7 "Progress:" 2
+8 "Final:" 3
+9 "All finished."
