@@ -15,11 +15,11 @@ var autobahn = require('./../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testArguments = function (testcase) {
+exports.testRpcArguments = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_arguments.txt");
+   var test = new testutil.Testlog("test/test_rpc_arguments.txt");
 
    var connection = new autobahn.Connection(testutil.config);
 

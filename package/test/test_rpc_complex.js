@@ -15,7 +15,7 @@ var autobahn = require('./../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testComplex = function (testcase) {
+exports.testRpcComplex = function (testcase) {
 
    testcase.expect(1);
 
