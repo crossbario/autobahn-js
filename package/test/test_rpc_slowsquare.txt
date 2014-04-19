@@ -1,0 +1,5 @@
+0 "Connected"
+1 "All registered."
+2 "Quick Square:" 9
+3 "Slow Square:" 9
+4 "All finished."
