@@ -1,0 +1,14 @@
+0 "all sessions connected"
+1 "publishing to topic 'com.myapp.topic1': 0"
+2 "Got event:" 0
+3 "publishing to topic 'com.myapp.topic1': 1"
+4 "Got event:" 1
+5 "publishing to topic 'com.myapp.topic1': 2"
+6 "Got event:" 2
+7 "publishing to topic 'com.myapp.topic1': 3"
+8 "Got event:" 3
+9 "publishing to topic 'com.myapp.topic1': 4"
+10 "Got event:" 4
+11 "publishing to topic 'com.myapp.topic1': 5"
+12 "Got event:" 5
+13 "Closing .."

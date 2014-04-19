@@ -20,6 +20,7 @@ var rpc_options = require('./test_rpc_options.js');
 var rpc_progress = require('./test_rpc_progress.js');
 var rpc_slowsquare = require('./test_rpc_slowsquare.js');
 var rpc_routing = require('./test_rpc_routing.js');
+var pubsub_basic = require('./test_pubsub_basic.js');
 
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
 exports.testRpcComplex = rpc_complex.testRpcComplex;
@@ -28,3 +29,4 @@ exports.testRpcOptions = rpc_options.testRpcOptions;
 exports.testRpcProgress = rpc_progress.testRpcProgress;
 exports.testRpcSlowsquare = rpc_slowsquare.testRpcSlowsquare;
 exports.testRpcRouting = rpc_routing.testRpcRouting;
+exports.testPubsubBasic = pubsub_basic.testPubsubBasic;
