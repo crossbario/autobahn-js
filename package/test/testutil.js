@@ -11,11 +11,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var autobahn = require('./../index.js');
 var fs = require("fs");
+
 
 var config = {
    'url': 'ws://127.0.0.1:8080/ws',
    'realm': 'realm1'
+}
+
+
+function connect_n(n) {
+   var dl = [];
+   for (var i = 0; i < n; ++i) {
+      (function (idx) {
+         var d = autobahn.when.defer();
+         var connection = new autobahn.Connection(config);
+
+         connection.onopen = function (session) {
+            d.resolve(session);
+         };
+
+         connection.open();
+
+         dl.push(d.promise);
+      })(i);
+   }
+   return dl;
 }
 
 
@@ -76,3 +98,4 @@ Testlog.prototype.check = function () {
 
 exports.Testlog = Testlog;
 exports.config = config;
+exports.connect_n = connect_n;
