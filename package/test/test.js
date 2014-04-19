@@ -13,8 +13,10 @@
 
 // this works via https://github.com/caolan/nodeunit
 
-var complex = require('./test_rpc_complex.js');
-var arguments = require('./test_arguments.js');
+var rpc_complex = require('./test_rpc_complex.js');
+var rpc_arguments = require('./test_arguments.js');
+var rpc_error = require('./test_rpc_error.js');
 
-exports.testArguments = arguments.testArguments;
-exports.testComplex = complex.testComplex;
+exports.testArguments = rpc_arguments.testArguments;
+exports.testComplex = rpc_complex.testComplex;
+exports.testRpcError = rpc_error.testRpcError;

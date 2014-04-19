@@ -21,14 +21,11 @@ exports.testComplex = function (testcase) {
 
    var test = new testutil.Testlog("test/test_rpc_complex.txt");
 
-
-   var connection = new autobahn.Connection({
-      url: 'ws://127.0.0.1:8080/ws',
-      realm: 'realm1'}
-   );
-
+   var connection = new autobahn.Connection(testutil.config);
 
    connection.onopen = function (session) {
+
+      test.log('Connected');
 
       function add_complex(args, kwargs) {
          test.log("add_complex()", args, kwargs);
@@ -114,4 +111,3 @@ exports.testComplex = function (testcase) {
 
    connection.open();
 }
-

@@ -13,6 +13,11 @@
 
 var fs = require("fs");
 
+var config = {
+   'url': 'ws://127.0.0.1:8080/ws',
+   'realm': 'realm1'
+}
+
 
 var Testlog = function (filename) {
 
@@ -70,3 +75,4 @@ Testlog.prototype.check = function () {
 
 
 exports.Testlog = Testlog;
+exports.config = config;
