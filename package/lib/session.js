@@ -621,15 +621,18 @@ var Session = function (socket, defer, onchallenge) {
 
          var details = msg[2];
 
+         var args = msg[3] || [];
+         var kwargs = msg[4] || {};
+
+         // maybe wrap complex result:
          var result = null;
-         if (msg.length > 3) {
-            if (msg.length > 4 || msg[3].length > 1) {
-               // wrap complex result
-               result = new Result(msg[3], msg[4]);
-            } else {
-               // single positional result
-               result = msg[3][0];
-            }
+         if (args.length > 1 || Object.keys(kwargs).length > 0) {
+            // wrap complex result is more than 1 positional result OR
+            // non-empty keyword result
+            result = new Result(args, kwargs);
+         } else if (args.length > 0) {
+            // single positional result
+            result = args[0];
          }
 
          var r = self._call_reqs[request];
