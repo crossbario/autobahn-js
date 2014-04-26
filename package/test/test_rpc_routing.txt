@@ -1,0 +1,4 @@
+0 "all sessions connected"
+1 "square() registered on session 1"
+2 "square() called from session 2" 23
+3 "result:" 529

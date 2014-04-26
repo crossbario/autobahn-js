@@ -621,15 +621,18 @@ var Session = function (socket, defer, onchallenge) {
 
          var details = msg[2];
 
+         var args = msg[3] || [];
+         var kwargs = msg[4] || {};
+
+         // maybe wrap complex result:
          var result = null;
-         if (msg.length > 3) {
-            if (msg.length > 4 || msg[3].length > 1) {
-               // wrap complex result
-               result = new Result(msg[3], msg[4]);
-            } else {
-               // single positional result
-               result = msg[3][0];
-            }
+         if (args.length > 1 || Object.keys(kwargs).length > 0) {
+            // wrap complex result is more than 1 positional result OR
+            // non-empty keyword result
+            result = new Result(args, kwargs);
+         } else if (args.length > 0) {
+            // single positional result
+            result = args[0];
          }
 
          var r = self._call_reqs[request];
@@ -947,7 +950,7 @@ var Session = function (socket, defer, onchallenge) {
 
    // session object constructed .. track creation time
    //
-   if ('performance' in global) {
+   if ('performance' in global && 'now' in performance) {
       self._created = performance.now();
    } else {
       self._created = Date.now();
@@ -1023,7 +1026,7 @@ Session.prototype.log = function () {
       if (self._id && self._created) {
 
          var now = null;
-         if ('performance' in global) {
+         if ('performance' in global && 'now' in performance) {
             now = performance.now() - self._created;
          } else {
             now = Date.now() - self._created;
