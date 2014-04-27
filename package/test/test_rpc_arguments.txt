@@ -4,14 +4,14 @@
 3 "add2()" [2,3]
 4 "stars" [] {"nick":"somebody","stars":0}
 5 "stars" [] {"nick":"Homer","stars":0}
-6 "stars" [] {"stars":5,"nick":"somebody"}
+6 "stars" [] {"nick":"somebody","stars":5}
 7 "stars" [] {"nick":"Homer","stars":5}
 8 "orders()" ["coffee"] {"limit":5}
 9 "orders()" ["coffee"] {"limit":10}
 10 "arglen()" [] {}
 11 "arglen()" [1,2,3] {}
-12 "arglen()" [] {"a":1,"c":3,"b":2}
-13 "arglen()" [1,2,3] {"a":1,"c":3,"b":2}
+12 "arglen()" [] {"a":1,"b":2,"c":3}
+13 "arglen()" [1,2,3] {"a":1,"b":2,"c":3}
 14 "Pinged"
 15 "Add2:" 5
 16 "Starred 1:" "somebody starred 0x"

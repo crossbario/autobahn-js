@@ -68,11 +68,38 @@ Testlog.prototype.stringify = function () {
       s += i;
       args = self._log[i];
       for (arg in args) {
-         s += ' ' + JSON.stringify(args[arg]);
+         s += ' ' + self.stringifyWithOrderedKeys(args[arg]);
       }
       s += "\n";
    }
    return s;
+};
+
+Testlog.prototype.stringifyWithOrderedKeys = function (arg) {
+   var self = this;
+   if(arg != null && typeof(arg) == "object") {
+      var clazz = Object.prototype.toString.call(arg).toLowerCase();
+      if(clazz.indexOf("array") != -1) {
+        var retval = "[";
+        for (var i = 0; i < arg.length; i++) {
+          if(i > 0) retval += ',';
+          retval += self.stringifyWithOrderedKeys(arg[i]);
+        }
+        retval += "]";
+        return retval;
+      } else {
+        var retval = "{";
+        var keys = Object.keys(arg).sort();
+        for (var i = 0; i < keys.length; i++) {
+          if(i > 0) retval += ',';
+          retval += '"'+keys[i]+'":' + self.stringifyWithOrderedKeys(arg[keys[i]]);
+        }
+        retval += "}";
+        return retval;
+      }
+   } else {
+      return JSON.stringify(arg);
+   }
 };
 
 

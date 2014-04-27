@@ -9,7 +9,7 @@
 8 "echo_complex()" [] {"a":23,"b":"hello"}
 9 "echo_complex()" [1,2,3] {}
 10 "echo_complex()" [1,2,3] {"a":23,"b":"hello"}
-11 "echo_complex()" [1,2,3,{"a":23,"b":"hello"}] {"a":23,"c":[1,2,3],"b":"hello"}
+11 "echo_complex()" [1,2,3,{"a":23,"b":"hello"}] {"a":23,"b":"hello","c":[1,2,3]}
 12 "Result: 6 + 8i"
 13 "Forename: Homer, Surname: Simpson"
 14 "Complex echo" null
@@ -19,5 +19,5 @@
 18 "Complex echo" {"args":[],"kwargs":{"a":23,"b":"hello"}}
 19 "Complex echo" {"args":[1,2,3],"kwargs":{}}
 20 "Complex echo" {"args":[1,2,3],"kwargs":{"a":23,"b":"hello"}}
-21 "Complex echo" {"args":[1,2,3,{"a":23,"b":"hello"}],"kwargs":{"a":23,"c":[1,2,3],"b":"hello"}}
+21 "Complex echo" {"args":[1,2,3,{"a":23,"b":"hello"}],"kwargs":{"a":23,"b":"hello","c":[1,2,3]}}
 22 "All finished."
