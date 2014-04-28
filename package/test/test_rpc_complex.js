@@ -58,19 +58,21 @@ exports.testRpcComplex = function (testcase) {
          function () {
             test.log("All registered.");
 
-            var pl2 = [];
+            // we enforce sequential execution of RPCs to get "stable" test results
 
-            pl2.push(session.call('com.myapp.add_complex', [2, 3, 4, 5]).then(
+            var d = session.call('com.myapp.add_complex', [2, 3, 4, 5]).then(
                function (res) {
                   test.log("Result: " + res.kwargs.c + " + " + res.kwargs.ci + "i");
                }
-            ));
+            );
 
-            pl2.push(session.call('com.myapp.split_name', ['Homer Simpson']).then(
-               function (res) {
-                  test.log("Forename: " + res.args[0] + ", Surname: " + res.args[1]);
-               }
-            ));
+            d = d.then(function () {
+               return session.call('com.myapp.split_name', ['Homer Simpson']).then(
+                  function (res) {
+                     test.log("Forename: " + res.args[0] + ", Surname: " + res.args[1]);
+                  }
+               );
+            });
 
             var params = [
                [null, null],
@@ -84,17 +86,18 @@ exports.testRpcComplex = function (testcase) {
             ];
 
             for (var i = 0; i < params.length; ++i) {
-               pl2.push(session.call('com.myapp.echo_complex', params[i][0], params[i][1]).then(
-                  function (res) {
-                     test.log("Complex echo", res);
-                  },
-                  function () {
-                     test.log(arguments);
-                  }
-               ));
+               (function (i, args, kwargs) {
+                  d = d.then(function () {
+                     return session.call('com.myapp.echo_complex', args, kwargs).then(
+                        function (res) {
+                           test.log("Complex echo", res);
+                        }
+                     );
+                  });
+               })(i, params[i][0], params[i][1]);
             }
 
-            autobahn.when.all(pl2).then(function () {
+            d.then(function () {
                test.log("All finished.");
                connection.close();
 

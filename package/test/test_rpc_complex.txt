@@ -1,23 +1,23 @@
 0 "Connected"
 1 "All registered."
 2 "add_complex()" [2,3,4,5] {}
-3 "split_name()" ["Homer Simpson"]
-4 "echo_complex()" [] {}
-5 "echo_complex()" [] {}
-6 "echo_complex()" [1,2,3] {}
-7 "echo_complex()" [] {}
-8 "echo_complex()" [] {"a":23,"b":"hello"}
-9 "echo_complex()" [1,2,3] {}
-10 "echo_complex()" [1,2,3] {"a":23,"b":"hello"}
-11 "echo_complex()" [1,2,3,{"a":23,"b":"hello"}] {"a":23,"b":"hello","c":[1,2,3]}
-12 "Result: 6 + 8i"
-13 "Forename: Homer, Surname: Simpson"
-14 "Complex echo" null
-15 "Complex echo" null
-16 "Complex echo" {"args":[1,2,3],"kwargs":{}}
-17 "Complex echo" null
-18 "Complex echo" {"args":[],"kwargs":{"a":23,"b":"hello"}}
-19 "Complex echo" {"args":[1,2,3],"kwargs":{}}
-20 "Complex echo" {"args":[1,2,3],"kwargs":{"a":23,"b":"hello"}}
+3 "Result: 6 + 8i"
+4 "split_name()" ["Homer Simpson"]
+5 "Forename: Homer, Surname: Simpson"
+6 "echo_complex()" [] {}
+7 "Complex echo" null
+8 "echo_complex()" [] {}
+9 "Complex echo" null
+10 "echo_complex()" [1,2,3] {}
+11 "Complex echo" {"args":[1,2,3],"kwargs":{}}
+12 "echo_complex()" [] {}
+13 "Complex echo" null
+14 "echo_complex()" [] {"a":23,"b":"hello"}
+15 "Complex echo" {"args":[],"kwargs":{"a":23,"b":"hello"}}
+16 "echo_complex()" [1,2,3] {}
+17 "Complex echo" {"args":[1,2,3],"kwargs":{}}
+18 "echo_complex()" [1,2,3] {"a":23,"b":"hello"}
+19 "Complex echo" {"args":[1,2,3],"kwargs":{"a":23,"b":"hello"}}
+20 "echo_complex()" [1,2,3,{"a":23,"b":"hello"}] {"a":23,"b":"hello","c":[1,2,3]}
 21 "Complex echo" {"args":[1,2,3,{"a":23,"b":"hello"}],"kwargs":{"a":23,"b":"hello","c":[1,2,3]}}
 22 "All finished."

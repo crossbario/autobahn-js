@@ -68,7 +68,10 @@ Testlog.prototype.stringify = function () {
       s += i;
       args = self._log[i];
       for (arg in args) {
+
+         // stringify with dict attributes ordered
          s += ' ' + self.stringifyWithOrderedKeys(args[arg]);
+         //s += ' ' + JSON.stringify(args[arg]);
       }
       s += "\n";
    }
