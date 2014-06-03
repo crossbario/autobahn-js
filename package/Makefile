@@ -1,6 +1,12 @@
 ##   http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html
 ##   http://addyosmani.com/writing-modular-js/
 
+##
+## ~/.npmrc
+## npm config edit
+## npm adduser
+##
+
 all: bundle
 
 bundle:
@@ -14,3 +20,6 @@ install:
 	npm install when
 	npm install crypto-js
 	npm install browserify
+
+publish:
+	npm publish
