@@ -120,6 +120,9 @@ var Connection = function (options) {
 
    // flag indicating if we are currently in a reconnect cycle
    self._is_retrying = false;
+
+   // when retrying, this is the timer object returned from window.setTimeout()
+   self._retry_timer = null;
 };
 
 
@@ -128,12 +131,21 @@ Connection.prototype.open = function () {
 
    var self = this;
 
-   if (self._websocket || self._is_retrying) {
-      throw "connection already open (or opening or retrying)";
+   if (self._websocket) {
+      throw "connection already open (or opening)";
    }
 
+   // reset reconnection tracking
    self._retry = true;
    self._retry_count = 0;
+   self._retry_delay = self._initial_retry_delay;
+   self._is_retrying = false;
+   if (self._retry_timer) {
+      log.debug("cancelling automatic retry upon manual retry");
+      clearTimeout(self._retry_timer);
+   }
+   self._retry_timer = null;
+
 
    function retry () {
 
@@ -155,12 +167,16 @@ Connection.prototype.open = function () {
 
       self._websocket.onopen = function () {
 
-         self._is_retrying = false;
-         self._retry_count = 0;
-         self._retry_delay = self._initial_retry_delay;
+         // remove any pending reconnect timer
+         if (self._retry_timer) {
+            clearTimeout(self._retry_timer);
+         }
+         self._retry_timer = null;
 
+         // log successful connections
          self._connect_successes += 1;
 
+         // start WAMP session
          self._session.join(self._options.realm, self._options.authmethods);
       };
 
@@ -235,7 +251,7 @@ Connection.prototype.open = function () {
                }
 
                log.debug("retrying in " + self._retry_delay + " s");
-               setTimeout(retry, self._retry_delay * 1000);
+               self._retry_timer = setTimeout(retry, self._retry_delay * 1000);
 
                // retry delay growth for next retry cycle
                if (self._retry_delay_growth) {
