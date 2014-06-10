@@ -80,6 +80,13 @@ var Connection = function (options) {
    // automatic reconnection configuration
    //
 
+   // enable automatic reconnect if host is unreachable
+   if (self._options.retry_if_unreachable !== undefined) {
+      self._retry_if_unreachable = self._options.retry_if_unreachable;
+   } else {
+      self._retry_if_unreachable = true;
+   }
+
    // maximum number of reconnection attempts
    self._max_retries = self._options.max_retries || 15;
 
@@ -181,7 +188,9 @@ Connection.prototype.open = function () {
          var reason = null;
          if (self._connect_successes === 0) {
             reason = "unreachable";
-            self._retry = false;
+            if (!self._retry_if_unreachable) {
+               self._retry = false;
+            }
 
          } else if (!evt.wasClean) {
             reason = "lost";
