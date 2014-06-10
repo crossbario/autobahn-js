@@ -316,6 +316,18 @@ Object.defineProperty(Connection.prototype, "session", {
 
 Object.defineProperty(Connection.prototype, "isOpen", {
    get: function () {
+      if (this._session && this._session.isOpen()) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+});
+
+
+
+Object.defineProperty(Connection.prototype, "isConnected", {
+   get: function () {
       if (this._websocket) {
          return true;
       } else {
