@@ -219,12 +219,34 @@ Connection.prototype.open = function () {
             reason = "closed";
          }
 
+         // Connection.onclose() allows to cancel any subsequent retry attempt       
          var stop_retrying = false;
 
+         // jitter retry delay
+         if (self._retry_delay_jitter) {
+            self._retry_delay = util.rand_normal(self._retry_delay, self._retry_delay * self._retry_delay_jitter);
+         }
+
+         // cap the retry delay
+         if (self._retry_delay > self._max_retry_delay) {
+            self._retry_delay = self._max_retry_delay;
+         }
+
+         // count number of retries
+         self._retry_count += 1;
+
+         // flag that indicated if we would retry (if retrying is not stopped manually)
+         var will_retry = self._retry_count <= self._max_retries;
+
+         // fire app code handler
+         //
          if (self.onclose) {
             var details = {
                reason: self._session_close_reason,
-               message: self._session_close_message
+               message: self._session_close_message,
+               retry_delay: self._retry_delay,
+               retry_count: self._retry_count,
+               will_retry: will_retry
             };
             try {
                stop_retrying = self.onclose(reason, details);
@@ -233,6 +255,8 @@ Connection.prototype.open = function () {
             }
          }
 
+         // reset session info
+         //
          if (self._session) {
             self._session._id = null;
             self._session = null;
@@ -243,20 +267,10 @@ Connection.prototype.open = function () {
          // automatic reconnection
          //
          if (self._retry && !stop_retrying) {
-            self._retry_count += 1;
-            if (self._retry_count <= self._max_retries) {
+
+            if (will_retry) {
 
                self._is_retrying = true;
-
-               // jitter retry delay
-               if (self._retry_delay_jitter) {
-                  self._retry_delay = util.rand_normal(self._retry_delay, self._retry_delay * self._retry_delay_jitter);
-               }
-
-               // cap the retry delay
-               if (self._retry_delay > self._max_retry_delay) {
-                  self._retry_delay = self._max_retry_delay;
-               }
 
                log.debug("retrying in " + self._retry_delay + " s");
                self._retry_timer = setTimeout(retry, self._retry_delay * 1000);
