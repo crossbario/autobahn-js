@@ -182,7 +182,11 @@ Connection.prototype.open = function () {
 
       self._session.onjoin = function (details) {
          if (self.onopen) {
-            self.onopen(self._session, details);
+            try {
+               self.onopen(self._session, details);
+            } catch (e) {
+               log.debug("Exception raised from app code while firing Connection.onopen()", e);
+            }
          }
       };
 
@@ -222,7 +226,11 @@ Connection.prototype.open = function () {
                reason: self._session_close_reason,
                message: self._session_close_message
             };
-            stop_retrying = self.onclose(reason, details);
+            try {
+               stop_retrying = self.onclose(reason, details);
+            } catch (e) {
+               log.debug("Exception raised from app code while firing Connection.onclose()", e);
+            }
          }
 
          if (self._session) {
