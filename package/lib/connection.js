@@ -17,6 +17,7 @@ var session = require('./session.js');
 var websocket = require('./websocket.js');
 var util = require('./util.js');
 var log = require('./log.js');
+var autobahn = require('./autobahn.js');
 
 
 var Connection = function (options) {
@@ -68,8 +69,9 @@ var Connection = function (options) {
 
    // WAMP transport
    //
-   self._websocket_factory = new websocket.WebSocket(self._options.url, ['wamp.2.json']);
-   self._websocket = null;
+   self._options.transport = self._options.transport || {factory:"websocket"};
+   self._options.transport.factory = self._options.transport.factory || "websocket";
+   self._init_websocket(['wamp.2.json']);
 
    // WAMP session
    //
@@ -125,7 +127,14 @@ var Connection = function (options) {
    self._retry_timer = null;
 };
 
-
+Connection.prototype._init_websocket = function (protocols) {
+    // WAMP transport
+    //
+    console.assert(this._options.transport && this._options.transport.factory, "No transport.factory specified");
+    var transport_factory_klass = autobahn.transports.get(this._options.transport.factory);
+    this._websocket_factory = new transport_factory_klass(this._options.url,protocols, this._options.transport);
+    this._websocket = null;
+};
 
 Connection.prototype.open = function () {
 

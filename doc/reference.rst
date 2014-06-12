@@ -160,6 +160,13 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 
 **Optional** options:
 
+Options that control the underlying **transport**:
+
+ * ``transport``: *object* - Transport configuration (default: **{ factory: "websocket" }**)
+ * ``transport.factory``: *string* - Alias of the factory that is used to construct the transport (default: **websocket**).
+
+.. note:: See.
+
 Options that control what **kind of Deferreds** to use:
 
  * ``use_es6_promises``: *boolean* - use deferreds based on ES6 promises
@@ -215,6 +222,52 @@ A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use w
 .. js:function:: Connection.defer
 
    :returns: a Deferred of the type specified in the call to the connection constructor :js:func:`autobahn.Connection`
+
+Transport Factory
+-----------------
+
+Custom transports can be used by registering a transport factory via ``autobahn.transports``:
+
+.. js:function:: autobahn.transports.register(alias, factory)
+
+   :param string alias: *optional* the alias of the transport factory
+   :param class factory: the factory class providing factory().create() method and factory.name attribute
+
+
+For example:
+
+.. code-block:: javascript
+
+   function TransportFactoryClass(transport_options) {
+     this.options = transport_options;
+   }
+   TransportFactoryClass.name = "my_custom_transport";
+   TransportFactoryClass.prototype.create = function () {};
+
+   autobahn.transports.register("my_custom_transport", TransportFactoryClass);
+
+Or without an alias, the identifier will be taken from the class.name attribute:
+
+.. code-block:: javascript
+
+   function TransportFactoryClass(transport_options) {
+     this.options = transport_options;
+   }
+   TransportFactoryClass.name = "my_custom_transport";
+   TransportFactoryClass.prototype.create = function () {};
+
+   autobahn.transports.register(TransportFactoryClass);
+
+which then can be used for the connection transport:
+
+.. code-block:: javascript
+
+   var connection = new autobahn.Connection( {
+     transport: {
+         factory: "my_custom_transport",
+         connect_timeout: 30
+
+     });
 
 
 Sessions

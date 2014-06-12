@@ -13,6 +13,8 @@
 
 // Polyfills for <= IE9
 require('./polyfill.js');
+// exception throwing console.assert method
+require('./assert.js');
 
 var pjson = require('../package.json');
 
@@ -33,11 +35,13 @@ var session = require('./session.js');
 var websocket = require('./websocket.js');
 var connection = require('./connection.js');
 var persona = require('./persona.js');
-
+var configure = require('./configure.js');
 
 exports.version = pjson.version;
 
 exports.WebSocket = websocket.WebSocket;
+
+exports.transports = configure.transports;
 
 exports.Connection = connection.Connection;
 
