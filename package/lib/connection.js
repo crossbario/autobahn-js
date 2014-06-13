@@ -70,7 +70,7 @@ var Connection = function (options) {
    //
    self._options.transports = self._options.transports || {type:"websocket"};
    self._options.protocols = self._options.protocols || ['wamp.2.json'];
-   self._init_transport();
+   self._init_transports();
 
    // WAMP session
    //
@@ -126,19 +126,13 @@ var Connection = function (options) {
    self._retry_timer = null;
 };
 
-Connection.prototype._init_transport = function () {
+Connection.prototype._create_transport = function (protocols) {
     // WAMP transport
     //
-    var transport_factory_klass, transports, transport_options;
-    util.assert(this._options.transports, "No transport.factory specified");
-    transports = this._options.transports;
-    if(typeof transports === "object") {
-        transports = [transports];
-    }
-    this._transport_factory = null;
-    for(var i=0;i<transports.length;i++) {
+    var transport_factory_klass, transport, transport_options;
+    for(var i=0;i<this._options.transports.length;i++) {
         // cascading transports until we find one which works
-        transport_options =  transports[i];
+        transport_options =  this._options.transports[i];
         if(!transport_options.url) {
             // defaulting to options.url if none is provided
             transport_options.url = this._options.url;
@@ -149,13 +143,26 @@ Connection.prototype._init_transport = function () {
             transport_factory_klass = autobahn.transports.get(transport_options.type);
             if(transport_factory_klass) {
                 this._transport_factory = new transport_factory_klass(transport_options);
+                transport = this._transport_factory.create(protocols);
             }
         } catch(exc) {
             console.error(exc);
         }
     }
-    util.assert(this._transport_factory, "Could not find a suitable transport");
-    this._transport = null;
+    util.assert(transport, "Could not find a suitable transport");
+    return transport;
+};
+
+Connection.prototype._init_transports = function () {
+    // WAMP transport
+    //
+    var transports;
+    util.assert(this._options.transports, "No transport.factory specified");
+    transports = this._options.transports;
+    if(typeof transports === "object") {
+        this._options.transports = [transports];
+    }
+
 };
 
 Connection.prototype.open = function () {
@@ -182,7 +189,7 @@ Connection.prototype.open = function () {
 
       // let the WebSocket factory produce a new WebSocket connection
       // which will automatically connect
-      self._transport = self._transport_factory.create(self._options.protocols);
+      self._transport = self._create_transport(self._options.protocols);
       if (!self._transport) {
          self._retry = false;
          if (self.onclose) {
