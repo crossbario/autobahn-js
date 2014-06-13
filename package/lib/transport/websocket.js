@@ -10,37 +10,39 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 ///////////////////////////////////////////////////////////////////////////////
+var util = require('../util.js');
 
-
-function Factory(url, protocols, options) {
-    this.url = url;
+function Factory(options) {
     this.options = options;
-    this.protocols = protocols;
+    util.assert(this.options.url!==undefined, "options.url missing");
+    util.assert(typeof this.options.url === "string", "options.url must be a string");
 }
 
-Factory.prototype.create = function() {
+Factory.type = "websocket";
+
+Factory.prototype.create = function(protocols) {
     if ('window' in global) {
 
       //
       // running in browser
       //
-      if ("WebSocket" in window && this.options.longpoll.options.use !== true) {
+      if ("WebSocket" in window) {
          // Chrome, MSIE, newer Firefox
-         if (this.protocols) {
-            return new window.WebSocket(this.url, this.protocols);
+         if (protocols) {
+            return new window.WebSocket(this.options.url, protocols);
          } else {
-            return new window.WebSocket(this.url);
+            return new window.WebSocket(this.options.url);
          }
-      } else if ("MozWebSocket" in window && this.options.longpoll.options.use !== true) {
+      } else if ("MozWebSocket" in window) {
          // older versions of Firefox prefix the WebSocket object
 
-         if (this.protocols) {
-            return new window.MozWebSocket(this.url, this.protocols);
+         if (protocols) {
+            return new window.MozWebSocket(this.options.url, protocols);
          } else {
-            return new window.MozWebSocket(this.url);
+            return new window.MozWebSocket(this.options.url);
          }
       } else {
-          console.assert(false,"Could not find a websocket implementation");
+          return false;
       }
 
    } else {
@@ -72,14 +74,14 @@ Factory.prototype.create = function() {
 
          var WebSocket = require('ws');
          var client;
-          var protocols = self.protocols;
+
          if (protocols) {
             if (Array.isArray(protocols)) {
                protocols = protocols.join(',');
             }
-            client = new WebSocket(self.url, {protocol: protocols});
+            client = new WebSocket(self.options.url, {protocol: protocols});
          } else {
-            client = new WebSocket(self.url);
+            client = new WebSocket(self.options.url);
          }
 
          websocket.send = function (msg) {

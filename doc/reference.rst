@@ -162,10 +162,10 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 
 Options that control the underlying **transport**:
 
- * ``transport``: *object* - Transport configuration (default: **{ factory: "websocket" }**)
- * ``transport.factory``: *string* - Alias of the factory that is used to construct the transport (default: **websocket**).
-
-.. note:: See.
+ * ``transports``: *object* or *object* - Transport configuration (default: **{ type: "websocket" }**)
+ * ``transport.type``: *string* - Alias of the factory that is used to construct the transport (default: **websocket**).
+ * ``transport.*``: *any* - Configuration options per transport.
+.. note:: See Transport Factory below.
 
 Options that control what **kind of Deferreds** to use:
 
@@ -231,7 +231,7 @@ Custom transports can be used by registering a transport factory via ``autobahn.
 .. js:function:: autobahn.transports.register(alias, factory)
 
    :param string alias: *optional* the alias of the transport factory
-   :param class factory: the factory class providing factory().create() method and factory.name attribute
+   :param class factory: the factory class providing factory().create() method and factory.type attribute
 
 
 For example:
@@ -241,7 +241,7 @@ For example:
    function TransportFactoryClass(transport_options) {
      this.options = transport_options;
    }
-   TransportFactoryClass.name = "my_custom_transport";
+   TransportFactoryClass.type = "my_custom_transport";
    TransportFactoryClass.prototype.create = function () {};
 
    autobahn.transports.register("my_custom_transport", TransportFactoryClass);
@@ -253,7 +253,7 @@ Or without an alias, the identifier will be taken from the class.name attribute:
    function TransportFactoryClass(transport_options) {
      this.options = transport_options;
    }
-   TransportFactoryClass.name = "my_custom_transport";
+   TransportFactoryClass.type = "my_custom_transport";
    TransportFactoryClass.prototype.create = function () {};
 
    autobahn.transports.register(TransportFactoryClass);
@@ -263,8 +263,9 @@ which then can be used for the connection transport:
 .. code-block:: javascript
 
    var connection = new autobahn.Connection( {
-     transport: {
-         factory: "my_custom_transport",
+     transports: {
+         type: "my_custom_transport",
+         url: "ws://127.0.0.1:8080/ws",
          connect_timeout: 30
 
      });

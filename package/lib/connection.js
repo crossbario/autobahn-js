@@ -14,7 +14,6 @@
 var when = require('when');
 
 var session = require('./session.js');
-var websocket = require('./websocket.js');
 var util = require('./util.js');
 var log = require('./log.js');
 var autobahn = require('./autobahn.js');
@@ -69,9 +68,9 @@ var Connection = function (options) {
 
    // WAMP transport
    //
-   self._options.transport = self._options.transport || {factory:"websocket"};
-   self._options.transport.factory = self._options.transport.factory || "websocket";
-   self._init_websocket(['wamp.2.json']);
+   self._options.transports = self._options.transports || {type:"websocket"};
+   self._options.protocols = self._options.protocols || ['wamp.2.json'];
+   self._init_transport();
 
    // WAMP session
    //
@@ -127,20 +126,43 @@ var Connection = function (options) {
    self._retry_timer = null;
 };
 
-Connection.prototype._init_websocket = function (protocols) {
+Connection.prototype._init_transport = function () {
     // WAMP transport
     //
-    console.assert(this._options.transport && this._options.transport.factory, "No transport.factory specified");
-    var transport_factory_klass = autobahn.transports.get(this._options.transport.factory);
-    this._websocket_factory = new transport_factory_klass(this._options.url,protocols, this._options.transport);
-    this._websocket = null;
+    var transport_factory_klass, transports, transport_options;
+    util.assert(this._options.transports, "No transport.factory specified");
+    transports = this._options.transports;
+    if(typeof transports === "object") {
+        transports = [transports];
+    }
+    this._transport_factory = null;
+    for(var i=0;i<transports.length;i++) {
+        // cascading transports until we find one which works
+        transport_options =  transports[i];
+        if(!transport_options.url) {
+            // defaulting to options.url if none is provided
+            transport_options.url = this._options.url;
+        }
+        util.assert(transport_options.type, "No transport.type specified");
+        util.assert(typeof transport_options.type === "string", "transport.type must be a string");
+        try {
+            transport_factory_klass = autobahn.transports.get(transport_options.type);
+            if(transport_factory_klass) {
+                this._transport_factory = new transport_factory_klass(transport_options);
+            }
+        } catch(exc) {
+            console.error(exc);
+        }
+    }
+    util.assert(this._transport_factory, "Could not find a suitable transport");
+    this._transport = null;
 };
 
 Connection.prototype.open = function () {
 
    var self = this;
 
-   if (self._websocket) {
+   if (self._transport) {
       throw "connection already open (or opening)";
    }
 
@@ -160,8 +182,8 @@ Connection.prototype.open = function () {
 
       // let the WebSocket factory produce a new WebSocket connection
       // which will automatically connect
-      self._websocket = self._websocket_factory.create();
-      if (!self._websocket) {
+      self._transport = self._transport_factory.create(self._options.protocols);
+      if (!self._transport) {
          self._retry = false;
          if (self.onclose) {
             self.onclose("unsupported", "WebSocket transport unsupported");
@@ -170,11 +192,11 @@ Connection.prototype.open = function () {
       }
 
       // create a new WAMP session using the WebSocket connection as transport
-      self._session = new session.Session(self._websocket, self._defer, self._options.onchallenge);
+      self._session = new session.Session(self._transport, self._defer, self._options.onchallenge);
       self._session_close_reason = null;
       self._session_close_message = null;
 
-      self._websocket.onopen = function () {
+      self._transport.onopen = function () {
 
          // remove any pending reconnect timer
          if (self._retry_timer) {
@@ -207,12 +229,12 @@ Connection.prototype.open = function () {
          self._session_close_reason = reason;
          self._session_close_message = details.message;
          self._retry = false;
-         self._websocket.close(1000);
+         self._transport.close(1000);
       };
 
-      self._websocket.onclose = function (evt) {
+      self._transport.onclose = function (evt) {
 
-         self._websocket = null;
+         self._transport = null;
 
          var reason = null;
          if (self._connect_successes === 0) {
@@ -303,7 +325,7 @@ Connection.prototype.open = function () {
 Connection.prototype.close = function (reason, message) {
    var self = this;
 
-   if (!self._websocket && !self._is_retrying) {
+   if (!self._transport && !self._is_retrying) {
       throw "connection already closed";
    }
 
@@ -313,9 +335,9 @@ Connection.prototype.close = function (reason, message) {
    if (self._session && self._session.isOpen) {
       // if there is an open session, close that first.
       self._session.leave(reason, message);
-   } else if (self._websocket) {
+   } else if (self._transport) {
       // no session active: just close the transport
-      self._websocket.close(1000);
+      self._transport.close(1000);
    }
 };
 
@@ -351,7 +373,7 @@ Object.defineProperty(Connection.prototype, "isOpen", {
 
 Object.defineProperty(Connection.prototype, "isConnected", {
    get: function () {
-      if (this._websocket) {
+      if (this._transport) {
          return true;
       } else {
          return false;

@@ -28,5 +28,11 @@ function rand_normal(mean, sd) {
    return (mean || 0) + (x1 * c) * (sd || 1);
 };
 
+var assert	= function(cond, text){
+	if( cond )	return;
+	if( assert.useDebugger || AUTOBAHN_DEBUG)	debugger;
+	throw new Error(text || "Assertion failed!");
+};
 
 exports.rand_normal = rand_normal;
+exports.assert = assert;

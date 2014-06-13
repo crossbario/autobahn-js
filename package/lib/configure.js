@@ -10,6 +10,7 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 ///////////////////////////////////////////////////////////////////////////////
+var util = require('./util.js');
 
 function Transports() {
     this._repository = {};
@@ -19,20 +20,19 @@ Transports.prototype.register = function() {
     var factory;
     var name;
 
-    console.assert(arguments.length>0, "Need to provide at least 1 argument autobahn.transports.register(TransportFactory)");
-    console.assert(arguments.length<3, "Need to provide at max 2 arguments autobahn.transports.register(alias, TransportFactory)");
+    util.assert(arguments.length>0, "Need to provide at least 1 argument autobahn.transports.register(TransportFactory)");
+    util.assert(arguments.length<3, "Need to provide at max 2 arguments autobahn.transports.register(alias, TransportFactory)");
 
     if(arguments.length==1) {
         factory = arguments[0];
-        console.assert(typeof factory.name === "string", "Transport does not provide a .name attribute");
-        name = factory.name;
+        util.assert(typeof factory.type === "string", "Transport does not provide a .name attribute");
+        name = factory.type;
     } else {
         name = arguments[0];
         factory = arguments[1];
-        console.assert(typeof factory.name === "string", "Factory does not provide a .name attribute");
+        util.assert(typeof factory.type === "string", "Factory does not provide a .name attribute");
     }
-
-    console.assert(typeof factory.prototype.create === "function", "Protocol '" + name + "' does not provide a .create method");
+    util.assert(typeof factory.prototype.create === "function", "Protocol '" + name + "' does not provide a .create method");
     this._repository[name] = factory;
 };
 Transports.prototype.isRegistered = function(name) {
@@ -44,7 +44,7 @@ Transports.prototype.get = function(name) {
         mod = this._repository[name];
     } else {
 
-      console.assert(false, "No such transport: " + name);
+      util.assert(false, "No such transport: " + name);
 
     }
     return mod;
@@ -67,7 +67,7 @@ var _transports = new Transports();
 /**
  * Register defaults
  */
-var websocket = require('./websocket.js');
+var websocket = require('./transport/websocket.js');
 _transports.register("websocket", websocket.Factory);
 
 exports.transports = _transports;
