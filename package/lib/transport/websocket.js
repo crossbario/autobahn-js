@@ -16,11 +16,12 @@ function Factory(options) {
     this.options = options;
     util.assert(this.options.url!==undefined, "options.url missing");
     util.assert(typeof this.options.url === "string", "options.url must be a string");
+
 }
 
 Factory.type = "websocket";
 
-Factory.prototype.create = function(protocols) {
+Factory.prototype.create = function() {
     if ('window' in global) {
 
       //
@@ -28,16 +29,16 @@ Factory.prototype.create = function(protocols) {
       //
       if ("WebSocket" in window) {
          // Chrome, MSIE, newer Firefox
-         if (protocols) {
-            return new window.WebSocket(this.options.url, protocols);
+         if (this.options.protocols) {
+            return new window.WebSocket(this.options.url, this.options.protocols);
          } else {
             return new window.WebSocket(this.options.url);
          }
       } else if ("MozWebSocket" in window) {
          // older versions of Firefox prefix the WebSocket object
 
-         if (protocols) {
-            return new window.MozWebSocket(this.options.url, protocols);
+         if (this.options.protocols) {
+            return new window.MozWebSocket(this.options.url, this.options.protocols);
          } else {
             return new window.MozWebSocket(this.options.url);
          }
@@ -74,8 +75,9 @@ Factory.prototype.create = function(protocols) {
 
          var WebSocket = require('ws');
          var client;
-
-         if (protocols) {
+         var protocols;
+         if (this.options.protocols) {
+             protocols = this.options.protocols;
             if (Array.isArray(protocols)) {
                protocols = protocols.join(',');
             }

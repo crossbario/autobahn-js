@@ -128,13 +128,13 @@ var Connection = function (options) {
    self._retry_timer = null;
 };
 
-Connection.prototype._create_transport = function (protocols) {
+Connection.prototype._create_transport = function () {
     // WAMP transport
     //
     var transport;
     for(var i=0;i<this._transport_factories.length;i++) {
         try {
-            transport = this._transport_factories[i].create(protocols);
+            transport = this._transport_factories[i].create();
             if(transport) {
                 break;
             }
@@ -162,6 +162,9 @@ Connection.prototype._init_transport_factories = function () {
         if(!transport_options.url) {
             // defaulting to options.url if none is provided
             transport_options.url = this._options.url;
+        }
+        if(!transport_options.protocols) {
+            transport_options.protocols = this._options.protocols;
         }
         util.assert(transport_options.type, "No transport.type specified");
         util.assert(typeof transport_options.type === "string", "transport.type must be a string");
@@ -201,7 +204,7 @@ Connection.prototype.open = function () {
 
       // let the WebSocket factory produce a new WebSocket connection
       // which will automatically connect
-      self._transport = self._create_transport(self._options.protocols);
+      self._transport = self._create_transport();
       if (!self._transport) {
          self._retry = false;
          if (self.onclose) {
