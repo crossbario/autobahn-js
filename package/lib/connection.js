@@ -70,6 +70,8 @@ var Connection = function (options) {
    //
    self._options.transports = self._options.transports || {type:"websocket"};
    self._options.protocols = self._options.protocols || ['wamp.2.json'];
+
+   self._transport_factories = [];
    self._init_transports();
 
    // WAMP session
@@ -129,21 +131,12 @@ var Connection = function (options) {
 Connection.prototype._create_transport = function (protocols) {
     // WAMP transport
     //
-    var transport_factory_klass, transport, transport_options;
-    for(var i=0;i<this._options.transports.length;i++) {
-        // cascading transports until we find one which works
-        transport_options =  this._options.transports[i];
-        if(!transport_options.url) {
-            // defaulting to options.url if none is provided
-            transport_options.url = this._options.url;
-        }
-        util.assert(transport_options.type, "No transport.type specified");
-        util.assert(typeof transport_options.type === "string", "transport.type must be a string");
+    var transport;
+    for(var i=0;i<this._transport_factories.length;i++) {
         try {
-            transport_factory_klass = autobahn.transports.get(transport_options.type);
-            if(transport_factory_klass) {
-                this._transport_factory = new transport_factory_klass(transport_options);
-                transport = this._transport_factory.create(protocols);
+            transport = this._transport_factories[i].create(protocols);
+            if(transport) {
+                break;
             }
         } catch(exc) {
             console.error(exc);
@@ -156,13 +149,32 @@ Connection.prototype._create_transport = function (protocols) {
 Connection.prototype._init_transports = function () {
     // WAMP transport
     //
-    var transports;
+    var transports, transport_options, transport_factory;
+
     util.assert(this._options.transports, "No transport.factory specified");
     transports = this._options.transports;
     if(typeof transports === "object") {
         this._options.transports = [transports];
     }
-
+    for(var i=0;i<this._options.transports.length;i++) {
+        // cascading transports until we find one which works
+        transport_options =  this._options.transports[i];
+        if(!transport_options.url) {
+            // defaulting to options.url if none is provided
+            transport_options.url = this._options.url;
+        }
+        util.assert(transport_options.type, "No transport.type specified");
+        util.assert(typeof transport_options.type === "string", "transport.type must be a string");
+        try {
+            transport_factory_klass = autobahn.transports.get(transport_options.type);
+            if(transport_factory_klass) {
+                transport_factory = new transport_factory_klass(transport_options);
+                this._transport_factories.push(transport_factory);
+            }
+        } catch(exc) {
+            console.error(exc);
+        }
+    }
 };
 
 Connection.prototype.open = function () {
