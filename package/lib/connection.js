@@ -72,7 +72,7 @@ var Connection = function (options) {
    self._options.protocols = self._options.protocols || ['wamp.2.json'];
 
    self._transport_factories = [];
-   self._init_transports();
+   self._init_transport_factories();
 
    // WAMP session
    //
@@ -146,10 +146,10 @@ Connection.prototype._create_transport = function (protocols) {
     return transport;
 };
 
-Connection.prototype._init_transports = function () {
+Connection.prototype._init_transport_factories = function () {
     // WAMP transport
     //
-    var transports, transport_options, transport_factory;
+    var transports, transport_options, transport_factory, transport_factory_klass;
 
     util.assert(this._options.transports, "No transport.factory specified");
     transports = this._options.transports;
