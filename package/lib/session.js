@@ -783,9 +783,9 @@ var Session = function (socket, defer, onchallenge) {
    self._MESSAGE_MAP[MSG_TYPE.INVOCATION] = self._process_INVOCATION;
 
 
-   self._socket.onmessage = function (evt) {
+   self._socket.onmessage = function (evt, is_msg) {
 
-      var msg = JSON.parse(evt.data);
+      var msg = !is_msg?JSON.parse(evt.data):evt;
       var msg_type = msg[0];
 
       // WAMP session not yet open

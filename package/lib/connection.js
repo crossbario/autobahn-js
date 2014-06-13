@@ -68,6 +68,7 @@ var Connection = function (options) {
 
    // WAMP transport
    //
+   self.transport = null;
    self._options.transports = self._options.transports || {type:"websocket"};
    self._options.protocols = self._options.protocols || ['wamp.2.json'];
 
@@ -172,6 +173,7 @@ Connection.prototype._init_transport_factories = function () {
             transport_factory_klass = autobahn.transports.get(transport_options.type);
             if(transport_factory_klass) {
                 transport_factory = new transport_factory_klass(transport_options);
+                transport_factory.type = transport_factory_klass.type;
                 this._transport_factories.push(transport_factory);
             }
         } catch(exc) {
@@ -252,12 +254,19 @@ Connection.prototype.open = function () {
          self._session_close_message = details.message;
          self._retry = false;
          self._transport.close(1000);
+         if(self._transport && typeof self._transport._destruct === "function") {
+            self._transport._destruct();
+         }
+         self._transport = null;
+         self.transport = null;
       };
 
       self._transport.onclose = function (evt) {
-
+         if(self._transport && typeof self._transport._destruct === "function") {
+            self._transport._destruct();
+         }
          self._transport = null;
-
+         self.transport = null;
          var reason = null;
          if (self._connect_successes === 0) {
             reason = "unreachable";
@@ -383,7 +392,7 @@ Object.defineProperty(Connection.prototype, "session", {
 
 Object.defineProperty(Connection.prototype, "isOpen", {
    get: function () {
-      if (this._session && this._session.isOpen()) {
+      if (this._session && this._session.isOpen) {
          return true;
       } else {
          return false;
