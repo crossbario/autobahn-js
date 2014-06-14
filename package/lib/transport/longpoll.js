@@ -36,6 +36,7 @@ function LongPollSocket(longpoll_options) {
 
     this._transport = null;
     this._requests = {};
+    this._cors_resources = {};
     this._receive_timeout = false;
     this._init_transaction_ids();
 
@@ -167,7 +168,7 @@ LongPollSocket.prototype._on_receive_failure = function (req, code) {
         this._connected && this.onclose({"code":code,"reason":req.responseText,"wasClean": false});
     } else if(code>=1000) {
         this._connected && this.onclose({"code":code,"reason":req.responseText,"wasClean": false});
-    } else if (!self._is_closing) {
+    } else if (!this._is_closing) {
         this.receive();
     }
 };
@@ -184,6 +185,9 @@ LongPollSocket.prototype._on_close_success = function (req, code, reason, res) {
 
     this.readyState = LongPollSocket.CLOSED;
     console.debug("closed successfully");
+    if(this.onclose) {
+        this.onclose({wasClean:true, code:code, msg:reason});
+    }
     return this._close(code, reason);
 };
 LongPollSocket.prototype._on_close_failure = function (req, code, reason) {
@@ -191,6 +195,9 @@ LongPollSocket.prototype._on_close_failure = function (req, code, reason) {
     this.readyState = LongPollSocket.CLOSED;
     console.error("closed with error", req);
 
+    if(this.onclose) {
+        this.onclose({wasClean:false, code:code, msg:reason});
+    }
 
 };
 LongPollSocket.prototype._on_open_success = function (req, res) {
@@ -207,6 +214,7 @@ LongPollSocket.prototype._on_open_success = function (req, res) {
     this._init_receiver();
     this.onopen(self);
     this._connected = true;
+
 };
 LongPollSocket.prototype._on_open_failure = function (req, code) {
     console.error("failed", code, req.responseText);
@@ -381,6 +389,28 @@ LongPollSocket.prototype._close_socket_if_still_not_connected = function(req) {
         this._close_timeout();
     }
 };
+LongPollSocket.prototype._cors_preflight = function(url) {
+    if (!this._requests["_preflight"]) {
+
+        this._requests["_preflight"] = new XMLHttpRequest();
+
+
+    }
+    this._requests["_preflight"].open("OPTIONS", url, false);
+    this._requests["_preflight"].setRequestHeader("Access-Control-Request-Method", "POST");
+    this._requests["_preflight"].setRequestHeader("Access-Control-Request-Headers", "content-type");
+    this._requests["_preflight"].setRequestHeader("Origin", window.location.host);
+    this._requests["_preflight"].send();
+    if (this._requests["_preflight"].status === 200) {
+
+            this._cors_resources[url]=true;
+            return true;
+
+    } else {
+        return false;
+    }
+
+};
 LongPollSocket.prototype._request = function (id, url, data, options, async) {
     options = options || {};
     async = async === undefined? true:async;
@@ -407,10 +437,21 @@ LongPollSocket.prototype._request = function (id, url, data, options, async) {
     }
 
     try {
-
+        if(this._cors_needed && !this._cors_resources[url]) {
+            if(!this._cors_preflight(url)) {
+                console.error("Could not complete cors preflight");
+                d.reject("Could not complete cors preflight");
+                if (d.promise.then) {
+                    // whenjs has the actual user promise in an attribute
+                    return d.promise;
+                } else {
+                    return d;
+                }
+            }
+        }
         this._requests[id].open("POST", url, async);
 
-        if(options.timeout>0 && options.timeout!=this._requests[id].timeout) {
+        if(async && options.timeout>0 && options.timeout!=this._requests[id].timeout) {
            this._requests[id].timeout = options.timeout*1000;
              if(options.ontimeout) {
                 this._requests[id].ontimeout=options.ontimeout;

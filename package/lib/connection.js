@@ -245,6 +245,7 @@ Connection.prototype.open = function () {
          }
       };
 
+
       //
       // ... WAMP session is now attached to realm.
       //
