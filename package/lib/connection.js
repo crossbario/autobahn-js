@@ -230,7 +230,7 @@ Connection.prototype.open = function () {
          self._connect_successes += 1;
 
          // start WAMP session
-         self._session.join(self._options.realm, self._options.authmethods);
+         self._session.join(self._options.realm, self._options.authmethods, self._options.authid);
       };
 
       self._session.onjoin = function (details) {

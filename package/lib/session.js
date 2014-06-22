@@ -14,8 +14,6 @@
 // require('assert') would be nice .. but it does not
 // work with Google Closure after Browserify
 
-var crypto = require('crypto-js');
-
 var when = require('when');
 var when_fn = require("when/function");
 
@@ -55,37 +53,6 @@ WAMP_FEATURES = {
 //
 function newid () {
    return Math.floor(Math.random() * 9007199254740992);
-}
-
-
-// PBKDF2-base key derivation function for salted WAMP-CRA
-//
-function derive_key (secret, extra) {
-   if (extra && extra.salt) {
-      var salt = extra.salt;
-      var keylen = extra.keylen || 32;
-      var iterations = extra.iterations || 10000;
-      var key = crypto.PBKDF2(secret,
-                              salt,
-                              {
-                                 keySize: keylen / 4,
-                                 iterations: iterations,
-                                 hasher: CryptoJS.algo.SHA256
-                              }
-      );
-      return key.toString(crypto.enc.Base64);
-   } else {
-      return secret;
-   }
-}
-
-
-function auth_sign (challenge, secret) {
-   if (!secret) {
-      secret = "";
-   }
-
-   return crypto.HmacSHA256(challenge, secret).toString(crypto.enc.Base64);
 }
 
 
@@ -1046,10 +1013,11 @@ Session.prototype.log = function () {
 };
 
 
-Session.prototype.join = function (realm, authmethods) {
+Session.prototype.join = function (realm, authmethods, authid) {
 
    util.assert(typeof realm === 'string', "Session.join: <realm> must be a string");
    util.assert(!authmethods || authmethods instanceof Array, "Session.join: <authmethods> must be an array []");
+   util.assert(!authid || typeof authid === 'string', "Session.join: <authid> must be a string");
 
    var self = this;
 
@@ -1065,6 +1033,9 @@ Session.prototype.join = function (realm, authmethods) {
 
    if (authmethods) {
       details.authmethods = authmethods;
+   }
+   if (authid) {
+      details.authid = authid;
    }
 
    var msg = [MSG_TYPE.HELLO, realm, details];

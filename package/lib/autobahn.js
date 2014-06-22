@@ -31,8 +31,10 @@ var util = require('./util.js');
 var log = require('./log.js');
 var session = require('./session.js');
 var connection = require('./connection.js');
-var persona = require('./persona.js');
 var configure = require('./configure.js');
+
+var persona = require('./auth/persona.js');
+var cra = require('./auth/cra.js');
 
 exports.version = pjson.version;
 
@@ -50,6 +52,7 @@ exports.Registration = session.Registration;
 exports.Publication = session.Publication;
 
 exports.auth_persona = persona.auth;
+exports.auth_cra = cra;
 
 exports.when = when;
 
