@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-function rand_normal(mean, sd) {
+function rand_normal (mean, sd) {
    // Derive a Gaussian from Uniform random variables
    // http://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
    var x1, x2, rad;
@@ -28,11 +28,18 @@ function rand_normal(mean, sd) {
    return (mean || 0) + (x1 * c) * (sd || 1);
 };
 
-var assert	= function(cond, text){
-	if( cond )	return;
-	if( assert.useDebugger || AUTOBAHN_DEBUG)	debugger;
+
+var assert = function (cond, text) {
+	if (cond) {
+      return;
+   }
+	if (assert.useDebugger || ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG)) {
+      debugger;
+   }
+
 	throw new Error(text || "Assertion failed!");
 };
+
 
 exports.rand_normal = rand_normal;
 exports.assert = assert;

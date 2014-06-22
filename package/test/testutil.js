@@ -14,12 +14,25 @@
 var autobahn = require('./../index.js');
 var fs = require("fs");
 
-
+/*
+// fully qualified config
 var config = {
-   'url': 'ws://127.0.0.1:8080/ws',
-   'realm': 'realm1'
+   transports: [
+      {
+         type: 'websocket',
+         url: 'ws://127.0.0.1:8080/ws',
+         protocols: ['wamp.2.json']
+      }
+   ],
+   realm: 'realm1'
 }
+*/
 
+// shortcut config
+var config = {
+   url: 'ws://127.0.0.1:8080/ws',
+   realm: 'realm1'
+}
 
 function connect_n(n) {
    var dl = [];

@@ -10,47 +10,64 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+
 var util = require('../util.js');
 
-function Factory(options) {
-    this.options = options;
-    util.assert(this.options.url!==undefined, "options.url missing");
-    util.assert(typeof this.options.url === "string", "options.url must be a string");
 
+function Factory (options) {
+   var self = this;
+
+   self._options = options;
+
+   util.assert(self._options.url !== undefined, "options.url missing");
+   util.assert(typeof self._options.url === "string", "options.url must be a string");
+
+   if (!self._options.protocols) {
+      self._options.protocols = ['wamp.2.json'];
+   } else {
+      util.assert(self._options.protocols instanceof Array, "options.protocols must be an array");
+   }
 }
+
 
 Factory.type = "websocket";
 
-Factory.prototype.create = function() {
-    if ('window' in global) {
 
-      //
-      // running in browser
-      //
+Factory.prototype.create = function () {
+
+   var self = this;
+
+   //
+   // running in browser
+   //
+   if ('window' in global) {
+
+      // Chrome, MSIE, newer Firefox
       if ("WebSocket" in window) {
-         // Chrome, MSIE, newer Firefox
-         if (this.options.protocols) {
-            return new window.WebSocket(this.options.url, this.options.protocols);
+         
+         if (self._options.protocols) {
+            return new window.WebSocket(self._options.url, self._options.protocols);
          } else {
-            return new window.WebSocket(this.options.url);
+            return new window.WebSocket(self._options.url);
          }
-      } else if ("MozWebSocket" in window) {
-         // older versions of Firefox prefix the WebSocket object
 
-         if (this.options.protocols) {
-            return new window.MozWebSocket(this.options.url, this.options.protocols);
+      // older versions of Firefox prefix the WebSocket object
+      } else if ("MozWebSocket" in window) {
+
+         if (self._options.protocols) {
+            return new window.MozWebSocket(self._options.url, self._options.protocols);
          } else {
-            return new window.MozWebSocket(this.options.url);
+            return new window.MozWebSocket(self._options.url);
          }
       } else {
-          return false;
+         return false;
       }
 
+   //
+   // running on NodeJS
+   //
    } else {
-
-      //
-      // running on nodejs
-      //
 
       // our WebSocket shim with W3C API
       var websocket = {};
@@ -76,14 +93,15 @@ Factory.prototype.create = function() {
          var WebSocket = require('ws');
          var client;
          var protocols;
-         if (self.options.protocols) {
-             protocols = self.options.protocols;
+
+         if (self._options.protocols) {
+            protocols = self._options.protocols;
             if (Array.isArray(protocols)) {
                protocols = protocols.join(',');
             }
-            client = new WebSocket(self.options.url, {protocol: protocols});
+            client = new WebSocket(self._options.url, {protocol: protocols});
          } else {
-            client = new WebSocket(self.options.url);
+            client = new WebSocket(self._options.url);
          }
 
          websocket.send = function (msg) {
@@ -100,7 +118,7 @@ Factory.prototype.create = function() {
 
          client.on('message', function (data, flags) {
             if (flags.binary) {
-
+               // FIXME!
             } else {
                websocket.onmessage({data: data});
             }
