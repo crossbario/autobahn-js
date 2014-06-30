@@ -124,10 +124,25 @@ Factory.prototype.create = function () {
             }
          });
 
-         client.on('close', function () {
+         // FIXME: improve mapping to WS API for the following
+         // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Close_codes
+         //
+         client.on('close', function (code, message) {
+            var evt = {
+               code: code,
+               reason: message,
+               wasClean: code === 1000
+            }
+            websocket.onclose(evt);
          });
 
-         client.on('error', function () {
+         client.on('error', function (error) {
+            var evt = {
+               code: 1006,
+               reason: '',
+               wasClean: false
+            }
+            websocket.onclose(evt);
          });
 
       })();

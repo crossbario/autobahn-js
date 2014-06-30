@@ -34,3 +34,7 @@ exports.testRpcRouting = rpc_routing.testRpcRouting;
 exports.testPubsubBasic = pubsub_basic.testPubsubBasic;
 exports.testPubsubComplex = pubsub_complex.testPubsubComplex;
 exports.testPubsubOptions = pubsub_options.testPubsubOptions;
+
+
+//var connect = require('./test_connect.js');
+//exports.testConnect = connect.testConnect;
