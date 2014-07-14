@@ -273,14 +273,10 @@ var Session = function (socket, defer, onchallenge) {
       // process ERROR reply to SUBSCRIBE
       //
       var request = msg[2];
-      var details = msg[3];
-      var error = msg[4];
-
-      // optional
-      var args = msg[5];
-      var kwargs = msg[6];
-
       if (request in self._subscribe_reqs) {
+
+         var details = msg[3];
+         var error = new Error(msg[4], msg[5], msg[6]);
 
          var r = self._subscribe_reqs[request];
 
@@ -336,14 +332,10 @@ var Session = function (socket, defer, onchallenge) {
       // process ERROR reply to UNSUBSCRIBE
       //
       var request = msg[2];
-      var details = msg[3];
-      var error = msg[4];
-
-      // optional
-      var args = msg[5];
-      var kwargs = msg[6];
-
       if (request in self._unsubscribe_reqs) {
+
+         var details = msg[3];
+         var error = new Error(msg[4], msg[5], msg[6]);
 
          var r = self._unsubscribe_reqs[request];
 
@@ -392,14 +384,10 @@ var Session = function (socket, defer, onchallenge) {
       // process ERROR reply to PUBLISH
       //
       var request = msg[2];
-      var details = msg[3];
-      var error = msg[4];
-
-      // optional
-      var args = msg[5];
-      var kwargs = msg[6];
-
       if (request in self._publish_reqs) {
+
+         var details = msg[3];
+         var error = new Error(msg[4], msg[5], msg[6]);
 
          var r = self._publish_reqs[request];
 
@@ -488,14 +476,10 @@ var Session = function (socket, defer, onchallenge) {
       // process ERROR reply to REGISTER
       //
       var request = msg[2];
-      var details = msg[3];
-      var error = msg[4];
-
-      // optional
-      var args = msg[5];
-      var kwargs = msg[6];
-
       if (request in self._register_reqs) {
+
+         var details = msg[3];
+         var error = new Error(msg[4], msg[5], msg[6]);
 
          var r = self._register_reqs[request];
 
@@ -546,14 +530,10 @@ var Session = function (socket, defer, onchallenge) {
       // process ERROR reply to UNREGISTER
       //
       var request = msg[2];
-      var details = msg[3];
-      var error = msg[4];
-
-      // optional
-      var args = msg[5];
-      var kwargs = msg[6];
-
       if (request in self._unregister_reqs) {
+
+         var details = msg[3];
+         var error = new Error(msg[4], msg[5], msg[6]);
 
          var r = self._unregister_reqs[request];
 
