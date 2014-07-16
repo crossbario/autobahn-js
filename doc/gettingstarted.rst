@@ -86,7 +86,7 @@ If you are using a module system like `RequireJS <http://requirejs.org/>`_, you 
            baseUrl: ".",
            paths: {
                "autobahn":
-                  "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min",
+                  "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js",
                "when": "https://cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when"
            },
            shim: {
