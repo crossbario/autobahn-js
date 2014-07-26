@@ -392,7 +392,7 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 
 
 rst_epilog = """
-.. |ab| replace:: Autobahn\|JS
+.. |ab| replace:: **Autobahn**\|JS
 .. |Ab| replace:: **Autobahn**\|JS
 .. _Autobahn: http://autobahn.ws
 .. _AutobahnPython: **Autobahn**\|Python

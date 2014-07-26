@@ -164,8 +164,8 @@ What we do here is:
 
 * We define (line 2) a WAMP/WebSocket connection with the minimum amount of necessary parameters
 
-   * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the server on.
-   * The WAMP realm to connect to. Realms are used to group connections to a WAMP server together, and to e.g. apply permissions to them. With our demo server, we are free to chose a realm name.
+  * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the server on.
+  * The WAMP realm to connect to. Realms are used to group connections to a WAMP server together, and to e.g. apply permissions to them. With our demo server, we are free to chose a realm name.
 
 * We set up an 'onopen' handler, i.e. a function to execute once a connection has been established (starting at line 10). This is passed an object through which we can interact with the established WAMP/WebSocket session.
 * We open the WAMP/WebSocket connection (line 17).
@@ -205,8 +205,10 @@ What we do here is:
 
 * We define the function to be executed as a remote procedure (starting line 2). This simply logs the fact that it has been called to the console, and returns the current time in ISO format.
 * We register this function as a remote procedure with the WAMP router we're connected to (line 9). The registration itself has two arguments:
-   * The name of the function to register (``utcnow``)
-   * The identifier which a caller needs to use for calling the procedure. For this, WAMP uses URIs following the Java package naming convention.
+
+  * The name of the function to register (``utcnow``)
+  * The identifier which a caller needs to use for calling the procedure. For this, WAMP uses URIs following the Java package naming convention.
+
 * The registration creates a promise, which is resolved when the registration either succeeds or fails. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
 * The first function (starting in line 10) is called if the registration succeeds and logs the registration ID that the server has created. In case we want to de-register the procedure later, we'd need to store the registration object here.
 * The second function (starting in line 13) is called if the registration fails and just logs the received error code.

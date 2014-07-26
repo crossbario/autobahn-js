@@ -5,18 +5,18 @@ Getting Started
 
 With |ab|, you can develop application components in JavaScript, and those components can be hosted inside **browsers**, **Node.js** and **PostgreSQL** (*under development*).
 
-To provide the communication between the components of your application, you need a WAMP v2 compatible **application router**.
+WAMP router
+-----------
 
-.. note:: The application router is responsible for call and event routing between your application's components. The router itself will not run any application code.
+|ab| does not connect application components directly to each other, but enables a connection to a WAMP router. This connects the application components. The routing is rule-based - no application code runs inside the router.
 
-WAMP implementations need to catch up with V2 of WAMP, and currently, the only WAMP v2 compatible routers are `Autobahn|Python <https://github.com/tavendo/AutobahnPython>`_ and `Crossbar.io <https://github.com/crossbario/crossbar>`_
+You can find a `list of WAMP v2 compatible routers <http://wamp.ws/implementations/>`_ at the WAMP project site. We recommend using Crossbar.io <https://github.com/crossbario/crossbar>`_, which is offers a lot of features, but the examples here should work with any WAMP router.
 
-**Crossbar**.io is an integrated server package that can run from configuration files and acts as a generic WAMP router. To get started with **Crossbar**.io, please see the `project GitHub wiki <https://github.com/crossbario/crossbar/wiki/Getting-Started>`_.
 
 Example Code
 ------------
 
-You can find complete examples for code running in both the browser and Node.js in the `Autobahn|Python Github repository <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic>`_.
+You can find complete examples for code running in both the browser and Node.js in the `Autobahn|Python Github repository <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic>`_. (The examples are also provided in Python versions.)
 
 
 Node.js
@@ -38,13 +38,13 @@ and then, in your code
 Browsers
 --------
 
-You can get the **latest** (= WAMPv2 only) prebuilt |ab| release from here:
+You can get the **latest** prebuilt |ab| release from here:
 
 1. `Production (minimized and gzipped) <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz>`_
 2. `Production (only minimized)] <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js>`_
 3. `Development <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js>`_
 
-and use it in your HTML like so
+For **development purposes**, you can include these directly like so
 
 .. code-block:: html
 
@@ -61,9 +61,11 @@ and use it in your HTML like so
    </html>
 
 
-.. note:: You can use the above via direct linking for *development purposes*, but do not hotlink for production. This will not work, since we place restrictions on HTTP referers.
+.. note:: We place restrictions on HTTP referers, so using the above in production would not work in most cases.
 
-The **old** |ab| for WAMPv1 is still available from here:
+For **production use**, please host |ab| yourself.
+
+The **old** |ab|, which supports the deprecated version 1 of WAMP is still available from here:
 
 1. `0.8.2 Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
 2. `0.8.2 Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
@@ -113,3 +115,12 @@ Doing so allows you to use forks of |ab|, e.g. ones which may implement features
 It also allows you to hack on |ab| yourself.
 
 To build |ab|, follow :doc:`these instructions <building>`
+
+
+What now?
+---------
+
+Take a look at the :doc:`tutorial`, which takes you step-by-step through a **simple sample application** that introduces RPC and PubSub.
+
+If you want to see some **live Web apps** using |ab|? Take a look at the `Crossbar.io demos <http://crossbar.io/>`.
+

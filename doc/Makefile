@@ -177,26 +177,10 @@ pseudoxml:
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
 copycustom:
-	cp _templates/sidetoc.html ../../AutobahnPython/doc/_templates/
-	cp _templates/stay_informed.html ../../AutobahnPython/doc/_templates/
-	cp _themes/kr/static/autobahn.css ../../AutobahnPython/doc/_themes/kr/static
-	cp _themes/kr/static/flasky.css_t ../../AutobahnPython/doc/_themes/kr/static
-	cp _themes/kr/previous_next.html ../../AutobahnPython/doc/_themes/kr/
+	cp _static/page.css ../../AutobahnPython/doc/_static/
 
-	cp _templates/sidetoc.html ../../AutobahnAndroid/doc/_templates/
-	cp _templates/stay_informed.html ../../AutobahnAndroid/doc/_templates/
-	cp _themes/kr/static/autobahn.css ../../AutobahnAndroid/doc/_themes/kr/static
-	cp _themes/kr/static/flasky.css_t ../../AutobahnAndroid/doc/_themes/kr/static
-	cp _themes/kr/previous_next.html ../../AutobahnAndroid/doc/_themes/kr/
+	cp _static/page.css ../../AutobahnAndroid/doc/_static/
 
-	cp _templates/sidetoc.html ../../AutobahnTestsuite/doc/_templates/
-	cp _templates/stay_informed.html ../../AutobahnTestsuite/doc/_templates/
-	cp _themes/kr/static/autobahn.css ../../AutobahnTestsuite/doc/_themes/kr/static
-	cp _themes/kr/static/flasky.css_t ../../AutobahnTestsuite/doc/_themes/kr/static
-	cp _themes/kr/previous_next.html ../../AutobahnTestsuite/doc/_themes/kr/
+	cp _static/page.css ../../AutobahnTestsuite/doc/_static/
 
-	cp _templates/sidetoc.html ../../AutobahnCpp/doc/_templates/
-	cp _templates/stay_informed.html ../../AutobahnCpp/doc/_templates/
-	cp _themes/kr/static/autobahn.css ../../AutobahnCpp/doc/_themes/kr/static
-	cp _themes/kr/static/flasky.css_t ../../AutobahnCpp/doc/_themes/kr/static
-	cp _themes/kr/previous_next.html ../../AutobahnCpp/doc/_themes/kr/
+	cp _static/page.css ../../AutobahnCpp/doc/_static/

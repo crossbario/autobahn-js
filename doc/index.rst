@@ -16,9 +16,18 @@ WAMP runs on top of `WebSocket <http://tools.ietf.org/html/rfc6455>`_ and adds `
 
 |ab| runs in the browser as well as in `Node.js <http://nodejs.org/>`_
 
-It is ideal for distributed, multi-client and server applications, such as multi-user database-drive business applications, sensor networks (IoT), instant messaging or MMOGs (massively multi-player online games) .
 
-WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Since WAMP implementations exist for multiple languages, WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case.
+What can I do with this stuff?
+------------------------------
+
+ab| makes **distributed, realtime Web applications easy**: it provides the infrastructure for both **distributing live updates** to all connected clients (using the PubSub messaging pattern) and for **calling remote procedures** in different backend components (using RPC).
+
+It is ideal for distributed, multi-client and server applications, such as multi-user database-drive business applications, real-time charts, sensor networks (IoT), instant messaging or MMOGs (massively multi-player online games).
+
+The protocol that |ab| uses, WAMP, enables application architectures with application code **distributed freely across processes and devices** according to functional aspects. All WAMP clients are equal in that they can publish events and subscribe to them, can offer a procedure for remote calling and call remote procedures.
+
+Since WAMP implementations exist for **multiple languages**, this extends beyond JavaScript clients: WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case. Applications can span the range from embedded IoT sensors right to mobile clients or the browser - using the same protocol.
+
 
 Show me some code
 -----------------
@@ -76,23 +85,22 @@ Features
 * easy to use Promise-based API
 * pluggable promises/deferreds: use `when.js <https://github.com/cujojs/when>`_  (built-in), `jQuery <http://api.jquery.com/category/deferred-object/>`_ , `Dojo <http://dojotoolkit.org/reference-guide/1.7/dojo/Deferred.html>`_ , ECMA Script 6 or others
 * no dependencies
-* small size (134kB source, 74kB minified, 23kB compressed)
+* small size (244kB source, 111kB minified, 33kB compressed)
 * Open-Source (MIT License)
 
 
-Where to go from here
+Where to start
 ---------------------
 
 :doc:`gettingstarted` gives a brief overview of requirements,  how to get |ab|, and where to get an application router which you need to route the application traffic of your JavaScript application.
 
-The :doc:`tutorial` take you step-by-step through simple sample applications that introduce core WAMP functionality and concepts.
+The :doc:`tutorial` takes you step-by-step through a simple sample application that introduces both RPC and PubSub.
 
 The :doc:`examples overview page <examples_overview>` lists code examples covering a broader range of uses cases and advanced WAMP features.
 
-The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some live sample applciations made using |ab| and `Crossbar.io <http://crossbar.io/>`_, an application router which uses WAMP.
+The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some live sample applciations made using |ab| and `Crossbar.io <http://crossbar.io/>`_, an application router which uses WAMP. The demo source code can be found on `GitHub <https://github.com/crossbario/crossbardemo>`_.
 
 The :doc:`reference` provides details for the entire API.
-
 
 .. note:: The documentation for older versions of |ab|, which implement WAMP v1, is still available as :doc:`legacy documentation <reference_wampv1>`. The current version of |ab| no longer supports WAMP v1. WAMP v2 adds a lot of features and some completely new capabilities, so consider upgrading.
 
