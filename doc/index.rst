@@ -102,9 +102,9 @@ Acknowledgements
 
 |ab| includes code from the following open-source projects
 
-  * `when.js <https://github.com/cujojs/when>`_
-  * `ws: a node.js websocket library <https://github.com/einaros/ws>`_
-  * `CryptoJS <http://code.google.com/p/crypto-js/>`_
+* `when.js <https://github.com/cujojs/when>`_
+* `ws: a node.js websocket library <https://github.com/einaros/ws>`_
+* `CryptoJS <http://code.google.com/p/crypto-js/>`_
 
 Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cujojs.com/>`_ for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
 
@@ -112,7 +112,7 @@ Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cuj
    :maxdepth: 2
    :hidden:
 
-   self
+   Home <self>
    gettingstarted
    tutorial
    examples_overview

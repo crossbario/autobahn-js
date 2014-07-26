@@ -118,8 +118,8 @@ Connection Callbacks
 
 ``autobahn.Connection`` provides two callbacks:
 
- * ``autobahn.Connection.onopen``
- * ``autobahn.Connection.onclose``
+* ``autobahn.Connection.onopen``
+* ``autobahn.Connection.onclose``
 
 The **connection open callback** is fired when the connection has been established and a new session was created. This is the main callback which application code will hook into.
 
@@ -142,9 +142,9 @@ The **connection close callback** is fired when the connection has been closed e
 
 ``reason`` is a string with the possible values
 
- * ``"closed"``: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
- * ``"lost"``: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
- * ``"unreachable"``: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
+* ``"closed"``: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
+* ``"lost"``: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
+* ``"unreachable"``: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
 
 ``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`
 
@@ -155,30 +155,30 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 
 **Required** options:
 
- * ``url``: *string* - the WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws``
- * ``realm``: *string* - The WAMP realm to join, e.g. ``realm1``
+* ``url``: *string* - the WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws``
+* ``realm``: *string* - The WAMP realm to join, e.g. ``realm1``
 
 **Optional** options:
 
 Options that control what **kind of Deferreds** to use:
 
- * ``use_es6_promises``: *boolean* - use deferreds based on ES6 promises
- * ``use_deferred``: *callable* - if provided, use this deferred constructor, e.g. ``jQuery.Deferred`` or ``Q.defer``
+* ``use_es6_promises``: *boolean* - use deferreds based on ES6 promises
+* ``use_deferred``: *callable* - if provided, use this deferred constructor, e.g. ``jQuery.Deferred`` or ``Q.defer``
 
 .. note:: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
 
 Options that control **automatic reconnection**:
 
- * ``max_retries``: *integer* - Maximum number of reconnection attempts (default: **15**)
- * ``initial_retry_delay``: *float* - Initial delay for reconnection attempt in seconds (default: **1.5**).
- * ``max_retry_delay``: *float* - Maximum delay for reconnection attempts in seconds (default: **300**).
- * ``retry_delay_growth``: *float* - The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).
- * ``retry_delay_jitter``: *float* - The standard deviation of a Gaussian to jitter the delay on each retry cycle as a fraction of the mean (default: **0.1**).
+* ``max_retries``: *integer* - Maximum number of reconnection attempts (default: **15**)
+* ``initial_retry_delay``: *float* - Initial delay for reconnection attempt in seconds (default: **1.5**).
+* ``max_retry_delay``: *float* - Maximum delay for reconnection attempts in seconds (default: **300**).
+* ``retry_delay_growth``: *float* - The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).
+* ``retry_delay_jitter``: *float* - The standard deviation of a Gaussian to jitter the delay on each retry cycle as a fraction of the mean (default: **0.1**).
 
 Options that control **WebSocket subprotocol handling**:
 
- * ``skip_subprotocol_check``: Not yet implemented.
- * ``skip_subprotocol_announce``: Not yet implemented.
+* ``skip_subprotocol_check``: Not yet implemented.
+* ``skip_subprotocol_announce``: Not yet implemented.
 
 
 Connection Properties
@@ -491,7 +491,7 @@ Example: **Unsubscribing a subscription**
 
 Complete Examples:
 
- * `PubSub Unsubscribe <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_
+* `PubSub Unsubscribe <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_
 
 
 Publish
@@ -520,8 +520,8 @@ Examples: **Publish an event**
 
 Complete Examples:
 
- * `PubSub Basic <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
- * `PubSub Complex Payload <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex>`_
+* `PubSub Basic <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
+* `PubSub Complex Payload <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex>`_
 
 
 Acknowledgement
@@ -552,8 +552,8 @@ Receiver Black-/Whitelisting
 
 If the feature is supported by the *Broker*, a *Publisher* may restrict the actual receivers of an event beyond those subscribed via the options
 
- * ``exclude``
- * ``eligible``
+* ``exclude``
+* ``eligible``
 
 ``exclude`` is an array of WAMP session IDs providing an explicit list of (potential) *Subscribers* that won't receive a published event, even though they might be subscribed. In other words, ``exclude`` is a blacklist of (potential) *Subscribers*.
 
@@ -663,10 +663,10 @@ Example: **Register a procedure**
 
 Complete Examples:
 
- * `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
- * `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
- * `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
- * `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
+* `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
+* `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
+* `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
+* `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
 
 Active Registrations
@@ -753,10 +753,10 @@ Example: **Call a procedure**
 
 Complete Examples:
 
- * `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
- * `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
- * `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
- * `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
+* `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
+* `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
+* `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
+* `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
 
 Errors
@@ -766,7 +766,7 @@ Write me.
 
 Complete Examples:
 
- * `RPC Errors <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/errors>`_
+* `RPC Errors <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/errors>`_
 
 
 Progressive Results
@@ -776,4 +776,4 @@ Write me.
 
 Complete Examples:
 
- * `RPC Progress <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress>`_
+* `RPC Progress <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress>`_

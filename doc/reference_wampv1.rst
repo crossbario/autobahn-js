@@ -13,9 +13,9 @@ Be aware that the following materials are no longer updated.
 Downloads
 ---------
 
-  1. `Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
-  2. `Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
-  3. `Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
+1. `Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
+2. `Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
+3. `Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
 
 .. note:: You can use the above via direct linking for *development purposes*, but do not hotlink for production. This will not work, since we place restrictions on HTTP referers.
 

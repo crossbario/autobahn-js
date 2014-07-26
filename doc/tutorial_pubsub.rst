@@ -169,8 +169,8 @@ What we do here is:
 
 * We define (line 2) a WAMP/WebSocket connection with the minimum amount of necessary parameters
 
-   * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the router on.
-   * The WAMP realm to connect to. Realms are used to group connections to a WAMP router together, and to e.g. apply permissions to them. With our demo router, we are free to chose a realm name.
+  * The WebSockets address to connect to. This starts with the WebSockets protocol prefix 'ws' (instead of 'http' for regular web traffic), and here is the localhost on port 9000. It could equally be the IP of the machine you run the router on.
+  * The WAMP realm to connect to. Realms are used to group connections to a WAMP router together, and to e.g. apply permissions to them. With our demo router, we are free to chose a realm name.
 
 * We set up an 'onopen' handler, i.e. a function to execute once a connection has been established (starting at line 8). This is passed an object through which we can interact with the established WAMP/WebSocket session.
 * We open the WAMP/WebSocket connection (line 13).

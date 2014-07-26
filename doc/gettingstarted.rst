@@ -40,9 +40,9 @@ Browsers
 
 You can get the **latest** (= WAMPv2 only) prebuilt |ab| release from here:
 
-  1. `Production (minimized and gzipped) <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz>`_
-  2. `Production (only minimized)] <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js>`_
-  3. `Development <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js>`_
+1. `Production (minimized and gzipped) <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz>`_
+2. `Production (only minimized)] <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js>`_
+3. `Development <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js>`_
 
 and use it in your HTML like so
 
@@ -65,9 +65,9 @@ and use it in your HTML like so
 
 The **old** |ab| for WAMPv1 is still available from here:
 
-  1. `0.8.2 Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
-  2. `0.8.2 Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
-  3. `0.8.2 Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
+1. `0.8.2 Production (minimized and gzipped) <http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz>`_
+2. `0.8.2 Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
+3. `0.8.2 Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
 
 
 AMD and RequireJS
