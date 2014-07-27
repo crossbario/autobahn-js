@@ -11,22 +11,30 @@ You can try a `live version <https://demo.crossbar.io/demo/vote_node/index.html>
 What the application does
 -------------------------
 
-The application allows you to vote for one of three flavors of ice cream. Votes are sent to the backend, and vote updates are immediately pushed to all connected clients. You can also reset the vote count, and this also propagates immediately to all other instances.
+The application allows you to vote for one of three flavors of ice cream. Votes are sent to the backend, and vote updates are immediately pushed to all connected frontends. You can also reset the vote count, and this also propagates immediately to all other instances.
 
 .. image:: ../_static/vote_screenshot.png
 
 The application uses both WAMP messaging patterns:
 
-* **PubSub**: All clients subscribe to vote update and vote reset events, and the backend publishes these events.
-* **RPC**: The backend offers getting the current vote count, voting for a flavor, and resetting the vote count as remote procedures, and clients call these.
+* **RPC**:
+  + The backend offers remote procedures for getting the current vote count, voting for a flavor, and resetting the vote count.
+  + Frontends call these remote procedures.
 
-.. note:: This demo uses a backend in the browser in order to allow anybody to try it out without the need to install a particular backend technology. For real world use cases, full browser backends are, of course, not recommended. You could run the backend code in NodeJS with minimal adjustments, and a NodeJS version is provided in the demo repository.
+* **PubSub**:
+
+  + Frontends subscribe to vote update and vote reset events.
+  + The backend publishes vote updates and vote resets events.
+
+.. note:: This demo uses a backend in the browser in order to allow anybody to try it out without the need to install a particular backend technology. For real world use cases, full browser backends are, of course, not recommended. You can run the backend code in NodeJS with minimal adjustments, and a NodeJS version is provided in the demo repository.
 
 
 Establishing a WAMP connection
-++++++++++++++++++++++++++++++
+------------------------------
 
-The first ting we need to do in our app's lifecycle, be it for the client or the backend, is to establish a connection to our WAMP router:
+For both the frontend and the backend, before we do any WAMP messaging, we need to establish a connection to our WAMP router.
+
+We first create an |ab| connection object, and set the parameters to use when establishing a connection:
 
 .. code-block:: javascript
 
@@ -35,15 +43,16 @@ The first ting we need to do in our app's lifecycle, be it for the client or the
       realm: "votesapp"
    });
 
-This creates an |ab| connection object, and sets the parameters to use when establishing a connection.
+WAMP uses WebSocket as its standard transport - so the url uses the "ws" scheme for WebSocket instead of "http". Since we're running our WAMP router locally, we use localhost as the IP. The port and path for the WebSocket endpoint that we're connecting to can be configured in Crossbar.io, the WAMP router we are using. (This allows serving Web assets under different paths on the same IP.)
 
-The url uses the "ws" scheme for WebSocket instead of "http". Since we're running our WAMP router locally, we use localhost. The port and path can be configured in Crossbar.io, the WAMP router we are using. (This allows serving Web assets under different paths.)
+Each connection is connected to a **realm**. Realms serve to separate routing for different applications, i.e. an application connected to one realm will not receive any messages from an application connected to another realm.
 
-Each connection is connected to a **realm**. Realms serve to separate routing for different applications.
+The connection object has two hooks for callbacks:
 
-The connection object has two hooks for callbacks: on successfull connection establishment ('onopen'), and on the connection establishment failing of the connection closing later on ('onclose'.
+* `onopen` fires on successfull establishment of the connection
+* `onclose`fires on the connection establishment failing or when the established connection closes
 
-We defined these:
+We define what happens in each case:
 
 .. code-block:: javascript
 
@@ -60,36 +69,31 @@ We defined these:
 
    }
 
-The 'onopen' handler receives a |ab| session object and a dictionary of connection details. All WAMP PubSub and RPC interaction occurs using this object. We call our main function, containing all actual app functionality, and pass it this session object.
+The 'onopen' handler receives an |ab| session object and a dictionary of connection details. All subsequent WAMP PubSub and RPC interaction occurs using this object. We call our main function which sets up the app messaging functionality, and pass it this session object.
 
-For 'onclose', all we do here is log the reason and details of why the connection establishment failed or the connection closed.
+The 'onclose' handler receives a reason for closing as well as details. All we do for our demo app is log these.
 
-Finally, we need to actually open a connection:
+Finally, we need to actually open the connection:
 
 .. code-block:: javascript
 
    connection.open();
 
+Once the connection establishment succeeds, our `onopen` handler fires, and the messaging is set up in our respective `main` functions.
 
-Backend
--------
 
-The backend of our app is very simple. It
-* delivers the current vote count to a client when requested,
-* receives vote submissions, updates the vote count, and publishes the new count to all clients
-* receives a vote reset, resets the vote counts, and publishes the reset event to all clients.
+Remote Procedure Calls (RPC)
+----------------------------
 
-For storing the vote count we us a simple object:
+The backend of our demo app needs to enable the frontends to
 
-.. code-block:: javascript
+* request the current vote count (on initial connection or reconnect)
+* submit a vote
+* trigger a vote reset
 
-   var votes = {
-      Banana: 0,
-      Chocolate: 0,
-      Lemon: 0
-   };
+The backend offers a procedure for each of these actions that frontends can call.
 
-The functionality is offered via three functions which can be called remotely by clients:
+We first need to define these procedures (function bodies will be explained further below):
 
 .. code-block:: javascript
 
@@ -102,10 +106,7 @@ The functionality is offered via three functions which can be called remotely by
    // reset vote count
    var resetVotes = function() { ... };
 
-
-Neither 'getVote' nor 'resetVotes' require any arguments. 'submitVote' receives three arguments: WAMP handles both argument lists and keyword arguments, and both are passed on each call (even though they may be emtpy). 'details' is an additional dictionary created by the WAMP router containing information about the caller. (This may e.g. be used to exempt a caller from receiving a PubSub event created based on the call.)
-
-In order for the functions be callable by clients, we need to register them with the WAMP router:
+Then we register them with the WAMP router so that clients can call them:
 
 .. code-block:: javascript
 
@@ -114,12 +115,30 @@ In order for the functions be callable by clients, we need to register them with
    session.register('io.crossbar.demo.vote.vote', submitVote);
    session.register('io.crossbar.demo.vote.reset', resetVotes);
 
-Function registration needs to provide an indentifier which is used when calling the function. For these WAMP uses URIs, in Java packet notation. URIs are an established, easy way for namespace management.
+Function registration needs to provide an indentifier which is used by the client when calling the function. For these WAMP uses URIs, in Java packet notation. URIs are an established, easy way for namespace management.
 
-Let's now have a look at the functions themselves.
+Our clients then call these procedures, e.g.
 
-Returning present vote count
-++++++++++++++++++++++++++++
+.. code-block:: javascript
+
+   session.call("io.crossbar.demo.vote.get").then(
+      function(res){ ... }
+   }, session.log);
+
+The WAMP router forwards the call to the backend which has registered a procedure for the URI 'io.crossbar.demo.vote.get'. The backend sends the result to the WAMP router, and this returns it to the caller.
+
+In the caller, a callback functions is fired and the result (`res`) of the call passed to it.
+
+In case of failure of the call, the router returns an error object. This is passed as an argument to the second callback we define. Here we use the `log` function on the `session` object to log both the error code and some information about the session.
+
+.. note:: |ab| uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, within the scope of this demo app, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.mattgreer.org/articles/promises-in-wicked-detail/>`_ is a good place to start.
+
+
+
+The functions in detail
++++++++++++++++++++++++
+
+For **getting the current vote count**, the backend function is:
 
 .. code-block:: javascript
 
@@ -136,75 +155,9 @@ Returning present vote count
       return votesArr;
    };
 
-Here we just define an array to contain the vote count and then construct its contents from our votes dictionary.
-This is then returned to the caller.
+The votes are stored in a dictionary, and `getVote` constructs an array from this. This array is then returned.
 
-
-Handling vote submissions
-+++++++++++++++++++++++++
-
-.. code-block:: javascript
-
-   var submitVote = function(args, kwargs, details) {
-      var flavor = args[0];
-      votes[flavor] += 1;
-
-      var evt = {
-         subject: flavor,
-         votes: votes[flavor]
-      };
-
-      // publish the vote event
-      session.publish("io.crossbar.demo.vote.onvote", [evt]);
-
-      return "voted for " + flavor;
-   };
-
-A vote submission has the flavor the vote has been cast for as its sole argument. We get this from the arguments list ('args'), and increase the relevant vote count.
-Here we return just the fact that the vote has been registered to the caller (`return "voted for " + flavor`).
-
-We don't return the current vote count because the caller will be notified just like all other clients: via a PubSub event.
-
-The payload for this is a dictionary containing two key/value pairs identifying the flavor and the vote count. This is then published as a 'onvote' event:
-
-.. code-block:: javascript
-
-   session.publish("io.crossbar.demo.vote.onvote", [evt]);
-
-Here a URI is used to identify the topic the event is for.
-
-The event is then distributed to all clients connected to the same realm as the publisher and who have subscribed to this topic (i.e., in our application, all clients).
-
-
-Reseting the vote count
-+++++++++++++++++++++++
-
-.. code-block:: javascript
-
-   var resetVotes = function() {
-      for (var fl in votes) {
-         if (votes.hasOwnProperty(fl)) {
-            votes[fl] = 0;
-         }
-      }
-      // publish the reset event
-      session.publish("io.crossbar.demo.vote.onreset");
-      return "votes reset";
-   };
-
-The vote count is simple: we reset the vote count in our local votes dictionary, and publish the fact that a vote reset call was received. Just like with the vote submission, all we return to the caller is an acknowledgement of the call.
-
-
-Client
-------
-
-The HTML is very basic - there's no real need to explain anythin. For each flavor, all we really need is something to display the current count and a vote button. In only other interactive element is the reset button. If you're interested, here's the `full markup <link to html in repo>`_.
-
-The client needs to get the current vote count on connecting, subscribe to vote update and vote reset events, and send votes and vote resets.
-
-
-Get the current vote count
-++++++++++++++++++++++++++
+The frontend iterates over this array and updates the displayed vote counts:
 
 .. code-block:: javascript
 
@@ -217,56 +170,20 @@ Get the current vote count
    }, session.log);
 
 
-The above is a WAMP call. Each call is to a specific procedure - identified by the URI that our backend registered it for. For this call we don't need to send any additional arguments.
-
-One of two callback functions is fired depending on whether the call succeeds or fails. In the first case, we give a function to handle the result (`res`). In case of failure or error, we use 'session.log' which is a convenience function that logs both the error details and some session data to the console.
-
-.. note:: |ab| uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming. However, for this app, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.mattgreer.org/articles/promises-in-wicked-detail/>`_ is a good place to start.
-
-
-As we've seen above, the result of the call for current votes is a list of objects. We just iterate over this and update the values of our vote display.
-
-
-Subscribe to future vote events
-+++++++++++++++++++++++++++++++
-
-Since we want to get the vote updates, we need to subscribe to them:
+For **submitting a vote**, the backend function is:
 
 .. code-block:: javascript
 
-   session.subscribe("io.crossbar.demo.vote.onvote",
-      function(args, kwargs, details) {
-         var event = args[0];
-         document.getElementById("votes" + event.subject).value =
-            event.votes;
-      });
+   var submitVote = function(args, kwargs, details) {
+      var flavor = args[0];
+      votes[flavor] += 1;
 
-We call the `subscribe` method on the `session` object and pass it the URI for the topic we're interested in. We also give it a callback to fire whenever an event has been received.
+      return "voted for " + flavor;
+   };
 
-This callback receives three arguments of a similar structure to those received by a called procedure. Here the payload is the object containing the flavor and vote count. We extract this and update the value of the respective vote display.
+This just returns an acknowledgement that the vote has been registered.
 
-!!!!!!!!! should really be delivered as kwargs to make the difference clear and give wider range of examples !!!!!!!!!
-
-
-Subscribe to vote reset event
-+++++++++++++++++++++++++++++
-
-The subscription to the vote reset event is very similar:
-
-.. code-block:: javascript
-
-   session.subscribe("io.crossbar.demo.vote.onreset", function() {
-         var voteCounters = document.getElementById("voteContainer").
-                                     getElementsByTagName("input");
-         for(var i = 0; i < voteCounters.length; i++) {
-            voteCounters[i].value = 0;
-         }
-      });
-
-Here we don't receive any arguments as part of the event, and just iterate over our vote displays and reset them to 0.
-
-Submit a vote
-+++++++++++++
+In the frontend, we wire up our vote buttons issue the `vote`call when clicked:
 
 .. code-block:: javascript
 
@@ -279,13 +196,21 @@ Submit a vote
       };
    }
 
-We iterate over our vote buttons and add a click handler for each. In the click handler, we issue a call to the 'vote' procedure on the backend, with the ice cream flavor as the argument.
 
-All we do with the return is log it - the vote change happens based on the subscription event the backend publishes and that we subscribed to above.
+And, finally, for the vote reset, in the backend we just set each vote value in our votes dict to 0 and return an acknowledgement:
 
+.. code-block:: javascript
 
-Send a vote reset
-+++++++++++++++++
+   var resetVotes = function() {
+      for (var fl in votes) {
+         if (votes.hasOwnProperty(fl)) {
+            votes[fl] = 0;
+         }
+      }
+      return "votes reset";
+   };
+
+In the frontend, we wire up the vote reset button:
 
 .. code-block:: javascript
 
@@ -294,16 +219,75 @@ Send a vote reset
          then(session.log, session.log);
    };
 
-We attach a click handler to the reset button. This calls the `reset` function on the backend. Again, as with the call to the `vote` function, we only log the return, since the reset happens based on a subscription event.
+
+Publish and Subscribe (PubSub)
+------------------------------
+
+For submitting a vote and triggering a vote reset, in the code above we've only triggered the backend changes. Nothing has changed in our frontend.
+
+This is because we'll handle the changes in the frontend sending the call and in all other connected frontends using the same mechanism: PubSub events.
+
+Each frontend subscribes to two events:
+
+* new vote submissions
+* vote resets
+
+This is done like:
+
+.. code-block:: javascript
+
+   session.subscribe("io.crossbar.demo.vote.onvote", function(args, kwargs, details) {});
+   session.subscribe("io.crossbar.demo.vote.onreset", function() {});
+
+Whenever an event is received, the respective callback is fired. In the case of a vote submission, we need to know which flavor was voted for, so we process arguments. In the case of the vote reset, the fact that the event has occured is all the information we need.
+
+In the backend, we need to publish the respective events.
+
+For the `resetVotes` function, this is just a single line:#
+
+.. code-block:: javascript
+
+      session.publish("io.crossbar.demo.vote.onreset");
+
+For `submitVote`, we need to construct the object we're publishing as the event payload:
+
+.. code-block:: javascript
+
+      var evt = {
+         subject: flavor,
+         votes: votes[flavor]
+      };
+
+      // publish the vote event
+      session.publish("io.crossbar.demo.vote.onvote", [evt]);
+
+In our frontend, vote submissions trigger an update of the respective vote display:
+
+.. code-block:: javascript
+
+   session.subscribe("io.crossbar.demo.vote.onvote",
+      function(args, kwargs, details) {
+         var event = args[0];
+         document.getElementById("votes" + event.subject).value =
+            event.votes;
+      });
+
+and a vote reset sets all these displays to 0:
+
+.. code-block:: javascript
+
+   session.subscribe("io.crossbar.demo.vote.onreset", function() {
+         var voteCounters = document.getElementById("voteContainer").
+                                     getElementsByTagName("input");
+         for(var i = 0; i < voteCounters.length; i++) {
+            voteCounters[i].value = 0;
+         }
+      });
 
 
-Extensions:
 
-- Exclude the caller from the publication and effect changes in caller client based on the call return
+Where to go from here
+---------------------
 
-- separate the backend procedures into three different components on different machines: each registers one. doesn't really make sense since it needs extensive backend coordination, but just to demonstrate.
-   coordination: general "vote count change" event
-
-
-
-
+* If you want to look at the full demo code, go to the `GitHub repository <>`_. This also has instructions for how to run the demo.
+* There's an :doc:`**overview of example code for specific WAMP features** <examples_overview>`.
