@@ -13,7 +13,7 @@ What the application does
 
 The application allows you to vote for one of three flavors of ice cream. Votes are sent to the backend, and vote updates are immediately pushed to all connected frontends. You can also reset the vote count, and this also propagates immediately to all other instances.
 
-.. image:: ../_static/vote_screenshot.png
+.. image:: ../_static/img/vote_screenshot.png
 
 The application uses both WAMP messaging patterns:
 
