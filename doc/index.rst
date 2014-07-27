@@ -20,7 +20,7 @@ WAMP runs on top of `WebSocket <http://tools.ietf.org/html/rfc6455>`_ and adds `
 What can I do with this stuff?
 ------------------------------
 
-ab| makes **distributed, realtime Web applications easy**: it provides the infrastructure for both **distributing live updates** to all connected clients (using the PubSub messaging pattern) and for **calling remote procedures** in different backend components (using RPC).
+|ab| makes **distributed, realtime Web applications easy**: it provides the infrastructure for both **distributing live updates** to all connected clients (using the PubSub messaging pattern) and for **calling remote procedures** in different backend components (using RPC).
 
 It is ideal for distributed, multi-client and server applications, such as multi-user database-drive business applications, real-time charts, sensor networks (IoT), instant messaging or MMOGs (massively multi-player online games).
 
