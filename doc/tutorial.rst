@@ -154,7 +154,7 @@ In the caller, on a successfull return the **success handler** function is fired
 
 In case of failure of the call, the router returns an error object. This is passed as an argument to the second callback we define, our **error handler**. Here we use the ``log`` function on the ``session`` object to log the error code and some additional information about the session.
 
-.. note:: |ab| uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, within the scope of this demo app, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.mattgreer.org/articles/promises-in-wicked-detail/>`_ is a good place to start.
+.. note:: |ab| uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, within the scope of this demo app, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.html5rocks.com/en/tutorials/es6/promises/>`_ is a good place to start.
 
 
 Publish and Subscribe (PubSub)
