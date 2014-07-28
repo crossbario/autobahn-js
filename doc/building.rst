@@ -13,63 +13,81 @@ To build |ab| for use in browsers, you will need
   * `ws <http://einaros.github.io/ws/>`_
   * `crypto-js <https://www.npmjs.org/package/crypto-js>`_
 
-To install NodeJS (here shown for Ubuntu):
+**Install NodeJS**
+
+*on Windows*
+
+Download the installer from `the NodeJS website <http://nodejs.org/download/>`_.
+
+*on Ubuntu*
 
 ::
 
    sudo apt-get install nodejs nodejs-legacy npm
 
+
+
 SCons is a Python based build tool, so you will need `Python <http://python.org/>`_ as well.
 
-Taschenmesser is an SCons toolbelt also written in Python. To install Taschenmesser:
+**Install Taschenmesser**, a SCons toolbelt also written in Python
+
+*on Windows*
+
+::
+
+   pip install --upgrade taschenmesser[aws,svg]
+
+*on Ubuntu*
 
 ::
 
     sudo pip install --upgrade taschenmesser[aws,svg]
 
-Set environment variables (here shown for Windows):
+**Set environment variables**
 
-1. `JAVA_HOME` pointing to your Java run-time
+*on Windows*
+
+1. ``JAVA_HOME`` pointing to your Java run-time
 
 ::
 
       C:\Program Files\Java\jre7
 
 
-2. Add Python and Python script to `PATH`
+2. Add Python and Python script to ``PATH``
 
 ::
 
       C:\Python27;C:\Python27\Scripts;
 
 
-3. Set `JS_COMPILER` pointing to the Google Closure `compiler.jar`
+3. Set ``JS_COMPILER`` pointing to the Google Closure ``compiler.jar``
 
 ::
 
       C:\Program Files\Google Closure\compiler.jar
 
-Set environment variables (here shown for Ubuntu):
+*on Ubuntu*
 
 ::
 
     export JS_COMPILER=$HOME/compiler.jar
     export JAVA_HOME=/usr/lib/jvm/default-java
 
-Now clone the repo:
+**Clone the Autobahn|JS repo**
 
 ::
 
     git clone git@github.com:tavendo/AutobahnJS.git
     cd autobahnjs
 
-To install JavaScript dependencies
+**Install JavaScript dependencies in NodeJS**
 
 ::
 
     npm install ws when crypto-js
 
-Then start the build:
+**Start the build**:
 
 ::
 
@@ -77,7 +95,7 @@ Then start the build:
 
 .. note:: When using a bash shell under Windows (e.g. git shell), use 'scons.py'.
 
-This will produce 3 files inside the `build` directory:
+**You get 3 files inside the** ``build`` **directory**
 
 ::
 
@@ -85,7 +103,7 @@ This will produce 3 files inside the `build` directory:
     build/autobahn.min.js
     build/autobahn.min.jgz
 
-To clean up your build:
+To **clean up your build** (i.e. remove previously created files):
 
 ::
 

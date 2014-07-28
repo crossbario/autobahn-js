@@ -5,6 +5,8 @@ Getting Started
 
 With |ab|, you can develop application components in JavaScript, and those components can be hosted inside **browsers**, **Node.js** and **PostgreSQL** (*under development*).
 
+This page explains what you need in order to include |ab| in your projects, and to route your application messages.
+
 WAMP router
 -----------
 
@@ -122,5 +124,5 @@ What now?
 
 Take a look at the :doc:`tutorial`, which takes you step-by-step through a **simple sample application** that introduces RPC and PubSub.
 
-If you want to see some **live Web apps** using |ab|? Take a look at the `Crossbar.io demos <http://crossbar.io/>`.
+If you want to see some **live Web apps** using |ab|? Take a look at the `Crossbar.io demos <http://crossbar.io/>`_.
 
