@@ -20,7 +20,7 @@ The library can be included
    }
 
 
-Autobahn bundles whenjs and cryptojs, and the bundled libraries can be accessed like this
+Autobahn bundles whenjs and cryptojs. These bundled libraries can be accessed like
 
 .. code-block:: javascript
 
@@ -99,13 +99,13 @@ To **open a connection**:
 
 This will establish an underlying transport (like WebSocket or long-poll) and create a new session running over the transport.
 
-When the transport is lost, automatic reconnection will be done. The latter can be configured using the ``options`` provided to the constructor of the ``Connection`` (see below).
+When the transport is lost, automatic reconnection will be attempted. This can be configured using the ``options`` provided to the constructor of the ``Connection`` (see `Connection Options`_).
 
 To **close a connection**:
 
 .. js:function::   autobahn.Connection.close(reason, message)
 
-   :param uri reason: optional WAMP URI providing a closing reason, e.g. ``com.myapp.close.signout`` to the server-side
+   :param uri reason: optional WAMP URI providing a closing reason, e.g. ``com.myapp.close.signout`` to the server-side. If no reason is given, the default URI ``wamp.goodbye.normal`` is sent.
    :param string message: optional (human readable) closing message
 
    :returns: *string* on connection close error, else *undefined*
@@ -146,7 +146,7 @@ The **connection close callback** is fired when the connection has been closed e
 * ``"lost"``: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
 * ``"unreachable"``: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
 
-``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`
+``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`, and thus does not apply in case of ``"lost"`` or ``"unreachable"``.
 
 Connection Options
 ++++++++++++++++++
@@ -190,7 +190,7 @@ To get the session oject if there is a session currently running over the connec
 
    Returns an instance of ``autobahn.Session`` if there is a session currently running on the connection.
 
-To check whether the connection (the transport underlying) is established:
+To check whether the connection (the underlying transport for the session) has been established:
 
 .. js:attribute:: Connection.isOpen
 
@@ -253,7 +253,7 @@ A read-only property with the **realm** the session is attached to:
 
 .. js:attribute:: Session.realm
 
-   Returns the realm the session is attached to as an integer.
+   Returns the realm the session is attached to as a string.
 
 A read-only property that signals if the **session is open** and attached to a realm:
 
@@ -271,13 +271,13 @@ A read-only property with an array of all currently **active subscriptions** on 
 
 .. js:attribute:: Session.subscriptions
 
-   :value: array
+   Returns an array with the subscription objects for all currently active subscriptions.
 
 A read-only property with an array of all currently **active registrations** on this session:
 
 .. js:attribute:: Session.registrations
 
-   Returns an array with the subscription objects for all currently active subscriptions.
+   Returns an array with the registration objects for all currently active registrations.
 
 A property with the **Deferred factory** in use on this session:
 
@@ -289,7 +289,7 @@ A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use w
 
 .. js:function:: Session.defer
 
-   :returns: a Deferred of the type specified in the call to the connection constructor :js:func:`autobahn.Connection`
+   :returns: a Deferred of the type specified in the call to the session constructor :js:func:`autobahn.Connection`
 
 
 
@@ -314,7 +314,7 @@ For example:
       session.log("Session open.");
 
       session.call('com.timeservice.now').then(
-            session.log(now);
+            session.log;
       );
    };
 
@@ -327,20 +327,22 @@ which will log to the console:
    WAMP session 2838853860563188 on 'realm1' at 4.679 ms
       2014-03-13T14:09:07Z
 
+where ``2014-03-13T14:09:07Z`` is the return value of the call to ``com.timeservice.now``.
+
 The log method will log the WAMP session ID and the realm of the session, as well as a timestamp that provides the time elapsed since the *construction* of the ``autobahn.Session`` object.
 
 
 URI Shortcuts
 +++++++++++++
 
-Establish an URI prefix to be used as a shortcut:
+Establish an URI prefix to be used as a shortcut in WAMp interactions on ``session``:
 
 .. js:function:: session.prefix(shortcut, prefix)
 
    :param string shortcut: the shortcut for the provided prefix URI
    :param URI prefix: an URI prefix
 
-..note:: URI prefixes must only contain full URI components, i.e. stop at a '.' separation of an URI. 'com.myapp.topics' is a valid prefix if it is to be used as part of full URI 'com.myapp.topics.one', but invalid if it is intended to be combined with a suffix to form 'com.myapp.topicsnew'.
+.. note:: URI prefixes must only contain full URI components, i.e. stop at a '.' separation of an URI. 'com.myapp.topics' is a valid prefix if it is to be used as part of full URI 'com.myapp.topics.one', but invalid if it is intended to be combined with a suffix to form 'com.myapp.topicsnew'.
 
 
 **Example**:
@@ -367,7 +369,7 @@ To remove a prefix:
 
    session.prefix('api', null);
 
-To resolve a prefix (normally not needed in user code):
+To resolve a prefix *(normally not needed in user code)*:
 
 .. code-block:: javascript
 
@@ -432,6 +434,10 @@ or, differently notated, but functionally equivalent
          // subscription failed, error is an instance of autobahn.Error
       }
    );
+
+Complete Examples:
+
+* `PubSub Basic <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
 
 
 Active Subscriptions
@@ -583,7 +589,7 @@ Publisher Exclusion
 
 By default, a *Publisher* of an event will not itself receive an event published, even when subscribed to the topic the *Publisher* is publishing to.
 
-If supported by the *Broker*, this behavior can be overridden via the option ``exclude_me`` set to ``true``.
+If supported by the *Broker*, this behavior can be overridden via the option ``exclude_me`` set to ``false``.
 
 Example: **Publish without excluding publisher**
 
@@ -762,7 +768,41 @@ Complete Examples:
 Errors
 ++++++
 
-Write me.
+On an error with a PRC call, a error object is passed to the error handler defined in the call. This has three properties:
+
+* error URI
+* an array of error arguments
+* an object with error arguments
+
+Throwing an error in a registered procedure can happen in one of two ways:
+
+* by defining an array of error arguments
+* by creating a ``autobahn.Error`` object
+
+In the first case, the ``error URI`` is set to a default value, and the object of error arguments remains emtpy, i.e. if you do
+
+.. code-block:: javascript
+
+   throw ['this is just an error', 'with an array of arguments'];
+
+logging this in the caller will come out something like
+
+::
+
+   wamp.error.runtime_error ["this is just an error", "with an array of arguments"] Object {}
+
+When defining an ``autobahn.Error` object, all three properties can be defined. I.e. doing
+
+.. code-block:: javascript
+
+   throw new autobahn.Error('com.myapp.error', ['this is a more complex error'], {a: 23, b: 9});
+
+and logging this in the caller will lead to something like
+
+::
+
+   com.myapp.error ['this is a more complex error'] Object {a: 23, b: 9}
+
 
 Complete Examples:
 
@@ -772,7 +812,42 @@ Complete Examples:
 Progressive Results
 +++++++++++++++++++
 
-Write me.
+Instead of returning just a single, final result, a remote procedure can return progressive results, if this is requested by the caller.
+
+Progressive results are part of the advanced spec for WAMP, and may not be supported by all WAMP routers.
+
+An example for a call requesting progressive call results would be
+
+.. code-block:: javascript
+
+   session.call('com.myapp.longop', [10], {}, {receive_progress: true}).then(
+      function (res) {
+         console.log("Final:", res);
+         connection.close();
+      },
+      function (err) {
+      },
+      function (progress) {
+         console.log(progress);
+      }
+   );
+
+Here a third callback has been added, which is fired on each receipt of a progressive result event.
+
+In the backend, the function for returning progressive results could be something like
+
+.. code-block:: javascript
+
+   if (details.progress) {
+      for (var i = 0; i < 5; i++) {
+         details.progress(i);
+      }
+      return "progressive result"
+   } else {
+      return "single result";
+   }
+
+which would return 5 progressive result events (each with the current value of ``i`` as the payload) before returning ``"progressive result"`` as the final result.
 
 Complete Examples:
 
