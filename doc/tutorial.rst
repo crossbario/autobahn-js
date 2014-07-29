@@ -8,7 +8,7 @@ This introduction takes you step by step through a **simple, fully functional WA
 
 We'll cover the **structure** of the application and the **WAMP messaging parts** - the things which aren't standard, plain JavaScript. We'll leave out the standard stuff such as click handlers, updating HMTL elements with values, and handling data structures. If you're interested, then a look at the source will tell you all you need to know about that.
 
-You can try a `live version <https://demo.crossbar.io/demo/vote_node/index.html>`_ of this demo (with the backend running in NodeJS), and you find the full code on `GitHub <https://github.com/crossbario/crossbardemo/tree/master/web/demo/vote>`_, complete with instructions how to run it.
+You find the full code on `GitHub <https://github.com/tavendo/autobahnJS/master/test/votes>`_.
 
 What the application does
 -------------------------
@@ -39,14 +39,32 @@ The application uses both WAMP messaging patterns:
 Running a WAMP router
 ---------------------
 
-WAMP messages are not exchanged directly between application components. All components connect to a WAMP router.
+WAMP messages are not exchanged directly between application components. All components connect to a WAMP router, which then handles the message passing.
 
-There are multiple compatible WAMP routers, but we suggest using `Crossbar.io <http://crossbar.io>`_, which offers a lot of advanced and useful features. For a description of how to set up Crossbar.io, see the `instructions on the project website <http://crossbar.io/docs/Installation-guides-overview/>`_. The demo runs fine with the standard configuration.
+There are `multiple compatible WAMP routers <http://wamp.ws/implementations/>`_, but we suggest using `Crossbar.io <http://crossbar.io>`_, which can generate this demo ready-to-run from an integrated template.
+
+Installation instructions for Crossbar.io can be found at the `Crossbar.io project website <http://crossbar.io/docs/>`_. Once you've installed Crossbar.io, just do
+
+::
+
+   crossbar init --template votes:browser --appdir votes_browser
+
+which will create a directory ``votes_browser`` and copy all necessary files there.
+
+Finally, go to the demo directory and do:
+
+::
+   crossbar start
+
+You can then access the demo overview page at ``http://localhost:8080``.
+
+Otherwise use a WAMP router of your choosing with the files in the `demo repository <https://github.com/tavendo/autobahnJS/master/test/votes>`_.
+
 
 Including Autobahn
 ------------------
 
-You need to include the |ab| library. This can be as easy as
+We need to include the |ab| library in our JavaScript. This can be as easy as
 
 .. code-block:: html
 
