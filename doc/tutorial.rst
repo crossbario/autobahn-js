@@ -54,6 +54,7 @@ which will create a directory ``votes_browser`` and copy all necessary files the
 Finally, go to the demo directory and do:
 
 ::
+
    crossbar start
 
 You can then access the demo overview page at ``http://localhost:8080``.
@@ -211,15 +212,14 @@ This published event is then sent to all connected frontends which are subscribe
 Summary
 -------
 
-Fire up a WAMP router, include |ab| in your project, add a few lines of boilerplate connection code - and you're ready to publish, subscribe, call and register.
+Integrating WAMP into your JavaScript apps is easy: Fire up a WAMP router, include |ab| in your project, add a few lines of boilerplate connection code - and you're ready to publish, subscribe, call and register.
 
-|ab| and WAMP have a lot of additional features, but you can discover those as you need them. The basics are simple, and all you need to get started.
+|ab| and WAMP have a lot of additional features, but you can discover those as you need them. The basics you need to get started are simple.
 
 
 Where to go from here
 ---------------------
 
-* If you want to look at the full demo code, go to the `GitHub repository <>`_. This also has instructions for how to run the demo.
 * There's an :doc:`overview of example code for specific WAMP features <examples_overview>`.
 * Read about `the idea behind WAMP. <http://wamp.ws/why/>`_
 * Explore WAMP's features by looking at the `spec <http://wamp.ws/spec/>`_
