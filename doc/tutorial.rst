@@ -8,7 +8,7 @@ This introduction takes you step by step through a **simple, fully functional WA
 
 We'll cover the **structure** of the application and the **WAMP messaging parts** - the things which aren't standard, plain JavaScript. We'll leave out the standard stuff such as click handlers, updating HMTL elements with values, and handling data structures. If you're interested, then a look at the source will tell you all you need to know about that.
 
-You find the full code on `GitHub <https://github.com/tavendo/autobahnJS/master/test/votes>`_.
+You find the full code on `GitHub <https://github.com/tavendo/autobahnJS/tree/master/test/votes>`_.
 
 What the application does
 -------------------------
@@ -19,7 +19,7 @@ Votes are sent to the backend, and vote updates are **immediately pushed** to al
 
 You can also reset the vote count, and this also propagates immediately to all other instances.
 
-.. image:: ../_static/img/vote_screenshot.png
+.. image:: /_static/img/vote_screenshot.png
 
 The application uses both WAMP messaging patterns:
 
