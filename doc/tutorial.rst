@@ -8,7 +8,7 @@ This introduction takes you step by step through a **simple, fully functional WA
 
 We'll cover the **structure** of the application and the **WAMP messaging parts** - the things which aren't standard, plain JavaScript. We'll leave out the standard stuff such as click handlers, updating HMTL elements with values, and handling data structures. If you're interested, then a look at the source will tell you all you need to know about that.
 
-You find the full code on `GitHub <https://github.com/tavendo/autobahnJS/tree/master/test/votes>`_.
+You find the full code on `GitHub <https://github.com/tavendo/autobahnJS/tree/master/doc/_static/code/votes>`_.
 
 What the application does
 -------------------------
