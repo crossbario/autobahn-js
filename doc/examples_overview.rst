@@ -61,7 +61,7 @@ Once you've installed Crossbar.io, open a command shell, create a test directory
    crossbar init
    crossbar start
 
-Alternatively, you can use the basic WAMP router which is intergrated into `Autobahn|Python <https://github.com/tavendo/AutobahnPython>`_.
+Alternatively, you can use the basic WAMP router which is integrated into `Autobahn|Python <https://github.com/tavendo/AutobahnPython>`_.
 
 
 Code runs both in the browser and in Node.js.

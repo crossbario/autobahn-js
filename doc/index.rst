@@ -26,7 +26,7 @@ It is ideal for distributed, multi-client and server applications, such as multi
 
 The protocol that |ab| uses, WAMP, enables application architectures with application code **distributed freely across processes and devices** according to functional aspects. All WAMP clients are equal in that they can publish events and subscribe to them, can offer a procedure for remote calling and call remote procedures.
 
-Since WAMP implementations exist for **multiple languages**, this extends beyond JavaScript clients: WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case. Applications can span the range from embedded IoT sensors right to mobile clients or the browser - using the same protocol.
+Since WAMP implementations exist for **multiple languages**, this extends beyond JavaScript clients: WAMP applications can be polyglot. Application components can be implemented in a language and run on a device which best fit the particular use case. Applications can span the range from embedded IoT sensors right to mobile clients or the browser - using the same protocol.
 
 
 Show me some code
@@ -98,7 +98,7 @@ The :doc:`tutorial` takes you step-by-step through a simple sample application t
 
 The :doc:`examples overview page <examples_overview>` lists code examples covering a broader range of uses cases and advanced WAMP features.
 
-The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some live sample applciations made using |ab| and `Crossbar.io <http://crossbar.io/>`_, an application router which uses WAMP. The demo source code can be found on `GitHub <https://github.com/crossbario/crossbardemo>`_.
+The `Demos <http://crossbar.io/>`_ give the opportunity to play around with some live sample applications made using |ab| and `Crossbar.io <http://crossbar.io/>`_, an application router which uses WAMP. The demo source code can be found on `GitHub <https://github.com/crossbario/crossbardemo>`_.
 
 The :doc:`reference` provides details for the entire API.
 

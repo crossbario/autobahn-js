@@ -40,7 +40,7 @@ and then, in your code
 Browsers
 --------
 
-You can get the **latest** prebuilt |ab| release from here:
+You can get the **latest** pre-built |ab| release from here:
 
 1. `Production (minimized and gzipped) <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz>`_
 2. `Production (only minimized)] <https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js>`_
@@ -63,7 +63,7 @@ For **development purposes**, you can include these directly like so
    </html>
 
 
-.. note:: We place restrictions on HTTP referers, so using the above in production would not work in most cases.
+.. note:: We place restrictions on HTTP referrers, so using the above in production would not work in most cases.
 
 For **production use**, please host |ab| yourself.
 

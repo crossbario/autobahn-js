@@ -33,7 +33,7 @@ For this tutorial, you will need
 The WAMP router
 ---------------
 
-The PubSub pattern is about decoupling publishers and subscribers. A publisher has no need to know of subscribers, and a subscriber (usally) does not care who the publisher is. This decoupling is done via the router: Publishers publish on a topic to the router, and subscribers register their interest in a topic with the router.
+The PubSub pattern is about decoupling publishers and subscribers. A publisher has no need to know of subscribers, and a subscriber (usually) does not care who the publisher is. This decoupling is done via the router: Publishers publish on a topic to the router, and subscribers register their interest in a topic with the router.
 
 For this tutorial we use Crossbar.io, an open source application router. (We could also use the basic router functionality which is provided by Autobahn|Python.)
 
@@ -216,7 +216,7 @@ What we do here is:
 * The publication also has an optional payload.
 * The payload here is a counter, which we've defined in line 2 and which we increment after each publish (line 18).
 * We want to publish more than once, so we create an interval time to wrap the publication (line 4).
-* We want feedback that the publication was successfull. As a default, publications are not acknowledged by the router. We change this by adding an options dictionary and passing 'acknowledge' as 'true'.
+* We want feedback that the publication was successful. As a default, publications are not acknowledged by the router. We change this by adding an options dictionary and passing 'acknowledge' as 'true'.
 * The publish creates a promise, which is resolved when the acknowledge returns as either successful or failed. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
 * The first handler function we attach (starting in line 8) is called on success, i.e. if the publish is received and allowed. It logs the received publication ID for the publish.
 * The second handler function (starting in line 12) is called on failure. It logs the received error code.
@@ -266,13 +266,13 @@ For the **subscriber** this is:
 
 What we do here is:
 
-* We subbscribe to a topic (line 25). Arguments are the subscription topic (identified by a URI) and the subscription event handler.
+* We subscribe to a topic (line 25). Arguments are the subscription topic (identified by a URI) and the subscription event handler.
 * The subscribe creates a promise, which is resolved when the subscribe either succeeds or fails. We attach a handler for either outcome to the promise (that's the ``.then()``). For more on promises see below.
 * The first handler is called when the subscribe succeeds (line 27). It logs the received subscription object. We also store this object, since it is needed to unsubscribe.
 * The second handler is called when the subscribe fails (line 32). It logs the received error code.
 * We define a handler for subscription events (line 4). This first of all logs the fact that we have received an event plus the event payload.
 * The payload is an array and/or a dictionary (sent by the publisher) and publication details (created by the router).
-* The subscription event handler also checks the current value of the counter that the publisher sent as the sole content of the array (line 8). Once this exceeds 20, we unsubscribe (line 9), using the previoulsy stored subscription object.
+* The subscription event handler also checks the current value of the counter that the publisher sent as the sole content of the array (line 8). Once this exceeds 20, we unsubscribe (line 9), using the previously stored subscription object.
 * Just like the subscribe, the unsubscribe creates a promise. We attach two handlers to this (lines 11, 15), which log success or failure.
 
 
@@ -291,7 +291,7 @@ To handle this problem, the |ab| library implements a form of promises. This mea
 
 The execution of this function is then deferred until the result has been received (the 'promise' has been fulfilled).
 
-In the above example, only a single function is passed as an argument, which is called when the action is successful. In our demo, we also pass a second function which is executed if the action fails, e.g. if the subscription is not allowe.
+In the above example, only a single function is passed as an argument, which is called when the action is successful. In our demo, we also pass a second function which is executed if the action fails, e.g. if the subscription is not allowed.
 
 There's no need for you to manage anything regarding the passed functions - reception of the result and execution of the function for handling the result, or calling of the error function, are fully automatic in the background. All it may take is a little rethinking of some of the habits from synchronous programming - but you gain an extremely powerful and flexible tool.
 

@@ -184,7 +184,7 @@ Options that control **WebSocket subprotocol handling**:
 Connection Properties
 +++++++++++++++++++++
 
-To get the session oject if there is a session currently running over the connection:
+To get the session object if there is a session currently running over the connection:
 
 .. js:attribute:: Connection.session
 

@@ -17,7 +17,7 @@ Downloads
 2. `Production (only minimized) <http://autobahn.s3.amazonaws.com/js/autobahn.min.js>`_
 3. `Development <http://autobahn.s3.amazonaws.com/js/autobahn.js>`_
 
-.. note:: You can use the above via direct linking for *development purposes*, but do not hotlink for production. This will not work, since we place restrictions on HTTP referers.
+.. note:: You can use the above via direct linking for *development purposes*, but do not hotlink for production. This will not work, since we place restrictions on HTTP referrers.
 
 In addition, the source code is still accessible in the `project GitHub repository <https://github.com/tavendo/AutobahnJS/tree/wamp1>`_.
 
@@ -594,7 +594,7 @@ Shrink the given fully qualified URI to a CURIE. A CURIE prefix must have been p
 
 .. js:function:: wampSession.shrink ( uri, pass )
 
-   :param string uri: The fully qualified URI to be shrinked to CURIE.
+   :param string uri: The fully qualified URI to be shrunk to CURIE.
    :param bool pass: If argument present and true, return the unmodified URI when no prefix was defined previously in this session to shrink the URI.
 
 .. code-block:: javascript
@@ -615,7 +615,7 @@ Resolves the given CURIE to a fully qualified URI. The CURIE prefix must have be
 .. js:function:: wampSession.resolve ( curie, pass )
 
    :param string curie: Resolves the The fully qualified URI to establish a CURIE prefix for.
-   :param bool pass: If argument persent and true, return the unmodified URI when no prefix was defined to.
+   :param bool pass: If argument present and true, return the unmodified URI when no prefix was defined to.
 
 .. code-block:: javascript
 

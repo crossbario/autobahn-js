@@ -96,7 +96,7 @@ We first create an |ab| ``connection`` object, and set the parameters to use whe
 
 The ``connection`` object has two **hooks for callbacks**:
 
-* ``onopen`` fires on successfull establishment of the connection
+* ``onopen`` fires on successful establishment of the connection
 * ``onclose`` fires on the connection establishment failing or when the established connection closes
 
 We define what happens in each case:
@@ -169,7 +169,7 @@ On a WAMP call
 * The backend sends the result to the WAMP router.
 * The WAMP router returns the result to the caller.
 
-In the caller, on a successfull return the **success handler** function is fired, i.e. the first function we define after ``then``. The result (`res`) of the call is passed to it.
+In the caller, on a successful return the **success handler** function is fired, i.e. the first function we define after ``then``. The result (`res`) of the call is passed to it.
 
 In case of failure of the call, the router returns an error object. This is passed as an argument to the second callback we define, our **error handler**. Here we use the ``log`` function on the ``session`` object to log the error code and some additional information about the session.
 
@@ -194,7 +194,7 @@ This is done like:
 
    session.subscribe("io.crossbar.demo.vote.onreset", function() { ... });
 
-Whenever an event is received, the respective callback is fired. In the case of a vote submission, we need to know which flavor was voted for, so we process arguments. In the case of the vote reset, the fact that the event has occured is all the information we need.
+Whenever an event is received, the respective callback is fired. In the case of a vote submission, we need to know which flavor was voted for, so we process arguments. In the case of the vote reset, the fact that the event has occurred is all the information we need.
 
 In the backend, we need to publish the respective events. This is done by adding a single line to the respective functions, i.e. ``resetVotes`` and ``submitVote``
 
