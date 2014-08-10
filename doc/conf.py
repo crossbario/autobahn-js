@@ -69,7 +69,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'AutobahnJS'
-copyright = u'2011-2014 <a href="http://tavendo.com">Tavendo GmbH</a>, <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons CC-BY-SA</a><br>Tavendo, WAMP and "Autobahn WebSocket" are trademarks of <a href="http://tavendo.com">Tavendo GmbH</a>'
+copyright = None
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -208,16 +208,12 @@ if sphinx_bootstrap_theme:
 
        # Choose Bootstrap version.
        # Values: "3" (default) or "2" (in quotes)
-       #'bootstrap_version': "3",
+       'bootstrap_version': "3",
    }
 
 # if sphinx_rtd_theme:
 #    html_theme = "sphinx_rtd_theme"
 #    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-
-if not html_theme:
-   #html_theme = "default"
-   html_theme = 'sphinxdoc'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -254,10 +250,28 @@ html_static_path = ['_static']
 # directly to the root of the documentation.
 #html_extra_path = []
 
-# additional variables which become accessible in the template engine's context for
-# all pages
-# html_context = {'widgeturl': 'http://192.168.1.147:8090/widget'}
-html_context = {'widgeturl': 'https://demo.crossbar.io/clandeckwidget'}
+## additional variables which become accessible in RST (e.g. .. ifconfig:: not no_network)
+##
+def setup(app):
+   app.add_config_value('no_network', False, True)
+
+no_network = None
+
+## additional variables which become accessible in the template engine's
+## context for all pages
+##
+html_context = {
+   #'widgeturl': 'https://demo.crossbar.io/clandeckwidget'
+   #'widgeturl': 'http://127.0.0.1:8090/widget'
+   'widgeturl': None,
+   'no_network': False,
+   #'cstatic': 'http://127.0.0.1:8888',
+   'cstatic': '//tavendo-common-static.s3-eu-west-1.amazonaws.com',
+}
+
+# (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
+# Path should be relative to the ``_static`` files directory.
+html_logo = None
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
