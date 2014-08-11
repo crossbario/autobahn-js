@@ -5,13 +5,13 @@ Building Autobahn|JS
 
 To build |ab| for use in browsers, you will need
 
-  * `Node.js <http://nodejs.org/>`_
-  * `Google Closure Compiler <http://dl.google.com/closure-compiler/compiler-latest.zip>`_
-  * `SCons <http://www.scons.org/>`_
-  * `Taschenmesser <https://github.com/oberstet/taschenmesser>`_
-  * `browserify <http://browserify.org/>`_
-  * `ws <http://einaros.github.io/ws/>`_
-  * `crypto-js <https://www.npmjs.org/package/crypto-js>`_
+* `Node.js <http://nodejs.org/>`_
+* `Google Closure Compiler <http://dl.google.com/closure-compiler/compiler-latest.zip>`_
+* `SCons <http://www.scons.org/>`_
+* `Taschenmesser <https://github.com/oberstet/taschenmesser>`_
+* `browserify <http://browserify.org/>`_
+* `ws <http://einaros.github.io/ws/>`_
+* `crypto-js <https://www.npmjs.org/package/crypto-js>`_
 
 **Install NodeJS**
 

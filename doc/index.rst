@@ -1,5 +1,5 @@
-|ab| Documentation
-======================================
+|ab|
+====
 .. _Autobahn: http://autobahn.ws
 .. _AutobahnJS: http://autobahn.ws/js
 .. _AutobahnPython: **Autobahn**\|Python
@@ -117,7 +117,6 @@ Acknowledgements
 Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cujojs.com/>`_ for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
 
 .. toctree::
-   :maxdepth: 2
    :hidden:
 
    Home <self>
@@ -126,4 +125,4 @@ Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cuj
    examples_overview
    building
    reference
-   table_of_contents
+
