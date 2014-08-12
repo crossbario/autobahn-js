@@ -94,7 +94,7 @@ Where to start
 
 :doc:`gettingstarted` gives a brief overview of requirements,  how to get |ab|, and where to get an application router which you need to route the application traffic of your JavaScript application.
 
-The :doc:`tutorial` takes you step-by-step through a simple sample application that introduces both RPC and PubSub.
+The :doc:`programming` gives an overview of how to connect your application components, and do basic RPC and PubSub.
 
 The :doc:`examples overview page <examples_overview>` lists code examples covering a broader range of uses cases and advanced WAMP features.
 
@@ -121,7 +121,7 @@ Special thanks to the `Coders with an Unhealthy Javascript Obsession <http://cuj
 
    Home <self>
    gettingstarted
-   tutorial
+   programming
    examples_overview
    building
    reference

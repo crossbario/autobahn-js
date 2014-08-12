@@ -11,7 +11,7 @@ Site Contents
 
    index
    gettingstarted
-   tutorial
+   programming
    examples_overview
    building
    reference
