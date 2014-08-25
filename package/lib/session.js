@@ -996,7 +996,7 @@ Session.prototype.log = function () {
 Session.prototype.join = function (realm, authmethods, authid) {
 
    util.assert(typeof realm === 'string', "Session.join: <realm> must be a string");
-   util.assert(!authmethods || authmethods instanceof Array, "Session.join: <authmethods> must be an array []");
+   util.assert(!authmethods || Array.isArray(authmethods), "Session.join: <authmethods> must be an array []");
    util.assert(!authid || typeof authid === 'string', "Session.join: <authid> must be a string");
 
    var self = this;
@@ -1052,7 +1052,7 @@ Session.prototype.leave = function (reason, message) {
 Session.prototype.call = function (procedure, args, kwargs, options) {
 
    util.assert(typeof procedure === 'string', "Session.call: <procedure> must be a string");
-   util.assert(!args || args instanceof Array, "Session.call: <args> must be an array []");
+   util.assert(!args || Array.isArray(args), "Session.call: <args> must be an array []");
    util.assert(!kwargs || kwargs instanceof Object, "Session.call: <kwargs> must be an object {}");
    util.assert(!options || options instanceof Object, "Session.call: <options> must be an object {}");
 
@@ -1094,7 +1094,7 @@ Session.prototype.call = function (procedure, args, kwargs, options) {
 Session.prototype.publish = function (topic, args, kwargs, options) {
 
    util.assert(typeof topic === 'string', "Session.publish: <topic> must be a string");
-   util.assert(!args || args instanceof Array, "Session.publish: <args> must be an array []");
+   util.assert(!args || Array.isArray(args), "Session.publish: <args> must be an array []");
    util.assert(!kwargs || kwargs instanceof Object, "Session.publish: <kwargs> must be an object {}");
    util.assert(!options || options instanceof Object, "Session.publish: <options> must be an object {}");
 

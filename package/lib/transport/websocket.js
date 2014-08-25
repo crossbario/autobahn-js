@@ -26,7 +26,7 @@ function Factory (options) {
    if (!self._options.protocols) {
       self._options.protocols = ['wamp.2.json'];
    } else {
-      util.assert(self._options.protocols instanceof Array, "options.protocols must be an array");
+      util.assert(Array.isArray(self._options.protocols), "options.protocols must be an array");
    }
 }
 
