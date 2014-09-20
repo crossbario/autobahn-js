@@ -222,7 +222,8 @@ var Session = function (socket, defer, onchallenge) {
 
 
    self._send_wamp = function (msg) {
-      self._socket.send(JSON.stringify(msg));
+      // forward WAMP message to be sent to WAMP transport
+      self._socket.send(msg);
    };
 
 
@@ -730,9 +731,10 @@ var Session = function (socket, defer, onchallenge) {
    self._MESSAGE_MAP[MSG_TYPE.INVOCATION] = self._process_INVOCATION;
 
 
-   self._socket.onmessage = function (evt) {
+   // callback fired by WAMP transport on receiving a WAMP message
+   //
+   self._socket.onmessage = function (msg) {
 
-      var msg = JSON.parse(evt.data);
       var msg_type = msg[0];
 
       // WAMP session not yet open

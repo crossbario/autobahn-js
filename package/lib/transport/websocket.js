@@ -18,16 +18,16 @@ var util = require('../util.js');
 function Factory (options) {
    var self = this;
 
-   self._options = options;
+   util.assert(options.url !== undefined, "options.url missing");
+   util.assert(typeof options.url === "string", "options.url must be a string");
 
-   util.assert(self._options.url !== undefined, "options.url missing");
-   util.assert(typeof self._options.url === "string", "options.url must be a string");
-
-   if (!self._options.protocols) {
-      self._options.protocols = ['wamp.2.json'];
+   if (!options.protocols) {
+      options.protocols = ['wamp.2.json'];
    } else {
-      util.assert(Array.isArray(self._options.protocols), "options.protocols must be an array");
+      util.assert(Array.isArray(options.protocols), "options.protocols must be an array");
    }
+
+   self._options = options;
 }
 
 
@@ -38,117 +38,137 @@ Factory.prototype.create = function () {
 
    var self = this;
 
+   // the WAMP transport we create
+   var transport = {};
+
+   // these will get defined further below
+   transport.protocol = undefined;
+   transport.send = undefined;
+   transport.close = undefined;
+
+   // these will get overridden by the WAMP session using this transport
+   transport.onmessage = function () {};
+   transport.onopen = function () {};
+   transport.onclose = function () {};
+
    //
    // running in browser
    //
    if ('window' in global) {
 
-      // Chrome, MSIE, newer Firefox
-      if ("WebSocket" in window) {
-         
-         if (self._options.protocols) {
-            return new window.WebSocket(self._options.url, self._options.protocols);
+      (function () {
+
+         var websocket;
+
+         // Chrome, MSIE, newer Firefox
+         if ("WebSocket" in window) {
+            
+            if (self._options.protocols) {
+               websocket = new window.WebSocket(self._options.url, self._options.protocols);
+            } else {
+               websocket = new window.WebSocket(self._options.url);
+            }
+
+         // older versions of Firefox prefix the WebSocket object
+         } else if ("MozWebSocket" in window) {
+
+            if (self._options.protocols) {
+               websocket = new window.MozWebSocket(self._options.url, self._options.protocols);
+            } else {
+               websocket = new window.MozWebSocket(self._options.url);
+            }
          } else {
-            return new window.WebSocket(self._options.url);
+            throw "browser does not support WebSocket";
          }
 
-      // older versions of Firefox prefix the WebSocket object
-      } else if ("MozWebSocket" in window) {
-
-         if (self._options.protocols) {
-            return new window.MozWebSocket(self._options.url, self._options.protocols);
-         } else {
-            return new window.MozWebSocket(self._options.url);
+         websocket.onmessage = function (evt) {
+            var msg = JSON.parse(evt.data);
+            transport.onmessage(msg);
          }
-      } else {
-         return false;
-      }
+
+         websocket.onopen = function () {
+            transport.onopen();
+         }
+
+         websocket.onclose = function () {
+            transport.onclose();
+         }
+
+         transport.send = function (msg) {
+            var payload = JSON.stringify(msg);
+            websocket.send(payload);
+         }
+
+      })();
 
    //
    // running on NodeJS
    //
    } else {
 
-      // our WebSocket shim with W3C API
-      var websocket = {};
-
-      // these will get defined by the specific shim
-      websocket.protocol = undefined;
-      websocket.send = undefined;
-      websocket.close = undefined;
-
-      // these will get called by the shim.
-      // in case user code doesn't override these, provide these NOPs
-      websocket.onmessage = function () {};
-      websocket.onopen = function () {};
-      websocket.onclose = function () {};
-      websocket.onerror = function () {};
-
-      var self = this;
-
-      // https://github.com/einaros/ws
-      //
       (function () {
 
-         var WebSocket = require('ws');
-         var client;
-         var protocols;
+         var WebSocket = require('ws'); // https://github.com/einaros/ws
+         var websocket;
 
+         var protocols;
          if (self._options.protocols) {
             protocols = self._options.protocols;
             if (Array.isArray(protocols)) {
                protocols = protocols.join(',');
             }
-            client = new WebSocket(self._options.url, {protocol: protocols});
+            websocket = new WebSocket(self._options.url, {protocol: protocols});
          } else {
-            client = new WebSocket(self._options.url);
+            websocket = new WebSocket(self._options.url);
          }
 
          websocket.send = function (msg) {
-            client.send(msg, {binary: false});
+            var payload = JSON.stringify(msg);
+            websocket.send(payload, {binary: false});
          };
 
          websocket.close = function (code, reason) {
-            client.close();
+            websocket.close();
          };
 
-         client.on('open', function () {
-            websocket.onopen();
+         websocket.on('open', function () {
+            transport.onopen();
          });
 
-         client.on('message', function (data, flags) {
+         websocket.on('message', function (data, flags) {
             if (flags.binary) {
                // FIXME!
             } else {
-               websocket.onmessage({data: data});
+               var msg = JSON.parse(data);
+               transport.onmessage(msg);
             }
          });
 
          // FIXME: improve mapping to WS API for the following
          // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Close_codes
          //
-         client.on('close', function (code, message) {
+         websocket.on('close', function (code, message) {
             var evt = {
                code: code,
                reason: message,
                wasClean: code === 1000
             }
-            websocket.onclose(evt);
+            transport.onclose(evt);
          });
 
-         client.on('error', function (error) {
+         websocket.on('error', function (error) {
             var evt = {
                code: 1006,
                reason: '',
                wasClean: false
             }
-            websocket.onclose(evt);
+            transport.onclose(evt);
          });
 
       })();
-
-      return websocket;
    }
+
+   return transport;
 };
 
 

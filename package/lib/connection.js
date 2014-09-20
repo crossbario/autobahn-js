@@ -158,25 +158,25 @@ Connection.prototype._init_transport_factories = function () {
     //if(typeof transports === "object") {
     //    this._options.transports = [transports];
     //}
-    for(var i=0;i<this._options.transports.length;i++) {
+    for(var i = 0; i < this._options.transports.length; ++i) {
         // cascading transports until we find one which works
         transport_options =  this._options.transports[i];
-        if(!transport_options.url) {
+        if (!transport_options.url) {
             // defaulting to options.url if none is provided
             transport_options.url = this._options.url;
         }
-        if(!transport_options.protocols) {
+        if (!transport_options.protocols) {
             transport_options.protocols = this._options.protocols;
         }
         util.assert(transport_options.type, "No transport.type specified");
         util.assert(typeof transport_options.type === "string", "transport.type must be a string");
         try {
             transport_factory_klass = autobahn.transports.get(transport_options.type);
-            if(transport_factory_klass) {
+            if (transport_factory_klass) {
                 transport_factory = new transport_factory_klass(transport_options);
                 this._transport_factories.push(transport_factory);
             }
-        } catch(exc) {
+        } catch (exc) {
             console.error(exc);
         }
     }

@@ -52,4 +52,7 @@ var _transports = new Transports();
 var websocket = require('./transport/websocket.js');
 _transports.register("websocket", websocket.Factory);
 
+var longpoll = require('./transport/longpoll.js');
+_transports.register("longpoll", longpoll.Factory);
+
 exports.transports = _transports;
