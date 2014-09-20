@@ -122,12 +122,12 @@ Factory.prototype.create = function () {
             websocket = new WebSocket(self._options.url);
          }
 
-         websocket.send = function (msg) {
+         transport.send = function (msg) {
             var payload = JSON.stringify(msg);
             websocket.send(payload, {binary: false});
          };
 
-         websocket.close = function (code, reason) {
+         transport.close = function (code, reason) {
             websocket.close();
          };
 
