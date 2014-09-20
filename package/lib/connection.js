@@ -134,9 +134,12 @@ var Connection = function (options) {
 
 Connection.prototype._create_transport = function () {
    for (var i = 0; i < this._transport_factories.length; ++i) {
+      var transport_factory = this._transport_factories[i];
+      console.log("Trying to create WAMP transport of type: " + transport_factory.type);
       try {
-         var transport = this._transport_factories[i].create();
+         var transport = transport_factory.create();
          if (transport) {
+            console.log("Using WAMP transport type: " + transport_factory.type);
             return transport;
          }
       } catch (e) {
@@ -161,6 +164,7 @@ Connection.prototype._init_transport_factories = function () {
     for(var i = 0; i < this._options.transports.length; ++i) {
         // cascading transports until we find one which works
         transport_options =  this._options.transports[i];
+
         if (!transport_options.url) {
             // defaulting to options.url if none is provided
             transport_options.url = this._options.url;

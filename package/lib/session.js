@@ -20,6 +20,10 @@ var when_fn = require("when/function");
 var log = require('./log.js');
 var util = require('./util.js');
 
+// IE fallback (http://afuchs.tumblr.com/post/23550124774/date-now-in-ie8)
+Date.now = Date.now || function() { return +new Date; };
+
+
 // WAMP "Advanced Profile" support in AutobahnJS per role
 //
 WAMP_FEATURES = {

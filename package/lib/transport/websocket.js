@@ -31,7 +31,7 @@ function Factory (options) {
 }
 
 
-Factory.type = "websocket";
+Factory.prototype.type = "websocket";
 
 
 Factory.prototype.create = function () {

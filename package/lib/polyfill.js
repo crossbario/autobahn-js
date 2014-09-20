@@ -5,4 +5,4 @@ require('./polyfill/function');
 require('./polyfill/console');
 require('./polyfill/typedarray');
 require('./polyfill/json');
-
+require('./polyfill/xmlhttprequest');
