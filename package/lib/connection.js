@@ -135,11 +135,11 @@ var Connection = function (options) {
 Connection.prototype._create_transport = function () {
    for (var i = 0; i < this._transport_factories.length; ++i) {
       var transport_factory = this._transport_factories[i];
-      console.log("Trying to create WAMP transport of type: " + transport_factory.type);
+      log.debug("trying to create WAMP transport of type: " + transport_factory.type);
       try {
          var transport = transport_factory.create();
          if (transport) {
-            console.log("Using WAMP transport type: " + transport_factory.type);
+            log.debug("using WAMP transport type: " + transport_factory.type);
             return transport;
          }
       } catch (e) {
@@ -407,6 +407,18 @@ Object.defineProperty(Connection.prototype, "isConnected", {
          return true;
       } else {
          return false;
+      }
+   }
+});
+
+
+
+Object.defineProperty(Connection.prototype, "transport", {
+   get: function () {
+      if (this._transport) {
+         return this._transport;
+      } else {
+         return {info: {type: 'none', url: null, protocol: null}};
       }
    }
 });

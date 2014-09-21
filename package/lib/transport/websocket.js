@@ -13,6 +13,7 @@
 
 
 var util = require('../util.js');
+var log = require('../log.js');
 
 
 function Factory (options) {
@@ -51,6 +52,12 @@ Factory.prototype.create = function () {
    transport.onopen = function () {};
    transport.onclose = function () {};
 
+   transport.info = {
+      type: 'websocket',
+      url: null,
+      protocol: 'wamp.2.json'
+   };
+
    //
    // running in browser
    //
@@ -82,11 +89,14 @@ Factory.prototype.create = function () {
          }
 
          websocket.onmessage = function (evt) {
+            log.debug("WebSocket transport receive", evt.data);
+
             var msg = JSON.parse(evt.data);
             transport.onmessage(msg);
          }
 
          websocket.onopen = function () {
+            transport.info.url = self._options.url;
             transport.onopen();
          }
 
@@ -103,6 +113,7 @@ Factory.prototype.create = function () {
 
          transport.send = function (msg) {
             var payload = JSON.stringify(msg);
+            log.debug("WebSocket transport send", payload);
             websocket.send(payload);
          }
 

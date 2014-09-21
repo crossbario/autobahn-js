@@ -7,6 +7,7 @@
       <h1>PubSub Basic Frontend</h1>
       <p>Open JavaScript console to watch output.</p>
       <button onclick="close_session()">Close Session</button>
+      <script>AUTOBAHN_DEBUG = true;</script>
       <script src="/build/autobahn.js"></script>
       <script>
          console.log("Running on AutobahnJS", autobahn.version);
@@ -15,14 +16,13 @@
             transports: [
                {
                   'type': 'websocket',
-                  //'url': 'ws://localhost:8080/ws'
-                  'url': 'ws://192.168.1.130:8080/ws',
+                  'url': 'ws://127.0.0.1:8080/ws'
+                  //'url': 'ws://192.168.1.130:8080/ws',
                },
                {
                   'type': 'longpoll',
-                  //'url': 'http://localhost:8080/lp',
-                  'url': 'http://192.168.1.130:8080/lp',
-                  'debug': true
+                  'url': 'http://127.0.0.1:8080/lp',
+                  //'url': 'http://192.168.1.130:8080/lp',
                }
             ],
             realm: 'realm1'}
@@ -39,7 +39,8 @@
          //
          connection.onopen = function (session, details) {
 
-            console.log("Connected");
+            console.log("Connected", connection.transport.info);
+            //console.log(connection.isOpen());
 
             session.onleave = function () {
                connection.close();
@@ -49,26 +50,27 @@
                session.leave();
             }
 
-            // SUBSCRIBE to a topic and receive events
-            //
-            function on_counter (args) {
-               var counter = args[0];
-               console.log("on_counter() event received with counter " + counter);
-            }
-
-            session.subscribe('com.example.oncounter', on_counter).then(
-               function (sub) {
-                  console.log('subscribed to topic');
-               },
-               function (err) {
-                  console.log('failed to subscribe to topic', err);
+            if (false) {
+               // SUBSCRIBE to a topic and receive events
+               //
+               function on_counter (args) {
+                  var counter = args[0];
+                  console.log("on_counter() event received with counter " + counter);
                }
-            );
 
+               session.subscribe('com.example.oncounter', on_counter).then(
+                  function (sub) {
+                     console.log('subscribed to topic');
+                  },
+                  function (err) {
+                     console.log('failed to subscribe to topic', err);
+                  }
+               );
+            }
 
             // perform full test
             //
-            if (true) {
+            if (false) {
 
                // PUBLISH an event every second
                //

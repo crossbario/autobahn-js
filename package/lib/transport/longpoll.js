@@ -12,6 +12,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 var util = require('../util.js');
+var log = require('../log.js');
+
 var when = require('when');
 
 
@@ -19,11 +21,9 @@ var when = require('when');
 // supposed to work on IE8, IE9 and old Android WebKit browsers. We don't care
 // if it works with other browsers.
 //
-function http_post(url, data, debug) {
+function http_post(url, data) {
 
-   if (debug) {
-      console.log("new http_post request", url, data);
-   }
+   log.debug("new http_post request", url, data);
 
    var d = when.defer();
    var req = new XMLHttpRequest();
@@ -100,9 +100,7 @@ Factory.prototype.create = function () {
 
    var self = this;
 
-   if (self._options.debug) {
-      console.log("longpoll.Factory.create");
-   }
+   log.debug("longpoll.Factory.create");
 
    // the WAMP transport we create
    var transport = {};
@@ -117,6 +115,11 @@ Factory.prototype.create = function () {
    transport.onopen = function () {};
    transport.onclose = function () {};
 
+   transport.info = {
+      type: 'longpoll',
+      url: null,
+      protocol: 'wamp.2.json'
+   };
 
    transport._run = function () {
 
@@ -134,10 +137,11 @@ Factory.prototype.create = function () {
          function (payload) {
 
             session_info = JSON.parse(payload);
+            var base_url = self._options.url + '/' + session_info.transport;
 
-            if (self._options.debug) {
-               console.log("longpoll.Transport: open", session_info);
-            }
+            transport.info.url = base_url;
+
+            log.debug("longpoll.Transport: open", session_info);
 
             transport.close = function (code, reason) {
 
@@ -147,12 +151,10 @@ Factory.prototype.create = function () {
 
                is_closing = true;
 
-               http_post(self._options.url + '/' + session_info.transport + '/close', null, self._options.debug).then(
+               http_post(base_url + '/close', null, self._options.debug).then(
 
                   function () {
-                     if (self._options.debug) {
-                        console.log("longpoll.Transport: transport closed");
-                     }
+                     log.debug("longpoll.Transport: transport closed");
                      var details = {
                         code: 1000,
                         reason: "transport closed",
@@ -162,9 +164,7 @@ Factory.prototype.create = function () {
                   },
 
                   function (err) {
-                     if (self._options.debug) {
-                        console.log("longpoll.Transport: could not close transport", err.code, err.text);
-                     }
+                     log.debug("longpoll.Transport: could not close transport", err.code, err.text);
                   }
                );
             }
@@ -177,25 +177,19 @@ Factory.prototype.create = function () {
 
                txseq += 1;
 
-               if (self._options.debug) {
-                  console.log("longpoll.Transport: sending message ...", msg);
-               }
+               log.debug("longpoll.Transport: sending message ...", msg);
 
                var payload = JSON.stringify(msg);
 
-               http_post(self._options.url + '/' + session_info.transport + '/send', payload, self._options.debug).then(
+               http_post(base_url + '/send', payload, self._options.debug).then(
 
                   function () {
                      // ok, message sent
-                     if (self._options.debug) {
-                        console.log("longpoll.Transport: message sent");
-                     }
+                     log.debug("longpoll.Transport: message sent");
                   },
 
                   function (err) {
-                     if (self._options.debug) {
-                        console.log("longpoll.Transport: could not send message", err.code, err.text);
-                     }
+                     log.debug("longpoll.Transport: could not send message", err.code, err.text);
 
                      is_closing = true;
                      var details = {
@@ -212,11 +206,9 @@ Factory.prototype.create = function () {
 
                rxseq += 1;
 
-               if (self._options.debug) {
-                  console.log("longpoll.Transport: polling for message ...");
-               }
+               log.debug("longpoll.Transport: polling for message ...");
 
-               http_post(self._options.url + '/' + session_info.transport + '/receive', null, self._options.debug).then(
+               http_post(base_url + '/receive', null, self._options.debug).then(
 
                   function (payload) {
 
@@ -224,9 +216,7 @@ Factory.prototype.create = function () {
 
                         var msg = JSON.parse(payload);
 
-                        if (self._options.debug) {
-                           console.log("longpoll.Transport: message received", msg);
-                        }
+                        log.debug("longpoll.Transport: message received", msg);
 
                         transport.onmessage(msg);
                      }
@@ -237,9 +227,7 @@ Factory.prototype.create = function () {
                   },
 
                   function (err) {
-                     if (self._options.debug) {
-                        console.log("longpoll.Transport: could not receive message", err.code, err.text);
-                     }
+                     log.debug("longpoll.Transport: could not receive message", err.code, err.text);
 
                      is_closing = true;
                      var details = {
@@ -258,9 +246,7 @@ Factory.prototype.create = function () {
          },
 
          function (err) {
-            if (self._options.debug) {
-               console.log("longpoll.Transport: could not open transport", err.code, err.text);
-            }
+            log.debug("longpoll.Transport: could not open transport", err.code, err.text);
 
             is_closing = true;
             var details = {
