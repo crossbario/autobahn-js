@@ -192,9 +192,15 @@ To get the session object if there is a session currently running over the conne
 
 To check whether the connection (the underlying transport for the session) has been established:
 
-.. js:attribute:: Connection.isOpen
+.. js:attribute:: Connection.isConnected
 
    Returns ``true`` if the Connection is open.
+   
+A read-only property that signals if the **underlying session is open** and attached to a realm:
+
+.. js:attribute:: Connection.isOpen
+
+   Returns ``true`` if the underlying session is open.
 
 To check whether the connection is currently in a "try to reconnect" cycle:
 

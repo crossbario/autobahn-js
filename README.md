@@ -54,6 +54,36 @@ connection.onopen = function (session) {
 connection.open();
 ```
 
+## Get it
+
+### Browser Development
+
+The *latest* release of AutobahnJS can be downloaded from here:
+
+ * [https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
+ * [https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
+ * [https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
+
+*Previous* releases are available under respective links containing the version number:
+
+ * [https://autobahn.s3.amazonaws.com/autobahnjs/0.9.4-2/autobahn.js](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
+ * [https://autobahn.s3.amazonaws.com/autobahnjs/0.9.4-2/autobahn.min.js](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
+ * [https://autobahn.s3.amazonaws.com/autobahnjs/0.9.4-2/autobahn.min.jgz](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
+
+A **complete history** of AutobahnJS releases is also available from the [built repository](https://github.com/tavendo/AutobahnJSbuilt).
+
+The latter can also be used with **[Bower](http://bower.io/)**:
+
+	bower install autobahn
+
+
+### NodeJS Development
+
+AutobahnJS is available via the Node package manager [here](https://www.npmjs.org/package/autobahn). To install:
+
+	npm install autobahn
+
+
 ## More information
 
 For more information, take a look at the [project documentation](http://autobahn.ws/js). This provides:
