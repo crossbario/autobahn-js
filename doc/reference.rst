@@ -208,6 +208,23 @@ To check whether the connection is currently in a "try to reconnect" cycle:
 
    Returns ``true`` if reconnects are being attempted.
 
+A property which holds a transport instance when connected
+
+.. js:attribute:: Connection.transport
+
+   Holds a transport instance when connected.
+
+.. js:attribute:: Connection.transport.info.type
+
+   Type of transport: ``websocket`` or ``longpoll``.
+
+.. js:attribute:: Connection.transport.info.url
+
+   The URL the transport is connected to.
+
+.. js:attribute:: Connection.transport.info.protocol
+
+   The WAMP protocol in use, e.g. ``wamp.2.json``.
 
 A property with the **Deferred factory** in use on this connection:
 

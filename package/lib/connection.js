@@ -70,7 +70,12 @@ var Connection = function (options) {
    //
    // backward compatiblity
    if (!self._options.transports) {
-      self._options.transports = [{type: 'websocket', url: self._options.url}];
+      self._options.transports = [
+         {
+            type: 'websocket',
+            url: self._options.url
+         }
+      ];
    }
    self._transport_factories = [];
    self._init_transport_factories();
