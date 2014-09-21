@@ -90,14 +90,25 @@ Factory.prototype.create = function () {
             transport.onopen();
          }
 
-         websocket.onclose = function () {
-            transport.onclose();
+         websocket.onclose = function (evt) {
+            var details = {
+               code: evt.code,
+               reason: evt.message,
+               wasClean: evt.wasClean
+            }
+            transport.onclose(details);
          }
+
+         websocket.onerror = websocket.onclose;
 
          transport.send = function (msg) {
             var payload = JSON.stringify(msg);
             websocket.send(payload);
          }
+
+         transport.close = function (code, reason) {
+            websocket.close(code, reason);
+         };
 
       })();
 
@@ -148,21 +159,21 @@ Factory.prototype.create = function () {
          // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Close_codes
          //
          websocket.on('close', function (code, message) {
-            var evt = {
+            var details = {
                code: code,
                reason: message,
                wasClean: code === 1000
             }
-            transport.onclose(evt);
+            transport.onclose(details);
          });
 
          websocket.on('error', function (error) {
-            var evt = {
+            var details = {
                code: 1006,
                reason: '',
                wasClean: false
             }
-            transport.onclose(evt);
+            transport.onclose(details);
          });
 
       })();

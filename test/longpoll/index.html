@@ -6,6 +6,7 @@
    <body>
       <h1>PubSub Basic Frontend</h1>
       <p>Open JavaScript console to watch output.</p>
+      <button onclick="close_session()">Close Session</button>
       <script src="/build/autobahn.js"></script>
       <script>
          console.log("Running on AutobahnJS", autobahn.version);
@@ -27,6 +28,8 @@
             realm: 'realm1'}
          );
 
+         var close_session;
+
          // timers
          //
          var t1, t2;
@@ -37,6 +40,14 @@
          connection.onopen = function (session, details) {
 
             console.log("Connected");
+
+            session.onleave = function () {
+               connection.close();
+            }
+
+            close_session = function () {
+               session.leave();
+            }
 
             // SUBSCRIBE to a topic and receive events
             //
@@ -112,6 +123,7 @@
          //
          connection.onclose = function (reason, details) {
             console.log("Connection lost: " + reason);
+            console.log(details);
             if (t1) {
                clearInterval(t1);
                t1 = null;

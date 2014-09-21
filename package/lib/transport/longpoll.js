@@ -15,6 +15,10 @@ var util = require('../util.js');
 var when = require('when');
 
 
+// Helper to do HTTP/POST requests returning deferreds. This function is
+// supposed to work on IE8, IE9 and old Android WebKit browsers. We don't care
+// if it works with other browsers.
+//
 function http_post(url, data, debug) {
 
    if (debug) {
@@ -37,17 +41,7 @@ function http_post(url, data, debug) {
 
             // response with content
             //
-            var request_result = null;
-
-            try {
-               request_result = req.responseText;
-            } catch (e) {
-               console.log("ERR", e);
-            }
-
-            if (request_result) {
-               d.resolve(request_result);
-            }
+            d.resolve(req.responseText);
 
          } if (status === 204) {
 
@@ -56,17 +50,22 @@ function http_post(url, data, debug) {
             d.resolve();
 
          } else {
-            // FIXME: handle this?
-            //d.reject(req.status, req.statusText);
-         }
 
-      } else {
-         // FIXME: handle this?
+            // anything else is a fail
+            //
+            d.reject({code: status, text: req.statusText});
+         }
       }
    }
 
    req.open("POST", url, true);
    req.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+   req.timeout = 2000; // request timeout in ms
+
+   req.ontimeout = function () {
+      d.reject({code: 501, text: "request timeout"});
+   }
 
    if (data) {
       req.send(data);
@@ -140,7 +139,41 @@ Factory.prototype.create = function () {
                console.log("longpoll.Transport: open", session_info);
             }
 
+            transport.close = function (code, reason) {
+
+               if (is_closing) {
+                  throw "transport is already closing";
+               }
+
+               is_closing = true;
+
+               http_post(self._options.url + '/' + session_info.transport + '/close', null, self._options.debug).then(
+
+                  function () {
+                     if (self._options.debug) {
+                        console.log("longpoll.Transport: transport closed");
+                     }
+                     var details = {
+                        code: 1000,
+                        reason: "transport closed",
+                        wasClean: true
+                     }
+                     transport.onclose(details);
+                  },
+
+                  function (err) {
+                     if (self._options.debug) {
+                        console.log("longpoll.Transport: could not close transport", err.code, err.text);
+                     }
+                  }
+               );
+            }
+
             transport.send = function (msg) {
+
+               if (is_closing) {
+                  throw "transport is closing or closed already";
+               }
 
                txseq += 1;
 
@@ -151,17 +184,26 @@ Factory.prototype.create = function () {
                var payload = JSON.stringify(msg);
 
                http_post(self._options.url + '/' + session_info.transport + '/send', payload, self._options.debug).then(
+
                   function () {
                      // ok, message sent
                      if (self._options.debug) {
                         console.log("longpoll.Transport: message sent");
                      }
                   },
-                  function (code, msg) {
-                     // FIXME: handle this
+
+                  function (err) {
                      if (self._options.debug) {
-                        console.log("longpoll.Transport: could not send message", code, msg);
+                        console.log("longpoll.Transport: could not send message", err.code, err.text);
                      }
+
+                     is_closing = true;
+                     var details = {
+                        code: 1001,
+                        reason: "transport send failure (HTTP/POST status " + err.code + " - '" + err.text + "')",
+                        wasClean: false
+                     }
+                     transport.onclose(details);
                   }
                );
             };
@@ -178,24 +220,34 @@ Factory.prototype.create = function () {
 
                   function (payload) {
 
-                     var msg = JSON.parse(payload);
+                     if (payload) {                     
 
-                     if (self._options.debug) {
-                        console.log("longpoll.Transport: message received", msg);
+                        var msg = JSON.parse(payload);
+
+                        if (self._options.debug) {
+                           console.log("longpoll.Transport: message received", msg);
+                        }
+
+                        transport.onmessage(msg);
                      }
-
-                     transport.onmessage(msg);
 
                      if (!is_closing) {
                         receive();
                      }
                   },
 
-                  function (code, msg) {
-                     // FIXME: handle this
+                  function (err) {
                      if (self._options.debug) {
-                        console.log("longpoll.Transport: could not receive message", code, msg);
+                        console.log("longpoll.Transport: could not receive message", err.code, err.text);
                      }
+
+                     is_closing = true;
+                     var details = {
+                        code: 1001,
+                        reason: "transport receive failure (HTTP/POST status " + err.code + " - '" + err.text + "')",
+                        wasClean: false
+                     }
+                     transport.onclose(details);
                   }
                );
             }
@@ -205,12 +257,20 @@ Factory.prototype.create = function () {
             transport.onopen();
          },
 
-         function (code, msg) {
-            // FIXME: handle this
-            console.log("could not create session", code, msg);
+         function (err) {
+            if (self._options.debug) {
+               console.log("longpoll.Transport: could not open transport", err.code, err.text);
+            }
+
+            is_closing = true;
+            var details = {
+               code: 1001,
+               reason: "transport open failure (HTTP/POST status " + err.code + " - '" + err.text + "')",
+               wasClean: false
+            }
+            transport.onclose(details);
          }
       );
-
    }
 
    transport._run();
