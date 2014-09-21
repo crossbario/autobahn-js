@@ -28,7 +28,9 @@ env = Environment(tools = ['default', 'taschenmesser'],
 
 ## Get package version
 ##
-#version = json.load(open('package/package.json'))['version']
+version = json.load(open('package/package.json'))['version']
+print("Building AutobahnJS {}".format(version))
+
 env['JS_DEFINES'] = {
 #   'AUTOBAHNJS_VERSION': "'%s'" % version
 }
@@ -78,12 +80,17 @@ Default(uploads)
 ## Upload to Amazon S3
 ##
 env['S3_BUCKET'] = 'autobahn'
-env['S3_BUCKET_PREFIX'] = 'autobahnjs/latest/' # note the trailing slash!
 env['S3_OBJECT_ACL'] = 'public-read'
+
+published = []
+
+for s in ['latest', version]:
+   e = env.Clone(S3_BUCKET_PREFIX = 'autobahnjs/{}/'.format(s)) # note the trailing slash!
+   published.append(AlwaysBuild(e.S3("build/.S3UploadDone_{}".format(s), uploads)))
+
 
 ## The uploaded stuff is always considered stale
 ##
-publish = AlwaysBuild(env.S3("build/.S3UploadDone", uploads))
+Depends(published, uploads)
 
-Depends(publish, uploads)
-Alias("publish", publish)
+Alias("publish", published)
