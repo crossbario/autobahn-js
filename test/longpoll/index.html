@@ -16,17 +16,15 @@
             transports: [
                {
                   'type': 'websocket',
-                  'url': 'ws://127.0.0.1:8080/ws'
-                  //'url': 'ws://192.168.1.130:8080/ws',
+                  'url': 'ws://' + document.location.host + '/ws',
                },
                {
                   'type': 'longpoll',
-                  'url': 'http://127.0.0.1:8080/lp',
-                  //'url': 'http://192.168.1.130:8080/lp',
+                  'url': 'http://' + document.location.host + '/lp',
                }
             ],
-            realm: 'realm1'}
-         );
+            realm: 'realm1'
+         });
 
          var close_session;
 
@@ -40,7 +38,6 @@
          connection.onopen = function (session, details) {
 
             console.log("Connected", connection.transport.info);
-            //console.log(connection.isOpen());
 
             session.onleave = function () {
                connection.close();
@@ -50,22 +47,22 @@
                session.leave();
             }
 
-            if (false) {
-               // SUBSCRIBE to a topic and receive events
-               //
-               function on_counter (args) {
-                  var counter = args[0];
-                  console.log("on_counter() event received with counter " + counter);
-               }
+            if (true) {
+            // SUBSCRIBE to a topic and receive events
+            //
+            function on_counter (args) {
+               var counter = args[0];
+               console.log("on_counter() event received with counter " + counter);
+            }
 
-               session.subscribe('com.example.oncounter', on_counter).then(
-                  function (sub) {
-                     console.log('subscribed to topic');
-                  },
-                  function (err) {
-                     console.log('failed to subscribe to topic', err);
-                  }
-               );
+            session.subscribe('com.example.oncounter', on_counter).then(
+               function (sub) {
+                  console.log('subscribed to topic');
+               },
+               function (err) {
+                  console.log('failed to subscribe to topic', err);
+               }
+            );            
             }
 
             // perform full test
@@ -134,13 +131,15 @@
                clearInterval(t2);
                t2 = null;
             }
+
+            // return true to stop retrying ..
+            //return true;
          }
 
 
          // now actually open the connection
          //
          connection.open();
-
       </script>
    </body>
 </html>

@@ -149,9 +149,10 @@ Connection.prototype._create_transport = function () {
          }
       } catch (e) {
          // ignore
+         log.debug("could not create WAMP transport '" + transport_factory.type + "': " + e);
       }
    }
-   throw "could not create a transport";
+   throw "could not create any WAMP transport";
 };
 
 

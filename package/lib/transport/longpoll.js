@@ -17,72 +17,6 @@ var log = require('../log.js');
 var when = require('when');
 
 
-// Helper to do HTTP/POST requests returning deferreds. This function is
-// supposed to work on IE8, IE9 and old Android WebKit browsers. We don't care
-// if it works with other browsers.
-//
-function http_post(url, data) {
-
-   log.debug("new http_post request", url, data);
-
-   var d = when.defer();
-   var req = new XMLHttpRequest();
-
-   req.onreadystatechange = function () {
-
-      if (req.readyState == 4) {
-
-         // Normalize IE's response to HTTP 204 when Win error 1223.
-         // http://stackoverflow.com/a/10047236/884770
-         //
-         var status = (req.status === 1223) ? 204 : req.status;
-
-         if (status === 200) {
-
-            // response with content
-            //
-            d.resolve(req.responseText);
-
-         } if (status === 204) {
-
-            // empty response
-            //
-            d.resolve();
-
-         } else {
-
-            // anything else is a fail
-            //
-            d.reject({code: status, text: req.statusText});
-         }
-      }
-   }
-
-   req.open("POST", url, true);
-   req.setRequestHeader("Content-type", "application/json; charset=utf-8");
-
-   req.timeout = 2000; // request timeout in ms
-
-   req.ontimeout = function () {
-      d.reject({code: 501, text: "request timeout"});
-   }
-
-   if (data) {
-      req.send(data);
-   } else {
-      req.send();
-   }
-
-   if (d.promise.then) {
-      // whenjs has the actual user promise in an attribute
-      return d.promise;
-   } else {
-      return d;
-   }
-};
-
-
-
 function Factory (options) {
    var self = this;
 
@@ -131,8 +65,9 @@ Factory.prototype.create = function () {
       var rxseq = 0;
 
       var options = {'protocols': ['wamp.2.json']};
+      var http_timeout = 2000;
 
-      http_post(self._options.url + '/open', JSON.stringify(options), self._options.debug).then(
+      util.http_post(self._options.url + '/open', JSON.stringify(options), http_timeout).then(
 
          function (payload) {
 
@@ -151,7 +86,7 @@ Factory.prototype.create = function () {
 
                is_closing = true;
 
-               http_post(base_url + '/close', null, self._options.debug).then(
+               util.http_post(base_url + '/close', null, http_timeout).then(
 
                   function () {
                      log.debug("longpoll.Transport: transport closed");
@@ -181,7 +116,7 @@ Factory.prototype.create = function () {
 
                var payload = JSON.stringify(msg);
 
-               http_post(base_url + '/send', payload, self._options.debug).then(
+               util.http_post(base_url + '/send', payload, http_timeout).then(
 
                   function () {
                      // ok, message sent
@@ -208,7 +143,7 @@ Factory.prototype.create = function () {
 
                log.debug("longpoll.Transport: polling for message ...");
 
-               http_post(base_url + '/receive', null, self._options.debug).then(
+               util.http_post(base_url + '/receive', null, 0).then(
 
                   function (payload) {
 

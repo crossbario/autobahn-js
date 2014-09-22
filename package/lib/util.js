@@ -11,8 +11,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var log = require('./log.js');
 
-function rand_normal (mean, sd) {
+var when = require('when');
+
+
+
+var rand_normal = function (mean, sd) {
    // Derive a Gaussian from Uniform random variables
    // http://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
    var x1, x2, rad;
@@ -29,6 +34,7 @@ function rand_normal (mean, sd) {
 };
 
 
+
 var assert = function (cond, text) {
 	if (cond) {
       return;
@@ -41,5 +47,81 @@ var assert = function (cond, text) {
 };
 
 
+
+// Helper to do HTTP/POST requests returning deferreds. This function is
+// supposed to work on IE8, IE9 and old Android WebKit browsers. We don't care
+// if it works with other browsers.
+//
+var http_post = function (url, data, timeout) {
+
+   log.debug("new http_post request", url, data, timeout);
+
+   var d = when.defer();
+   var req = new XMLHttpRequest();
+
+   req.onreadystatechange = function () {
+
+      if (req.readyState === 4) {
+
+         // Normalize IE's response to HTTP 204 when Win error 1223.
+         // http://stackoverflow.com/a/10047236/884770
+         //
+         var status = (req.status === 1223) ? 204 : req.status;
+
+         if (status === 200) {
+
+            // response with content
+            //
+            d.resolve(req.responseText);
+
+         } if (status === 204) {
+
+            // empty response
+            //
+            d.resolve();
+
+         } else {
+
+            // anything else is a fail
+            //
+            var statusText = null;
+            try {
+               statusText = req.statusText;
+            } catch (e) {
+               // IE8 fucks up on this
+            }
+            d.reject({code: status, text: statusText});
+         }
+      }
+   }
+
+   req.open("POST", url, true);
+   req.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+   if (timeout > 0) {
+      req.timeout = timeout; // request timeout in ms
+
+      req.ontimeout = function () {
+         d.reject({code: 501, text: "request timeout"});
+      }
+   }
+
+   if (data) {
+      req.send(data);
+   } else {
+      req.send();
+   }
+
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
+};
+
+
+
 exports.rand_normal = rand_normal;
 exports.assert = assert;
+exports.http_post = http_post;

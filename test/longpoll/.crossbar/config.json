@@ -49,7 +49,9 @@
                   "lp": {
                      "type": "longpoll",
                      "options": {
-                        "debug": true
+                        "debug": true,
+                        "request_timeout": 0,
+                        "session_timeout": 0
                      }
                   }
                }
