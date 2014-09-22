@@ -109,7 +109,10 @@ Factory.prototype.create = function () {
             transport.onclose(details);
          }
 
-         websocket.onerror = websocket.onclose;
+         // do NOT do the following, since that will make
+         // transport.onclose() fire twice (browsers already fire
+         // websocket.onclose() for errors also)
+         //websocket.onerror = websocket.onclose;
 
          transport.send = function (msg) {
             var payload = JSON.stringify(msg);

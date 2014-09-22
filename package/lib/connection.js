@@ -152,7 +152,9 @@ Connection.prototype._create_transport = function () {
          log.debug("could not create WAMP transport '" + transport_factory.type + "': " + e);
       }
    }
-   throw "could not create any WAMP transport";
+
+   // could not create any WAMP transport
+   return null;
 };
 
 
@@ -193,6 +195,69 @@ Connection.prototype._init_transport_factories = function () {
 };
 
 
+Connection.prototype._autoreconnect_reset_timer = function () {
+
+   var self = this;
+
+   if (self._retry_timer) {
+      clearTimeout(self._retry_timer);
+   }
+   self._retry_timer = null;
+}
+
+
+Connection.prototype._autoreconnect_reset = function () {
+
+   var self = this;
+
+   self._autoreconnect_reset_timer();
+
+   self._retry_count = 0;
+   self._retry_delay = self._initial_retry_delay;
+   self._is_retrying = false;
+}
+
+
+Connection.prototype._autoreconnect_advance = function () {
+
+   var self = this;
+
+   // jitter retry delay
+   if (self._retry_delay_jitter) {
+      self._retry_delay = util.rand_normal(self._retry_delay, self._retry_delay * self._retry_delay_jitter);
+   }
+
+   // cap the retry delay
+   if (self._retry_delay > self._max_retry_delay) {
+      self._retry_delay = self._max_retry_delay;
+   }
+
+   // count number of retries
+   self._retry_count += 1;
+
+   var res;
+   if (self._retry && self._retry_count <= self._max_retries) {
+      res = {
+         count: self._retry_count,
+         delay: self._retry_delay,
+         will_retry: true
+      };
+   } else {
+      res = {
+         count: null,
+         delay: null,
+         will_retry: false
+      }
+   }
+
+   // retry delay growth for next retry cycle
+   if (self._retry_delay_growth) {
+      self._retry_delay = self._retry_delay * self._retry_delay_growth;
+   }
+
+   return res;
+}
+
 
 Connection.prototype.open = function () {
 
@@ -202,27 +267,26 @@ Connection.prototype.open = function () {
       throw "connection already open (or opening)";
    }
 
-   // reset reconnection tracking
+   self._autoreconnect_reset();
    self._retry = true;
-   self._retry_count = 0;
-   self._retry_delay = self._initial_retry_delay;
-   self._is_retrying = false;
-   if (self._retry_timer) {
-      log.debug("cancelling automatic retry upon manual retry");
-      clearTimeout(self._retry_timer);
-   }
-   self._retry_timer = null;
-
 
    function retry () {
 
-      // let the WebSocket factory produce a new WebSocket connection
-      // which will automatically connect
+      // create a WAMP transport
       self._transport = self._create_transport();
+
       if (!self._transport) {
+         // failed to create a WAMP transport
          self._retry = false;
          if (self.onclose) {
-            self.onclose("unsupported", "WebSocket transport unsupported");
+            var details = {
+               reason: null,
+               message: null,
+               retry_delay: null,
+               retry_count: null,
+               will_retry: false
+            };
+            self.onclose("unsupported", details);
          }
          return;
       }
@@ -234,11 +298,8 @@ Connection.prototype.open = function () {
 
       self._transport.onopen = function () {
 
-         // remove any pending reconnect timer
-         if (self._retry_timer) {
-            clearTimeout(self._retry_timer);
-         }
-         self._retry_timer = null;
+         // reset auto-reconnect timer and tracking
+         self._autoreconnect_reset();
 
          // log successful connections
          self._connect_successes += 1;
@@ -263,12 +324,15 @@ Connection.prototype.open = function () {
 
       self._session.onleave = function (reason, details) {
          self._session_close_reason = reason;
-         self._session_close_message = details.message;
+         self._session_close_message = details.message || "";
          self._retry = false;
          self._transport.close(1000);
       };
 
       self._transport.onclose = function (evt) {
+
+         // remove any pending reconnect timer
+         self._autoreconnect_reset_timer();
 
          self._transport = null;
 
@@ -285,25 +349,8 @@ Connection.prototype.open = function () {
          } else {
             reason = "closed";
          }
-
-         // Connection.onclose() allows to cancel any subsequent retry attempt       
-         var stop_retrying = false;
-
-         // jitter retry delay
-         if (self._retry_delay_jitter) {
-            self._retry_delay = util.rand_normal(self._retry_delay, self._retry_delay * self._retry_delay_jitter);
-         }
-
-         // cap the retry delay
-         if (self._retry_delay > self._max_retry_delay) {
-            self._retry_delay = self._max_retry_delay;
-         }
-
-         // count number of retries
-         self._retry_count += 1;
-
-         // flag that indicated if we would retry (if retrying is not stopped manually)
-         var will_retry = self._retry_count <= self._max_retries;
+        
+         var next_retry = self._autoreconnect_advance();
 
          // fire app code handler
          //
@@ -311,12 +358,13 @@ Connection.prototype.open = function () {
             var details = {
                reason: self._session_close_reason,
                message: self._session_close_message,
-               retry_delay: self._retry_delay,
-               retry_count: self._retry_count,
-               will_retry: will_retry
+               retry_delay: next_retry.delay,
+               retry_count: next_retry.count,
+               will_retry: next_retry.will_retry
             };
             try {
-               stop_retrying = self.onclose(reason, details);
+               // Connection.onclose() allows to cancel any subsequent retry attempt
+               var stop_retrying = self.onclose(reason, details);
             } catch (e) {
                log.debug("Exception raised from app code while firing Connection.onclose()", e);
             }
@@ -335,17 +383,12 @@ Connection.prototype.open = function () {
          //
          if (self._retry && !stop_retrying) {
 
-            if (will_retry) {
+            if (next_retry.will_retry) {
 
                self._is_retrying = true;
 
-               log.debug("retrying in " + self._retry_delay + " s");
-               self._retry_timer = setTimeout(retry, self._retry_delay * 1000);
-
-               // retry delay growth for next retry cycle
-               if (self._retry_delay_growth) {
-                  self._retry_delay = self._retry_delay * self._retry_delay_growth;
-               }
+               log.debug("retrying in " + next_retry.delay + " s");
+               self._retry_timer = setTimeout(retry, next_retry.delay * 1000);
 
             } else {
                log.debug("giving up trying to reconnect");

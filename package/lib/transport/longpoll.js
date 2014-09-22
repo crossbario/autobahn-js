@@ -65,9 +65,9 @@ Factory.prototype.create = function () {
       var rxseq = 0;
 
       var options = {'protocols': ['wamp.2.json']};
-      var http_timeout = 2000;
+      var request_timeout = self._options.request_timeout || 2000;
 
-      util.http_post(self._options.url + '/open', JSON.stringify(options), http_timeout).then(
+      util.http_post(self._options.url + '/open', JSON.stringify(options), request_timeout).then(
 
          function (payload) {
 
@@ -86,7 +86,7 @@ Factory.prototype.create = function () {
 
                is_closing = true;
 
-               util.http_post(base_url + '/close', null, http_timeout).then(
+               util.http_post(base_url + '/close', null, request_timeout).then(
 
                   function () {
                      log.debug("longpoll.Transport: transport closed");
@@ -116,7 +116,7 @@ Factory.prototype.create = function () {
 
                var payload = JSON.stringify(msg);
 
-               util.http_post(base_url + '/send', payload, http_timeout).then(
+               util.http_post(base_url + '/send', payload, request_timeout).then(
 
                   function () {
                      // ok, message sent
@@ -143,7 +143,7 @@ Factory.prototype.create = function () {
 
                log.debug("longpoll.Transport: polling for message ...");
 
-               util.http_post(base_url + '/receive', null, 0).then(
+               util.http_post(base_url + '/receive', null, request_timeout).then(
 
                   function (payload) {
 

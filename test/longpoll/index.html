@@ -6,8 +6,9 @@
    <body>
       <h1>PubSub Basic Frontend</h1>
       <p>Open JavaScript console to watch output.</p>
+      <button onclick="open_session()">Open Session</button>
       <button onclick="close_session()">Close Session</button>
-      <script>AUTOBAHN_DEBUG = true;</script>
+      <script>AUTOBAHN_DEBUG = false;</script>
       <script src="/build/autobahn.js"></script>
       <script>
          console.log("Running on AutobahnJS", autobahn.version);
@@ -37,14 +38,11 @@
          //
          connection.onopen = function (session, details) {
 
-            console.log("Connected", connection.transport.info);
-
-            session.onleave = function () {
-               connection.close();
-            }
+            console.log("Connected: " + JSON.stringify(connection.transport.info));
 
             close_session = function () {
                session.leave();
+               //session.leave("wamp.close.normal", "I am fed up!!");
             }
 
             if (true) {
@@ -121,8 +119,7 @@
          // fired when connection was lost (or could not be established)
          //
          connection.onclose = function (reason, details) {
-            console.log("Connection lost: " + reason);
-            console.log(details);
+            console.log("Connection gone: " + reason + " (" + JSON.stringify(details) + ")");
             if (t1) {
                clearInterval(t1);
                t1 = null;
@@ -139,7 +136,9 @@
 
          // now actually open the connection
          //
-         connection.open();
+         function open_session() {
+            connection.open();
+         }
       </script>
    </body>
 </html>
