@@ -153,7 +153,7 @@ Here is how you call the procedure ``add2`` that we registered above:
    :linenos:
    :emphasize-lines: 1
 
-   session.call('com.myapp.add2', [2, 3]).then(
+   session.call('com.myapp.add2', [2, 3]).then(function showSum(res) {
       console.log('sum is', res);
    }, session.log);
 
