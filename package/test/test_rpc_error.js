@@ -37,7 +37,7 @@ exports.testRpcError = function (testcase) {
             //throw "cannot take sqrt of negative";
             throw new autobahn.Error('com.myapp.error', ['fuck'], {a: 23, b: 9});
          }
-         return res;
+         return res.toFixed(6);
       }
 
       var endpoints = {
