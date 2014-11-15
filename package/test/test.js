@@ -23,6 +23,9 @@ var rpc_routing = require('./test_rpc_routing.js');
 var pubsub_basic = require('./test_pubsub_basic.js');
 var pubsub_complex = require('./test_pubsub_complex.js');
 var pubsub_options = require('./test_pubsub_options.js');
+var pubsub_excludme = require('./test_pubsub_excludeme.js');
+var pubsub_exclude = require('./test_pubsub_exclude.js');
+var pubsub_eligible = require('./test_pubsub_eligible.js');
 
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
 exports.testRpcComplex = rpc_complex.testRpcComplex;
@@ -34,6 +37,9 @@ exports.testRpcRouting = rpc_routing.testRpcRouting;
 exports.testPubsubBasic = pubsub_basic.testPubsubBasic;
 exports.testPubsubComplex = pubsub_complex.testPubsubComplex;
 exports.testPubsubOptions = pubsub_options.testPubsubOptions;
+exports.testPubsubExcludeMe = pubsub_excludme.testPubsubExcludeMe;
+exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
+exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
 
 
 //var connect = require('./test_connect.js');

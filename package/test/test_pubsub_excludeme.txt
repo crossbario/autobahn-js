@@ -1,0 +1,44 @@
+0 "all sessions connected"
+1 ""
+2 "Case 1: 'exclude_me' unset"
+3 "==========================="
+4 "Session 2 got event:" 0
+5 "Session 2 got event:" 1
+6 "Session 2 got event:" 2
+7 "Session 2 got event:" 3
+8 "Session 2 got event:" 4
+9 "Session 2 got event:" 5
+10 ""
+11 ""
+12 ""
+13 ""
+14 "Case 2: 'exclude_me: true' "
+15 "==========================="
+16 "Session 2 got event:" 0
+17 "Session 2 got event:" 1
+18 "Session 2 got event:" 2
+19 "Session 2 got event:" 3
+20 "Session 2 got event:" 4
+21 "Session 2 got event:" 5
+22 ""
+23 ""
+24 ""
+25 ""
+26 "Case 3: 'exclude_me: false' "
+27 "==========================="
+28 "-----------"
+29 "Session 1 got event: 0"
+30 "Session 1 got event: 1"
+31 "Session 1 got event: 2"
+32 "Session 1 got event: 3"
+33 "Session 1 got event: 4"
+34 "Session 1 got event: 5"
+35 "----------"
+36 "-----------"
+37 "Session 2 got event: 0"
+38 "Session 2 got event: 1"
+39 "Session 2 got event: 2"
+40 "Session 2 got event: 3"
+41 "Session 2 got event: 4"
+42 "Session 2 got event: 5"
+43 "----------"
