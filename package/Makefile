@@ -15,6 +15,9 @@ bundle:
 test:
 	npm test
 
+test_connect:
+	nodeunit test/test_connect.js 
+
 install:
 	npm install ws
 	npm install when

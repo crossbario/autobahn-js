@@ -41,7 +41,7 @@ exports.testPubsubOptions = function (testcase) {
                }
             );
             counter += 1;
-         }, 1000);
+         }, 100);
 
          var received = 0;
 

@@ -46,7 +46,7 @@ exports.testRpcProgress = function (testcase) {
                } else {
                   clearInterval(interval_id);
                }
-            }, 1000);
+            }, 100);
          }
 
          var d = autobahn.when.defer();

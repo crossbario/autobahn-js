@@ -50,7 +50,7 @@ exports.testPubsubComplex = function (testcase) {
             counter += 1;
 
             test.log("events published", counter);
-         }, 1000);
+         }, 100);
 
 
          var received = 0;

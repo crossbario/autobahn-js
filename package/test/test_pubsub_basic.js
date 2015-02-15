@@ -36,7 +36,7 @@ exports.testPubsubBasic = function (testcase) {
             test.log("publishing to topic 'com.myapp.topic1': " + counter);
             session1.publish('com.myapp.topic1', [counter]);
             counter += 1;
-         }, 1000);
+         }, 100);
 
          var received = 0;
 

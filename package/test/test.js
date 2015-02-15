@@ -13,6 +13,7 @@
 
 // this works via https://github.com/caolan/nodeunit
 
+var connect = require('./test_connect.js');
 var rpc_complex = require('./test_rpc_complex.js');
 var rpc_arguments = require('./test_rpc_arguments.js');
 var rpc_error = require('./test_rpc_error.js');
@@ -27,6 +28,7 @@ var pubsub_excludme = require('./test_pubsub_excludeme.js');
 var pubsub_exclude = require('./test_pubsub_exclude.js');
 var pubsub_eligible = require('./test_pubsub_eligible.js');
 
+exports.testConnect = connect.testConnect;
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
 exports.testRpcComplex = rpc_complex.testRpcComplex;
 exports.testRpcError = rpc_error.testRpcError;
@@ -40,7 +42,3 @@ exports.testPubsubOptions = pubsub_options.testPubsubOptions;
 exports.testPubsubExcludeMe = pubsub_excludme.testPubsubExcludeMe;
 exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
 exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
-
-
-//var connect = require('./test_connect.js');
-//exports.testConnect = connect.testConnect;

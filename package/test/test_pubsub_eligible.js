@@ -133,7 +133,7 @@ exports.testPubsubEligible = function (testcase) {
             var counter = 0;
 
             var t2 = setInterval(function () {
-               session1.publish('com.myapp.topic2', [counter], {}, { exclude: [ session2.id ]});
+               session1.publish('com.myapp.topic2', [counter], {}, { eligible: [ session3.id ]});
                counter += 1;
             }, delay);
 
@@ -190,7 +190,7 @@ exports.testPubsubEligible = function (testcase) {
             var counter = 0;
 
             var t1 = setInterval(function () {
-               session1.publish('com.myapp.topic3', [counter]);
+               session1.publish('com.myapp.topic3', [counter], {}, { eligible: [ session2.id, session3.id ]});
                counter += 1;
             }, delay);
 

@@ -43,7 +43,7 @@ exports.testRpcSlowsquare = function (testcase) {
          // resolve the promise after 1s
          setTimeout(function () {
             d.resolve(x * x);
-         }, 1000);
+         }, 500);
 
          // need to return the promise
          return d.promise;

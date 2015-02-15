@@ -39,6 +39,9 @@ exports.testPubsubExcludeMe = function (testcase) {
          // cleans up after test
          function onTestFinished() {
 
+            test.log("");
+            test.log("Finished.");
+
             session1.leave();
             session2.leave();
 
@@ -53,7 +56,6 @@ exports.testPubsubExcludeMe = function (testcase) {
          // Expected: 
          //    - session1 (publisher) receives no events
          //    - session2 (other subscriber) receives events
-
          function case1 () {
             test.log("");
             test.log("Case 1: 'exclude_me' unset");
@@ -81,8 +83,6 @@ exports.testPubsubExcludeMe = function (testcase) {
                received += 1;
                if (received > 5) {
                   test.log("");
-                  test.log("");
-                  test.log("");
 
                   clearInterval(t1);
 
@@ -96,22 +96,16 @@ exports.testPubsubExcludeMe = function (testcase) {
                }
             }
 
-
-
             // both sessions subscribe
             session1.subscribe('com.myapp.topic1', onevent1);
             session2.subscribe('com.myapp.topic1', onevent2);
-
          }
-
-
 
          // Case 2: "exclude_me: true"
          // 
          // Expected: 
          //    - session1 (publisher) receives no events
          //    - session2 (other subscriber) receives events
-
          function case2 () {
             test.log("");
             test.log("Case 2: 'exclude_me: true' ");
@@ -139,8 +133,6 @@ exports.testPubsubExcludeMe = function (testcase) {
                received += 1;
                if (received > 5) {
                   test.log("");
-                  test.log("");
-                  test.log("");
 
                   clearInterval(t2);
 
@@ -158,18 +150,13 @@ exports.testPubsubExcludeMe = function (testcase) {
             // both sessions subscribe
             session1.subscribe('com.myapp.topic2', onevent1);
             session2.subscribe('com.myapp.topic2', onevent2);
-
          }
-
-
 
          // Case 3: "exclude_me: false"
          // 
          // Expected: 
          //    - session1 (publisher) receives events
          //    - session2 (other subscriber) receives events
-
-
          function case3 () {
             test.log("");
             test.log("Case 3: 'exclude_me: false' ");
@@ -218,11 +205,10 @@ exports.testPubsubExcludeMe = function (testcase) {
                // write the log
                var logs = [testLog1, testLog2];
                logs.forEach(function(log) {
-                  test.log("-----------")
+                  test.log("");
                   log.forEach(function(line) {
                      test.log(line);
-                  })
-                  test.log("----------");
+                  });
                })
 
                onTestFinished();
@@ -231,13 +217,11 @@ exports.testPubsubExcludeMe = function (testcase) {
             // both sessions subscribe
             session1.subscribe('com.myapp.topic3', onevent1);
             session2.subscribe('com.myapp.topic3', onevent2);
-
          }
 
          case1();
-
-
       },
+
       function (err) {
          console.log("connections failed");
          test.log(err);
