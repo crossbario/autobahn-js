@@ -27,6 +27,7 @@ var pubsub_options = require('./test_pubsub_options.js');
 var pubsub_excludme = require('./test_pubsub_excludeme.js');
 var pubsub_exclude = require('./test_pubsub_exclude.js');
 var pubsub_eligible = require('./test_pubsub_eligible.js');
+var pubsub_prefix_sub = require('./test_pubsub_prefix_sub.js');
 
 exports.testConnect = connect.testConnect;
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
@@ -41,4 +42,4 @@ exports.testPubsubComplex = pubsub_complex.testPubsubComplex;
 exports.testPubsubOptions = pubsub_options.testPubsubOptions;
 exports.testPubsubExcludeMe = pubsub_excludme.testPubsubExcludeMe;
 exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
-exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
+exports.testPubsubPrefixSub = pubsub_prefix_sub.testPubsubPrefixSub;
