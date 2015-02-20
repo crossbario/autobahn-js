@@ -50,8 +50,6 @@ exports.testPubsubPrefixSub = function (testcase) {
          var msg = "Hello prefix pattern subscriber!";
          var counter = 0;
 
-         console.log("HERE ", options);
-
          session2.subscribe('com.myapp', onevent1, options).then(
             function (subscription) {
                // these are all received

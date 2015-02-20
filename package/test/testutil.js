@@ -67,7 +67,7 @@ Testlog.prototype.log = function () {
 
    var self = this;
 
-   console.log.apply(this, arguments);
+   //console.log.apply(this, arguments);
    self._log.push(arguments);
 };
 
