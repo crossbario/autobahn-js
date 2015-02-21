@@ -53,7 +53,7 @@ To enable *debug mode*, define a global variable
 
    AUTOBAHN_DEBUG = true;
 
-*before* including |ab|. E.g.
+*before* including |ab|. Debug mode works for use both in the browser and in Node.js. When using |ab| in a browser, you'd do e.g.
 
 .. code-block:: html
 
@@ -67,6 +67,8 @@ To enable *debug mode*, define a global variable
         </script>
       </body>
    </html>
+
+
 
 
 Connections
