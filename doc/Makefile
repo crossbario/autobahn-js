@@ -30,7 +30,7 @@ clean:
 	rm -rf _test
 	rm -rf _spelling
 
-publish: clean build
+deploy: clean build
 	scons publish
 
 doctest:
