@@ -60,21 +60,23 @@ function newid () {
 }
 
 
-var Invocation = function (caller, progress) {
+var Invocation = function (caller, progress, procedure) {
 
    var self = this;
 
    self.caller = caller;
    self.progress = progress;
+   self.procedure = procedure;
 };
 
 
-var Event = function (publication, publisher) {
+var Event = function (publication, publisher, topic) {
 
    var self = this;
 
    self.publication = publication;
    self.publisher = publisher;
+   self.topic = topic;
 };
 
 
@@ -426,7 +428,7 @@ var Session = function (socket, defer, onchallenge) {
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
 
-         var ed = new Event(publication, details.publisher);
+         var ed = new Event(publication, details.publisher, details.topic);
 
          var subs = self._subscriptions[subscription];
 
@@ -668,7 +670,7 @@ var Session = function (socket, defer, onchallenge) {
             }
          };
 
-         var cd = new Invocation(details.caller, progress);
+         var cd = new Invocation(details.caller, progress, details.procedure);
 
          // We use the following whenjs call wrapper, which automatically
          // wraps a plain, non-promise value in a (immediately resolved) promise

@@ -9,7 +9,11 @@
 
 all: bundle
 
+clean:
+	rm -rf ./build
+
 bundle:
+	mkdir -p ./build
 	browserify lib/autobahn.js --standalone autobahn -o build/autobahn.js
 
 test:
