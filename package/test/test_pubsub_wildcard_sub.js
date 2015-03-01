@@ -15,7 +15,7 @@ var autobahn = require('./../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testPubsubPrefixSub = function (testcase) {
+exports.testPubsubWildcardSub = function (testcase) {
 
    testcase.expect(1);
 
@@ -49,8 +49,6 @@ exports.testPubsubPrefixSub = function (testcase) {
          var options = {match: 'wildcard'};
          var msg = "Hello wildcard pattern subscriber!";
          var counter = 0;
-
-         console.log("HERE ", options);
 
          session2.subscribe('com.example..create', onevent1, options).then(
             function (subscription) {
