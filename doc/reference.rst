@@ -401,6 +401,12 @@ To resolve a prefix *(normally not needed in user code)*:
    session.resolve('api:add2');
 
 
+Session Meta-Events & Procedures
+++++++++++++++++++++++++++++++++
+
+Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on session lifecycle, as well as procedures which allow the retrieval of information about current sessions. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Session-Metaevents-and-Procedures/>`_.
+
+
 Subscribe
 ---------
 
@@ -465,6 +471,21 @@ Complete Examples:
 * `PubSub Basic <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
 
 
+Patter-Based Subscriptions
+++++++++++++++++++++++++++
+
+As a default, topic URIs in subscriptions are matched exactly.
+
+It is possible to change the matching policy to either ``prefix`` or ``wildcard`` matching via an option when subscribing, e.g.
+
+.. code-block:: javascript
+
+   session.subscribe('com.myapp', on_event_all, { match: 'prefix' })
+   session.subscribe('com.myapp..update', on_event_update, { match: 'wildcard' })
+
+In the first case, events for all publications where the topic contains the prefix ``com.myapp`` will be received, in the second events for all publications which match the wildcard pattern, e.g. ``com.myapp.user121.update`` and ``com.myapp.sensor_23.update``.
+
+
 Active Subscriptions
 ++++++++++++++++++++
 
@@ -523,6 +544,11 @@ Example: **Unsubscribing a subscription**
 Complete Examples:
 
 * `PubSub Unsubscribe <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_
+
+Subscription Meta-Events and Procedures
++++++++++++++++++++++++++++++++++++++++
+
+Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on subscription lifecycle, as well as procedures which allow the retrieval of information about current subscriptions. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Subscription-Metaevents-and-Procedures/>`_.
 
 
 Publish
@@ -646,6 +672,9 @@ If the *Broker* allows the disclosure, receivers can consume the *Publisher's* s
    session.subscribe(on_event, 'com.myapp.topic1');
 
 
+
+
+
 Register
 --------
 
@@ -700,6 +729,46 @@ Complete Examples:
 * `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
 
+Pattern-Based Registrations
++++++++++++++++++++++++++++
+
+As a default, URIs in registrations are matched exactly.
+
+It is possible to change the matching policy to either ``prefix`` or ``wildcard`` matching via an option when registering, e.g.
+
+.. code-block:: javascript
+
+   session.register('com.myapp', handle_all, { match: 'prefix' })
+   
+or
+
+.. code-block:: javascript
+   session.register('com.myapp..update', handle_updates, { match: 'wildcard' })
+
+In the first case, calls for where the URI contains the prefix ``com.myapp`` will lead to the callee being invoked, while in the second calls where the URI matches the wildcard pattern will lead to the callee being invoked, e.g. ``com.myapp.user121.update`` and ``com.myapp.sensor_23.update``.
+
+
+Shared Registrations
+++++++++++++++++++++
+
+As a default, only a single registration per URI is allowed, with an existing registration blocking all subsequent attempts.
+
+It is possible to have shared registrations, i.e. more than one registration for an URI. This does not change the fact that only a single calle is invoked for each call. There are four invocation rules which determine how a callee is determined:
+
+* ``first`` - first registration in the list is invoked
+* ``last`` - last registration in the list is invoked
+* ``roundrobing`` - the registration following the last invoked registration on the list is invoked
+* ``random`` - a random registration from the list is invoked
+
+The invocation policy for an URI is determined by the first registration for that URI, and only subsequent registration attemps which set the same invocation rule may be successful. For example, with a first registration of
+
+.. code-block:: javascript
+   
+   session.register('com.myapp.procedure1', handle_all, { invoke: 'random' })
+
+any subsequent registration which does not set ``invoke: 'random'`` will be rejected.
+
+
 Active Registrations
 ++++++++++++++++++++
 
@@ -752,6 +821,11 @@ Example: **Unregistering a registration**
       }
    );
 
+
+Registration Meta-Events and Procedures
++++++++++++++++++++++++++++++++++++++++
+
+Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on registration lifecycle, as well as procedures which allow the retrieval of information about current registrations. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Registration-Metaevents-and-Procedures/>`_.
 
 
 Call
@@ -877,3 +951,25 @@ which would return 5 progressive result events (each with the current value of `
 Complete Examples:
 
 * `RPC Progress <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress>`_
+
+
+Caller Identification
++++++++++++++++++++++
+
+If the feature is supported by the *Dealer*, a *Caller* may request the disclosure of its identity (its WAMP session ID) to the invoked *Callee* via the option ``disclose_me`` set to ``true``.
+
+Example: **Call with caller disclosure**
+
+.. code-block:: javascript
+
+   session.call('com.myapp.procedure1', ['Hello, world!'], {}, {disclose_me: true});
+
+If the *Dealer* allows the disclosure, the callee can consume the *Caller's* session ID like this:
+
+.. code-block:: javascript
+
+   function on_call(args, kwargs, details) {
+     // details.caller provides the Publisher's WAMP session ID
+   }
+
+   session.register(on_call, 'com.myapp.procedure1');
