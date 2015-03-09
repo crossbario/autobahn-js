@@ -304,6 +304,19 @@ A read-only property with an array of all currently **active registrations** on 
 
    Returns an array with the registration objects for all currently active registrations.
 
+
+A writeable property with the current default setting for caller disclosure:
+
+.. js:attribute:: Session.caller_disclose_me
+
+   Returns ``true`` if the value has been changed for the session from the default ``false``
+
+A writeable property with the current default setting for publisher disclosure:
+
+.. js:attribute:: Session.publisher_disclose_me
+
+   Returns ``true`` if the value has been changed for the session from the default ``false``   
+
 A property with the **Deferred factory** in use on this session:
 
 .. js:attribute:: Session.defer
@@ -315,6 +328,7 @@ A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use w
 .. js:function:: Session.defer
 
    :returns: a Deferred of the type specified in the call to the session constructor :js:func:`autobahn.Connection`
+
 
 
 
