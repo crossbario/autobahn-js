@@ -42,7 +42,6 @@ Remote Procedure Calls (RPC)
 
 `Options <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/options>`_ - Using options with RPC to exclude a RPC caller from a publication.
 
-
 Running examples
 ----------------
 
@@ -69,3 +68,5 @@ For the latter, you need to have |ab| installed. To do so, in a shell do
 
    npm install autobahn
    npm install when
+
+The **Crossbar.io examples** --> crossbar start in the example directory

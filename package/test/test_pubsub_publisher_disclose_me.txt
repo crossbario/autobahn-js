@@ -1,0 +1,25 @@
+0 "all sessions connected"
+1 ""
+2 "Case 1: 'session.publisher_disclose_me' unset"
+3 "============================================="
+4 "Publisher disclosed:" false
+5 "Publisher disclosed:" false
+6 "Publisher disclosed:" true
+7 ""
+8 ""
+9 ""
+10 "Case 2: 'session.publisher_disclose_me' set to 'false'"
+11 "======================================================"
+12 "Publisher disclosed:" false
+13 "Publisher disclosed:" false
+14 "Publisher disclosed:" true
+15 ""
+16 ""
+17 ""
+18 "Case 3: 'session.publisher_disclose_me' set to 'true'"
+19 "====================================================="
+20 "Publisher disclosed:" true
+21 "Publisher disclosed:" false
+22 "Publisher disclosed:" true
+23 ""
+24 ""

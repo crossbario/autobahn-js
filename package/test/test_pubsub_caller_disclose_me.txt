@@ -1,0 +1,25 @@
+0 "all sessions connected"
+1 ""
+2 "Case 1: 'session.caller_disclose_me' unset"
+3 "============================================="
+4 "Caller disclosed:" false
+5 "Caller disclosed:" false
+6 "Caller disclosed:" true
+7 ""
+8 ""
+9 ""
+10 "Case 2: 'session.caller_disclose_me' set to 'false'"
+11 "======================================================"
+12 "Caller disclosed:" false
+13 "Caller disclosed:" false
+14 "Caller disclosed:" true
+15 ""
+16 ""
+17 ""
+18 "Case 3: 'session.caller_disclose_me' set to 'true'"
+19 "====================================================="
+20 "Caller disclosed:" true
+21 "Caller disclosed:" false
+22 "Caller disclosed:" true
+23 ""
+24 ""
