@@ -19,7 +19,7 @@ exports.testRpcCallerDiscloseMe = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_pubsub_caller_disclose_me.txt");
+   var test = new testutil.Testlog("test/test_rpc_caller_disclose_me.txt");
 
    var dl = testutil.connect_n(2);
 
