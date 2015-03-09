@@ -15,7 +15,7 @@ var autobahn = require('./../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testPubsubCallerDiscloseMe = function (testcase) {
+exports.testRpcCallerDiscloseMe = function (testcase) {
 
    testcase.expect(1);
 
