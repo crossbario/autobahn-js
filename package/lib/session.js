@@ -367,7 +367,7 @@ var Session = function (socket, defer, onchallenge) {
 
             if (subscription_id in self._subscriptions) {
                var subs = self._subscriptions[subscription_id];
-               for (var i = 0; i < subscriptions.length; ++i) {
+               for (var i = 0; i < subs.length; ++i) {
                   subs[i].active = false;
                   subs[i]._on_unsubscribe.resolve(reason);
                }
