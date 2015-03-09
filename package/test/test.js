@@ -29,6 +29,7 @@ var pubsub_exclude = require('./test_pubsub_exclude.js');
 var pubsub_eligible = require('./test_pubsub_eligible.js');
 var pubsub_prefix_sub = require('./test_pubsub_prefix_sub.js');
 var pubsub_wildcard_sub = require('./test_pubsub_wildcard_sub.js');
+// var pubsub_publisher_disclose_me = require('./test_pubsub_publisher_disclose_me.js');
 
 exports.testConnect = connect.testConnect;
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
@@ -45,3 +46,4 @@ exports.testPubsubExcludeMe = pubsub_excludme.testPubsubExcludeMe;
 exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
 exports.testPubsubPrefixSub = pubsub_prefix_sub.testPubsubPrefixSub;
 exports.testPubsubWildcardSub = pubsub_wildcard_sub.testPubsubWildcardSub;
+// exports.testPubsubPublisherDiscloseMe = pubsub_publisher_disclose_me.testPubsubPublisherDiscloseMe;

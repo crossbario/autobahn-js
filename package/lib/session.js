@@ -225,7 +225,9 @@ var Session = function (socket, defer, onchallenge) {
    // prefix shortcuts for URIs
    self._prefixes = {};
 
-
+   // the defaults for 'disclose_me'
+   self._caller_disclose_me = false;
+   self._publisher_disclose_me = false;
 
    self._send_wamp = function (msg) {
       // forward WAMP message to be sent to WAMP transport
@@ -940,6 +942,24 @@ Object.defineProperty(Session.prototype, "features", {
 });
 
 
+Object.defineProperty(Session.prototype, "caller_disclose_me", {
+   get: function () {
+      return this._caller_disclose_me;
+   },
+   set: function (newValue) {
+      this._caller_disclose_me = newValue;
+   }
+});
+
+Object.defineProperty(Session.prototype, "publisher_disclose_me", {
+   get: function () {
+      return this._publisher_disclose_me;
+   },
+   set: function (newValue) {
+      this._publisher_disclose_me = newValue;
+   }
+});
+
 Object.defineProperty(Session.prototype, "subscriptions", {
    get: function () {
       var keys = Object.keys(this._subscriptions);
@@ -1070,6 +1090,19 @@ Session.prototype.call = function (procedure, args, kwargs, options) {
       throw "session not open";
    }
 
+   // modify options based on caller_disclose_me flag
+   // we only need to modify if the flag is 'true',
+   // since 'false' is the default if no option is set
+   if (this.publisher_disclose_me === true) {
+      if (!options) {
+         options = {};
+      }
+      // only set option if user hasn't set a value 
+      if (options.disclose_me === undefined) {
+         options.disclose_me = true;
+      }
+   }
+
    // create and remember new CALL request
    //
    var request = newid();
@@ -1114,6 +1147,19 @@ Session.prototype.publish = function (topic, args, kwargs, options) {
 
    var ack = options && options.acknowledge;
    var d = null;
+   
+   // modify options based on publisher_disclose_me flag
+   // we only need to modify if the flag is 'true',
+   // since 'false' is the default if no option is set
+   if (this.publisher_disclose_me === true) {
+      if (!options) {
+         options = {};
+      }
+      // only set option if user hasn't set a value
+      if (options.disclose_me === undefined) {
+         options.disclose_me = true;
+      }
+   }
 
    // create and remember new PUBLISH request
    //
