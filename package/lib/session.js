@@ -1093,7 +1093,7 @@ Session.prototype.call = function (procedure, args, kwargs, options) {
    // modify options based on caller_disclose_me flag
    // we only need to modify if the flag is 'true',
    // since 'false' is the default if no option is set
-   if (this.publisher_disclose_me === true) {
+   if (this.caller_disclose_me === true) {
       if (!options) {
          options = {};
       }
