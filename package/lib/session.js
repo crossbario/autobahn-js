@@ -35,19 +35,25 @@ WAMP_FEATURES = {
    },
    callee: {
       features: {
-         progressive_call_results: true
+         caller_identification: true,
+         pattern_based_registration: true,
+         shared_registration: true,
+         progressive_call_results: true,
+         registration_revocation: true
       }
    },
    publisher: {
       features: {
+         publisher_identification: true,
          subscriber_blackwhite_listing: true,
-         publisher_exclusion: true,
-         publisher_identification: true
+         publisher_exclusion: true
       }
    },
    subscriber: {
       features: {
-         publisher_identification: true
+         publisher_identification: true,
+         pattern_based_subscription: true,
+         subscription_revocation: true
       }
    }
 };
@@ -110,6 +116,16 @@ var Subscription = function (topic, handler, options, session, id) {
    self.id = id;
 
    self.active = true;
+
+   // this will fire when the handler is unsubscribed
+   self._on_unsubscribe = session._defer();
+
+   if (self._on_unsubscribe.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      self.on_unsubscribe = self._on_unsubscribe.promise;
+   } else {
+      self.on_unsubscribe = self._on_unsubscribe;
+   }
 };
 
 
@@ -118,7 +134,6 @@ Subscription.prototype.unsubscribe = function () {
    var self = this;
    return self.session.unsubscribe(self);
 };
-
 
 
 var Registration = function (procedure, endpoint, options, session, id) {
@@ -132,6 +147,16 @@ var Registration = function (procedure, endpoint, options, session, id) {
    self.id = id;
 
    self.active = true;
+
+   // this will fire when the endpoint is unregistered
+   self._on_unregister = session._defer();
+
+   if (self._on_unregister.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      self.on_unregister = self._on_unregister.promise;
+   } else {
+      self.on_unregister = self._on_unregister;
+   }
 };
 
 
@@ -313,12 +338,13 @@ var Session = function (socket, defer, onchallenge) {
          var d = r[0];
          var subscription = r[1];
 
-         if (subscription in self._subscriptions) {
-            var subs = self._subscriptions[subscription];
+         if (subscription.id in self._subscriptions) {
+            var subs = self._subscriptions[subscription.id];
             // the following should actually be NOP, since UNSUBSCRIBE was
             // only sent when subs got empty
             for (var i = 0; i < subs.length; ++i) {
                subs[i].active = false;
+               subs[i].on_unsubscribe.resolve();
             }
             delete self._subscriptions[subscription];
          }
@@ -328,7 +354,29 @@ var Session = function (socket, defer, onchallenge) {
          delete self._unsubscribe_reqs[request];
 
       } else {
-         self._protocol_violation("UNSUBSCRIBED received for non-pending request ID " + request);
+
+         if (request === 0) {
+
+            // router actively revoked our subscription
+            //
+            var details = msg[2];
+            var subscription_id = details.subscription;
+            var reason = details.reason;
+
+            if (subscription_id in self._subscriptions) {
+               var subs = self._subscriptions[subscription_id];
+               for (var i = 0; i < subscriptions.length; ++i) {
+                  subs[i].active = false;
+                  subs[i]._on_unsubscribe.resolve(reason);
+               }
+               delete self._subscriptions[subscription_id];
+            } else {
+               self._protocol_violation("non-voluntary UNSUBSCRIBED received for non-existing subscription ID " + subscription_id);
+            }
+
+         } else {
+            self._protocol_violation("UNSUBSCRIBED received for non-pending request ID " + request);
+         }
       }
    };
    self._MESSAGE_MAP[MSG_TYPE.UNSUBSCRIBED] = self._process_UNSUBSCRIBED;
@@ -526,7 +574,27 @@ var Session = function (socket, defer, onchallenge) {
          delete self._unregister_reqs[request];
 
       } else {
-         self._protocol_violation("UNREGISTERED received for non-pending request ID " + request);
+
+         if (request === 0) {
+
+            // the router actively revoked our registration
+            //
+            var details = msg[2];
+            var registration_id = details.registration;
+            var reason = details.reason;
+
+            if (registration_id in self._registrations) {
+               var registration = self._registrations[registration_id];
+               registration.active = false;
+               registration._on_unregister.resolve(reason);
+               delete self._registrations[registration_id];
+            } else {
+               self._protocol_violation("non-voluntary UNREGISTERED received for non-existing registration ID " + registration_id);
+            }
+
+         } else {
+            self._protocol_violation("UNREGISTERED received for non-pending request ID " + request);
+         }
       }
    };
    self._MESSAGE_MAP[MSG_TYPE.UNREGISTERED] = self._process_UNREGISTERED;
