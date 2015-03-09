@@ -1175,12 +1175,15 @@ Session.prototype.call = function (procedure, args, kwargs, options) {
 
    // construct CALL message
    //
-   var msg = [MSG_TYPE.CALL, request, options || {}, self.resolve(procedure)];
+   var msg = [MSG_TYPE.CALL, request, options, self.resolve(procedure)];
    if (args) {
       msg.push(args);
       if (kwargs) {
          msg.push(kwargs);
       }
+   } else if (kwargs) {
+      msg.push([]);
+      msg.push(kwargs);
    }
 
    // send WAMP message
@@ -1227,12 +1230,15 @@ Session.prototype.publish = function (topic, args, kwargs, options) {
 
    // construct PUBLISH message
    //
-   var msg = [MSG_TYPE.PUBLISH, request, options || {}, self.resolve(topic)];
+   var msg = [MSG_TYPE.PUBLISH, request, options, self.resolve(topic)];
    if (args) {
       msg.push(args);
       if (kwargs) {
          msg.push(kwargs);
       }
+   } else if (kwargs) {
+      msg.push([]);
+      msg.push(kwargs);
    }
 
    // send WAMP message
