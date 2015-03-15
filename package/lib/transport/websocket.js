@@ -58,78 +58,13 @@ Factory.prototype.create = function () {
       protocol: 'wamp.2.json'
    };
 
-   //
-   // running in browser
-   //
-   if ('window' in global) {
 
-      (function () {
-
-         var websocket;
-
-         // Chrome, MSIE, newer Firefox
-         if ("WebSocket" in window) {
-            
-            if (self._options.protocols) {
-               websocket = new window.WebSocket(self._options.url, self._options.protocols);
-            } else {
-               websocket = new window.WebSocket(self._options.url);
-            }
-
-         // older versions of Firefox prefix the WebSocket object
-         } else if ("MozWebSocket" in window) {
-
-            if (self._options.protocols) {
-               websocket = new window.MozWebSocket(self._options.url, self._options.protocols);
-            } else {
-               websocket = new window.MozWebSocket(self._options.url);
-            }
-         } else {
-            throw "browser does not support WebSocket";
-         }
-
-         websocket.onmessage = function (evt) {
-            log.debug("WebSocket transport receive", evt.data);
-
-            var msg = JSON.parse(evt.data);
-            transport.onmessage(msg);
-         }
-
-         websocket.onopen = function () {
-            transport.info.url = self._options.url;
-            transport.onopen();
-         }
-
-         websocket.onclose = function (evt) {
-            var details = {
-               code: evt.code,
-               reason: evt.message,
-               wasClean: evt.wasClean
-            }
-            transport.onclose(details);
-         }
-
-         // do NOT do the following, since that will make
-         // transport.onclose() fire twice (browsers already fire
-         // websocket.onclose() for errors also)
-         //websocket.onerror = websocket.onclose;
-
-         transport.send = function (msg) {
-            var payload = JSON.stringify(msg);
-            log.debug("WebSocket transport send", payload);
-            websocket.send(payload);
-         }
-
-         transport.close = function (code, reason) {
-            websocket.close(code, reason);
-         };
-
-      })();
-
-   //
-   // running on NodeJS
-   //
-   } else {
+   // Test below used to be via the 'window' object in the browser.
+   // This fails when running in a Web worker.
+   // 
+   // running in Node.js
+   // 
+   if (global.process && global.process.versions.node) {
 
       (function () {
 
@@ -189,6 +124,73 @@ Factory.prototype.create = function () {
             }
             transport.onclose(details);
          });
+
+      })();
+   // 
+   // running in the browser
+   // 
+   } else {
+      
+      (function () {
+
+         var websocket;
+
+         // Chrome, MSIE, newer Firefox
+         if ("WebSocket" in global) {
+            
+            if (self._options.protocols) {
+               websocket = new global.WebSocket(self._options.url, self._options.protocols);
+            } else {
+               websocket = new global.WebSocket(self._options.url);
+            }
+
+         // older versions of Firefox prefix the WebSocket object
+         } else if ("MozWebSocket" in global) {
+
+            if (self._options.protocols) {
+               websocket = new global.MozWebSocket(self._options.url, self._options.protocols);
+            } else {
+               websocket = new global.MozWebSocket(self._options.url);
+            }
+         } else {
+            throw "browser does not support WebSocket or WebSocket in Web workers";
+         }
+
+         websocket.onmessage = function (evt) {
+            log.debug("WebSocket transport receive", evt.data);
+
+            var msg = JSON.parse(evt.data);
+            transport.onmessage(msg);
+         }
+
+         websocket.onopen = function () {
+            transport.info.url = self._options.url;
+            transport.onopen();
+         }
+
+         websocket.onclose = function (evt) {
+            var details = {
+               code: evt.code,
+               reason: evt.message,
+               wasClean: evt.wasClean
+            }
+            transport.onclose(details);
+         }
+
+         // do NOT do the following, since that will make
+         // transport.onclose() fire twice (browsers already fire
+         // websocket.onclose() for errors also)
+         //websocket.onerror = websocket.onclose;
+
+         transport.send = function (msg) {
+            var payload = JSON.stringify(msg);
+            log.debug("WebSocket transport send", payload);
+            websocket.send(payload);
+         }
+
+         transport.close = function (code, reason) {
+            websocket.close(code, reason);
+         };
 
       })();
    }
