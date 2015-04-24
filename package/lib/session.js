@@ -634,15 +634,16 @@ var Session = function (socket, defer, onchallenge) {
       //
       var request = msg[1];
       if (request in self._call_reqs) {
-
          var details = msg[2];
-
          var args = msg[3] || [];
          var kwargs = msg[4] || {};
-
+         var r = self._call_reqs[request];
+         var d = r[0];
+         var options = r[1];
          // maybe wrap complex result:
          var result = null;
-         if (args.length > 1 || Object.keys(kwargs).length > 0) {
+
+         if (options.wrap_result || args.length > 1 || Object.keys(kwargs).length > 0) {
             // wrap complex result is more than 1 positional result OR
             // non-empty keyword result
             result = new Result(args, kwargs);
@@ -650,11 +651,6 @@ var Session = function (socket, defer, onchallenge) {
             // single positional result
             result = args[0];
          }
-
-         var r = self._call_reqs[request];
-
-         var d = r[0];
-         var options = r[1];
 
          if (details.progress) {
             if (options && options.receive_progress) {
