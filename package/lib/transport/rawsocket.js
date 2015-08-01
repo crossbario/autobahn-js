@@ -216,8 +216,26 @@ Protocol.prototype.STATUS = {
    UNINITIATED: 0,
    NEGOCIATING: 1,
    NEGOCIATED:  2,
-   RXLEN:       3,
+   RXHEAD:      3,
    RXDATA:      4,
+   RXPING:      5,
+   RXPONG:      6,
+};
+
+/* RawSocket error codes */
+Protocol.prototype.ERRORS = {
+   0: "illegal (must not be used)",
+   1: "serializer unsupported",
+   2: "maximum message length unacceptable",
+   3: "use of reserved bits (unsupported feature)",
+   4: "maximum connection count reached"
+};
+
+/* RawSocket message types */
+Protocol.prototype.MSGTYPES = {
+   WAMP: 0,
+   PING: 1,
+   PONG: 2,
 };
 
 /**
@@ -235,12 +253,19 @@ Protocol.prototype.close = function () {
 /**
  * Write a frame to the transport
  *
- * @param   {Oject} obj The frame to send
+ * @param   {Oject}   msg  The frame to send
+ * @param   {Integer} type The frame type
  */
-Protocol.prototype.write = function (obj) {
-   // Serialize
-   // TODO: Implement other serializers
-   var msg = JSON.stringify(obj);
+Protocol.prototype.write = function (msg, type) {
+   type = type === undefined ? 0 : type;
+
+   // If WAMP frame, serialize the object passed
+   if (type === this.MSGTYPES.WAMP) {
+      msg = JSON.stringify(msg);
+   // Otherwise send as-is
+   } else {
+      msg = obj;
+   }
 
    // Get the frame size
    var msgLen = Buffer.byteLength(msg, 'utf8');
@@ -254,8 +279,10 @@ Protocol.prototype.write = function (obj) {
    // Create the frame
    var frame = new Buffer(msg.length + 4);
 
-   // Prefix by frame size as a 32 bit integer
-   frame.writeUInt32BE(msgLen, 0);
+   // Message type
+   frame.writeUInt8(type, 0);
+   // Prefix by frame size as a 24 bit integer
+   frame.writeUIntBE(msgLen, 1, 3);
    frame.write(msg, 4);
 
    this._stream.write(frame);
@@ -281,15 +308,25 @@ Protocol.prototype._read = function (data) {
          break;
 
       case this.STATUS.NEGOCIATED:
-      case this.STATUS.RXLEN:
-         this._status = this.STATUS.RXLEN;
+      case this.STATUS.RXHEAD:
+         this._status = this.STATUS.RXHEAD;
 
-         handler = this._handleLenPacket;
+         handler = this._handleHeaderPacket;
          frame = 4;
          break;
 
       case this.STATUS.RXDATA:
          handler = this._handleDataPacket;
+         frame = this._msgLen;
+         break;
+
+      case this.STATUS.RXPING:
+         handler = this._handlePingPacket;
+         frame = this._msgLen;
+         break;
+
+      case this.STATUS.RXPONG:
+         handler = this._handlePongPacket;
          frame = this._msgLen;
          break;
    }
@@ -389,6 +426,13 @@ Protocol.prototype._handleHandshake = function (int32) {
       return this.close();
    }
 
+   // Check for error
+   if (int32[1] & 0x0f === 0) {
+      var errcode = int32[1] >> 4;
+      this._emitter.emit('error',  new ProtocolError(this.ERRORS[errcode] || errcode));
+      return this.close();
+   }
+
    // Extract max message length and serializer
    this._max_len_exp_peer = (int32[1] >> 4) + 9;
    this._serializer_peer = int32[1] & 0x0f;
@@ -411,17 +455,34 @@ Protocol.prototype._handleHandshake = function (int32) {
 };
 
 /**
- * Handle a length prefix
+ * Handle a frame header
  *
  * @param   {Buffer} int32 A 4 byte buffer representing the packet length
  *
  * @returns {Integer} The new protocol state
  */
-Protocol.prototype._handleLenPacket = function (int32) {
-   // Decode integer and store it
-   this._msgLen = int32.readUInt32BE(0);
+Protocol.prototype._handleHeaderPacket = function (int32) {
+   var type = int32[0] & 0x0f;
 
-   return this.STATUS.RXDATA;
+   // Decode integer and store it
+   this._msgLen = int32.readUIntBE(1, 3);
+
+   switch (type) {
+      case this.MSGTYPES.WAMP: // WAMP frame
+         return this.STATUS.RXDATA;
+
+      case this.MSGTYPES.PING: // PING frame
+         return this.STATUS.RXPING;
+
+      case this.MSGTYPES.PONG: // PONG frame
+         return this.STATUS.RXPONG;
+
+      default:
+         this._emitter.emit('error', new ProtocolError(
+            'Invalid frame type: 0x' + status.toString(16))
+         );
+         return this.close();
+   }
 };
 
 /**
@@ -441,13 +502,37 @@ Protocol.prototype._handleDataPacket = function (buffer) {
       this._emitter.emit('error',
          new ProtocolError('Invalid JSON frame')
       );
-      return this.STATUS.RXLEN;
+      return this.STATUS.RXHEAD;
    }
 
    // Emit a data event for consumers
    this._emitter.emit('data', msg);
 
-   return this.STATUS.RXLEN;
+   return this.STATUS.RXHEAD;
+};
+
+/**
+ * Handle a ping packet - Reply with a  PONG and the same payload
+ *
+ * @param   {Buffer} buffer The received data
+ *
+ * @returns {Integer} The new protocol state
+ */
+Protocol.prototype._handlePingPacket = function (buffer) {
+   this.write(buffer.toString('utf8'), this.MSGTYPES.PONG);
+   return this.STATUS.RXHEAD;
+};
+
+/**
+ * Handle a pong packet
+ *
+ * @param   {Buffer} buffer The received data
+ *
+ * @returns {Integer} The new protocol state
+ */
+Protocol.prototype._handlePongPacket = function (buffer) {
+   // Ignore for now.
+   return this.STATUS.RXHEAD;
 };
 
 Protocol.prototype.on = function (evt, handler) {
