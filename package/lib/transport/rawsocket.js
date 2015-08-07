@@ -147,6 +147,8 @@ Factory.prototype.create = function () {
  * @param {Stream} stream       Source stream object
  * @param {String} serializer   Serializer to use (default: json)
  * @param {Integer} max_len_exp Maximum message length (default: 24)
+ *
+ * @see https://github.com/tavendo/WAMP/blob/master/spec/advanced.md#rawsocket-transport
  */
 function Protocol (stream, serializer, max_len_exp) {
    // Init params
@@ -260,12 +262,12 @@ Protocol.prototype.write = function (msg, type) {
    type = type === undefined ? 0 : type;
 
    // If WAMP frame, serialize the object passed
+   // Otherwise send as-is
    if (type === this.MSGTYPES.WAMP) {
       msg = JSON.stringify(msg);
-   // Otherwise send as-is
-   } else {
-      msg = obj;
    }
+
+   console.log('Sending', type, msg);
 
    // Get the frame size
    var msgLen = Buffer.byteLength(msg, 'utf8');
@@ -284,6 +286,8 @@ Protocol.prototype.write = function (msg, type) {
    // Prefix by frame size as a 24 bit integer
    frame.writeUIntBE(msgLen, 1, 3);
    frame.write(msg, 4);
+
+   console.log(frame);
 
    this._stream.write(frame);
 };
@@ -337,6 +341,8 @@ Protocol.prototype._read = function (data) {
    // Protocol#_splitBytes returns null if there isn't enough data to fill the
    // requested frame yet. Wait for more
    if (!chunks) return;
+
+   console.log(handler.toString());
 
    // Call the packet handler with the frame
    this._status = handler.call(this, chunks[0]);
@@ -427,9 +433,10 @@ Protocol.prototype._handleHandshake = function (int32) {
    }
 
    // Check for error
-   if (int32[1] & 0x0f === 0) {
+   if ((int32[1] & 0x0f) === 0) {
       var errcode = int32[1] >> 4;
-      this._emitter.emit('error',  new ProtocolError(this.ERRORS[errcode] || errcode));
+      this._emitter.emit('error',  new ProtocolError('Peer failed handshake: ' +
+         (this.ERRORS[errcode] || '0x' + errcode.toString(16))));
       return this.close();
    }
 
@@ -519,6 +526,7 @@ Protocol.prototype._handleDataPacket = function (buffer) {
  * @returns {Integer} The new protocol state
  */
 Protocol.prototype._handlePingPacket = function (buffer) {
+   console.log('IT WAS A PING !');
    this.write(buffer.toString('utf8'), this.MSGTYPES.PONG);
    return this.STATUS.RXHEAD;
 };
@@ -536,25 +544,31 @@ Protocol.prototype._handlePongPacket = function (buffer) {
 };
 
 Protocol.prototype.on = function (evt, handler) {
-   this._emitter.on(evt, handler);
+   return this._emitter.on(evt, handler);
 };
 
 Protocol.prototype.once = function (evt, handler) {
-   this._emitter.once(evt, handler);
+   return this._emitter.once(evt, handler);
 };
 
 Protocol.prototype.removeListener = function (evt, handler) {
-   this._emitter.removeListener(evt, handler);
+   return this._emitter.removeListener(evt, handler);
 };
 
 
 /**
  * ProtocolError type
  */
-var ProtocolError = exports.ProtocolError = function () {
-   Error.apply(this, arguments);
+var ProtocolError = exports.ProtocolError = function (msg) {
+   Error.apply(this, Array.prototype.splice.call(arguments));
+
+   Error.captureStackTrace(this, this.constructor);
+
+   this.message = msg;
+   this.name = 'ProtocolError'
 };
 ProtocolError.prototype = Object.create(Error.prototype);
 
 
 exports.Factory = Factory;
+exports.Protocol = Protocol;
