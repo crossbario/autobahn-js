@@ -98,7 +98,7 @@ var Connection = function (options) {
    }
 
    // maximum number of reconnection attempts
-   self._max_retries = self._options.max_retries || 15;
+   self._max_retries = typeof self._options.max_retries !== 'undefined' ?  self._options.max_retries : 15;
 
    // initial retry delay in seconds
    self._initial_retry_delay = self._options.initial_retry_delay || 1.5;
