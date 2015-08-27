@@ -216,7 +216,7 @@ module.exports = {
 
             // Reply with a PONG packet using the same payload
             setTimeout(function () {
-               machine.transition('wait')
+               machine.transition('wait');
                var frame = buildRawSocketFrame(0x2, packet.toString('utf8', 4));
 
                wire.tx.write(frame);
@@ -285,7 +285,7 @@ module.exports = {
          // Reply to the PING with an invalid payload
          waitPing: function (packet) {
             setTimeout(function () {
-               machine.transition('wait')
+               machine.transition('wait');
                var frame = buildRawSocketFrame(0x2, packet.toString('utf8', 'This is not supposed to be the same payload'));
 
                wire.tx.write(frame);
@@ -630,7 +630,7 @@ function replyWithValidHandshake (connection, transitionTo, delay) {
 
          transitionTo && self.tick && self.tick();
       }, delay || 10);
-   }
+   };
 }
 
 /**

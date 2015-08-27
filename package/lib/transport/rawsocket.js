@@ -14,7 +14,6 @@
 
 var util = require('../util.js');
 var log = require('../log.js');
-var _ = { defaults: require('lodash.defaults') };
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -173,7 +172,7 @@ function Protocol (stream, options) {
                               // the peer
    };
 
-   _.defaults(this._options, options, this.DEFAULT_OPTIONS);
+   this._options = util.defaults(this._options, options, this.DEFAULT_OPTIONS);
 
    // Check valid options
    if (!(this._options.serializer in this.SERIALIZERS)) {
@@ -358,7 +357,8 @@ Protocol.prototype.ping = function (payload) {
                  '0123456789&~"#\'{([-|`_\\^@)]=},?;.:/!*$<>';
       var len = Math.max(1, payload);
 
-      for (var i = 0; i < len; i++) payload += base.charAt((Math.random() * base.length) | 0)
+      for (var i = 0; i < len; i++)
+         payload += base.charAt((Math.random() * base.length) | 0);
    }
 
    // Store the payload for checking against PONG packet
@@ -690,7 +690,7 @@ var ProtocolError = exports.ProtocolError = function (msg) {
    Error.captureStackTrace(this, this.constructor);
 
    this.message = msg;
-   this.name = 'ProtocolError'
+   this.name = 'ProtocolError';
 };
 ProtocolError.prototype = Object.create(Error.prototype);
 
