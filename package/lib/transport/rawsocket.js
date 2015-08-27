@@ -175,36 +175,31 @@ function Protocol (stream, options) {
    this._options = util.defaults(this._options, options, this.DEFAULT_OPTIONS);
 
    // Check valid options
-   if (!(this._options.serializer in this.SERIALIZERS)) {
-      throw 'Unsupported serializer: ' + this._options.serializer;
-   }
+   util.assert(this._options.serializer in this.SERIALIZERS,
+      'Unsupported serializer: ' + this._options.serializer);
 
-   if (this._options.max_len_exp < 9 || this._options.max_len_exp > 36) {
-      throw 'Message length out of bounds [9, 36]: '+ this._options.max_len_exp;
-   }
+   util.assert(this._options.max_len_exp >= 9 &&
+      this._options.max_len_exp <= 36,
+      'Message length out of bounds [9, 36]: '+ this._options.max_len_exp);
 
-   if (this._options.autoping && (!Number.isInteger(this._options.autoping)
-         || this._options.autoping < 0)) {
-      throw 'Autoping interval must be positive';
-   }
+   util.assert(!this._options.autoping ||
+      (Number.isInteger(this._options.autoping) && this._options.autoping >= 0),
+      'Autoping interval must be positive');
 
-   if (this._options.ping_timeout &&
-      (!Number.isInteger(this._options.ping_timeout)
-       || this._options.ping_timeout < 0)) {
-      throw 'Ping timeout duration must be positive';
-   }
+   util.assert(!this._options.ping_timeout ||
+      (Number.isInteger(this._options.ping_timeout) &&
+         this._options.ping_timeout >= 0),
+      'Ping timeout duration must be positive');
 
-   if (this._options.packet_timeout &&
-      (!Number.isInteger(this._options.packet_timeout)
-       || this._options.packet_timeout < 0)) {
-      throw 'Packet timeout duration must be positive';
-   }
+   util.assert(!this._options.packet_timeout ||
+      (Number.isInteger(this._options.packet_timeout) &&
+         this._options.packet_timeout >= 0),
+      'Packet timeout duration must be positive');
 
-   if (this._options.autoping && this._options.ping_timeout
-      && this._options.autoping < this._options.ping_timeout) {
-      throw 'Autoping interval (' + this._options.autoping + ') must be lower '+
-            'than ping timeout (' + this._options.ping_timeout + ')';
-   }
+   util.assert((!this._options.autoping || !this._options.ping_timeout) ||
+      this._options.autoping > this._options.ping_timeout,
+      'Autoping interval (' + this._options.autoping + ') must be lower ' +
+      'than ping timeout (' + this._options.ping_timeout + ')');
 
    // Will store a reference to the timeout function associated with the last
    // PING packet
