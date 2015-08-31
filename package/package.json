@@ -7,13 +7,13 @@
     "test": "nodeunit test/test.js"
   },
   "dependencies": {
-    "crypto-js": ">= 3.1.2-2",
-    "when": ">= 2.8.0",
-    "ws": ">= 0.4.31"
+    "crypto-js": ">= 3.1.5",
+    "when": ">= 3.7.3",
+    "ws": ">= 0.8.0"
   },
   "devDependencies": {
-    "browserify": ">= 3.28.1",
-    "nodeunit": ">= 0.8.6"
+    "browserify": ">= 11.0.1",
+    "nodeunit": ">= 0.9.1"
   },
   "repository": {
     "type": "git",
