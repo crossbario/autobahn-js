@@ -89,7 +89,10 @@ Factory.prototype.create = function () {
 
          // Open a TCP socket and setup the protocol
          socket = net.connect(connectionOptions);
-         protocol = new Protocol(socket, 'json', self._options.rawsocket_max_len_exp);
+         protocol = new Protocol(socket, {
+            serializer: 'json',
+            max_len_exp: self._options.rawsocket_max_len_exp,
+         });
 
          // Relay connect event to the onopen transport handler
          protocol.on('connect', function (msg) {
@@ -144,27 +147,69 @@ Factory.prototype.create = function () {
 /**
  *  Protocol constructor
  *
- * @param {Stream} stream       Source stream object
- * @param {String} serializer   Serializer to use (default: json)
- * @param {Integer} max_len_exp Maximum message length (default: 24)
+ * @param {Stream} stream    Source stream object
+ * @param {Object} [options] Protocol options
+ *
+ * @param {String} [options.serializer] The serializer to use (default: json)
+ * @param {Integer} [options.max_len_exp] The maximum allowed frame length as
+ *        2^x(default: 24)
+ * @param {Integer|False} [options.ping_timeout] Maximum duration in ms to wait
+ *        for an answer to a PING packet (default: 2000)
+ * @param {Integer|False} [options.autoping] If an integer, send a PING packet*
+ *        every `x`ms (default: false)
+ * @param {Boolean} [options.fail_on_ping_timeout] Whether to close the
+ *        underlying connection when the peer fails to answer to a PING within
+ *        the `ping_timeout` window (default: true)
+ * @param {Integer|False} [options.packet_timeout] The maximum amount of time to
+ *        wait for a packet !!NOT IMPLEMENTED!! (default: 2000)
+ *
+ * @see https://github.com/tavendo/WAMP/blob/master/spec/advanced.md#rawsocket-transport
  */
-function Protocol (stream, serializer, max_len_exp) {
-   // Init params
-   serializer = serializer || 'json';
-   max_len_exp = Number.isInteger(max_len_exp) ? max_len_exp : 24;
+function Protocol (stream, options) {
+   this._options = {
+      _peer_serializer: null, // Will hold the serializer declared by the peer
+      _peer_max_len_exp: 0,   // Will hold the maximum frame length declared by
+                              // the peer
+   };
 
-   if (!(serializer in this.SERIALIZERS)) {
-      throw 'Unsupported serializer: ' + serializer;
-   }
+   this._options = util.defaults(this._options, options, this.DEFAULT_OPTIONS);
 
-   if (max_len_exp < 9 || max_len_exp > 36) {
-      throw 'Message length out of bounds [9, 36]: ' + max_len_exp;
-   }
+   // Check valid options
+   util.assert(this._options.serializer in this.SERIALIZERS,
+      'Unsupported serializer: ' + this._options.serializer);
 
-   this._serializer = serializer;
-   this._serializer_peer = null;
-   this._max_len_exp = max_len_exp;
-   this._max_len_exp_peer = 0;
+   util.assert(this._options.max_len_exp >= 9 &&
+      this._options.max_len_exp <= 36,
+      'Message length out of bounds [9, 36]: '+ this._options.max_len_exp);
+
+   util.assert(!this._options.autoping ||
+      (Number.isInteger(this._options.autoping) && this._options.autoping >= 0),
+      'Autoping interval must be positive');
+
+   util.assert(!this._options.ping_timeout ||
+      (Number.isInteger(this._options.ping_timeout) &&
+         this._options.ping_timeout >= 0),
+      'Ping timeout duration must be positive');
+
+   util.assert(!this._options.packet_timeout ||
+      (Number.isInteger(this._options.packet_timeout) &&
+         this._options.packet_timeout >= 0),
+      'Packet timeout duration must be positive');
+
+   util.assert((!this._options.autoping || !this._options.ping_timeout) ||
+      this._options.autoping > this._options.ping_timeout,
+      'Autoping interval (' + this._options.autoping + ') must be lower ' +
+      'than ping timeout (' + this._options.ping_timeout + ')');
+
+   // Will store a reference to the timeout function associated with the last
+   // PING packet
+   this._ping_timeout = null;
+
+   // Will store the payload of the last PING packet
+   this._ping_payload = null;
+
+   // Will store the autoping setInterval reference
+   this._ping_interval = null;
 
    // Protocol status (see Protocol.prototype.STATUS)
    this._status = this.STATUS.UNINITIATED;
@@ -177,7 +222,7 @@ function Protocol (stream, serializer, max_len_exp) {
    this._bufferLen = 0;
    this._msgLen = 0;
 
-   /* Hook events */
+   // Hook events
    var self = this;
    this._stream.on('data', function (data) {
       self._read(data);
@@ -187,7 +232,7 @@ function Protocol (stream, serializer, max_len_exp) {
       self._handshake();
    });
 
-   /* Proxy these events from the stream as we don't need to handle them */
+   // Proxy these events from the stream as we don't need to handle them
    var proxyEvents = [
       'close',
       'drain',
@@ -233,9 +278,20 @@ Protocol.prototype.ERRORS = {
 
 /* RawSocket message types */
 Protocol.prototype.MSGTYPES = {
-   WAMP: 0,
-   PING: 1,
-   PONG: 2,
+   WAMP: 0x0,
+   PING: 0x1,
+   PONG: 0x2,
+};
+
+/* Default protocol options */
+Protocol.prototype.DEFAULT_OPTIONS = {
+   fail_on_ping_timeout: true,
+   strict_pong: true,
+   ping_timeout: 2000,
+   autoping: 0,
+   max_len_exp: 24,
+   serializer: 'json',
+   packet_timeout: 2000,
 };
 
 /**
@@ -253,31 +309,30 @@ Protocol.prototype.close = function () {
 /**
  * Write a frame to the transport
  *
- * @param   {Oject}   msg  The frame to send
- * @param   {Integer} type The frame type
+ * @param   {Oject}    msg      The frame to send
+ * @param   {Integer}  type     The frame type
+ * @param   {Function} callback Callback function called when frame is sent
  */
-Protocol.prototype.write = function (msg, type) {
+Protocol.prototype.write = function (msg, type, callback) {
    type = type === undefined ? 0 : type;
 
    // If WAMP frame, serialize the object passed
+   // Otherwise send as-is
    if (type === this.MSGTYPES.WAMP) {
       msg = JSON.stringify(msg);
-   // Otherwise send as-is
-   } else {
-      msg = obj;
    }
 
    // Get the frame size
    var msgLen = Buffer.byteLength(msg, 'utf8');
 
    // Check frame size against negociated max size
-   if (msgLen > Math.pow(2, this._max_len_exp_peer)) {
+   if (msgLen > Math.pow(2, this._options._peer_max_len_exp)) {
       this._emitter.emit('error', new ProtocolError('Frame too big'));
       return;
    }
 
    // Create the frame
-   var frame = new Buffer(msg.length + 4);
+   var frame = new Buffer(msgLen + 4);
 
    // Message type
    frame.writeUInt8(type, 0);
@@ -285,7 +340,63 @@ Protocol.prototype.write = function (msg, type) {
    frame.writeUIntBE(msgLen, 1, 3);
    frame.write(msg, 4);
 
-   this._stream.write(frame);
+   this._stream.write(frame, callback);
+};
+
+Protocol.prototype.ping = function (payload) {
+   payload = payload || 255;
+
+   // Generate a random payload if none provided
+   if (Number.isInteger(payload)) {
+      var base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'+
+                 '0123456789&~"#\'{([-|`_\\^@)]=},?;.:/!*$<>';
+      var len = Math.max(1, payload);
+
+      for (var i = 0; i < len; i++)
+         payload += base.charAt((Math.random() * base.length) | 0);
+   }
+
+   // Store the payload for checking against PONG packet
+   this._ping_payload = payload;
+
+   // Send the packet and register the ping timeout once done
+   return this.write(payload, this.MSGTYPES.PING, this._setupPingTimeout.bind(this));
+};
+
+Protocol.prototype._setupPingTimeout = function () {
+   if (this._options.ping_timeout) {
+      this._ping_timeout = setTimeout(this._onPingTimeout.bind(this), this._options.ping_timeout);
+   }
+};
+
+Protocol.prototype._clearPingTimeout = function () {
+   if (this._ping_timeout) {
+      clearTimeout(this._ping_timeout);
+      this._ping_timeout = null;
+   }
+};
+
+Protocol.prototype._setupAutoPing = function () {
+   this._clearAutoPing();
+
+   if (this._options.autoping) {
+      this._autoping_interval = setInterval(this.ping.bind(this), this._options.autoping);
+   }
+};
+
+Protocol.prototype._clearAutoPing = function () {
+   if (this._autoping_interval) {
+      clearInterval(this._autoping_interval);
+      this._autoping_interval = null;
+   }
+};
+
+Protocol.prototype._onPingTimeout = function () {
+   this._emitter.emit('error', new ProtocolError('PING timeout'));
+
+   if (this._options.fail_on_ping_timeout) {
+      this.close();
+   }
 };
 
 /**
@@ -361,7 +472,7 @@ Protocol.prototype._handshake = function () {
    // Protocol magic byte
    gday.writeUInt8(this._MAGIC_BYTE, 0);
    // Announce message max length and serializer
-   gday.writeUInt8((this._max_len_exp - 9) << 4 | this.SERIALIZERS[this._serializer], 1);
+   gday.writeUInt8((this._options.max_len_exp - 9) << 4 | this.SERIALIZERS[this._options.serializer], 1);
    // Reserved bytes
    gday.writeUInt8(0x00, 2);
    gday.writeUInt8(0x00, 3);
@@ -395,7 +506,7 @@ Protocol.prototype._splitBytes = function (data, len) {
 
    // If there still isn't enough data, increment the counter and return null
    if (this._bufferLen + data.length < len) {
-      this.bufferLen += data.length;
+      this._bufferLen += data.length;
       return null;
    // Otherwise, return the requested frame and the leftover data
    } else {
@@ -427,22 +538,23 @@ Protocol.prototype._handleHandshake = function (int32) {
    }
 
    // Check for error
-   if (int32[1] & 0x0f === 0) {
+   if ((int32[1] & 0x0f) === 0) {
       var errcode = int32[1] >> 4;
-      this._emitter.emit('error',  new ProtocolError(this.ERRORS[errcode] || errcode));
+      this._emitter.emit('error',  new ProtocolError('Peer failed handshake: ' +
+         (this.ERRORS[errcode] || '0x' + errcode.toString(16))));
       return this.close();
    }
 
    // Extract max message length and serializer
-   this._max_len_exp_peer = (int32[1] >> 4) + 9;
-   this._serializer_peer = int32[1] & 0x0f;
+   this._options._peer_max_len_exp = (int32[1] >> 4) + 9;
+   this._options._peer_serializer = int32[1] & 0x0f;
 
    // We only support JSON so far
    // TODO: Support more serializers
-   if (this._serializer_peer !== this.SERIALIZERS.json) {
+   if (this._options._peer_serializer !== this.SERIALIZERS.json) {
       this._emitter.emit('error', new ProtocolError(
          'Unsupported serializer: 0x' +
-         this._serializer_peer.toString(16))
+         this._options._peer_serializer.toString(16))
       );
       return this.close();
    }
@@ -450,6 +562,9 @@ Protocol.prototype._handleHandshake = function (int32) {
    // Protocol negociation complete, we're connected to the peer and ready to
    // talk
    this._emitter.emit('connect');
+
+   // Setup the autoping
+   this._setupAutoPing();
 
    return this.STATUS.NEGOCIATED;
 };
@@ -531,30 +646,49 @@ Protocol.prototype._handlePingPacket = function (buffer) {
  * @returns {Integer} The new protocol state
  */
 Protocol.prototype._handlePongPacket = function (buffer) {
-   // Ignore for now.
+   // Clear the ping timeout (if any)
+   this._clearPingTimeout();
+
+   // If strict PONG checking is activated and the payloads don't match, throw
+   // an error and close the connection
+   if (this._options.strict_pong
+      && this._ping_payload !== buffer.toString('utf8')) {
+      this._emitter.emit('error', new ProtocolError(
+         'PONG response payload doesn\'t match PING.'
+      ));
+
+      return this.close();
+   }
+
    return this.STATUS.RXHEAD;
 };
 
 Protocol.prototype.on = function (evt, handler) {
-   this._emitter.on(evt, handler);
+   return this._emitter.on(evt, handler);
 };
 
 Protocol.prototype.once = function (evt, handler) {
-   this._emitter.once(evt, handler);
+   return this._emitter.once(evt, handler);
 };
 
 Protocol.prototype.removeListener = function (evt, handler) {
-   this._emitter.removeListener(evt, handler);
+   return this._emitter.removeListener(evt, handler);
 };
 
 
 /**
  * ProtocolError type
  */
-var ProtocolError = exports.ProtocolError = function () {
-   Error.apply(this, arguments);
+var ProtocolError = exports.ProtocolError = function (msg) {
+   Error.apply(this, Array.prototype.splice.call(arguments));
+
+   Error.captureStackTrace(this, this.constructor);
+
+   this.message = msg;
+   this.name = 'ProtocolError';
 };
 ProtocolError.prototype = Object.create(Error.prototype);
 
 
 exports.Factory = Factory;
+exports.Protocol = Protocol;

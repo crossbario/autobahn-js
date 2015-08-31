@@ -1,30 +1,30 @@
 {
-   "name": "autobahn",
-   "version": "0.9.7",
-   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
-   "main": "index.js",
-   "scripts": {
-      "test": "nodeunit test/test.js"
-   },
-   "dependencies": {
-      "when": ">= 2.8.0",
-      "ws": ">= 0.4.31",
-      "crypto-js": ">= 3.1.2-2"
-   },
-   "devDependencies": {
-      "browserify": ">= 3.28.1",
-      "nodeunit": ">= 0.8.6"
-   },
-   "repository": {
-      "type": "git",
-      "url": "git://github.com/tavendo/AutobahnJS.git"
-   },
-   "keywords": [
-      "WAMP",
-      "WebSocket",
-      "RPC",
-      "PubSub"
-   ],
-   "author": "Tavendo GmbH",
-   "license": "MIT"
+  "name": "autobahn",
+  "version": "0.9.7",
+  "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodeunit test/test.js"
+  },
+  "dependencies": {
+    "crypto-js": ">= 3.1.2-2",
+    "when": ">= 2.8.0",
+    "ws": ">= 0.4.31"
+  },
+  "devDependencies": {
+    "browserify": ">= 3.28.1",
+    "nodeunit": ">= 0.8.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tavendo/AutobahnJS.git"
+  },
+  "keywords": [
+    "WAMP",
+    "WebSocket",
+    "RPC",
+    "PubSub"
+  ],
+  "author": "Tavendo GmbH",
+  "license": "MIT"
 }
