@@ -75,13 +75,13 @@ Factory.prototype.create = function () {
          if (self._options.path) {
             connectionOptions = {
                path: self._options.path,
-               allowHalfOpen: true,
+               allowHalfOpen: true
             };
          } else if (self._options.port) {
             connectionOptions = {
                port: self._options.port || 8000,
                host: self._options.host || 'localhost',
-               allowHalfOpen: true,
+               allowHalfOpen: true
             };
          } else {
             throw "You must specify a host/port combination or a unix socket path to connect to";
@@ -91,7 +91,7 @@ Factory.prototype.create = function () {
          socket = net.connect(connectionOptions);
          protocol = new Protocol(socket, {
             serializer: 'json',
-            max_len_exp: self._options.rawsocket_max_len_exp,
+            max_len_exp: self._options.rawsocket_max_len_exp
          });
 
          // Relay connect event to the onopen transport handler
@@ -112,7 +112,7 @@ Factory.prototype.create = function () {
             transport.onclose({
                code: 999,
                reason: '',
-               wasClean: !had_error,
+               wasClean: !had_error
             });
          });
 
@@ -168,7 +168,7 @@ Factory.prototype.create = function () {
 function Protocol (stream, options) {
    this._options = {
       _peer_serializer: null, // Will hold the serializer declared by the peer
-      _peer_max_len_exp: 0,   // Will hold the maximum frame length declared by
+      _peer_max_len_exp: 0    // Will hold the maximum frame length declared by
                               // the peer
    };
 
@@ -238,7 +238,7 @@ function Protocol (stream, options) {
       'drain',
       'end',
       'error',
-      'timeout',
+      'timeout'
    ];
    proxyEvents.forEach(function (evt) {
       self._stream.on(evt, function (data) {
@@ -252,7 +252,7 @@ Protocol.prototype._MAGIC_BYTE = 0x7f;
 
 /* Supported serializers */
 Protocol.prototype.SERIALIZERS = {
-   json: 1,
+   json: 1
 };
 
 /* Protocol states */
@@ -264,7 +264,7 @@ Protocol.prototype.STATUS = {
    RXHEAD:      3,
    RXDATA:      4,
    RXPING:      5,
-   RXPONG:      6,
+   RXPONG:      6
 };
 
 /* RawSocket error codes */
@@ -280,7 +280,7 @@ Protocol.prototype.ERRORS = {
 Protocol.prototype.MSGTYPES = {
    WAMP: 0x0,
    PING: 0x1,
-   PONG: 0x2,
+   PONG: 0x2
 };
 
 /* Default protocol options */
@@ -291,7 +291,7 @@ Protocol.prototype.DEFAULT_OPTIONS = {
    autoping: 0,
    max_len_exp: 24,
    serializer: 'json',
-   packet_timeout: 2000,
+   packet_timeout: 2000
 };
 
 /**
