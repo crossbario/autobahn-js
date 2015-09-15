@@ -171,7 +171,7 @@ Options that control what **kind of Deferreds** to use:
 
 Options that control **automatic reconnection**:
 
-* ``max_retries``: *integer* - Maximum number of reconnection attempts (default: **15**)
+* ``max_retries``: *integer* - Maximum number of reconnection attempts. Unlimited if set to -1 (default: **15**)
 * ``initial_retry_delay``: *float* - Initial delay for reconnection attempt in seconds (default: **1.5**).
 * ``max_retry_delay``: *float* - Maximum delay for reconnection attempts in seconds (default: **300**).
 * ``retry_delay_growth``: *float* - The growth factor applied to the retry delay between reconnection attempts (default: **1.5**).

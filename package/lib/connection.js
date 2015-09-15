@@ -98,7 +98,7 @@ var Connection = function (options) {
    }
 
    // maximum number of reconnection attempts
-   self._max_retries = self._options.max_retries || 15;
+   self._max_retries = typeof self._options.max_retries !== 'undefined' ?  self._options.max_retries : 15;
 
    // initial retry delay in seconds
    self._initial_retry_delay = self._options.initial_retry_delay || 1.5;
@@ -236,7 +236,7 @@ Connection.prototype._autoreconnect_advance = function () {
    self._retry_count += 1;
 
    var res;
-   if (self._retry && self._retry_count <= self._max_retries) {
+   if (self._retry && (self._max_retries === -1 || self._retry_count <= self._max_retries)) {
       res = {
          count: self._retry_count,
          delay: self._retry_delay,
