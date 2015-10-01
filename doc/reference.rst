@@ -165,9 +165,9 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 Options that control what **kind of Deferreds** to use:
 
 * ``use_es6_promises``: *boolean* - use deferreds based on ES6 promises
-* ``use_deferred``: *callable* - if provided, use this deferred constructor, e.g. ``jQuery.Deferred`` or ``Q.defer``
+* ``use_deferred``: *callable* - if provided, use this deferred constructor, e.g. ``jQuery.Deferred`` or ``Q.defer``, if omitted `when.js <https://github.com/cujojs/when>`_ is used (see their documentation for information on the full range of features)
 
-.. note:: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported.
+.. note:: Using ES6-based promises has certain restrictions. E.g. no progressive call results are supported. In general, unless there is a good technical reason, the default deferreds should be used.
 
 Options that control **automatic reconnection**:
 
