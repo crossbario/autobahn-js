@@ -99,7 +99,7 @@ To **open a connection**:
 
 .. js:function:: autobahn.Connection.open
 
-This will establish an underlying transport (like WebSocket or long-poll) and create a new session running over the transport.
+This will establish an underlying transport and create a new session running over the transport. WebSocket is the default transport, but for environments which do not support WebSocket (like really old browsers) HTTP long-poll is used as a fallback.
 
 When the transport is lost, automatic reconnection will be attempted. This can be configured using the ``options`` provided to the constructor of the ``Connection`` (see `Connection Options`_).
 
