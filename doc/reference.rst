@@ -147,6 +147,7 @@ The **connection close callback** is fired when the connection has been closed e
 * ``"closed"``: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
 * ``"lost"``: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
 * ``"unreachable"``: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
+* ``unsupported``:  No WebSocket transport could be created. For security reasons the WebSocket spec states that there should not be any specific errors for network-related issues, so no details are returned in this case either. 
 
 ``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`, and thus does not apply in case of ``"lost"`` or ``"unreachable"``.
 
@@ -159,6 +160,10 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 
 * ``url``: *string* - the WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws``
 * ``realm``: *string* - The WAMP realm to join, e.g. ``realm1``
+
+.. note:: We recommend that you use encrypted connections (using TLS). On the client side in |ab|, do this by setting the schema part of the connection URL to ``wss`` instead of ``ws``. 
+
+.. note:: When a Web page is served encrypted, then WebSocket connections from the page are also required to be encrypted. The WebSocket spec does intentionally not define any error message for this case, so |ab| returns ``unsupported``.
 
 **Optional** options:
 
@@ -757,6 +762,7 @@ It is possible to change the matching policy to either ``prefix`` or ``wildcard`
 or
 
 .. code-block:: javascript
+
    session.register('com.myapp..update', handle_updates, { match: 'wildcard' })
 
 In the first case, calls for where the URI contains the prefix ``com.myapp`` will lead to the callee being invoked, while in the second calls where the URI matches the wildcard pattern will lead to the callee being invoked, e.g. ``com.myapp.user121.update`` and ``com.myapp.sensor_23.update``.
@@ -904,7 +910,7 @@ logging this in the caller will come out something like
 
    wamp.error.runtime_error ["this is just an error", "with an array of arguments"] Object {}
 
-When defining an ``autobahn.Error` object, all three properties can be defined. I.e. doing
+When defining an ``autobahn.Error`` object, all three properties can be defined. I.e. doing
 
 .. code-block:: javascript
 
