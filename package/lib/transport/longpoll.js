@@ -65,7 +65,7 @@ Factory.prototype.create = function () {
       var rxseq = 0;
 
       var options = {'protocols': ['wamp.2.json']};
-      var request_timeout = self._options.request_timeout || 2000;
+      var request_timeout = self._options.request_timeout || 12000; // timeout here > than the 10s default in Crossbar.io
 
       util.http_post(self._options.url + '/open', JSON.stringify(options), request_timeout).then(
 
