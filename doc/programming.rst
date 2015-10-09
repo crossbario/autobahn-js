@@ -60,7 +60,7 @@ Connections are handled via an |ab| ``connection`` object, which is created by
       realm: "votesapp"
    });
 
-* WAMP uses WebSocket as its standard transport - so the url uses the ``ws`` **scheme** for WebSocket instead of ``http`` (or ``wss`` for secure WebSocket connections).
+* WAMP uses WebSocket as its standard transport - so the url uses the ``ws`` **scheme** for WebSocket instead of ``http`` (or ``wss`` for secure WebSocket connections). For using alternative transports see the :doc:`reference` for connection options.
 * Since we're running our WAMP router locally, we use localhost (i.e. ``127.0.0.1``) as the **IP**.
 * The **port** (``8080``) and **path** (``/ws``) for the WebSocket endpoint that we're connecting to can be configured in Crossbar.io, the WAMP router we are using. (This allows serving Web assets under different paths on the same IP.)
 * Each connection is connected to a **Realm**. A Realm is a routing namespace and an administrative domain for WAMP. For example, a single WAMP router can manage multiple Realms, and those realms are completely separate: an event published to topic T on a Realm R1 is NOT received by a subscribe to T on Realm R2.

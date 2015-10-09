@@ -82,7 +82,7 @@ Features
 * supports WAMP v2, works with any WAMP server
 * works both in the browser and Node.js
 * provides asynchronous RPC and PubSub messaging patterns
-* uses WebSocket with a HTTP long-poll fallback
+* uses WebSocket or HTTP long-poll as transport
 * easy to use Promise-based API
 * pluggable promises/deferreds: use `when.js <https://github.com/cujojs/when>`_  (built-in), `jQuery <http://api.jquery.com/category/deferred-object/>`_ , `Dojo <http://dojotoolkit.org/reference-guide/1.7/dojo/Deferred.html>`_ , ECMA Script 6 or others
 * no dependencies

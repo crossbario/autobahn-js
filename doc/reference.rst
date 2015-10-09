@@ -82,7 +82,7 @@ A new connection is created using
 
    :returns: *object* - autobahn connection object
 
-Example: **Create a new connection**
+Example: **Create a new connection using WebSocket as a transport**
 
 .. code-block:: javascript
 
@@ -91,6 +91,7 @@ Example: **Create a new connection**
                               realm: 'realm1'
                            });
 
+This is the brief syntax which uses the default WebSocket transport and just gives a single connection URL. You can alternatively define a list of transports to try successively - see :ref:`connection-options`.
 
 Connection Methods
 ++++++++++++++++++
@@ -151,6 +152,9 @@ The **connection close callback** is fired when the connection has been closed e
 
 ``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`, and thus does not apply in case of ``"lost"`` or ``"unreachable"``.
 
+
+.. _connection-options:
+
 Connection Options
 ++++++++++++++++++
 
@@ -158,8 +162,32 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 
 **Required** options:
 
-* ``url``: *string* - the WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws``
 * ``realm``: *string* - The WAMP realm to join, e.g. ``realm1``
+* a target to connect to, for which there are two options:
+
+   * ``url``: *string* - the WebSocket URL of the WAMP router to connect to, e.g. ``ws://myserver.com:8080/ws`` via WebSocket, or
+   * a list of transports to try successively
+
+Supported transports are WebSocket and HTTP long-poll.
+
+As an example, with the options below, |ab| first attempts to establish a WebSocket connection and if this fails a HTTP long-poll connection to the respective URLs given.
+
+.. code-block:: javascript
+   var connection = new autobahn.Connection({
+      transports: [
+         {
+            'type': 'websocket',
+            'url': 'ws://127.0.0.1:9000/ws'
+         },
+         {
+            'type': 'longpoll',
+            'url': 'http://127.0.0.1:9000/lp'
+         }
+      ],
+      realm: 'realm1'
+   });
+
+Not all WAMP routers support all transports, so take a look at the documentation for your router. (The above configuration with both WebSocket and HTTP long-poll on the same port is something which Crossbar.io allows.)
 
 .. note:: We recommend that you use encrypted connections (using TLS). On the client side in |ab|, do this by setting the schema part of the connection URL to ``wss`` instead of ``ws``. 
 
