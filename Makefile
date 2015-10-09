@@ -6,3 +6,6 @@ bundle:
 
 clean:
 	rm -rf build
+
+closure_version:
+	java -jar ${JS_COMPILER} --version
