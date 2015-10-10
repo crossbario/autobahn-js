@@ -3,6 +3,9 @@
   "version": "0.9.7",
   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
   "main": "index.js",
+  "browser": {
+    "lib/transport/rawsocket.js": false
+  },
   "scripts": {
     "test": "nodeunit test/test.js"
   },
