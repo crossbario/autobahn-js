@@ -28,6 +28,10 @@ function Factory (options) {
       util.assert(Array.isArray(options.protocols), "options.protocols must be an array");
    }
 
+   if (options.options) {
+      util.assert(typeof options.options === "object", "options must be an object");
+   }
+
    self._options = options;
 }
 
@@ -61,26 +65,26 @@ Factory.prototype.create = function () {
 
    // Test below used to be via the 'window' object in the browser.
    // This fails when running in a Web worker.
-   // 
+   //
    // running in Node.js
-   // 
+   //
    if (global.process && global.process.versions.node) {
 
       (function () {
-
          var WebSocket = require('ws'); // https://github.com/einaros/ws
          var websocket;
 
+         var options = self._options.options || {};
          var protocols;
          if (self._options.protocols) {
             protocols = self._options.protocols;
             if (Array.isArray(protocols)) {
                protocols = protocols.join(',');
             }
-            websocket = new WebSocket(self._options.url, {protocol: protocols});
-         } else {
-            websocket = new WebSocket(self._options.url);
+            options.protocol = protocols;
          }
+
+         websocket = new WebSocket(self._options.url, options);
 
          transport.send = function (msg) {
             var payload = JSON.stringify(msg);
@@ -126,18 +130,18 @@ Factory.prototype.create = function () {
          });
 
       })();
-   // 
+   //
    // running in the browser
-   // 
+   //
    } else {
-      
+
       (function () {
 
          var websocket;
 
          // Chrome, MSIE, newer Firefox
          if ("WebSocket" in global) {
-            
+
             if (self._options.protocols) {
                websocket = new global.WebSocket(self._options.url, self._options.protocols);
             } else {
