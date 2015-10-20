@@ -14322,7 +14322,7 @@ module.exports={
    },
    "repository": {
       "type": "git",
-      "url": "git://github.com/tavendo/AutobahnJS.git"
+      "url": "git://github.com/crossbario/autobahn-js.git"
    },
    "keywords": [
       "WAMP",

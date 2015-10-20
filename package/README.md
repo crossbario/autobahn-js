@@ -11,4 +11,4 @@ AutobahnJS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, 
 3. Caller
 4. Callee
 
-AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), MIT licensed, and full source code can be found on [GitHub](https://github.com/tavendo/AutobahnJS/).
+AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), MIT licensed, and full source code can be found on [GitHub](https://github.com/crossbario/autobahn-js/).

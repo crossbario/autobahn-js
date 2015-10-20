@@ -19,13 +19,13 @@ Downloads
 
 .. note:: You can use the above via direct linking for *development purposes*, but do not hotlink for production. This will not work, since we place restrictions on HTTP referrers.
 
-In addition, the source code is still accessible in the `project GitHub repository <https://github.com/tavendo/AutobahnJS/tree/wamp1>`_.
+In addition, the source code is still accessible in the `project GitHub repository <https://github.com/crossbario/autobahn-js/tree/wamp1>`_.
 
 
 Example code
 ------------
 
-Example code for various aspects of the use of |ab| can be found in the `Autobahn|Python GitHub repository <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp1>`_
+Example code for various aspects of the use of |ab| can be found in the `Autobahn|Python GitHub repository <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp1>`_
 
 
 API Reference

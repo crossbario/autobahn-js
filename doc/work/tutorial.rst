@@ -8,7 +8,7 @@ This introduction takes you step by step through a **simple, fully functional WA
 
 We'll cover the entire code of the application, both frontend and backend, with a special focus on the **WAMP messaging parts**. In the course of this we'll cover both messaging patterns which WAMP supports: Remote Procedure Calls (RCP) and Publish and Subscribe (PubSub).
 
-You find the full code on `GitHub <https://github.com/tavendo/autobahnJS/tree/master/doc/_static/code/votes>`_, including instructions how to best run the demo.
+You find the full code on `GitHub <https://github.com/crossbario/autobahn-js/tree/master/doc/_static/code/votes>`_, including instructions how to best run the demo.
 
 What the application does
 -------------------------
@@ -62,7 +62,7 @@ Crossbar includes a static Web server, and the template configured this so that 
 
 You can then access the demo overview page at ``http://localhost:8080``, and this allows you to start a backend and the frontends.
 
-Otherwise use a WAMP router of your choosing with the files in the `demo repository <https://github.com/tavendo/autobahnJS/tree/master/doc/_static/code/votes>`_.
+Otherwise use a WAMP router of your choosing with the files in the `demo repository <https://github.com/crossbario/autobahn-js/tree/master/doc/_static/code/votes>`_.
 
 
 Including Autobahn

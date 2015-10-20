@@ -7,7 +7,7 @@
 .. _RFC6455: http://tools.ietf.org/html/rfc6455
 .. _WAMP: http://wamp.ws/
 .. _WAMPv1: http://wamp.ws/spec/wamp1/
-.. _WAMPv2: https://github.com/tavendo/WAMP/blob/master/spec/README.md
+.. _WAMPv2: http://wamp.ws/spec/
 .. _AutobahnTestsuite: http://autobahn.ws/testsuite
 
 |ab| is a subproject of `Autobahn`_ and provides an open-source implementation of `The Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_ .

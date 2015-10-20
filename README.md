@@ -70,7 +70,7 @@ The *latest* release of AutobahnJS can be downloaded from here:
  * [https://autobahn.s3.amazonaws.com/autobahnjs/0.9.4-2/autobahn.min.js](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
  * [https://autobahn.s3.amazonaws.com/autobahnjs/0.9.4-2/autobahn.min.jgz](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
 
-A **complete history** of AutobahnJS releases is also available from the [built repository](https://github.com/tavendo/AutobahnJSbuilt).
+A **complete history** of AutobahnJS releases is also available from the [built repository](https://github.com/crossbario/autobahn-jsbuilt).
 
 The latter can also be used with **[Bower](http://bower.io/)**:
 

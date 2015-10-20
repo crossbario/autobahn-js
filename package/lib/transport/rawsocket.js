@@ -163,7 +163,7 @@ Factory.prototype.create = function () {
  * @param {Integer|False} [options.packet_timeout] The maximum amount of time to
  *        wait for a packet !!NOT IMPLEMENTED!! (default: 2000)
  *
- * @see https://github.com/tavendo/WAMP/blob/master/spec/advanced.md#rawsocket-transport
+ * @see https://github.com/wamp-proto/wamp-proto
  */
 function Protocol (stream, options) {
    this._options = {

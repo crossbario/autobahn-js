@@ -10,7 +10,7 @@ Read, run, and modify as you like!
 
 There are two main sources of examples:
 
-* the `Autobahn|Python repository <https://github.com/tavendo/AutobahnPython/tree/master/examples>`_ - for an overview see the `Autobahn|Python documentation <http://autobahn.ws/python/wamp/examples.html>`_ 
+* the `Autobahn|Python repository <https://github.com/crossbario/autobahn-python/tree/master/examples>`_ - for an overview see the `Autobahn|Python documentation <http://autobahn.ws/python/wamp/examples.html>`_ 
 * the `Crossbar.io examples repository <https://github.com/crossbario/crossbarexamples>`_ - for an overview see `the Crossbar.io documentation <http://crossbar.io/docs/Examples/>`_
 
 .. note:: The JavaScript code provided generally runs both in the browser and in Node.js. When using the browser, load the JavaScript via the provided HTML page. Each example also contains Python versions. Python and JavaScript versions are interoperable: You may run e.g. a JavaScript subscriber and a Python publisher.

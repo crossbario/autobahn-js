@@ -18,7 +18,7 @@ You can find a `list of WAMP v2 compatible routers <http://wamp.ws/implementatio
 Example Code
 ------------
 
-You can find complete examples for code running in both the browser and Node.js in the `Autobahn|Python Github repository <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic>`_. (The examples are also provided in Python versions.)
+You can find complete examples for code running in both the browser and Node.js in the `Autobahn|Python Github repository <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic>`_. (The examples are also provided in Python versions.)
 
 
 Node.js

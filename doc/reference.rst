@@ -516,7 +516,7 @@ or, differently notated, but functionally equivalent
 
 Complete Examples:
 
-* `PubSub Basic <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
+* `PubSub Basic <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
 
 
 Patter-Based Subscriptions
@@ -591,7 +591,7 @@ Example: **Unsubscribing a subscription**
 
 Complete Examples:
 
-* `PubSub Unsubscribe <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_
+* `PubSub Unsubscribe <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_
 
 Subscription Meta-Events and Procedures
 +++++++++++++++++++++++++++++++++++++++
@@ -625,8 +625,8 @@ Examples: **Publish an event**
 
 Complete Examples:
 
-* `PubSub Basic <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
-* `PubSub Complex Payload <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/pubsub/complex>`_
+* `PubSub Basic <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
+* `PubSub Complex Payload <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/complex>`_
 
 
 Acknowledgement
@@ -771,10 +771,10 @@ Example: **Register a procedure**
 
 Complete Examples:
 
-* `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
-* `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
-* `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
-* `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
+* `RPC Time Service <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
+* `RPC Arguments <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
+* `RPC Complex Result <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
+* `RPC Slow Square <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
 
 Pattern-Based Registrations
@@ -907,10 +907,10 @@ Example: **Call a procedure**
 
 Complete Examples:
 
-* `RPC Time Service <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
-* `RPC Arguments <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
-* `RPC Complex Result <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
-* `RPC Slow Square <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
+* `RPC Time Service <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
+* `RPC Arguments <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
+* `RPC Complex Result <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
+* `RPC Slow Square <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
 
 
 Errors
@@ -954,7 +954,7 @@ and logging this in the caller will lead to something like
 
 Complete Examples:
 
-* `RPC Errors <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/errors>`_
+* `RPC Errors <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/errors>`_
 
 
 Progressive Results
@@ -999,7 +999,7 @@ which would return 5 progressive result events (each with the current value of `
 
 Complete Examples:
 
-* `RPC Progress <https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/basic/rpc/progress>`_
+* `RPC Progress <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/progress>`_
 
 
 Caller Identification
