@@ -485,9 +485,12 @@ var Session = function (socket, defer, onchallenge) {
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
 
-         var ed = new Event(publication, details.publisher, details.topic);
-
          var subs = self._subscriptions[subscription];
+
+         // we want to provide the subscription topic to the handler, and may need to get this
+         // from one of the subscription handler objects attached to the subscription
+         // since for non-pattern subscriptions this is not sent over the wire
+         var ed = new Event(publication, details.publisher, details.topic || subs[0].topic);
 
          for (var i = 0; i < subs.length; ++i) {
             try {
