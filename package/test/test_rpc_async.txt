@@ -1,0 +1,5 @@
+0 "Connected"
+1 "stars" [] {"nick":"Homer","stars":5}
+2 "Homer starred 5x"
+3 "Bad call!!!"
+4 "All finished."

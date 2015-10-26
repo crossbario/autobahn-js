@@ -16,6 +16,7 @@
 var connect = require('./test_connect.js');
 var rpc_complex = require('./test_rpc_complex.js');
 var rpc_arguments = require('./test_rpc_arguments.js');
+var rpc_async = require('./test_rpc_async.js');
 var rpc_error = require('./test_rpc_error.js');
 var rpc_options = require('./test_rpc_options.js');
 var rpc_progress = require('./test_rpc_progress.js');
@@ -35,6 +36,7 @@ var pubsub_publisher_disclose_me = require('./test_pubsub_publisher_disclose_me.
 
 exports.testConnect = connect.testConnect;
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
+exports.testRpcAsync = rpc_async.testRpcAsync;
 exports.testRpcComplex = rpc_complex.testRpcComplex;
 exports.testRpcError = rpc_error.testRpcError;
 exports.testRpcOptions = rpc_options.testRpcOptions;

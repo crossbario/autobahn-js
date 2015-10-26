@@ -16,6 +16,7 @@
 
 var when = require('when');
 var when_fn = require("when/function");
+var when_node = require("when/node");
 
 var log = require('./log.js');
 var util = require('./util.js');
@@ -724,6 +725,7 @@ var Session = function (socket, defer, onchallenge) {
       if (registration in self._registrations) {
 
          var endpoint = self._registrations[registration].endpoint;
+         var options = self._registrations[registration].options;
 
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
@@ -752,63 +754,66 @@ var Session = function (socket, defer, onchallenge) {
 
          var cd = new Invocation(details.caller, progress, details.procedure);
 
+         var onResp = function (res) {
+            // construct YIELD message
+            // FIXME: Options
+            //
+            var reply = [MSG_TYPE.YIELD, request, {}];
+
+            if (res instanceof Result) {
+               var kwargs_len = Object.keys(res.kwargs).length;
+               if (res.args.length || kwargs_len) {
+                  reply.push(res.args);
+                  if (kwargs_len) {
+                     reply.push(res.kwargs);
+                  }
+               }
+            } else {
+               reply.push([res]);
+            }
+
+            // send WAMP message
+            //
+            self._send_wamp(reply);
+         };
+
+         var onErr = function (err) {
+            // construct ERROR message
+            // [ERROR, REQUEST.Type|int, REQUEST.Request|id, Details|dict, Error|uri, Arguments|list, ArgumentsKw|dict]
+
+            var reply = [MSG_TYPE.ERROR, MSG_TYPE.INVOCATION, request, {}];
+
+            if (err instanceof Error) {
+
+               reply.push(err.error);
+
+               var kwargs_len = Object.keys(err.kwargs).length;
+               if (err.args.length || kwargs_len) {
+                  reply.push(err.args);
+                  if (kwargs_len) {
+                     reply.push(err.kwargs);
+                  }
+               }
+            } else {
+               reply.push('wamp.error.runtime_error');
+               reply.push([err]);
+            }
+
+            // send WAMP message
+            //
+            self._send_wamp(reply);
+         };
          // We use the following whenjs call wrapper, which automatically
          // wraps a plain, non-promise value in a (immediately resolved) promise
          //
          // See: https://github.com/cujojs/when/blob/master/docs/api.md#fncall
          //
-         when_fn.call(endpoint, args, kwargs, cd).then(
-
-            function (res) {
-               // construct YIELD message
-               // FIXME: Options
-               //
-               var reply = [MSG_TYPE.YIELD, request, {}];
-
-               if (res instanceof Result) {
-                  var kwargs_len = Object.keys(res.kwargs).length;
-                  if (res.args.length || kwargs_len) {
-                     reply.push(res.args);
-                     if (kwargs_len) {
-                        reply.push(res.kwargs);
-                     }
-                  }
-               } else {
-                  reply.push([res]);
-               }
-
-               // send WAMP message
-               //
-               self._send_wamp(reply);
-            },
-
-            function (err) {
-               // construct ERROR message
-               // [ERROR, REQUEST.Type|int, REQUEST.Request|id, Details|dict, Error|uri, Arguments|list, ArgumentsKw|dict]
-
-               var reply = [MSG_TYPE.ERROR, MSG_TYPE.INVOCATION, request, {}];
-
-               if (err instanceof Error) {
-
-                  reply.push(err.error);
-
-                  var kwargs_len = Object.keys(err.kwargs).length;
-                  if (err.args.length || kwargs_len) {
-                     reply.push(err.args);
-                     if (kwargs_len) {
-                        reply.push(err.kwargs);
-                     }
-                  }
-               } else {
-                  reply.push('wamp.error.runtime_error');
-                  reply.push([err]);
-               }
-
-               // send WAMP message
-               //
-               self._send_wamp(reply);
-            }
-         );
+         if (options.async) {
+            when_node.call(endpoint, args, kwargs, cd).done(onResp, onErr);
+         }
+         else {
+            when_fn.call(endpoint, args, kwargs, cd).then(onResp, onErr);
+         }
 
       } else {
          self._protocol_violation("INVOCATION received for non-registered registration ID " + request);
