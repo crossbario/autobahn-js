@@ -26,7 +26,7 @@ Date.now = Date.now || function() { return +new Date; };
 
 // WAMP "Advanced Profile" support in AutobahnJS per role
 //
-WAMP_FEATURES = {
+var WAMP_FEATURES = {
    caller: {
       features: {
          caller_identification: true,
