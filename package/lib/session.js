@@ -262,6 +262,7 @@ var Session = function (socket, defer, onchallenge) {
    self._publisher_disclose_me = false;
 
    self._send_wamp = function (msg) {
+      log.debug(msg);
       // forward WAMP message to be sent to WAMP transport
       self._socket.send(msg);
    };
