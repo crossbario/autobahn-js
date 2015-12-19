@@ -13,6 +13,11 @@ Set `$JS_COMPILER` to `${HOME}/compiler.jar`.
 
 ## Release Steps
 
+Autobahn is release to the following locations:
+
+1. On S3, here https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz
+2. On NPM, here https://www.npmjs.com/package/autobahn
+3. On GitHub, here https://github.com/crossbario/autobahn-js-built
 
 ### Update the release number in the repo
 
