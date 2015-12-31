@@ -346,17 +346,17 @@ var Session = function (socket, defer, onchallenge) {
          var r = self._unsubscribe_reqs[request];
 
          var d = r[0];
-         var subscription = r[1];
+         var subscription_id = r[1];
 
-         if (subscription.id in self._subscriptions) {
-            var subs = self._subscriptions[subscription.id];
+         if (subscription_id in self._subscriptions) {
+            var subs = self._subscriptions[subscription_id];
             // the following should actually be NOP, since UNSUBSCRIBE was
             // only sent when subs got empty
             for (var i = 0; i < subs.length; ++i) {
                subs[i].active = false;
                subs[i].on_unsubscribe.resolve();
             }
-            delete self._subscriptions[subscription];
+            delete self._subscriptions[subscription_id];
          }
 
          d.resolve(true);
