@@ -301,7 +301,7 @@ Protocol.prototype.DEFAULT_OPTIONS = {
  */
 Protocol.prototype.close = function () {
    this._status = this.STATUS.CLOSED;
-   this._stream.close();
+   this._stream.end();
 
    return this.STATUS.CLOSED;
 };
