@@ -594,7 +594,7 @@ Protocol.prototype._handleHeaderPacket = function (int32) {
 
       default:
          this._emitter.emit('error', new ProtocolError(
-            'Invalid frame type: 0x' + status.toString(16))
+            'Invalid frame type: 0x' + type.toString(16))
          );
          return this.close();
    }
