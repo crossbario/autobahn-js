@@ -724,7 +724,7 @@ var Session = function (socket, defer, onchallenge) {
 
       if (registration in self._registrations) {
 
-         var endpoint = self._registrations[registration].endpoint;
+         var reg = self._registrations[registration];
 
          var args = msg[4] || [];
          var kwargs = msg[5] || {};
@@ -751,14 +751,17 @@ var Session = function (socket, defer, onchallenge) {
             }
          };
 
-         var cd = new Invocation(details.caller, progress, details.procedure);
+         // we want to provide the regitration procedure to the handler and may
+         // need to get this from the registration object attached to the registration
+         // since for non-pattern registrations this is not sent over the wire
+         var cd = new Invocation(details.caller, progress, details.procedure || reg.procedure);
 
          // We use the following whenjs call wrapper, which automatically
          // wraps a plain, non-promise value in a (immediately resolved) promise
          //
          // See: https://github.com/cujojs/when/blob/master/docs/api.md#fncall
          //
-         when_fn.call(endpoint, args, kwargs, cd).then(
+         when_fn.call(reg.endpoint, args, kwargs, cd).then(
 
             function (res) {
                // construct YIELD message
