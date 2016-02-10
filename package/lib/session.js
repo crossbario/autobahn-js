@@ -73,23 +73,35 @@ function newid () {
 }
 
 
-var Invocation = function (caller, progress, procedure) {
+var Invocation = function (procedure,
+                           progress,
+                           caller,
+                           caller_authid,
+                           caller_authrole) {
 
    var self = this;
 
-   self.caller = caller;
-   self.progress = progress;
    self.procedure = procedure;
+   self.progress = progress;
+   self.caller = caller;
+   self.caller_authid = caller_authid;
+   self.caller_authrole = caller_authrole;
 };
 
 
-var Event = function (publication, publisher, topic) {
+var Event = function (publication,
+                      topic,
+                      publisher,
+                      publisher_authid,
+                      publisher_authrole) {
 
    var self = this;
 
    self.publication = publication;
-   self.publisher = publisher;
    self.topic = topic;
+   self.publisher = publisher;
+   self.publisher_authid = publisher_authid;
+   self.publisher_authrole = publisher_authrole;
 };
 
 
@@ -491,7 +503,12 @@ var Session = function (socket, defer, onchallenge) {
          // we want to provide the subscription topic to the handler, and may need to get this
          // from one of the subscription handler objects attached to the subscription
          // since for non-pattern subscriptions this is not sent over the wire
-         var ed = new Event(publication, details.publisher, details.topic || subs[0].topic);
+         var ed = new Event(publication,
+                            details.topic || subs[0].topic,
+                            details.publisher,
+                            details.publisher_authid,
+                            details.publisher_authrole
+                      );
 
          for (var i = 0; i < subs.length; ++i) {
             try {
@@ -754,7 +771,12 @@ var Session = function (socket, defer, onchallenge) {
          // we want to provide the regitration procedure to the handler and may
          // need to get this from the registration object attached to the registration
          // since for non-pattern registrations this is not sent over the wire
-         var cd = new Invocation(details.caller, progress, details.procedure || reg.procedure);
+         var cd = new Invocation(details.procedure || reg.procedure,
+                                 progress,
+                                 details.caller,
+                                 details.caller_authid,
+                                 details.caller_authrole
+                      );
 
          // We use the following whenjs call wrapper, which automatically
          // wraps a plain, non-promise value in a (immediately resolved) promise
