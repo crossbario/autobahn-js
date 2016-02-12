@@ -148,7 +148,7 @@ The **connection close callback** is fired when the connection has been closed e
 * ``"closed"``: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
 * ``"lost"``: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return falsy** from this callback.
 * ``"unreachable"``: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
-* ``unsupported``:  No WebSocket transport could be created. For security reasons the WebSocket spec states that there should not be any specific errors for network-related issues, so no details are returned in this case either. 
+* ``unsupported``:  No WebSocket transport could be created. For security reasons the WebSocket spec states that there should not be any specific errors for network-related issues, so no details are returned in this case either.
 
 ``details`` is an object containing the ``reason`` and ``message`` passed to :js:func:`autobahn.Connection.close`, and thus does not apply in case of ``"lost"`` or ``"unreachable"``.
 
@@ -190,7 +190,7 @@ As an example, with the options below, |ab| first attempts to establish a WebSoc
 
 Not all WAMP routers support all transports, so take a look at the documentation for your router. (The above configuration with both WebSocket and HTTP long-poll on the same port is something which Crossbar.io allows.)
 
-.. note:: We recommend that you use encrypted connections (using TLS). On the client side in |ab|, do this by setting the schema part of the connection URL to ``wss`` instead of ``ws``. 
+.. note:: We recommend that you use encrypted connections (using TLS). On the client side in |ab|, do this by setting the schema part of the connection URL to ``wss`` instead of ``ws``.
 
 .. note:: When a Web page is served encrypted, then WebSocket connections from the page are also required to be encrypted. The WebSocket spec does intentionally not define any error message for this case, so |ab| returns ``unsupported``.
 
@@ -231,7 +231,7 @@ To check whether the connection (the underlying transport for the session) has b
 .. js:attribute:: Connection.isConnected
 
    Returns ``true`` if the Connection is open.
-   
+
 A read-only property that signals if the **underlying session is open** and attached to a realm:
 
 .. js:attribute:: Connection.isOpen
@@ -349,7 +349,7 @@ A writeable property with the current default setting for publisher disclosure:
 
 .. js:attribute:: Session.publisher_disclose_me
 
-   Returns ``true`` if the value has been changed for the session from the default ``false``   
+   Returns ``true`` if the value has been changed for the session from the default ``false``
 
 A property with the **Deferred factory** in use on this session:
 
@@ -768,6 +768,21 @@ Example: **Register a procedure**
       }
    );
 
+When the procedure which you are registering works asynchronous, you can return a promise which is resolved when the asynchronous part has completed:
+
+.. code-block:: javascript
+
+   function myAsyncFunction(args, kwargs, details) {
+      var d = new autobahn.when.defer();
+
+      setTimeout(function() {
+         d.resolve("async finished");
+      }, 1000);
+
+      return d.promise;
+   }
+
+The above example uses the default promises library for AutobahnJS, `when`. The syntax may vary for other libraries.
 
 Complete Examples:
 
@@ -787,7 +802,7 @@ It is possible to change the matching policy to either ``prefix`` or ``wildcard`
 .. code-block:: javascript
 
    session.register('com.myapp', handle_all, { match: 'prefix' })
-   
+
 or
 
 .. code-block:: javascript
@@ -812,7 +827,7 @@ It is possible to have shared registrations, i.e. more than one registration for
 The invocation policy for an URI is determined by the first registration for that URI, and only subsequent registration attemps which set the same invocation rule may be successful. For example, with a first registration of
 
 .. code-block:: javascript
-   
+
    session.register('com.myapp.procedure1', handle_all, { invoke: 'random' })
 
 any subsequent registration which does not set ``invoke: 'random'`` will be rejected.
