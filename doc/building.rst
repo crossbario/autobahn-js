@@ -10,7 +10,7 @@ To build |ab| for use in browsers, you will need
 * `SCons <http://www.scons.org/>`_
 * `Taschenmesser <https://github.com/oberstet/taschenmesser>`_
 * `browserify <http://browserify.org/>`_
-* `ws <http://einaros.github.io/ws/>`_
+* `ws <http://websockets.github.io/ws/>`_
 * `crypto-js <https://www.npmjs.org/package/crypto-js>`_
 
 **Install NodeJS**

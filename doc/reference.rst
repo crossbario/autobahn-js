@@ -516,7 +516,7 @@ or, differently notated, but functionally equivalent
 
 Complete Examples:
 
-* `PubSub Basic <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
+* `PubSub Basic <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/pubsub/basic>`_
 
 
 Patter-Based Subscriptions
@@ -591,12 +591,12 @@ Example: **Unsubscribing a subscription**
 
 Complete Examples:
 
-* `PubSub Unsubscribe <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/unsubscribe>`_
+* `PubSub Unsubscribe <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/pubsub/unsubscribe>`_
 
 Subscription Meta-Events and Procedures
 +++++++++++++++++++++++++++++++++++++++
 
-Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on subscription lifecycle, as well as procedures which allow the retrieval of information about current subscriptions. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Subscription-Metaevents-and-Procedures/>`_.
+Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on subscription lifecycle, as well as procedures which allow the retrieval of information about current subscriptions. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Subscription-Meta-Events-and-Procedures/>`_.
 
 
 Publish
@@ -625,8 +625,8 @@ Examples: **Publish an event**
 
 Complete Examples:
 
-* `PubSub Basic <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/basic>`_
-* `PubSub Complex Payload <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/pubsub/complex>`_
+* `PubSub Basic <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/pubsub/basic>`_
+* `PubSub Complex Payload <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/pubsub/complex>`_
 
 
 Acknowledgement
@@ -786,10 +786,10 @@ The above example uses the default promises library for AutobahnJS, `when`. The 
 
 Complete Examples:
 
-* `RPC Time Service <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
-* `RPC Arguments <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
-* `RPC Complex Result <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
-* `RPC Slow Square <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
+* `RPC Time Service <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/timeservice>`_
+* `RPC Arguments <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/arguments>`_
+* `RPC Complex Result <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/complex>`_
+* `RPC Slow Square <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/slowsquare>`_
 
 
 Pattern-Based Registrations
@@ -889,7 +889,7 @@ Example: **Unregistering a registration**
 Registration Meta-Events and Procedures
 +++++++++++++++++++++++++++++++++++++++
 
-Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on registration lifecycle, as well as procedures which allow the retrieval of information about current registrations. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Registration-Metaevents-and-Procedures/>`_.
+Some WAMP routers (such as `Crossbar.io <http://crossbar.io>`_) provide the possibility to subscribe to events which are created by the router based on registration lifecycle, as well as procedures which allow the retrieval of information about current registrations. For more information see the `Crossbar.io documenation <http://crossbar.io/docs/Registration-Meta-Events-and-Procedures/>`_.
 
 
 Call
@@ -922,10 +922,10 @@ Example: **Call a procedure**
 
 Complete Examples:
 
-* `RPC Time Service <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/timeservice>`_
-* `RPC Arguments <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/arguments>`_
-* `RPC Complex Result <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/complex>`_
-* `RPC Slow Square <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/slowsquare>`_
+* `RPC Time Service <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/timeservice>`_
+* `RPC Arguments <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/arguments>`_
+* `RPC Complex Result <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/complex>`_
+* `RPC Slow Square <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/slowsquare>`_
 
 
 Errors
@@ -969,7 +969,7 @@ and logging this in the caller will lead to something like
 
 Complete Examples:
 
-* `RPC Errors <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/errors>`_
+* `RPC Errors <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/errors>`_
 
 
 Progressive Results
@@ -1014,7 +1014,7 @@ which would return 5 progressive result events (each with the current value of `
 
 Complete Examples:
 
-* `RPC Progress <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/basic/rpc/progress>`_
+* `RPC Progress <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/rpc/progress>`_
 
 
 Caller Identification
