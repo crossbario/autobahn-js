@@ -51,6 +51,7 @@ Factory.prototype.create = function () {
    transport.onmessage = function () {};
    transport.onopen = function () {};
    transport.onclose = function () {};
+   transport.ontimeout = function() {};
 
    transport.info = {
       type: 'websocket',
@@ -61,9 +62,9 @@ Factory.prototype.create = function () {
 
    // Test below used to be via the 'window' object in the browser.
    // This fails when running in a Web worker.
-   // 
+   //
    // running in Node.js
-   // 
+   //
    if (global.process && global.process.versions.node) {
 
       (function () {
@@ -91,8 +92,27 @@ Factory.prototype.create = function () {
             websocket.close();
          };
 
+         transport._setupPingTimeout = function () {
+            if (self._options.ping_timeout) {
+               self._ping_timeout = setTimeout(transport._onPingTimeout.bind(self), self._options.ping_timeout);
+            }
+         };
+
+         transport._clearPingTimeout = function () {
+            if (self._ping_timeout) {
+               clearTimeout(self._ping_timeout);
+               self._ping_timeout = null;
+            }
+         };
+
+         transport._onPingTimeout = function () {
+            websocket.terminate();
+            transport.ontimeout();
+         };
+
          websocket.on('open', function () {
             transport.onopen();
+            transport._setupPingTimeout();
          });
 
          websocket.on('message', function (data, flags) {
@@ -102,6 +122,11 @@ Factory.prototype.create = function () {
                var msg = JSON.parse(data);
                transport.onmessage(msg);
             }
+         });
+
+         websocket.on('ping', function(data, flags) {
+            transport._clearPingTimeout();
+            transport._setupPingTimeout();
          });
 
          // FIXME: improve mapping to WS API for the following
@@ -117,6 +142,11 @@ Factory.prototype.create = function () {
          });
 
          websocket.on('error', function (error) {
+            if (error && error.code != "ENOTFOUND" ) {
+               console.log("Websocket ERROR");
+               console.log(error);
+            }
+
             var details = {
                code: 1006,
                reason: '',
