@@ -28,6 +28,10 @@ function Factory (options) {
       util.assert(Array.isArray(options.protocols), "options.protocols must be an array");
    }
 
+   if (!options.ping_timeout) {
+      options.ping_timeout = 15000;
+   }
+
    self._options = options;
 }
 
