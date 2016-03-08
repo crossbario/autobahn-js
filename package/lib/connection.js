@@ -329,6 +329,10 @@ Connection.prototype.open = function () {
          self._transport.close(1000);
       };
 
+      self._transport.ontimeout = function () {
+         self._transport = self._create_transport();
+      };
+
       self._transport.onclose = function (evt) {
 
          // remove any pending reconnect timer
