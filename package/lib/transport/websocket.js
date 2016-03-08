@@ -69,7 +69,7 @@ Factory.prototype.create = function () {
 
       (function () {
 
-         var WebSocket = require('ws'); // https://github.com/einaros/ws
+         var WebSocket = require('ws'); // https://github.com/websockets/ws
          var websocket;
 
          var protocols;
