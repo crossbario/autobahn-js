@@ -14,7 +14,7 @@
 
 var util = require('../util.js');
 var log = require('../log.js');
-
+var serializer = require('../serializer.js');
 
 function Factory (options) {
    var self = this;
@@ -22,8 +22,20 @@ function Factory (options) {
    util.assert(options.url !== undefined, "options.url missing");
    util.assert(typeof options.url === "string", "options.url must be a string");
 
+   if (!options.serializers) {
+      options.serializers = [new serializer.JSONSerializer()];
+      if (serializer.MsgpackSerializer) {
+         options.serializers.push(new serializer.MsgpackSerializer());
+      }
+   } else {
+      util.assert(Array.isArray(options.serializers), "options.serializers must be an array");
+   }
+
    if (!options.protocols) {
-      options.protocols = ['wamp.2.json'];
+      options.protocols = [];
+      options.serializers.forEach(function (ser) {
+         options.protocols.push("wamp.2." + ser.SERIALIZER_ID);
+      });
    } else {
       util.assert(Array.isArray(options.protocols), "options.protocols must be an array");
    }
@@ -44,6 +56,7 @@ Factory.prototype.create = function () {
 
    // these will get defined further below
    transport.protocol = undefined;
+   transport.serializer = undefined;
    transport.send = undefined;
    transport.close = undefined;
 
@@ -54,8 +67,8 @@ Factory.prototype.create = function () {
 
    transport.info = {
       type: 'websocket',
-      url: null,
-      protocol: 'wamp.2.json'
+      url: self._options.url,
+      protocol: null
    };
 
 
@@ -83,8 +96,8 @@ Factory.prototype.create = function () {
          }
 
          transport.send = function (msg) {
-            var payload = JSON.stringify(msg);
-            websocket.send(payload, {binary: false});
+            var payload = transport.serializer.serialize(msg);
+            websocket.send(payload, {binary: transport.serializer.BINARY});
          };
 
          transport.close = function (code, reason) {
@@ -92,16 +105,22 @@ Factory.prototype.create = function () {
          };
 
          websocket.on('open', function () {
+            var serializer_part = websocket.protocol.split('.')[2];
+            for (var index in self._options.serializers) {
+               var serializer = self._options.serializers[index];
+               if (serializer.SERIALIZER_ID == serializer_part) {
+                  transport.serializer = serializer;
+                  break;
+               }
+            }
+
+            transport.info.protocol = websocket.protocol;
             transport.onopen();
          });
 
          websocket.on('message', function (data, flags) {
-            if (flags.binary) {
-               // FIXME!
-            } else {
-               var msg = JSON.parse(data);
-               transport.onmessage(msg);
-            }
+            var msg = transport.serializer.unserialize(data);
+            transport.onmessage(msg);
          });
 
          // FIXME: improve mapping to WS API for the following
@@ -143,6 +162,7 @@ Factory.prototype.create = function () {
             } else {
                websocket = new global.WebSocket(self._options.url);
             }
+            websocket.binaryType = 'arrayBuffer';
 
          // older versions of Firefox prefix the WebSocket object
          } else if ("MozWebSocket" in global) {
@@ -159,12 +179,21 @@ Factory.prototype.create = function () {
          websocket.onmessage = function (evt) {
             log.debug("WebSocket transport receive", evt.data);
 
-            var msg = JSON.parse(evt.data);
+            var msg = transport.serializer.unserialize(evt.data);
             transport.onmessage(msg);
          }
 
          websocket.onopen = function () {
-            transport.info.url = self._options.url;
+            var serializer_part = websocket.protocol.split('.')[2];
+            for (var index in self._options.serializers) {
+               var serializer = self._options.serializers[index];
+               if (serializer.SERIALIZER_ID == serializer_part) {
+                  transport.serializer = serializer;
+                  break;
+               }
+            }
+
+            transport.info.protocol = websocket.protocol;
             transport.onopen();
          }
 
@@ -183,7 +212,7 @@ Factory.prototype.create = function () {
          //websocket.onerror = websocket.onclose;
 
          transport.send = function (msg) {
-            var payload = JSON.stringify(msg);
+            var payload = transport.serializer.serialize(msg);
             log.debug("WebSocket transport send", payload);
             websocket.send(payload);
          }

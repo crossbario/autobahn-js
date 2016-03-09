@@ -177,6 +177,9 @@ Connection.prototype._init_transport_factories = function () {
             // defaulting to options.url if none is provided
             transport_options.url = this._options.url;
         }
+        if (!transport_options.serializers) {
+            transport_options.serializers = this._options.serializers;
+        }
         if (!transport_options.protocols) {
             transport_options.protocols = this._options.protocols;
         }
