@@ -32,6 +32,7 @@ var log = require('./log.js');
 var session = require('./session.js');
 var connection = require('./connection.js');
 var configure = require('./configure.js');
+var serializer = require('./serializer.js');
 
 var persona = require('./auth/persona.js');
 var cra = require('./auth/cra.js');
@@ -50,6 +51,8 @@ exports.Error = session.Error;
 exports.Subscription = session.Subscription;
 exports.Registration = session.Registration;
 exports.Publication = session.Publication;
+
+exports.serializer = serializer;
 
 exports.auth_persona = persona.auth;
 exports.auth_cra = cra;
