@@ -5,5 +5,6 @@
 4 "Result:" "hello"
 5 "Result:" [1,2,-3]
 6 "Result:" {"a":5,"b":"hello2"}
-7 "Result:" null
-8 "All finished."
+7 "Result:" [-9007199254740991,9007199254740991]
+8 "Result:" null
+9 "All finished."

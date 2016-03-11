@@ -69,7 +69,7 @@ var WAMP_FEATURES = {
 // generate a WAMP ID
 //
 function newid () {
-   return Math.floor(Math.random() * 2147483648);
+   return Math.floor(Math.random() * 9007199254740992);
 }
 
 

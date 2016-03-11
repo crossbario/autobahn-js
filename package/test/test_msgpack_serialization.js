@@ -55,7 +55,7 @@ exports.testMsgpackSerialization = function (testcase) {
 
             var pl2 = [];
 
-            var vals1 = [1.7, "hello", [1, 2, -3], {a: 5, b: "hello2"}, null];
+            var vals1 = [1.7, "hello", [1, 2, -3], {a: 5, b: "hello2"}, [-9007199254740991, 9007199254740991], null];
 
             for (var i = 0; i < vals1.length; ++i) {
 
