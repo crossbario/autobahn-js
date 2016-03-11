@@ -27,6 +27,8 @@ install:
 	npm install when
 	npm install crypto-js
 	npm install browserify
+	npm install utf-8-validate
+	npm install bufferutil
 
 publish:
 	npm publish
