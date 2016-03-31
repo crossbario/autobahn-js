@@ -39,13 +39,12 @@ and then, in your code
 Docker
 ++++++
 
-We offer a `Docker Image<https://hub.docker.com/r/crossbario/autobahn-js/>`_ with Node.js and |ab| pre-installed. To use this, if you have Docker already installed, just do
+We offer a `Docker Image <https://hub.docker.com/r/crossbario/autobahn-js/>`_ with Node.js and |ab| pre-installed. To use this, if you have Docker already installed, just do
 
    ``sudo docker run -it crossbario/autobahn-js node root/client.js ws://IP_of_WAMP_router/ws realm1``
 
 This starts up a Docker container and `client.js`, which connects to a Crossbar.io router at the given URL and to the given realm.
 
-For a WAMP router, there's also a Docker image of Crossbar.io. This has a demo realm `realm1` so that the above Docker image can connect to it.
 
 
 Browsers
