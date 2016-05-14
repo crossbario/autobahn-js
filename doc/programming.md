@@ -195,6 +195,6 @@ session.publish('com.myapp.oncounter', [1]);
 Where to go from here
 =====================
 
--   For more features of **Autobahn|JS** and details about RPC and PubSub, see the [Reference](/reference.md).
--   There's an overview of example code for specific WAMP features [Examples Overview](/examples_overview.md).
+-   For more features of **Autobahn|JS** and details about RPC and PubSub, see the [Reference](reference.md).
+-   There's an overview of example code for specific WAMP features [Examples Overview](examples_overview.md).
 -   Read about [the idea behind WAMP.](http://wamp.ws/why/)
