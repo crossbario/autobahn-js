@@ -130,7 +130,7 @@ Several [WAMP router implementations exist](http://wamp.ws/implementations/), ac
 
 We suggest using Crossbar.io, which not only offers stable, performant and scalable WAMP routing, but also other features such as application scaffolding and hosting of application components.
 
-For Crossbar.io, you can take a look at the [quick start instructions](http://crossbar.io/docs/Quick-Start/) or, for an all-JavaScript application, how to set things up for an [application with a Node.js backend](http://crossbar.io/docs/Getting-started-with-NodeJS/).
+For Crossbar.io, you can take a look at the [quick start instructions](http://crossbar.io/docs/Quick-Start/).
 
 What now?
 =========
