@@ -234,4 +234,3 @@ Where to go from here
 * For more features of **Autobahn|JS** and details about RPC and PubSub, see the :doc:`reference`.
 * There's an :doc:`overview of example code for specific WAMP features <examples_overview>`.
 * Read about `the idea behind WAMP. <http://wamp.ws/why/>`_
-

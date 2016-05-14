@@ -13,4 +13,3 @@ And finally, we suggest visiting the [Crossbar.io site](http://crossbar.io). Cro
 * [Reference](reference.md) - A full reference to the Autobahn|JS API
 * [Examples Overview](examples_overview-md) - An overview of the available code examples
 * [Building](building.md) - Instructions for how to build Autobahn|JS from source
-  

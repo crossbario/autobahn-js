@@ -1,5 +1,3 @@
-.. _gettingstarted:
-
 Getting Started
 ===============
 
@@ -144,6 +142,6 @@ For Crossbar.io, you can take a look at the `quick start instructions <http://cr
 What now?
 ---------
 
-* Take a look at the :doc:`programming`, which gives an overview of how to connect your application components, and do basic RPC and PubSub.
+* Take a look at [Programming](programming.md), which gives an overview of how to connect your application components, and do basic RPC and PubSub.
 
 * If you want to see some **live Web apps** using **Autobahn|JS**? Take a look at the `Crossbar.io demos <http://crossbar.io/>`_.
