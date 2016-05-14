@@ -4,7 +4,7 @@
 Publish & Subscribe with **Autobahn**\|JS
 =========================================
 
-The goal of this tutorial is to introduce publish and subscribe (PubSub) messaging with |ab| .
+The goal of this tutorial is to introduce publish and subscribe (PubSub) messaging with **Autobahn|JS** .
 
 Publish & Subscribe is a messaging pattern in which publishers send events to a server, and this server distributes the events to subscribers. Publishers and subscribers are decoupled through the server: they don't have any knowledge about each other. The connection between the two is only established via the topics.
 
@@ -14,7 +14,7 @@ Publish & Subscribe can be used for a large variety of applications, e.g. chat, 
 
 It scales well, and the fact that subscriptions need not be handled by publishers means that publishing is a light-weight process that can easily be added to applications.
 
-In |ab| , PubSub is implemented based on the `Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_, an open protocol that enables both PubSub and Remote Procedure Calls (RPC) over WebSocket. There is also a :ref:`tutorial for how to do RPC <tutorial_rpc>` using |ab| .
+In **Autobahn|JS** , PubSub is implemented based on the `Web Application Messaging Protocol (WAMP) <http://wamp.ws/>`_, an open protocol that enables both PubSub and Remote Procedure Calls (RPC) over WebSocket. There is also a :ref:`tutorial for how to do RPC <tutorial_rpc>` using **Autobahn|JS** .
 
 In this tutorial well will create a small JavaScript application that consists of two clients which connect to a WAMP router. Clients can run either in the browser or on Node.js. One of the clients publishes to a topic to which the other client subscribes himself. The sent and received events are logged in the respective browser consoles or command shells.
 
@@ -56,7 +56,7 @@ With this we have all the non-JavaScript stuff out of the way. From now on it's 
 The HTML
 --------
 
-Since we want to be able to run the clients in either the browser or Node.js, we'll keep the the HTML very simple for both the publisher and the subscriber. We basically just want something which identifies the browser tab to us, plus, of course, we need to load the WAMP library, |ab| and our JavaScript.
+Since we want to be able to run the clients in either the browser or Node.js, we'll keep the the HTML very simple for both the publisher and the subscriber. We basically just want something which identifies the browser tab to us, plus, of course, we need to load the WAMP library, **Autobahn|JS** and our JavaScript.
 
 For the publisher, we use:
 
@@ -116,7 +116,7 @@ Download the JavaScript (right click + 'save as'):
 Running in the browser vs. Node.js
 ++++++++++++++++++++++++++++++++++
 
-The only difference between running the JavaScript for our demo application in the browser and in Node.js is that in the browser, |ab| is loaded via a script tag, while in Node.js we need to include it via Node's dependency management.
+The only difference between running the JavaScript for our demo application in the browser and in Node.js is that in the browser, **Autobahn|JS** is loaded via a script tag, while in Node.js we need to include it via Node's dependency management.
 
 In order for the same JavaScript to run in both cases, we do:
 
@@ -129,7 +129,7 @@ In order for the same JavaScript to run in both cases, we do:
       // be included without a module system
    }
 
-You need to have |ab| installed for Node.js. To do so, in a shell do
+You need to have **Autobahn|JS** installed for Node.js. To do so, in a shell do
 
 ::
 
@@ -143,7 +143,7 @@ Connecting to the Server
 
 The first thing we need to do if we want to use PubSub over WebSockets is to establish a WebSocket connection.
 
-|ab| provides some comfort features for handling WebSocket connections. Because of this all our interaction for the connection is via |ab| .
+**Autobahn|JS** provides some comfort features for handling WebSocket connections. Because of this all our interaction for the connection is via **Autobahn|JS** .
 
 The code to establish a WAMP/WebSocket connection is the same for both the publisher and the subscriber.
 
@@ -283,7 +283,7 @@ With all networking events, the outcome of a process involves network latencies.
 
 Conventional synchronous programming in JavaScript, in which the program blocks until there is a function result, is not an option if apps are to remain speedy.
 
-To handle this problem, the |ab| library implements a form of promises. This means that together with the publish or subscribe, you pass at least one function to handle the result of the action, e.g.
+To handle this problem, the **Autobahn|JS** library implements a form of promises. This means that together with the publish or subscribe, you pass at least one function to handle the result of the action, e.g.
 
 .. code-block:: javascript
 
@@ -299,10 +299,10 @@ There's no need for you to manage anything regarding the passed functions - rece
 Summary & Beyond
 ----------------
 
-This tutorial gave an overview how simple PubSub messaging is with |ab| - no more than a line of code each for either subscribing and publishing.
+This tutorial gave an overview how simple PubSub messaging is with **Autobahn|JS** - no more than a line of code each for either subscribing and publishing.
 
 We encourage you to play around with the demo app. Run it on different machines. Add more event data. Use the received events to trigger functions that do more than just log things.
 
 The :ref:`examples overview page <examples_overview>` lists available examples which demonstrate additional features of WAMP.
 
-The :ref:`tutorial_rpc` tutorial shows you an equally quick and easy start into remote procedure calls (RPC) with |ab|.
+The :ref:`tutorial_rpc` tutorial shows you an equally quick and easy start into remote procedure calls (RPC) with **Autobahn|JS**.

@@ -8,7 +8,15 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 
 **Autobahn**|JS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**.
 
-WAMP enables application architectures with application code distributed freely across processes and devices according to functional aspects. Since WAMP implementations exist for multiple languages, WAMP applications can be polyglott. Application components can be implemented in a language and run on a device which best fit the particular use case.
+## What can I do with this stuff?
+
+**Autobahn|JS** makes **distributed, realtime Web applications easy**: it provides the infrastructure for both **distributing live updates** to all connected clients (using the PubSub messaging pattern) and for **calling remote procedures** in different backend components (using RPC).
+
+It is ideal for distributed, multi-client and server applications, such as multi-user database-drive business applications, real-time charts, sensor networks (IoT), instant messaging or MMOGs (massively multi-player online games).
+
+The protocol that **Autobahn|JS** uses, WAMP, enables application architectures with application code **distributed freely across processes and devices** according to functional aspects. All WAMP clients are equal in that they can publish events and subscribe to them, can offer a procedure for remote calling and call remote procedures.
+
+Since WAMP implementations exist for **multiple languages**, this extends beyond JavaScript clients: WAMP applications can be polyglot. Application components can be implemented in a language and run on a device which best fit the particular use case. Applications can span the range from embedded IoT sensors right to mobile clients or the browser - using the same protocol.
 
 ## Show me some code
 
@@ -54,6 +62,20 @@ connection.onopen = function (session) {
 connection.open();
 ```
 
+Features
+--------
+
+* supports WAMP v2, works with any WAMP server
+* works both in the browser and Node.js
+* provides asynchronous RPC and PubSub messaging patterns
+* uses WebSocket or HTTP long-poll as transport
+* easy to use Promise-based API
+* pluggable promises/deferreds: use [when.js](https://github.com/cujojs/when)  (built-in), [jQuery](http://api.jquery.com/category/deferred-object/) , [Dojo](http://dojotoolkit.org/reference-guide/1.7/dojo/Deferred.html), ECMA Script 6 or others
+* no dependencies
+* small size (244kB source, 111kB minified, 33kB compressed)
+* Open-Source (MIT License)
+
+
 ## Get it
 
 ### Browser Development
@@ -86,12 +108,12 @@ AutobahnJS is available via the Node package manager [here](https://www.npmjs.or
 
 ## More information
 
-For more information, take a look at the [project documentation](http://autobahn.ws/js). This provides:
+For more information, take a look at the [project documentation](/doc/). This provides:
 
-* [a quick 'Getting Started'](http://autobahn.ws/js/gettingstarted.html)
-* [tutorials on RPC and PubSub](http://autobahn.ws/js/tutorial.html)
-* [a list of all examples in this repo](http://autobahn.ws/js/examples_overview.html)
-* [a full API reference](http://autobahn.ws/js/reference.html)
+* [a quick 'Getting Started'](/doc/gettingstarted.md)
+* [a basic introduction to programming with Autobahn|JS](/doc/programming.md)
+* [a list of all examples in this repo](/doc/examples_overview.md)
+* [a full API reference](/doc/reference.md)
 
 
 ## Get in touch

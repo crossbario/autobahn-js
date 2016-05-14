@@ -1,19 +1,17 @@
-# Documentation
+# Autobahn|JS Documentation
 
-The **Autobahn**|JS documentation is generated using [Sphinx](http://sphinx.pocoo.org/) and the generated documentation is hosted [here](http://autobahn.ws/js).
+## First Contact
 
+If you're new to Autobahn|JS, then please take a look at [Getting Started](gettingstarted.md) first.
 
-## Generate
+You may also want to read up a bit on the [Web Application Messaging Protocol (WAMP)](http://wamp-proto.org/why/) which it implements.
 
-You will need to have Python and [SCons](http://www.scons.org/) installed. To install the rest of the build dependencies
+And finally, we suggest visiting the [Crossbar.io site](http://crossbar.io). Crossbar.io is a WAMP router maintained by the people behind Autobahn|JS, and the documentation there includes examples for some aspects of building WAMP applications - all of which use Autobahn|JS.
 
-```sh
-make install_deps
-```
+## Table of Contents
 
-
-Then, to get help on available build targets, just type
-
-```sh
-make
-```
+* [Getting Started](gettingstarted.md)
+* [Programming](programming.md) - A quick introduction to using Autobahn|JS in your applications
+* [Reference](reference.md) - A full reference to the Autobahn|JS API
+* [Examples Overview](examples_overview.md) - An overview of the available code examples
+* [Building](building.md) - Instructions for how to build Autobahn|JS from source
