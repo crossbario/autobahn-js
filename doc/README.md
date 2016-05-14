@@ -8,7 +8,7 @@ And finally, we suggest visiting the [Crossbar.io site](http://crossbar.io). Cro
 
 ## Table of Contents
 
-* [Getting Started](getting-started.md)
+* [Getting Started](gettingstarted.md)
 * [Programming](programming.md) - A quick introduction to using Autobahn|JS in your applications
 * [Reference](reference.md) - A full reference to the Autobahn|JS API
 * [Examples Overview](examples_overview-md) - An overview of the available code examples
