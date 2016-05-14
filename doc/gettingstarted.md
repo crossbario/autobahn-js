@@ -46,7 +46,7 @@ Browsers
 You can get the **latest** pre-built **Autobahn|JS** release from here:
 
 1.  [Production (minimized and gzipped)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
-2.  [Production (only minimized)]](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
+2.  [Production (only minimized)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
 3.  [Development](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
 
 For **development purposes**, you can include these directly like so
