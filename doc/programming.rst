@@ -4,7 +4,7 @@
 Introduction to WAMP programming
 ================================
 
-This guide gives an introduction to programming with `WAMP <http://wamp.ws>`__ in JavaScript using |Ab|.
+This guide gives an introduction to programming with `WAMP <http://wamp.ws>`__ in JavaScript using **Autobahn|JS**.
 
 WAMP provides two communication patterns for application components to talk to each other
 
@@ -43,7 +43,7 @@ Hence, to create a WAMP application, you
 Including Autobahn
 ------------------
 
-We need to include the |ab| library in our JavaScript. There are :doc:`instructions <gettingstarted>` for how to do this in the browser and in Node.js. This also links to available WAMP routers. In this documentation use of `Crossbar.io <http://crossbar.io>`_ is assumed, but examples should work with other routers as well.
+We need to include the **Autobahn|JS** library in our JavaScript. There are :doc:`instructions <gettingstarted>` for how to do this in the browser and in Node.js. This also links to available WAMP routers. In this documentation use of `Crossbar.io <http://crossbar.io>`_ is assumed, but examples should work with other routers as well.
 
 
 .. _establishing-wamp-connection:
@@ -51,7 +51,7 @@ We need to include the |ab| library in our JavaScript. There are :doc:`instructi
 Establishing a WAMP connection
 ------------------------------
 
-Connections are handled via an |ab| ``connection`` object, which is created by
+Connections are handled via an **Autobahn|JS** ``connection`` object, which is created by
 
 .. code-block:: javascript
 
@@ -83,7 +83,7 @@ We define what happens in each case:
       // handle connection lost
    }
 
-The ``onopen`` handler receives an |ab| ``session`` object and a dictionary of connection details. All subsequent WAMP PubSub and RPC interaction occurs using the ``session`` object.
+The ``onopen`` handler receives an **Autobahn|JS** ``session`` object and a dictionary of connection details. All subsequent WAMP PubSub and RPC interaction occurs using the ``session`` object.
 
 The ``onclose`` handler receives a reason for closing as well as details.
 
@@ -161,7 +161,7 @@ In the caller, on a successful return the **success handler** function is fired,
 
 In case of failure of the call, the router returns an error object. This is passed as an argument to the second callback we define, our **error handler**. Here we use the ``log`` function on the ``session`` object to log both the error code and some additional information about the session.
 
-.. note:: For calls, |ab| uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, is used with the above pattern, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.html5rocks.com/en/tutorials/es6/promises/>`_ is a good place to start. As a default, `when.js <https://github.com/cujojs/when>`_ is used for promises, but you can change this as part of the connecting options (see :ref:`reference`).
+.. note:: For calls, **Autobahn|JS** uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, is used with the above pattern, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.html5rocks.com/en/tutorials/es6/promises/>`_ is a good place to start. As a default, `when.js <https://github.com/cujojs/when>`_ is used for promises, but you can change this as part of the connecting options (see :ref:`reference`).
 
 .. _publish-and-subscribe:
 
@@ -231,7 +231,7 @@ Publishing an event to a topic is done by calling the ``publish`` method on the 
 Where to go from here
 ---------------------
 
-* For more features of |ab| and details about RPC and PubSub, see the :doc:`reference`.
+* For more features of **Autobahn|JS** and details about RPC and PubSub, see the :doc:`reference`.
 * There's an :doc:`overview of example code for specific WAMP features <examples_overview>`.
 * Read about `the idea behind WAMP. <http://wamp.ws/why/>`_
 

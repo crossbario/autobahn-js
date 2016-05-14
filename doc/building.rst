@@ -3,7 +3,7 @@
 Building Autobahn|JS
 ====================
 
-To build |ab| for use in browsers, you will need
+To build **Autobahn|JS** for use in browsers, you will need
 
 * `Node.js <http://nodejs.org/>`_
 * `Google Closure Compiler <http://dl.google.com/closure-compiler/compiler-latest.zip>`_

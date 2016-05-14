@@ -4,7 +4,7 @@
 Autobahn Legacy (WAMP v1) documentation
 =======================================
 
-This page contains materials concerning |ab| 0.8.2, the last version of |ab| to implement version 1 of WAMP.
+This page contains materials concerning **Autobahn|JS** 0.8.2, the last version of **Autobahn|JS** to implement version 1 of WAMP.
 
 This version is now in maintenance mode.
 
@@ -25,7 +25,7 @@ In addition, the source code is still accessible in the `project GitHub reposito
 Example code
 ------------
 
-Example code for various aspects of the use of |ab| can be found in the `Autobahn|Python GitHub repository <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp1>`_
+Example code for various aspects of the use of **Autobahn|JS** can be found in the `Autobahn|Python GitHub repository <https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp1>`_
 
 
 API Reference

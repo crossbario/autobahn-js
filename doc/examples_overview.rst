@@ -39,7 +39,7 @@ Once you've installed Crossbar.io, open a command shell, create a test directory
 
 Code runs both in the browser and in Node.js.
 
-For the latter, you need to have |ab| installed. To do so, in a shell do
+For the latter, you need to have **Autobahn|JS** installed. To do so, in a shell do
 
 ::
 

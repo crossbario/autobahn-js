@@ -37,7 +37,7 @@ Autobahn bundles whenjs and cryptojs. These bundled libraries can be accessed li
 Library Version
 +++++++++++++++
 
-|ab| library version is available (read-only):
+**Autobahn|JS** library version is available (read-only):
 
 .. js:function:: autobahn.version
 
@@ -53,7 +53,7 @@ To enable *debug mode*, define a global variable
 
    AUTOBAHN_DEBUG = true;
 
-*before* including |ab|. Debug mode works for use both in the browser and in Node.js. When using |ab| in a browser, you'd do e.g.
+*before* including **Autobahn|JS**. Debug mode works for use both in the browser and in Node.js. When using **Autobahn|JS** in a browser, you'd do e.g.
 
 .. code-block:: html
 
@@ -170,7 +170,7 @@ The constructor of :js:func:`autobahn.Connection` provides various options.
 
 Supported transports are WebSocket and HTTP long-poll.
 
-As an example, with the options below, |ab| first attempts to establish a WebSocket connection and if this fails a HTTP long-poll connection to the respective URLs given.
+As an example, with the options below, **Autobahn|JS** first attempts to establish a WebSocket connection and if this fails a HTTP long-poll connection to the respective URLs given.
 
 .. code-block:: javascript
 
@@ -190,9 +190,9 @@ As an example, with the options below, |ab| first attempts to establish a WebSoc
 
 Not all WAMP routers support all transports, so take a look at the documentation for your router. (The above configuration with both WebSocket and HTTP long-poll on the same port is something which Crossbar.io allows.)
 
-.. note:: We recommend that you use encrypted connections (using TLS). On the client side in |ab|, do this by setting the schema part of the connection URL to ``wss`` instead of ``ws``.
+.. note:: We recommend that you use encrypted connections (using TLS). On the client side in **Autobahn|JS**, do this by setting the schema part of the connection URL to ``wss`` instead of ``ws``.
 
-.. note:: When a Web page is served encrypted, then WebSocket connections from the page are also required to be encrypted. The WebSocket spec does intentionally not define any error message for this case, so |ab| returns ``unsupported``.
+.. note:: When a Web page is served encrypted, then WebSocket connections from the page are also required to be encrypted. The WebSocket spec does intentionally not define any error message for this case, so **Autobahn|JS** returns ``unsupported``.
 
 **Optional** options:
 
@@ -369,7 +369,7 @@ A Deferred factory for the type of Deferreds (whenjs, ES6, jQuery or Q) in use w
 Session Logging
 +++++++++++++++
 
-|ab| includes a logging method for convenient logging from sessions.
+**Autobahn|JS** includes a logging method for convenient logging from sessions.
 
 
 .. js:function:: session.log(output)
