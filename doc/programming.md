@@ -2,15 +2,15 @@ This guide gives an introduction to programming with [WAMP](http://wamp.ws) in J
 
 WAMP provides two communication patterns for application components to talk to each other
 
--   remote-procedure-calls
--   publish-and-subscribe
+-   [routed Remote Procedure Calls (rRPC)](#remote-procedure-calls)
+-   [Publish and Subscribe (PubSub](#publish-and-subscribe)
 
 and we will cover all four interactions involved in above patterns
 
-1.  registering-procedures for remote calling
-2.  calling-procedures remotely
-3.  subscribing-to-topics for receiving events
-4.  publishing-events to topics
+1.  [Registering procedures](#registering-procedures) for remote calling
+2.  [Calling Procedures](#calling-procedures) remotely
+3.  [Subscribing to Topics](#subscribing-to-topics) for receiving events
+4.  [Publishing Events](#publishing-events) to topics
 
 > **tip**
 >
@@ -33,7 +33,7 @@ Hence, to create a WAMP application, you
 Including Autobahn
 ==================
 
-We need to include the **Autobahn|JS** library in our JavaScript. There are instructions &lt;gettingstarted&gt; for how to do this in the browser and in Node.js. This also links to available WAMP routers. In this documentation use of [Crossbar.io](http://crossbar.io) is assumed, but examples should work with other routers as well.
+We need to include the **Autobahn|JS** library in our JavaScript. There are instructions in [Getting Started](/gettingstarted.md); for how to do this in the browser and in Node.js. This also links to available WAMP routers. In this documentation use of [Crossbar.io](http://crossbar.io) is assumed, but examples should work with other routers as well.
 
 Establishing a WAMP connection
 ==============================
@@ -83,7 +83,7 @@ connection.open();
 Remote Procedure Calls
 ======================
 
-**Remote Procedure Call (RPC)** is a messaging pattern involving peers of three roles:
+**routed Remote Procedure Call (rRPC)** is a messaging pattern involving peers of three roles:
 
 -   *Caller*
 -   *Callee*
@@ -195,6 +195,6 @@ session.publish('com.myapp.oncounter', [1]);
 Where to go from here
 =====================
 
--   For more features of **Autobahn|JS** and details about RPC and PubSub, see the reference.
--   There's an overview of example code for specific WAMP features &lt;examples\_overview&gt;.
+-   For more features of **Autobahn|JS** and details about RPC and PubSub, see the [Reference](/reference.md).
+-   There's an overview of example code for specific WAMP features [Examples Overview](/examples_overview.md).
 -   Read about [the idea behind WAMP.](http://wamp.ws/why/)
