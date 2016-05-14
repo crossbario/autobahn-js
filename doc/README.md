@@ -6,7 +6,7 @@ You may also want to read up a bit on the [Web Application Messaging Protocol (W
 
 And finally, we suggest visiting the [Crossbar.io site](http://crossbar.io). Crossbar.io is a WAMP router maintained by the people behind Autobahn|JS, and the documentation there includes examples for some aspects of building WAMP applications - all of which use Autobahn|JS.
 
-[got to TOC](#Table-of-Contents)
+[got to TOC](#table-of-contents)
 
 
 -
