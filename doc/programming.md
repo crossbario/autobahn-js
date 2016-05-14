@@ -3,7 +3,7 @@ This guide gives an introduction to programming with [WAMP](http://wamp.ws) in J
 WAMP provides two communication patterns for application components to talk to each other
 
 -   [routed Remote Procedure Calls (rRPC)](#remote-procedure-calls)
--   [Publish and Subscribe (PubSub](#publish-and-subscribe)
+-   [Publish and Subscribe (PubSub)](#publish-and-subscribe)
 
 and we will cover all four interactions involved in above patterns
 
