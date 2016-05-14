@@ -68,20 +68,20 @@ Otherwise use a WAMP router of your choosing with the files in the `demo reposit
 Including Autobahn
 ------------------
 
-We need to include the |ab| library, which provides the WAMP functionality, in our JavaScript. The libaray is provided as part of the template and in the demo repository, so we do 
+We need to include the **Autobahn|JS** library, which provides the WAMP functionality, in our JavaScript. The libaray is provided as part of the template and in the demo repository, so we do 
 
 .. code-block:: html
 
    <script src="js/autobahn.min.js"></script>
 
-For development, it's also advisable to enable debugging, so that |ab| tells us a bit about what's happening. This is achieved like so:
+For development, it's also advisable to enable debugging, so that **Autobahn|JS** tells us a bit about what's happening. This is achieved like so:
 
 .. code-block:: html
 
 <script>AUTOBAHN_DEBUG = true;</script>
    <script src="js/autobahn.min.js"></script>
 
-(For getting |ab| for your own projects, see the :doc:`setup page <gettingstarted>`.)
+(For getting **Autobahn|JS** for your own projects, see the :doc:`setup page <gettingstarted>`.)
 
 
 Establishing a WAMP connection
@@ -89,7 +89,7 @@ Establishing a WAMP connection
 
 For both the frontend and the backend, before we do any WAMP messaging, we need to establish a connection to our WAMP router.
 
-We first create an |ab| ``connection`` object, and set the parameters to use when establishing the connection:
+We first create an **Autobahn|JS** ``connection`` object, and set the parameters to use when establishing the connection:
 
 .. code-block:: javascript
 
@@ -121,7 +121,7 @@ We define what happens in each case:
       console.log("Connection lost: " + reason);
    }
 
-The ``onopen`` handler receives an |ab| ``session`` object and a dictionary of connection details. All subsequent WAMP PubSub and RPC interaction occurs using the ``session`` object. We **call our** ``main`` **function** which sets up the app messaging functionality, and pass it the ``session`` object.
+The ``onopen`` handler receives an **Autobahn|JS** ``session`` object and a dictionary of connection details. All subsequent WAMP PubSub and RPC interaction occurs using the ``session`` object. We **call our** ``main`` **function** which sets up the app messaging functionality, and pass it the ``session`` object.
 
 The ``onclose`` handler receives a reason for closing as well as details. All we do for our demo app is **log the reason**.
 
@@ -190,7 +190,7 @@ In our frontend, which here is the caller, on a successful return the **success 
 
 In case of failure of the call, the router returns an error object. This is passed as an argument to the second callback we define, our **error handler**. Here all we do is use the ``log`` function on the ``session`` object to log the error code and some additional information about the session.
 
-.. note:: |ab| uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, within the scope of this demo app, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.html5rocks.com/en/tutorials/es6/promises/>`_ is a good place to start.
+.. note:: **Autobahn|JS** uses **promises**, not conventional callbacks. **Promises** offer powerful features for async programming, and allow you to do way more than is shown here. However, within the scope of this demo app, you can think of them just like a different notation for callbacks. If you want to learn more about promises, `this article <http://www.html5rocks.com/en/tutorials/es6/promises/>`_ is a good place to start.
 
 .. note:: WAMP uses URIs to identify procedures (and topics, see below). The URIs are in Java package notation, i.e. start with the TLD and then go to the more specific parts. The choice of URIs is because these present an established, global mechanism for namespacing.
 
@@ -219,7 +219,7 @@ Subscribing to the updates is done like:
 
 Subscriptions are for topics, and topics (just like procedures) are identified by an URI. Together with the topic we pass a function which gets called each time an event for the topic is received.
 
-The event itself is wrapped in an array. (The function is also passed an object for keyword arguments and a details object, but we don't need these here. The array + object format allows better cross-language compatibility, but may be a bit confusing at first when using |ab|.) We extract this event - which is an object like the ones we receive in the above call for the initial vote count. The updating itself is then just like it was for the initial setting - just for a single flavor.
+The event itself is wrapped in an array. (The function is also passed an object for keyword arguments and a details object, but we don't need these here. The array + object format allows better cross-language compatibility, but may be a bit confusing at first when using **Autobahn|JS**.) We extract this event - which is an object like the ones we receive in the above call for the initial vote count. The updating itself is then just like it was for the initial setting - just for a single flavor.
 
 
 Subscribing to the vote reset event
