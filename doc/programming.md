@@ -1,3 +1,5 @@
+# Programming
+
 This guide gives an introduction to programming with [WAMP](http://wamp.ws) in JavaScript using **Autobahn|JS**.
 
 WAMP provides two communication patterns for application components to talk to each other
