@@ -1,4 +1,6 @@
-# Documentation
+# Autobahn|JS Documentation
+
+## First Contact
 
 If you're new to Autobahn|JS, then please take a look at [Getting Started](gettingstarted.md) first.
 

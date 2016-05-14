@@ -1,3 +1,5 @@
+# Getting Started
+
 With **Autobahn|JS**, you can develop application components in JavaScript, and those components can be hosted inside **browsers**, **Node.js** and **PostgreSQL** (*under development*).
 
 This page explains what you need in order to include **Autobahn|JS** in your projects, and to route your application messages.
@@ -23,7 +25,7 @@ You can get **Autobahn|JS** for Node.js using the Node Package Manager:
 
 and then, in your code
 
-``` sourceCode
+``` js
 var autobahn = require('autobahn')
 ```
 
@@ -51,7 +53,7 @@ You can get the **latest** pre-built **Autobahn|JS** release from here:
 
 For **development purposes**, you can include these directly like so
 
-``` sourceCode
+``` html
 <!DOCTYPE html>
 <html>
    <body>
@@ -82,7 +84,7 @@ AMD and RequireJS
 
 If you are using a module system like [RequireJS](http://requirejs.org/), you can use **Autobahn|JS** like so:
 
-``` sourceCode
+``` html
 <!DOCTYPE html>
 <html>
 <body>

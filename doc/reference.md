@@ -6,7 +6,7 @@ Library
 
 The library can be included
 
-``` sourceCode
+``` js
 try {
    // for Node.js
    var autobahn = require('autobahn');
@@ -17,7 +17,7 @@ try {
 
 Autobahn bundles whenjs and cryptojs. These bundled libraries can be accessed like
 
-``` sourceCode
+``` js
 try {
    var autobahn = require('autobahn');
    var when = require('when');
@@ -46,7 +46,7 @@ To enable *debug mode*, define a global variable
 
 *before* including **Autobahn|JS**. Debug mode works for use both in the browser and in Node.js. When using **Autobahn|JS** in a browser, you'd do e.g.
 
-``` sourceCode
+``` html
 <!DOCTYPE html>
 <html>
    <body>
@@ -70,7 +70,7 @@ which returns an autobahn connection object.
 
 Example: **Create a new connection using WebSocket as a transport**
 
-``` sourceCode
+``` js
 var connection = new autobahn.Connection({
                            url: 'ws://127.0.0.1:9000/',
                            realm: 'realm1'
@@ -113,7 +113,7 @@ Connection Callbacks
 
 The **connection open callback** is fired when the connection has been established and a new session was created. This is the main callback which application code will hook into.
 
-``` sourceCode
+``` js
 autobahn.Connection.onopen = function (session) {
    // Underlying transport to WAMP router established and new WAMP session started.
    // session is an instance of autobahn.Session
@@ -124,7 +124,7 @@ The **connection open callback** is passed the `autobahn.Session` object which h
 
 The **connection close callback** is fired when the connection has been closed explicitly, was lost or could not be established in the first place.
 
-``` sourceCode
+``` js
 autobahn.Connection.onclose = function (reason, details) {
    // connection closed, lost or unable to connect
 };
@@ -155,7 +155,7 @@ Supported transports are WebSocket and HTTP long-poll.
 
 As an example, with the options below, **Autobahn|JS** first attempts to establish a WebSocket connection and if this fails a HTTP long-poll connection to the respective URLs given.
 
-``` sourceCode
+``` js
 var connection = new autobahn.Connection({
    transports: [
       {
@@ -269,7 +269,7 @@ Sessions
 
 WAMP sessions are instances of `autobahn.Session` that are created by connections:
 
-``` sourceCode
+``` js
 var connection = new autobahn.Connection({
                            url: 'ws://127.0.0.1:9000/',
                            realm: 'realm1'
@@ -335,7 +335,7 @@ This can be assigned as an event handler when no `output` argument is used.
 
 For example:
 
-``` sourceCode
+``` js
 connection.onopen = function (session) {
 
    session.log("Session open.");
@@ -375,31 +375,31 @@ where
 
 **Example**:
 
-``` sourceCode
+``` js
 session.prefix('api', 'com.myapp.service');
 ```
 
 You can then use [CURIEs](http://en.wikipedia.org/wiki/CURIE) in addition to URIs:
 
-``` sourceCode
+``` js
 session.call('api:add2').then(...);
 ```
 
 which is equivalent to
 
-``` sourceCode
+``` js
 session.call('com.myapp.service.add2').then(...);
 ```
 
 To remove a prefix:
 
-``` sourceCode
+``` js
 session.prefix('api', null);
 ```
 
 To resolve a prefix *(normally not needed in user code)*:
 
-``` sourceCode
+``` js
 session.resolve('api:add2');
 ```
 
@@ -433,7 +433,7 @@ where
 
 Example: **Subscribe to a topic**
 
-``` sourceCode
+``` js
 function on_event1(args, kwargs, details) {
    // event received, do something ..
 }
@@ -450,7 +450,7 @@ session.subscribe('com.myapp.topic1', on_event1).then(
 
 or, differently notated, but functionally equivalent
 
-``` sourceCode
+``` js
 var d = session.subscribe('com.myapp.topic1', on_event1);
 
 d.then(
@@ -474,7 +474,7 @@ As a default, topic URIs in subscriptions are matched exactly.
 
 It is possible to change the matching policy to either `prefix` or `wildcard` matching via an option when subscribing, e.g.
 
-``` sourceCode
+``` js
 session.subscribe('com.myapp', on_event_all, { match: 'prefix' })
 session.subscribe('com.myapp..update', on_event_update, { match: 'wildcard' })
 ```
@@ -488,7 +488,7 @@ A list of subscriptions (in no particular order) currently active on a `session`
 
 This returns an array of `autobahn.Subscription` objects. E.g.
 
-``` sourceCode
+``` js
 var subs = session.subscriptions;
 for (var i = 0; i < subs.length; ++i) {
    console.log("Active subscription with ID " + subs[i].id);
@@ -514,7 +514,7 @@ where `subscription` is an instance of `autobahn.Subscrioption` and which return
 
 Example: **Unsubscribing a subscription**
 
-``` sourceCode
+``` js
 var sub1;
 
 session.subscribe('com.myapp.topic1', on_event1).then(
@@ -562,11 +562,11 @@ and which returns a *promise* if `options.acknowledge` is set, else nothing.
 
 Examples: **Publish an event**
 
-``` sourceCode
+``` js
 session.publish('com.myapp.hello', ['Hello, world!']);
 ```
 
-``` sourceCode
+``` js
 session.publish('com.myapp.hello', [], { text: 'Hello, world' })
 ```
 
@@ -586,7 +586,7 @@ With acknowledged publish, the publish method will return a promise that will re
 
 Example: **Publish with acknowledge**
 
-``` sourceCode
+``` js
 session.publish('com.myapp.hello', ['Hello, world!'], {}, {acknowledge: true}).then(
    function (publication) {
       // publish was successful
@@ -613,7 +613,7 @@ The *Broker* will dispatch events published only to *Subscribers* that are not e
 
 Example: **Publish with exclude**
 
-``` sourceCode
+``` js
 session.publish('com.myapp.hello', ['Hello, world!'], {}, {exclude: [123, 456]});
 ```
 
@@ -621,7 +621,7 @@ The event will be received by all *Subscribers* to topic `com.myapp.hello`, but 
 
 Example: **Publish with eligible**
 
-``` sourceCode
+``` js
 session.publish('com.myapp.hello', ['Hello, world!'], {}, {eligible: [123, 456]});
 ```
 
@@ -636,7 +636,7 @@ If supported by the *Broker*, this behavior can be overridden via the option `ex
 
 Example: **Publish without excluding publisher**
 
-``` sourceCode
+``` js
 session.publish('com.myapp.hello', ['Hello, world!'], {}, {exclude_me: false});
 ```
 
@@ -672,7 +672,7 @@ The `autobahn.Result` wrapper is used when returning a complex value (multiple p
 
 Example: **Register a procedure**
 
-``` sourceCode
+``` js
 function myproc1(args, kwargs, details) {
    // invocation .. do something and return a plain value or a promise ..
 }
@@ -689,7 +689,7 @@ session.register('com.myapp.proc1', myproc1).then(
 
 When the procedure which you are registering works asynchronous, you can return a promise which is resolved when the asynchronous part has completed:
 
-``` sourceCode
+``` js
 function myAsyncFunction(args, kwargs, details) {
    var d = new autobahn.when.defer();
 
@@ -717,13 +717,13 @@ As a default, URIs in registrations are matched exactly.
 
 It is possible to change the matching policy to either `prefix` or `wildcard` matching via an option when registering, e.g.
 
-``` sourceCode
+``` js
 session.register('com.myapp', handle_all, { match: 'prefix' })
 ```
 
 or
 
-``` sourceCode
+``` js
 session.register('com.myapp..update', handle_updates, { match: 'wildcard' })
 ```
 
@@ -743,7 +743,7 @@ It is possible to have shared registrations, i.e. more than one registration for
 
 The invocation policy for an URI is determined by the first registration for that URI, and only subsequent registration attemps which set the same invocation rule may be successful. For example, with a first registration of
 
-``` sourceCode
+``` js
 session.register('com.myapp.procedure1', handle_all, { invoke: 'random' })
 ```
 
@@ -756,7 +756,7 @@ A list of registrations (in no particular order) currently active on a `session`
 
 This returns an array of `autobahn.Registration` objects. E.g.
 
-``` sourceCode
+``` js
 var regs = session.registrations;
 for (var i = 0; i < regs.length; ++i) {
    console.log("Active registration with ID " + regs[i].id);
@@ -779,7 +779,7 @@ where registration is an instance of autobahn.Registration and which returns a *
 
 Example: **Unregistering a registration**
 
-``` sourceCode
+``` js
 var reg1;
 
 session.register('com.myapp.proc1', myproc1).then(
@@ -823,7 +823,7 @@ and which returns a *promise* that will resolve to the call result if successful
 
 Example: **Call a procedure**
 
-``` sourceCode
+``` js
 session.call('com.arguments.add2', [2, 3]).then(
    function (result) {
       // call was successful
@@ -857,7 +857,7 @@ Throwing an error in a registered procedure can happen in one of two ways:
 
 In the first case, the `error URI` is set to a default value, and the object of error arguments remains emtpy, i.e. if you do
 
-``` sourceCode
+``` js
 throw ['this is just an error', 'with an array of arguments'];
 ```
 
@@ -867,7 +867,7 @@ logging this in the caller will come out something like
 
 When defining an `autobahn.Error` object, all three properties can be defined. I.e. doing
 
-``` sourceCode
+``` js
 throw new autobahn.Error('com.myapp.error', ['this is a more complex error'], {a: 23, b: 9});
 ```
 
@@ -888,7 +888,7 @@ Progressive results are part of the advanced spec for WAMP, and may not be suppo
 
 An example for a call requesting progressive call results would be
 
-``` sourceCode
+``` js
 session.call('com.myapp.longop', [10], {}, {receive_progress: true}).then(
    function (res) {
       console.log("Final:", res);
@@ -906,7 +906,7 @@ Here a third callback has been added, which is fired on each receipt of a progre
 
 In the backend, the function for returning progressive results could be something like
 
-``` sourceCode
+``` js
 if (details.progress) {
    for (var i = 0; i < 5; i++) {
       details.progress(i);
@@ -930,13 +930,13 @@ If the feature is supported by the *Dealer*, a *Caller* may request the disclosu
 
 Example: **Call with caller disclosure**
 
-``` sourceCode
+``` js
 session.call('com.myapp.procedure1', ['Hello, world!'], {}, {disclose_me: true});
 ```
 
 If the *Dealer* allows the disclosure, the callee can consume the *Caller's* session ID like this:
 
-``` sourceCode
+``` js
 function on_call(args, kwargs, details) {
   // details.caller provides the Publisher's WAMP session ID
 }

@@ -46,6 +46,6 @@ The examples here all include a Crossbar.io configuration for the example.
 
 So do
 
-    crossbar start 
+    crossbar start
 
 in the example directory and then open a Web browser to 'localhost:8080'.

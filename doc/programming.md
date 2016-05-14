@@ -42,7 +42,7 @@ Establishing a WAMP connection
 
 Connections are handled via an **Autobahn|JS** `connection` object, which is created by
 
-``` sourceCode
+``` js
 var connection = new autobahn.Connection({
    url: "ws://127.0.0.1:8080/ws",
    realm: "votesapp"
@@ -61,7 +61,7 @@ The `connection` object has two **hooks for callbacks**:
 
 We define what happens in each case:
 
-``` sourceCode
+``` js
 connection.onopen = function (session, details) {
    // Publish, Subscribe, Call and Register
 };
@@ -78,7 +78,7 @@ The `onclose` handler receives a reason for closing as well as details.
 
 You open the connection by doing:
 
-``` sourceCode
+``` js
 connection.open();
 ```
 
@@ -102,7 +102,7 @@ Registering Procedures
 
 To make a procedure available for remote calling, the procedure needs to be *registered*. Registering a procedure is done by calling the `register` method on the `session` object:
 
-``` sourceCode
+``` js
 connection.onopen(session, details) {
    var add2 = function(args) {
       return args[0] + args[1];
@@ -127,7 +127,7 @@ Calling a procedure (that has been previously registered) is done using the `cal
 
 Here is how you call the procedure `add2` that we registered above:
 
-``` sourceCode
+``` js
 session.call('com.myapp.add2', [2, 3]).then(function showSum(res) {
    console.log('sum is', res);
 }, session.log);
@@ -163,7 +163,7 @@ To receive events published to a topic, a session needs to first subscribe to th
 
 Subscribing to a topic is done by calling the `subscribe` method on the `session` object:
 
-``` sourceCode
+``` js
 var onCounter = function(args) {
    console.log('counter is', args[0]);
 }
@@ -182,7 +182,7 @@ Publishing Events
 
 Publishing an event to a topic is done by calling the `publish` method on the `session` object.
 
-``` sourceCode
+``` js
 session.publish('com.myapp.oncounter', [1]);
 ```
 
