@@ -108,7 +108,7 @@ AutobahnJS is available via the Node package manager [here](https://www.npmjs.or
 
 ## More information
 
-For more information, take a look at the [project documentation](/doc/). This provides:
+For more information, take a look at the [project documentation](/doc/README.md). This provides:
 
 * [a quick 'Getting Started'](/doc/gettingstarted.md)
 * [a basic introduction to programming with Autobahn|JS](/doc/programming.md)
