@@ -74,9 +74,9 @@ Factory.prototype.create = function () {
 
    // Test below used to be via the 'window' object in the browser.
    // This fails when running in a Web worker.
-   // 
+   //
    // running in Node.js
-   // 
+   //
    if (global.process && global.process.versions.node) {
 
       (function () {
@@ -145,18 +145,18 @@ Factory.prototype.create = function () {
          });
 
       })();
-   // 
+   //
    // running in the browser
-   // 
+   //
    } else {
-      
+
       (function () {
 
          var websocket;
 
          // Chrome, MSIE, newer Firefox
          if ("WebSocket" in global) {
-            
+
             if (self._options.protocols) {
                websocket = new global.WebSocket(self._options.url, self._options.protocols);
             } else {
@@ -226,7 +226,6 @@ Factory.prototype.create = function () {
 
    return transport;
 };
-
 
 
 exports.Factory = Factory;

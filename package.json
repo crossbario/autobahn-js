@@ -1,0 +1,5 @@
+{
+    "name": "autobahn",
+    "version": "0.10.0",
+    "main": "autobahn.js"
+}

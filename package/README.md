@@ -1,6 +1,6 @@
 # AutobahnJS
 
-AutobahnJS implements **[The Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript.
+AutobahnJS implements **[The Web Application Messaging Protocol](http://wamp-proto.org)** in JavaScript.
 
 WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe** for applications in *one* protocol running over [WebSocket](http://tools.ietf.org/html/rfc6455).
 
@@ -11,4 +11,4 @@ AutobahnJS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**, 
 3. Caller
 4. Callee
 
-AutobahnJS is part of the [Autobahn project](http://autobahn.ws/), MIT licensed, and full source code can be found on [GitHub](https://github.com/crossbario/autobahn-js/).
+AutobahnJS is part of the [Autobahn project](http://crossbar.io/autobahn/), MIT licensed, and full source code can be found on [GitHub](https://github.com/crossbario/autobahn-js/).

@@ -26,11 +26,11 @@ Update 'package/package.json' with the new release number.
 
 ### Build for browsers
 
-In the root directory, do 
+In the root directory, do
 
 ```
 make all
-``` 
+```
 
 which will package the library for browser use into the `build` directory.
 
@@ -61,7 +61,7 @@ In the `package` directory do
 make publish
 ```
 
-(This requires your npm user to have publishing priviledges for the package on npm.)
+(This requires your npm user to have publishing privileges for the package on npm.)
 
 
 ### Copy over to AutobahnJSbuilt

@@ -75,7 +75,7 @@ exports.testRpcOptions = function (testcase) {
             var vals = [2, 0, -2];
             for (var i = 0; i < vals.length; ++i) {
 
-               pl2.push(session.call('com.myapp.square', [vals[i]], {}, {disclose_me: true}).then(
+               pl2.push(session.call('com.myapp.square', [vals[i]], {}, {}).then(
                   function (res) {
                      test.log("Squared", res);
                   },
@@ -97,7 +97,7 @@ exports.testRpcOptions = function (testcase) {
          function () {
             test.log("Registration failed!", arguments);
          }
-      );  
+      );
    };
 
    connection.open();

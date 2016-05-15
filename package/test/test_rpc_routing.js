@@ -17,7 +17,7 @@ var testutil = require('./testutil.js');
 
 exports.testRpcRouting = function (testcase) {
 
-   testcase.expect(3);
+   testcase.expect(2);
 
    var test = new testutil.Testlog("test/test_rpc_routing.txt");
 
@@ -33,16 +33,18 @@ exports.testRpcRouting = function (testcase) {
          function square(args, kwargs, details) {
             var x = args[0];
             test.log("square() called from session 2", x);
-            testcase.ok(details.caller == session2.id);
+
+            // FIXME: caller disclosure now is pure router config based
+            // testcase.ok(details.caller == session2.id);
             return x * x;
          }
 
          session1.register('com.math.square', square).then(
             function (res) {
-   
+
                test.log("square() registered on session 1");
-   
-               session2.call('com.math.square', [23], {}, {disclose_me: true}).then(
+
+               session2.call('com.math.square', [23], {}, {}).then(
                   function (res) {
                      test.log("result:", res);
 

@@ -33,7 +33,7 @@ exports.testPubsubOptions = function (testcase) {
          var counter = 0;
 
          var t1 = setInterval(function () {
-            var options = {acknowledge: true, disclose_me: true};
+            var options = {acknowledge: true};
 
             session1.publish('com.myapp.topic1', [counter], {}, options).then(
                function (pub) {
@@ -48,7 +48,9 @@ exports.testPubsubOptions = function (testcase) {
          var sub;
 
          function onevent1(args, kwargs, details) {
-            test.log("got event:", typeof(details), typeof(details.publication), typeof(details.publisher), details.publisher == session1.id, args[0]);
+            // FIXME: publisher disclosure now is a strictly router configured
+            // test.log("got event:", typeof(details), typeof(details.publication), typeof(details.publisher), details.publisher == session1.id, args[0]);
+            test.log("got event:", typeof(details), typeof(details.publication), args[0]);
 
             received += 1;
             if (received > 5) {

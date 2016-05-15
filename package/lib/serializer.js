@@ -83,5 +83,6 @@ try {
 
    exports.MsgpackSerializer = MsgpackSerializer;
 } catch (err) {
-   // msgpack-lite not installed
+
+   exports.MsgpackSerializer = null;
 }
