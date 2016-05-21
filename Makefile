@@ -1,3 +1,5 @@
+.PHONY: clean build publish
+
 default:
 	@echo "Targets: clean, build, publish"
 
