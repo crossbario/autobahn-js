@@ -1,6 +1,6 @@
 {
     "name": "autobahn",
-    "version": "0.10.0",
+    "version": "0.10.1",
     "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
     "main": "index.js",
     "browser": {
