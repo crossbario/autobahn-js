@@ -162,7 +162,7 @@ Factory.prototype.create = function () {
             } else {
                websocket = new global.WebSocket(self._options.url);
             }
-            websocket.binaryType = 'arrayBuffer';
+            websocket.binaryType = 'arraybuffer';
 
          // older versions of Firefox prefix the WebSocket object
          } else if ("MozWebSocket" in global) {
@@ -226,6 +226,7 @@ Factory.prototype.create = function () {
 
    return transport;
 };
+
 
 
 exports.Factory = Factory;
