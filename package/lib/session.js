@@ -1169,7 +1169,7 @@ Session.prototype.leave = function (reason, message) {
    }
 
    if (!reason) {
-      reason = "wamp.close.normal";
+      reason = "wamp.goodbye.normal";
    }
 
    var details = {};
