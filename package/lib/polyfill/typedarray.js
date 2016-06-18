@@ -34,7 +34,7 @@
 // Variations:
 //  * Allows typed_array.get/set() as alias for subscripts (typed_array[])
 //  * Gradually migrating structure from Khronos spec to ES6 spec
-if (typeof global["Uint8Array"] === "undefined") {
+if (typeof Uint8Array === "undefined") {
     (function (global, win) {
         'use strict';
 
@@ -1167,8 +1167,8 @@ if (typeof global["Uint8Array"] === "undefined") {
 }
 // workaround for crypto-js on IE11
 // http://code.google.com/p/crypto-js/issues/detail?id=81
-if ('window' in global) {
+if (typeof window !== "undefined") {
     if (!('Uint8ClampedArray' in window)) {
-        window.Uint8ClampedArray = global.Uint8Array;
+        window.Uint8ClampedArray = window.Uint8Array;
     }
 }
