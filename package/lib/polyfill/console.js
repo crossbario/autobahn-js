@@ -93,4 +93,4 @@
       };
    }());
 
-})(global.console);
+})(typeof console !== 'undefined' ? console : undefined);
