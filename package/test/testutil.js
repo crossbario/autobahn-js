@@ -126,6 +126,9 @@ Testlog.prototype.check = function () {
 
    if (fs.existsSync(self._filename)) {
       var slog_baseline = fs.readFileSync(self._filename);
+      //TH 26.07.2016 on Windows platform replace crlf in baseline file with Unix style lf
+     //if the file is already in unix format nothing will be replaced, so it works also in this case
+      if (process.platform==="win32") slog_baseline=slog_baseline.toString().replace(/\r\n/g,"\n");
       if (slog != slog_baseline) {
          return "\nExpected:\n\n" + slog_baseline + "\n\n\nGot:\n\n" + slog + "\n\n";
       } else {
