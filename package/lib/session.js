@@ -504,7 +504,7 @@ var Session = function (socket, defer, onchallenge) {
          // from one of the subscription handler objects attached to the subscription
          // since for non-pattern subscriptions this is not sent over the wire
          var ed = new Event(publication,
-                            details.topic || subs[0].topic,
+                            details.topic || (subs[0] && subs[0].topic),
                             details.publisher,
                             details.publisher_authid,
                             details.publisher_authrole
