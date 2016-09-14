@@ -58,7 +58,7 @@ var http_post = function (url, data, timeout) {
 
    var d = when.defer();
    var req = new XMLHttpRequest();
-
+   req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {
 
       if (req.readyState === 4) {
