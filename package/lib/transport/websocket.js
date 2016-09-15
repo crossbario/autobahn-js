@@ -77,15 +77,22 @@ Factory.prototype.create = function () {
          var websocket;
 
          var protocols;
+         var wsOptions = {};
+         
          if (self._options.protocols) {
             protocols = self._options.protocols;
             if (Array.isArray(protocols)) {
                protocols = protocols.join(',');
             }
-            websocket = new WebSocket(self._options.url, {protocol: protocols});
-         } else {
-            websocket = new WebSocket(self._options.url);
+            wsOptions.protocol = protocols;
          }
+         
+         if (self._options.agent) {
+            wsOptions.agent = self._options.agent;
+         }
+
+         console.log(JSON.stringify(wsOptions));
+         websocket = new WebSocket(self._options.url, wsOptions);
 
          transport.send = function (msg) {
             var payload = JSON.stringify(msg);
@@ -160,18 +167,18 @@ Factory.prototype.create = function () {
          });
 
       })();
-   // 
+   //
    // running in the browser
-   // 
+   //
    } else {
-      
+
       (function () {
 
          var websocket;
 
          // Chrome, MSIE, newer Firefox
          if ("WebSocket" in global) {
-            
+
             if (self._options.protocols) {
                websocket = new global.WebSocket(self._options.url, self._options.protocols);
             } else {
