@@ -1499,7 +1499,7 @@ Session.prototype.resolve = function (curie) {
       if (prefix in self._prefixes) {
          return self._prefixes[prefix] + '.' + curie.substring(i + 1);
       } else {
-         throw "cannot resolve CURIE prefix '" + prefix + "'";
+         return curie;
       }
    } else {
       return curie;
