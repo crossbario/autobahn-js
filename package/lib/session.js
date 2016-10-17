@@ -20,6 +20,9 @@ var when_fn = require("when/function");
 var log = require('./log.js');
 var util = require('./util.js');
 
+// require('int64-buffer') for correct msgpack serialization of large integers
+var Uint64BE = require('int64-buffer').Uint64BE;
+
 // IE fallback (http://afuchs.tumblr.com/post/23550124774/date-now-in-ie8)
 Date.now = Date.now || function() { return +new Date; };
 
@@ -67,9 +70,10 @@ var WAMP_FEATURES = {
 
 
 // generate a WAMP ID
-//
+// 
 function newid () {
-   return Math.floor(Math.random() * 9007199254740992);
+   // msgpack: Uint64BE ensures that ID is encoded as int instead of double
+   return new Uint64BE(Math.floor(Math.random() * 9007199254740992));
 }
 
 
