@@ -32,20 +32,6 @@ exports.JSONSerializer = JSONSerializer;
 
 try {
    var msgpack = require('msgpack-lite');
-   var write_type = require("msgpack-lite/lib/write-type").type;
-   var write_token = require("msgpack-lite/lib/write-token").token;
-
-   // Save the original number encoder
-   var original_number = write_type.number;
-
-   // monkey patch the number encoder to send all generated
-   // WAMP IDs as integers
-   write_type.number = function (encoder, value) {
-      if (Number.isInteger(value) && value > 2147483648 && value <= 9007199254740991) {
-         return write_token[0xcf](encoder, value);
-      }
-      return original_number(encoder, value);
-   };
 
    function MsgpackSerializer() {
       this.SERIALIZER_ID = 'msgpack';
@@ -58,7 +44,8 @@ try {
    };
 
    MsgpackSerializer.prototype.unserialize = function (payload) {
-      return msgpack.decode(payload, {codec: this.codec});
+      // need to encapsulate ArrayBuffer into Uint8Array for msgpack decoding
+      return msgpack.decode(new Uint8Array(payload), {codec: this.codec});
    };
 
    /**

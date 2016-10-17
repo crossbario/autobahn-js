@@ -14,7 +14,8 @@
         "crypto-js": ">= 3.1.5",
         "when": ">= 3.7.3",
         "ws": ">= 0.8.0",
-        "msgpack-lite": ">= 0.1.17"
+        "msgpack-lite": ">= 0.1.18",
+        "int64-buffer": ">= 0.1.5"
     },
     "optionalDependencies": {
         "bufferutil": ">= 1.2.1",
