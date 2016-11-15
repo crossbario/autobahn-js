@@ -14,7 +14,7 @@
 // this works via https://github.com/caolan/nodeunit
 
 var connect = require('./test_connect.js');
-//var msgpack_serialization = require('./test_msgpack_serialization.js');
+var msgpack_serialization = require('./test_msgpack_serialization.js');
 var rpc_complex = require('./test_rpc_complex.js');
 var rpc_arguments = require('./test_rpc_arguments.js');
 var rpc_error = require('./test_rpc_error.js');
@@ -33,7 +33,7 @@ var pubsub_wildcard_sub = require('./test_pubsub_wildcard_sub.js');
 
 
 exports.testConnect = connect.testConnect;
-//exports.testMsgpackSerialization = msgpack_serialization.testMsgpackSerialization;
+exports.testMsgpackSerialization = msgpack_serialization.testMsgpackSerialization;
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
 exports.testRpcComplex = rpc_complex.testRpcComplex;
 exports.testRpcError = rpc_error.testRpcError;
