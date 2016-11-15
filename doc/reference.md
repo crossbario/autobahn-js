@@ -114,13 +114,13 @@ Connection Callbacks
 The **connection open callback** is fired when the connection has been established and a new session was created. This is the main callback which application code will hook into.
 
 ``` js
-autobahn.Connection.onopen = function (session) {
+autobahn.Connection.onopen = function (session, details) {
    // Underlying transport to WAMP router established and new WAMP session started.
    // session is an instance of autobahn.Session
 };
 ```
 
-The **connection open callback** is passed the `autobahn.Session` object which has been created on opening the connection.
+The **connection open callback** is passed the `autobahn.Session` object which has been created on opening the connection and a details object which contains further information about the session establishment such as the authentication role and ID assigned by the WAMP router.
 
 The **connection close callback** is fired when the connection has been closed explicitly, was lost or could not be established in the first place.
 
