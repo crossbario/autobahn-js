@@ -2,7 +2,7 @@
 
 ## First Contact
 
-If you're new to Autobahn|JS, then please take a look at [Getting Started](gettingstarted.md) first.
+If you're new to Autobahn|JS, then please take a look at [Getting Started](getting-started.md) first.
 
 You may also want to read up a bit on the [Web Application Messaging Protocol (WAMP)](http://wamp-proto.org/why/) which it implements.
 
@@ -10,8 +10,9 @@ And finally, we suggest visiting the [Crossbar.io site](http://crossbar.io). Cro
 
 ## Table of Contents
 
-* [Getting Started](gettingstarted.md)
+* [Getting Started](getting-started.md)
 * [Programming](programming.md) - A quick introduction to using Autobahn|JS in your applications
 * [Reference](reference.md) - A full reference to the Autobahn|JS API
-* [Examples Overview](examples_overview.md) - An overview of the available code examples
+* [Examples Overview](examples.md) - An overview of the available code examples
 * [Building](building.md) - Instructions for how to build Autobahn|JS from source
+* [Release Process](release-process.md) - Instructions on how to do a new release (only relevant for project members)

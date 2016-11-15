@@ -11,7 +11,8 @@
         "tweetnacl": ">= 0.14.3",
         "when": ">= 3.7.7",
         "ws": ">= 1.1.1",
-        "msgpack-lite": ">= 0.1.26"
+        "msgpack-lite": ">= 0.1.26",
+        "int64-buffer": ">= 0.1.9"
     },
     "optionalDependencies": {
         "bufferutil": ">= 1.2.1",

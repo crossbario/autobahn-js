@@ -35,7 +35,7 @@ Hence, to create a WAMP application, you
 Including Autobahn
 ==================
 
-We need to include the **Autobahn|JS** library in our JavaScript. There are instructions in [Getting Started](/gettingstarted.md) for how to do this in the browser and in Node.js. This also links to available WAMP routers. In this documentation use of [Crossbar.io](http://crossbar.io) is assumed, but examples should work with other routers as well.
+We need to include the **Autobahn|JS** library in our JavaScript. There are instructions in [Getting Started](/getting-started.md) for how to do this in the browser and in Node.js. This also links to available WAMP routers. In this documentation use of [Crossbar.io](http://crossbar.io) is assumed, but examples should work with other routers as well.
 
 Establishing a WAMP connection
 ==============================
@@ -198,5 +198,5 @@ Where to go from here
 =====================
 
 -   For more features of **Autobahn|JS** and details about RPC and PubSub, see the [Reference](reference.md).
--   There's an overview of example code for specific WAMP features [Examples Overview](examples_overview.md).
+-   There's an overview of example code for specific WAMP features [Examples Overview](examples.md).
 -   Read about [the idea behind WAMP.](http://wamp.ws/why/)
