@@ -1,10 +1,11 @@
-.PHONY: clean build publish
+.PHONY: clean build publish test
 
 default:
 	@echo "Targets: clean, build, publish"
 
 clean:
 	rm -rf build
+	rm -rf ./node_modules
 
 build:
 	scons
@@ -20,3 +21,18 @@ closure_version:
 requirements:
 	pip install -U scons scour taschenmesser boto
 
+
+test:
+	npm test
+
+test_connect:
+	nodeunit test/test_connect.js
+
+test_msgpack_serialization:
+	nodeunit test/test_msgpack_serialization.js
+
+dependencies:
+	npm update
+
+publish_npm:
+	npm publish

@@ -6,4 +6,6 @@ node_modules
 *.pyc
 *.pid
 .idea/
+.*.swp
+.lock-*
 package/.crossbar/
