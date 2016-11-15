@@ -50,7 +50,7 @@ checksums.append(env.SHA256("build/CHECKSUM.SHA256", artifacts))
 
 # fixed static files to be included
 statics = []
-for f in ["LICENSE.md"]:
+for f in ["LICENSE"]:
     statics.append(Command("build/{}".format(f), [], Copy("$TARGET", f)))
 
 # The default target consists of all artifacts that
