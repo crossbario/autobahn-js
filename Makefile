@@ -16,3 +16,7 @@ publish:
 
 closure_version:
 	java -jar ${JS_COMPILER} --version
+
+requirements:
+	pip install -U scons scour taschenmesser boto
+

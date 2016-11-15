@@ -1,28 +1,30 @@
 {
     "name": "autobahn",
-    "version": "0.10.1",
+    "version": "0.11.0",
     "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
     "main": "index.js",
-    "browser": {
-        "lib/transport/rawsocket.js": false,
-        "msgpack-lite": "msgpack-lite/global"
-    },
     "scripts": {
         "test": "nodeunit test/test.js"
     },
     "dependencies": {
-        "crypto-js": ">= 3.1.5",
-        "when": ">= 3.7.3",
-        "ws": ">= 0.8.0",
-        "msgpack-lite": ">= 0.1.17"
+        "crypto-js": ">= 3.1.8",
+        "tweetnacl": ">= 0.14.3",
+        "when": ">= 3.7.7",
+        "ws": ">= 1.1.1",
+        "msgpack-lite": ">= 0.1.26"
     },
     "optionalDependencies": {
         "bufferutil": ">= 1.2.1",
         "utf-8-validate": ">= 1.2.1"
     },
     "devDependencies": {
-        "browserify": ">= 11.0.1",
-        "nodeunit": ">= 0.9.1"
+        "browserify": ">= 13.1.1",
+        "nodeunit": ">= 0.10.2"
+    },
+    "browser": {
+        "ws": false,
+        "lib/transport/rawsocket.js": false,
+        "msgpack-lite": "msgpack-lite/global"
     },
     "repository": {
         "type": "git",
@@ -34,6 +36,6 @@
         "RPC",
         "PubSub"
     ],
-    "author": "Tavendo GmbH",
+    "author": "Crossbar.io Technologies GmbH",
     "license": "MIT"
 }

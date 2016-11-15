@@ -10,48 +10,50 @@ To build **Autobahn|JS** for use in browsers, you will need
 -   [ws](http://websockets.github.io/ws/)
 -   [crypto-js](https://www.npmjs.org/package/crypto-js)
 
-**Install NodeJS**
 
-*on Windows*
+## Installing build requirements
 
-Download the installer from [the NodeJS website](http://nodejs.org/download/).
+Install [Node.js](http://nodejs.org/)
 
-*on Ubuntu*
+    sudo apt-get install -y nodejs nodejs-legacy npm
 
-    sudo apt-get install nodejs nodejs-legacy npm
+Install browserify
 
-SCons is a Python based build tool, so you will need [Python](http://python.org/) as well.
+    sudo npm install -g browserify
 
-**Install Taschenmesser**, a SCons toolbelt also written in Python
+Install Python tools (preferrably into a dedicated virtualenv)
 
-*on Windows*
+    pip install -U scons boto scour taschenmesser
 
-    pip install --upgrade taschenmesser[aws,svg]
+Install Java JDK
 
-*on Ubuntu*
+    sudo apt install -y openjdk-8-jdk
 
-    sudo pip install --upgrade taschenmesser[aws,svg]
+Install
 
-**Set environment variables**
+    cd ~
+    rm -f compiler-latest.zip
+    wget https://dl.google.com/closure-compiler/compiler-latest.zip
+    unzip -o compiler-latest.zip
 
-*on Windows*
+This will produce a file like `closure-compiler-v20161024.jar` in your `$HOME`.
 
-1.  `JAVA_HOME` pointing to your Java run-time
+Install library dependencies
 
-    C:\Program Files\Java\jre7
+    sudo npm install -g ws when crypto-js msgpack-lite utf-8-validate
 
-1.  Add Python and Python script to `PATH`
+Set environment variables (add that to `$HOME/.profile`):
 
-    C:\Python27;C:\Python27\Scripts;
-
-1.  Set `JS_COMPILER` pointing to the Google Closure `compiler.jar`
-
-    C:\Program Files\Google Closure\compiler.jar
-
-*on Ubuntu*
-
-    export JS_COMPILER=$HOME/compiler.jar
+    export JS_COMPILER=$HOME/closure-compiler-v20161024.jar
     export JAVA_HOME=/usr/lib/jvm/default-java
+    export NODE_PATH=/usr/local/lib/node_modules/
+
+
+
+
+
+
+
 
 **Clone the Autobahn|JS repo**
 
@@ -60,7 +62,7 @@ SCons is a Python based build tool, so you will need [Python](http://python.org/
 
 **Install JavaScript dependencies in NodeJS**
 
-    npm install ws when crypto-js
+    npm install ws when crypto-js msgpack-lite utf-8-validate
 
 **Start the build**:
 
