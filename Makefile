@@ -1,27 +1,32 @@
-.PHONY: clean build publish test
+.PHONY: clean test build_browser build_npm publish_browser publish_npm
 
 default:
-	@echo "Targets: clean, build, publish"
+	@echo "Targets:"
+	@echo "  - clean            Clean the build"
+	@echo "  - test             Run all unit tests"
+	@echo "  - build_browser    Build browser version of the library"
+	@echo "  - build_npm        NOOP (there is nothing to prebuild here)"
+	@echo "  - publish_browser  Publish the browser version of the library"
+	@echo "  - publish_npm      Publish the npm version of the library"
 
 clean:
 	rm -rf build
 	rm -rf ./node_modules
 	rm -f .sconsign.dblite
 
-build:
+build_browser:
 	scons
 
-publish:
+build_npm:
+	@echo "Ok, nothing to build for npm!"
+
+publish_browser:
 	scons publish
 	cp ./build/* ../autobahn-js-built
 	@echo "Now commit and push autobahn-js-built!"
 
-closure_version:
-	java -jar ${JS_COMPILER} --version
-
-requirements:
-	pip install -U scons scour taschenmesser boto
-
+publish_npm:
+	npm publish
 
 test:
 	npm test
@@ -31,9 +36,3 @@ test_connect:
 
 test_msgpack_serialization:
 	nodeunit test/test_msgpack_serialization.js
-
-dependencies:
-	npm update
-
-publish_npm:
-	npm publish

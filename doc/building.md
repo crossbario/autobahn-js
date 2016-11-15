@@ -32,7 +32,8 @@ This will produce a file like `closure-compiler-v20161024.jar` in your `$HOME`.
 
 Install library dependencies
 
-    sudo npm install -g ws when crypto-js msgpack-lite utf-8-validate
+    sudo npm install -g ws when crypto-js \
+      tweetnacl msgpack-lite int64-buffer bufferutil utf-8-validate
 
 Set environment variables (add that to `$HOME/.profile`):
 
