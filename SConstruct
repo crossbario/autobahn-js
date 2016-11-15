@@ -9,7 +9,7 @@ env = Environment(tools = ['default', 'taschenmesser'],
                   ENV = os.environ)
 
 # Get package version
-version = json.load(open('package/package.json'))['version']
+version = json.load(open('package.json'))['version']
 print("Building AutobahnJS {}".format(version))
 
 env['JS_DEFINES'] = {
@@ -17,12 +17,12 @@ env['JS_DEFINES'] = {
 }
 
 # Source for Autobahn package
-sourcedir = 'package/lib'
+sourcedir = 'lib'
 sources = [os.path.join(sourcedir, d) for d in os.listdir(sourcedir)]
 
 # browserified
 ab = env.Command("build/autobahn.js",
-                 "package/lib/autobahn.js",
+                 "lib/autobahn.js",
                  "browserify $SOURCE --standalone autobahn -o $TARGET")
 Depends(ab, sources)
 
@@ -50,7 +50,7 @@ checksums.append(env.SHA256("build/CHECKSUM.SHA256", artifacts))
 
 # fixed static files to be included
 statics = []
-for f in ["LICENSE.md"]:
+for f in ["LICENSE"]:
     statics.append(Command("build/{}".format(f), [], Copy("$TARGET", f)))
 
 # The default target consists of all artifacts that
