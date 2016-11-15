@@ -6,6 +6,7 @@ default:
 clean:
 	rm -rf build
 	rm -rf ./node_modules
+	rm -f .sconsign.dblite
 
 build:
 	scons

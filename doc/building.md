@@ -11,7 +11,7 @@ Install [Node.js](http://nodejs.org/)
 
 Install [browserify](http://browserify.org/)
 
-    sudo npm install -g browserify
+    sudo npm install -g browserify nodeunit
 
 Install Python tools (preferrably into a dedicated virtualenv)
 
