@@ -1,6 +1,6 @@
 {
     "name": "autobahn",
-    "version": "0.11.0",
+    "version": "0.11.1",
     "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
     "main": "index.js",
     "scripts": {
@@ -24,8 +24,7 @@
     },
     "browser": {
         "ws": false,
-        "lib/transport/rawsocket.js": false,
-        "msgpack-lite": "msgpack-lite/global"
+        "lib/transport/rawsocket.js": false
     },
     "repository": {
         "type": "git",
