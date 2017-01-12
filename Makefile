@@ -14,14 +14,22 @@ clean:
 	rm -rf ./node_modules
 	rm -f .sconsign.dblite
 
+requirements:
+	pip install scons boto taschenmesser
+
+build: build_browser build_npm
+
 build_browser:
 	scons
 
 build_npm:
-	@echo "Ok, nothing to build for npm!"
+	@echo "Ok, npm doesn't need a build step"
+
+publish: publish_browser publish_npm
 
 publish_browser:
 	scons publish
+	git -C ../autobahn-js-built pull
 	cp ./build/* ../autobahn-js-built
 	@echo "Now commit and push autobahn-js-built!"
 
