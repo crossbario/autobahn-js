@@ -150,7 +150,7 @@ Publish & Subscribe
 -   *Subscriber*
 -   *Broker*
 
-A *Publishers* publishes events to topics by providing the topic URI and any payload for the event. Subscribers of the topic will receive the event together with the event payload.
+A *Publisher* publishes events to topics by providing the topic URI and any payload for the event. Subscribers of the topic will receive the event together with the event payload. Publishing can include some options for whitelisting and blacklisting receivers (among other things).
 
 *Subscribers* subscribe to topics they are interested in with *Brokers*. *Publishers* initiate publication first at *Brokers*. *Brokers* route events incoming from *Publishers* to *Subscribers* that are subscribed to respective topics.
 
@@ -177,6 +177,11 @@ To subscribe (line 5) we provide the event handler function (`onCounter`) and th
 
 When the subscription succeeds, we will receive any events published to `'com.myapp.oncounter'`. Note that we won't receive events published *before* the subscription succeeds.
 
+You may also include an optional third argument which is a dictionary of options. Valid options:
+
+- `match`: one of "exact" (the default), "prefix" or "wildcard". See [crossbar.io's subscription documentation](http://crossbar.io/docs/Pattern-Based-Subscriptions/)
+- `get_retained`: bool, default `false`. If `true` the subscriber gets a retained event from the broker (if any).
+
 Publishing Events
 -----------------
 
@@ -184,11 +189,26 @@ Publishing an event to a topic is done by calling the `publish` method on the `s
 
 ``` js
 session.publish('com.myapp.oncounter', [1]);
+session.publish('com.myapp.complex', [1, 2, 3], {foo: "bar"}, {exclude_me: false});
 ```
+
+The first arg is a string, a topic WAMP URI. The second argument is a list of `args` and the third argument is a dictionary of `kwargs`.
+
+You may also include a forth argument containing options. These require support from the router to work (for example, see [crossbar.io's white/black listing documentation](http://crossbar.io/docs/Subscriber-Black-and-Whitelisting/). Valid options are:
+
+- `eligible`: a list of session-id's that are allowed to receive the event
+- `eligible_authid`: a list of strings of session authid's which are allowed to receive the publish
+- `eligible_authrole`: a list of strings of authrole's which can receive the publish
+- `exclude`: blacklist by session-id's
+- `exclude_authid`: blacklist by `authid`s
+- `exclude_authrole`: blacklist by `authrole`s
+- `retain`: bool, default `false`. Request broker to retain the event.
+- `acknowledge`: bool, default `false`. Request a notification from the broker when the event has been accepted (this does **not** wait for all subscribers to actually receive the event).
+- `exclude_me`: bool, default `true`. If `false`, the sending session will also receive the publish (if it is subscribed).
 
 > **tip**
 >
-> By default, a publisher will not receive an event it publishes even when the publisher is *itself* subscribed to the topic subscribed to. This behavior can be overridden.
+> By default, a publisher will not receive an event it publishes even when the publisher is *itself* subscribed to the topic subscribed to. This behavior can be overridden by passing `exclude_me: False` in the options.
 
 > **tip**
 >
