@@ -29,17 +29,17 @@ var config = {
 */
 
 // shortcut config
-var config = {
+var default_config = {
    url: 'ws://127.0.0.1:8080/ws',
    realm: 'realm1'
 }
 
-function connect_n(n) {
+function connect_n(n, config) {
    var dl = [];
    for (var i = 0; i < n; ++i) {
       (function (idx) {
          var d = autobahn.when.defer();
-         var connection = new autobahn.Connection(config);
+         var connection = new autobahn.Connection(config || default_config);
 
          connection.onopen = function (session) {
             d.resolve(session);
@@ -148,5 +148,5 @@ Testlog.prototype.check = function () {
 
 
 exports.Testlog = Testlog;
-exports.config = config;
+exports.config = default_config;
 exports.connect_n = connect_n;

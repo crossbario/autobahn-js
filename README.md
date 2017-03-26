@@ -93,6 +93,15 @@ AutobahnJS is available via the Node package manager [here](https://www.npmjs.or
 
 	npm install autobahn
 
+#### NodeJS and ws version
+
+AutobahnJS currently strives for support of NodeJS v4.2.6 or later. The reason is that this is the version that currently ships with Ubuntu 16.04 LTS.
+
+On NodeJS, we need the [ws library](https://github.com/websockets/ws/) for WebSocket support, as different from browsers, NodeJS does not come with a native implementation.
+
+However, the ws library v2 or later is incompatible with NodeJS earlier than v4.5.0. See [here](http://stackoverflow.com/a/42331959/884770) and [here](https://github.com/websockets/ws/issues/989).
+
+Rather than dropping support for NodeJS v4 (and hence for the system NodeJS version of Ubuntu), we use ws v1 for time being.
 
 ## More information
 

@@ -1,0 +1,17 @@
+0 "connecting 2 sessions ..."
+1 "all 2 sessions connected"
+2 "session._socket.info" {"protocol":"wamp.2.json","type":"rawsocket","url":null}
+3 "session._socket.info" {"protocol":"wamp.2.json","type":"rawsocket","url":null}
+4 "publishing to topic 'com.myapp.topic1': 0"
+5 "Got event:" 0
+6 "publishing to topic 'com.myapp.topic1': 1"
+7 "Got event:" 1
+8 "publishing to topic 'com.myapp.topic1': 2"
+9 "Got event:" 2
+10 "publishing to topic 'com.myapp.topic1': 3"
+11 "Got event:" 3
+12 "publishing to topic 'com.myapp.topic1': 4"
+13 "Got event:" 4
+14 "publishing to topic 'com.myapp.topic1': 5"
+15 "Got event:" 5
+16 "Closing .."
