@@ -45,6 +45,10 @@ function connect_n(n) {
             d.resolve(session);
          };
 
+         connection.onclose = function (reason, details) {
+            console.log('CLOSE', reason, details);
+         }
+
          connection.open();
 
          dl.push(d.promise);
@@ -60,6 +64,7 @@ var Testlog = function (filename) {
 
    self._filename = filename;
    self._log = [];
+//   self._log = [["AutobahnJS " + autobahn.version]];
 };
 
 

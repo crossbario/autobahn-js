@@ -13,6 +13,8 @@
 
 // this works via https://github.com/caolan/nodeunit
 
+var sync = require('./test_basic_sync.js');
+var async = require('./test_basic_async.js');
 var connect = require('./test_connect.js');
 var msgpack_serialization = require('./test_msgpack_serialization.js');
 var rpc_complex = require('./test_rpc_complex.js');
@@ -32,6 +34,8 @@ var pubsub_prefix_sub = require('./test_pubsub_prefix_sub.js');
 var pubsub_wildcard_sub = require('./test_pubsub_wildcard_sub.js');
 
 
+exports.testSync = sync.testSync;
+exports.testAsync = async.testAsync;
 exports.testConnect = connect.testConnect;
 exports.testMsgpackSerialization = msgpack_serialization.testMsgpackSerialization;
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
@@ -46,6 +50,7 @@ exports.testPubsubComplex = pubsub_complex.testPubsubComplex;
 exports.testPubsubOptions = pubsub_options.testPubsubOptions;
 exports.testPubsubExcludeMe = pubsub_excludme.testPubsubExcludeMe;
 exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
+exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
 exports.testPubsubPrefixSub = pubsub_prefix_sub.testPubsubPrefixSub;
 exports.testPubsubWildcardSub = pubsub_wildcard_sub.testPubsubWildcardSub;
 
