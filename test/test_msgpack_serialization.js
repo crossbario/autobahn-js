@@ -21,12 +21,13 @@ exports.testMsgpackSerialization = function (testcase) {
 
    var test = new testutil.Testlog("test/test_msgpack_serialization.txt");
 
-   var serializer = new autobahn.serializer.MsgpackSerializer();
+   var json_ser = new autobahn.serializer.JSONSerializer();
+   var msgpack_ser = new autobahn.serializer.MsgpackSerializer();
 
    var config = {
       url: testutil.config.url,
       realm: testutil.config.realm,
-      serializers: [serializer]
+      serializers: [msgpack_ser]
    };
    var connection = new autobahn.Connection(config);
 
