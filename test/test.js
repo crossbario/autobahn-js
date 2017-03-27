@@ -51,7 +51,7 @@ exports.testJSONSerialization = serialization_json.testJSONSerialization;
 exports.testMsgpackSerialization = serialization_msgpack.testMsgpackSerialization;
 exports.testCBORSerialization = serialization_cbor.testCBORSerialization;
 
-//exports.testRawSocketTransport = rawsocket_transport.testRawSocketTransport;
+exports.testRawSocketTransport = rawsocket_transport.testRawSocketTransport;
 
 exports.testRpcArguments = rpc_arguments.testRpcArguments;
 exports.testRpcComplex = rpc_complex.testRpcComplex;

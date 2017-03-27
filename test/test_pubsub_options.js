@@ -65,7 +65,7 @@ exports.testPubsubOptions = function (testcase) {
                }
             );
             counter += 1;
-         }, 500);
+         }, 1000);
       },
       function (err) {
          test.log(err);
