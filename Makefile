@@ -46,11 +46,14 @@ copy_browser: build_browser
 publish_npm:
 	npm publish
 
+crossbar:
+	crossbar start
+
 test:
 	npm test
 
 test_connect:
 	nodeunit test/test_connect.js
 
-test_msgpack_serialization:
-	nodeunit test/test_msgpack_serialization.js
+test_serialization_cbor:
+	nodeunit test/test_serialization_cbor.js

@@ -5,7 +5,7 @@
             "type": "router",
             "realms": [
                 {
-                    "name": "realm1",
+                    "name": "crossbardemo",
                     "roles": [
                         {
                             "name": "anonymous",
@@ -58,12 +58,15 @@
                         "port": 8080
                     },
                     "rawsocket": {
+                        "serializers": [
+                            "cbor", "msgpack", "ubjson", "json"
+                        ]
                     },
                     "websocket": {
                         "ws": {
                             "type": "websocket",
                             "serializers": [
-                                "cbor", "msgpack", "json"
+                                "cbor", "msgpack", "ubjson", "json"
                             ],
                             "options": {
                                 "compression": {
