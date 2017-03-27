@@ -31,20 +31,7 @@ exports.testPubsubOptions = function (testcase) {
          var session2 = res[1];
 
          var counter = 0;
-
-         var t1 = setInterval(function () {
-            var options = {acknowledge: true};
-
-            session1.publish('com.myapp.topic1', [counter], {}, options).then(
-               function (pub) {
-                  test.log("event published", typeof(pub), typeof(pub.id));
-               }
-            );
-            counter += 1;
-         }, 100);
-
          var received = 0;
-
          var sub;
 
          function onevent1(args, kwargs, details) {
@@ -68,6 +55,17 @@ exports.testPubsubOptions = function (testcase) {
          }
 
          sub = session2.subscribe('com.myapp.topic1', onevent1);
+
+         var t1 = setInterval(function () {
+            var options = {acknowledge: true};
+
+            session1.publish('com.myapp.topic1', [counter], {}, options).then(
+               function (pub) {
+                  test.log("event published", typeof(pub), typeof(pub.id));
+               }
+            );
+            counter += 1;
+         }, 500);
       },
       function (err) {
          test.log(err);
