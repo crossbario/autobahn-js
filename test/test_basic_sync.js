@@ -11,16 +11,17 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var autobahn = require('./../index.js');
+var testutil = require('./testutil.js');
 
-var debug = function () {};
+exports.testSync = function (testcase) {
 
-if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
-   debug = function () {
-      console.log.apply(console, arguments);
-   }
+   testcase.expect(1);
+
+   var test = new testutil.Testlog("test/test_basic_sync.txt");
+
+   test.log(true);
+   var chk = test.check();
+   testcase.ok(!chk, chk);
+   testcase.done();
 }
-
-var warn = console.warn;
-
-exports.debug = debug;
-exports.warn = warn;

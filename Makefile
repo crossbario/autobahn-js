@@ -11,11 +11,18 @@ default:
 
 clean:
 	rm -rf build
-	rm -rf ./node_modules
-	rm -f .sconsign.dblite
+	#rm -rf ./node_modules
+	#rm -f .sconsign.dblite
 
 requirements:
-	pip install scons boto taschenmesser
+	pip install -U scons boto taschenmesser
+	sudo apt install -y npm nodejs-legacy default-jre
+	node -v
+	sudo npm install -g google-closure-compiler nodeunit
+
+browser_deps:
+	npm install
+	npm update
 
 build: build_browser build_npm
 
@@ -27,14 +34,20 @@ build_npm:
 
 publish: publish_browser publish_npm
 
-publish_browser:
+publish_browser: build_browser
 	scons publish
+
+copy_browser: build_browser
 	git -C ../autobahn-js-built pull
 	cp ./build/* ../autobahn-js-built
-	@echo "Now commit and push autobahn-js-built!"
+	cp ./build/* ../crossbar/crossbar/templates/default/web/js/
+	@echo "Now commit and push these repos: autobahn-js-built, crossbar"
 
 publish_npm:
 	npm publish
+
+crossbar:
+	crossbar start
 
 test:
 	npm test
@@ -42,5 +55,5 @@ test:
 test_connect:
 	nodeunit test/test_connect.js
 
-test_msgpack_serialization:
-	nodeunit test/test_msgpack_serialization.js
+test_serialization_cbor:
+	nodeunit test/test_serialization_cbor.js
