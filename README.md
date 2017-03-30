@@ -119,6 +119,53 @@ However, the ws library v2 or later is incompatible with NodeJS earlier than v4.
 
 Rather than dropping support for NodeJS v4 (and hence for the system NodeJS version of Ubuntu), we use ws v1 as a dependency in `package.json`, but allow any version of ws to be used.
 
+#### Usage on Ubuntu
+
+As mentioned above, Ubuntu 16.04 ships with Node 4.2, which only works with ws v1. To use that, do the following:
+
+```console
+sudo npm install -g ws@1 autobahn
+export NODE_PATH=/usr/local/lib/node_modules/
+```
+
+> This first install ws at version 1, and then installs Autobahn. When you install Autobahn without installing ws first, the latest ws version will be installed as a dependency of Autobahn, hence ws v2, and that won't work.
+
+To use a current Node with ws v2, do the following:
+
+```console
+cd ~
+wget https://nodejs.org/dist/v6.10.1/node-v6.10.1-linux-x64.tar.xz
+tar xvf node-v6.10.1-linux-x64.tar.xz
+export PATH=${HOME}/node-v6.10.1-linux-x64/bin:${PATH}
+export NODE_PATH=${HOME}/node-v6.10.1-linux-x64/lib/node_modules
+```
+
+This should give you:
+
+```console
+oberstet@office-corei7:~$ which node
+/home/oberstet/node-v6.10.1-linux-x64/bin/node
+oberstet@office-corei7:~$ which npm
+/home/oberstet/node-v6.10.1-linux-x64/bin/npm
+oberstet@office-corei7:~$ node -v
+v6.10.1
+oberstet@office-corei7:~$ npm -v
+3.10.10
+```
+
+Now you can install Autobahn:
+
+```console
+npm install -g autobahn
+```
+
+and check
+
+```console
+oberstet@office-corei7:~$ node -e "var autobahn = require('autobahn'); console.log(autobahn.version);"
+0.12.0
+```
+
 ## More information
 
 For more information, take a look at the [project documentation](/doc/README.md). This provides:
