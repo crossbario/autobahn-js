@@ -45,39 +45,13 @@ This starts up a Docker container and client.js, which connects to a Crossbar.io
 Browsers
 ========
 
-You can get the **latest** pre-built **Autobahn|JS** release from here:
+You can get the **latest** pre-built **Autobahn|JS** release from the [autobahn-js-built repository](https://github.com/crossbario/autobahn-js-built):
 
-1.  [Production (minimized and gzipped)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz)
-2.  [Production (only minimized)](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.js)
-3.  [Development](https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.js)
 
-For **development purposes**, you can include these directly like so
+1.  Production (minimized and gzipped)
+2.  Production (only minimized)
+3.  Development
 
-``` html
-<!DOCTYPE html>
-<html>
-   <body>
-      <script
-         src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
-      </script>
-      <script>
-         console.log("Ok, Autobahn loaded", autobahn.version);
-      </script>
-   </body>
-</html>
-```
-
-> **note**
->
-> We place restrictions on HTTP referrers, so using the above in production would not work in most cases.
-
-For **production use**, please host **Autobahn|JS** yourself.
-
-The **old** **Autobahn|JS**, which supports the deprecated version 1 of WAMP is still available from here:
-
-1.  [0.8.2 Production (minimized and gzipped)](http://autobahn.s3.amazonaws.com/js/autobahn.min.jgz)
-2.  [0.8.2 Production (only minimized)](http://autobahn.s3.amazonaws.com/js/autobahn.min.js)
-3.  [0.8.2 Development](http://autobahn.s3.amazonaws.com/js/autobahn.js)
 
 AMD and RequireJS
 =================
@@ -94,7 +68,7 @@ If you are using a module system like [RequireJS](http://requirejs.org/), you ca
         baseUrl: ".",
         paths: {
             "autobahn":
-               "https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min",
+               "https://path_to_your_hosted_version_of_autobahn/autobahn.min.js",
             "when": "https://cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when"
         },
         shim: {

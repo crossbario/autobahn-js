@@ -53,7 +53,7 @@ To enable *debug mode*, define a global variable
       <script>
          AUTOBAHN_DEBUG = true;
       </script>
-      <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz">
+      <script src="http://path_to_your_hosted_version_of_autobah/autobahn.min.jgz">
      </script>
    </body>
 </html>

@@ -2,9 +2,8 @@
 
 Autobahn is released to the following locations:
 
-1. On S3, here https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz
-2. On NPM, here https://www.npmjs.com/package/autobahn
-3. On GitHub, here https://github.com/crossbario/autobahn-js-built
+1. On NPM, here https://www.npmjs.com/package/autobahn
+2. On GitHub, here https://github.com/crossbario/autobahn-js-built
 
 ## Release Steps
 
