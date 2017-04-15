@@ -1,20 +1,20 @@
 0 "all sessions connected"
-1 "event_e: args=" ["hello subscriber!",1] ", kwargs=" {}
+1 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
 2 "subscription: sub_topic=" "com.myapp.topic1" ", sub_match=" "exact" ", session_ident=" "E"
-3 "event_d: args=" ["hello subscriber!",1] ", kwargs=" {}
+3 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
 4 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-5 "event_c: args=" ["hello subscriber!",1] ", kwargs=" {}
+5 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
 6 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
-7 "event_b: args=" ["hello subscriber!",1] ", kwargs=" {}
+7 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
 8 "subscription: sub_topic=" "com..topic1" ", sub_match=" "wildcard" ", session_ident=" "B"
-9 "event_d: args=" ["hello subscriber!",2] ", kwargs=" {}
+9 "event: args=" ["hello subscriber!",2] ", kwargs=" {}
 10 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-11 "event_c: args=" ["hello subscriber!",2] ", kwargs=" {}
+11 "event: args=" ["hello subscriber!",2] ", kwargs=" {}
 12 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
-13 "event_d: args=" ["hello subscriber!",3] ", kwargs=" {}
+13 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
 14 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-15 "event_c: args=" ["hello subscriber!",3] ", kwargs=" {}
+15 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
 16 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
-17 "event_d: args=" ["hello subscriber!",5] ", kwargs=" {}
+17 "event: args=" ["hello subscriber!",5] ", kwargs=" {}
 18 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
 19 "closing .."

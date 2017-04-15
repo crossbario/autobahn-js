@@ -76,7 +76,10 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
 
          var received = 0;
 
-         function shutdown () {
+         function on_event (args, kwargs, details, sub) {
+            test.log('event: args=', args, ', kwargs=', kwargs);
+            test.log('subscription: sub_topic=', sub.topic, ', sub_match=', sub.options.match, ', session_ident=', sub.session._ident);
+            received += 1;
             if (received >= 9) {
                test.log("closing ..");
 
@@ -94,40 +97,12 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
             }
          }
 
-         function on_event_b (args, kwargs, details, sub) {
-            test.log('event_b: args=', args, ', kwargs=', kwargs);
-            test.log('subscription: sub_topic=', sub.topic, ', sub_match=', sub.options.match, ', session_ident=', sub.session._ident);
-            received += 1;
-            shutdown();
-         }
-
-         function on_event_c (args, kwargs, details, sub) {
-            test.log('event_c: args=', args, ', kwargs=', kwargs);
-            test.log('subscription: sub_topic=', sub.topic, ', sub_match=', sub.options.match, ', session_ident=', sub.session._ident);
-            received += 1;
-            shutdown();
-         }
-
-         function on_event_d (args, kwargs, details, sub) {
-            test.log('event_d: args=', args, ', kwargs=', kwargs);
-            test.log('subscription: sub_topic=', sub.topic, ', sub_match=', sub.options.match, ', session_ident=', sub.session._ident);
-            received += 1;
-            shutdown();
-         }
-
-         function on_event_e (args, kwargs, details, sub) {
-            test.log('event_e: args=', args, ', kwargs=', kwargs);
-            test.log('subscription: sub_topic=', sub.topic, ', sub_match=', sub.options.match, ', session_ident=', sub.session._ident);
-            received += 1;
-            shutdown();
-         }
-
          var dl2 = [];
 
-         dl2.push(session_b.subscribe('com..topic1', on_event_b, {match: 'wildcard'}));
-         dl2.push(session_c.subscribe('com.myapp', on_event_c, {match: 'prefix'}));
-         dl2.push(session_d.subscribe('com', on_event_d, {match: 'prefix'}));
-         dl2.push(session_e.subscribe('com.myapp.topic1', on_event_e, {match: 'exact'}));
+         dl2.push(session_b.subscribe('com..topic1', on_event, {match: 'wildcard'}));
+         dl2.push(session_c.subscribe('com.myapp', on_event, {match: 'prefix'}));
+         dl2.push(session_d.subscribe('com', on_event, {match: 'prefix'}));
+         dl2.push(session_e.subscribe('com.myapp.topic1', on_event, {match: 'exact'}));
 
          autobahn.when.all(dl2).then(
             function (subs) {
