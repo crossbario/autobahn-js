@@ -31,7 +31,7 @@ var config = {
 // shortcut config
 var default_config = {
    url: 'ws://127.0.0.1:8080/ws',
-   realm: 'crossbardemo'
+   realm: 'realm1'
 }
 
 function connect_n(n, config) {
