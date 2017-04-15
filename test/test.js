@@ -40,7 +40,7 @@ var pubsub_exclude = require('./test_pubsub_exclude.js');
 var pubsub_eligible = require('./test_pubsub_eligible.js');
 var pubsub_prefix_sub = require('./test_pubsub_prefix_sub.js');
 var pubsub_wildcard_sub = require('./test_pubsub_wildcard_sub.js');
-
+var pubsub_multiple_matching_subs = require('./test_pubsub_multiple_matching_subs.js');
 
 exports.testSync = sync.testSync;
 exports.testAsync = async.testAsync;
@@ -69,3 +69,4 @@ exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
 exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
 exports.testPubsubPrefixSub = pubsub_prefix_sub.testPubsubPrefixSub;
 exports.testPubsubWildcardSub = pubsub_wildcard_sub.testPubsubWildcardSub;
+exports.testPubsubMultipleMatchingSubs = pubsub_multiple_matching_subs.testPubsubMultipleMatchingSubs;

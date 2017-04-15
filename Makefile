@@ -58,3 +58,6 @@ test_connect:
 
 test_serialization_cbor:
 	nodeunit test/test_serialization_cbor.js
+
+test_pubsub_multiple_matching_subs:
+	nodeunit test/test_pubsub_multiple_matching_subs.js
