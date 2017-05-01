@@ -1,5 +1,7 @@
 # **Autobahn**|JS
 
+[![NPM](https://nodei.co/npm/autobahn.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/autobahn/)
+
 **Autobahn**|JS is a subproject of the [Autobahn project](http://autobahn.ws/) and provides an open-source implementation of the **[Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript
 
 It is licensed under the [MIT license](/LICENSE).

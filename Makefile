@@ -27,6 +27,7 @@ browser_deps:
 	npm install
 	npm update
 
+
 build: build_browser build_npm
 
 build_browser:
@@ -35,20 +36,19 @@ build_browser:
 build_npm:
 	@echo "Ok, npm doesn't need a build step"
 
+
 publish: publish_browser publish_npm
 
 publish_browser: build_browser
-	scons publish
-
-copy_browser: build_browser
 	git -C ../autobahn-js-built pull
 	cp ./build/* ../autobahn-js-built/
 	cp ./build/* ../crossbar-examples/_shared-web-resources/autobahn/
 	cp ./build/* ../crossbar/crossbar/templates/default/web/js/
 	@echo "Now commit and push these repos: autobahn-js-built, crossbar"
 
-publish_npm:
+publish_npm: build_npm
 	npm publish
+
 
 crossbar:
 	crossbar start
