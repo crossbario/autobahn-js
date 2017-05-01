@@ -11,11 +11,14 @@ default:
 
 clean:
 	rm -rf build
-	#rm -rf ./node_modules
-	#rm -f .sconsign.dblite
+
+dist_clean: clean
+	rm -rf ./node_modules
+	rm -f .sconsign.dblite
 
 requirements:
 	pip install -U scons boto taschenmesser
+	sudo apt update
 	sudo apt install -y npm nodejs-legacy default-jre
 	node -v
 	sudo npm install -g google-closure-compiler nodeunit
