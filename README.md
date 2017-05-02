@@ -4,6 +4,8 @@ WAMP for Browsers and NodeJS.
 
 [![NPM](https://nodei.co/npm/autobahn.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/autobahn/)
 
+[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/crossbario/autobahn-js/)
+
 ---
 
 **Autobahn**|JS is a subproject of the [Autobahn project](http://autobahn.ws/) and provides an open-source implementation of the **[Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript under the [MIT license](/LICENSE).
