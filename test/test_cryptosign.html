@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <h1>Open JavaScript console to watch log output (hit F12)</h1>
+      <script>AUTOBAHN_DEBUG = false;</script>
+      <script src="../build/autobahn.js"></script>
+      <script>
+         console.log('running autobahn-js ' + autobahn.version);
+
+         var url;
+         if (document.location.origin == "file://") {
+            url = "ws://127.0.0.1:9000/ws";
+
+         } else {
+            url = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
+                        document.location.host + "/ws";
+         }
+
+         var authid = "tobias.oberstein@gmail.com";
+         var private_key = "com.crossbario.fabric.key.seed";
+
+         var activation_code = null;
+         //var activation_code = "WPCW-TNQC-FJKK";
+         var request_new_activation_code = false;
+
+         var pkey = autobahn.auth_cryptosign.load_private_key(private_key);
+
+         var connection = autobahn.auth_cryptosign.create_connection(url, authid, pkey, activation_code, request_new_activation_code);
+
+         connection.onopen = function (session, details) {
+            console.log("Connected:", details);
+         };
+
+         connection.onclose = function (reason, details) {
+
+            if (details.reason == 'fabric.auth-failed.pending-activation') {
+               console.log("PENDING-ACTIVATION:", details.message);
+
+            } else if (details.reason == 'fabric.auth-failed.new-user-auth-code-sent') {
+               console.log("NEW-USER-AUTH-CODE-SENT:", details.message);
+
+            } else if (details.reason == 'fabric.auth-failed.no-pending-activation') {
+               console.log("NO-PENDING-ACTIVATION:", details.message);
+
+            } else {
+               console.log("Connection lost: " + reason, details);
+            }
+         }
+
+         connection.open();
+      </script>
+   </body>
+</html>
