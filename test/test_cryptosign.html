@@ -7,32 +7,38 @@
       <script>
          console.log('running autobahn-js ' + autobahn.version);
 
-         // the WebSocket-WAMP URL of Crossbar.io
-         var url;
-         if (document.location.origin == "file://") {
-            url = "ws://127.0.0.1:9000/ws";
+         var config = {
+            // either null, to connect to the global user management realm or
+            // a specific management realm to which the user must have
+            // access permissions.
+            realm: null,
 
-         } else {
-            url = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
-                        document.location.host + "/ws";
+            // the user email (used as authid)
+            authid: "tobias.oberstein@gmail.com",
+
+            // this is usually fixed per app (when there is only one keypair in the app)
+            private_key: "com.crossbario.fabric.key.seed",
+
+            // the activation code must be set exactly once during exchange
+            activation_code: null,
+            //activation_code: "WHTG-ENYA-3VPF",
+
+            // this is an optional feature (see below)
+            request_new_activation_code: false
          }
 
-         // the user email (used as authid)
-         var authid = "tobias.oberstein@gmail.com";
+         // the WebSocket-WAMP URL of Crossbar.io
+         if (document.location.origin == "file://") {
+            config.url = "ws://127.0.0.1:9000/ws";
 
-         // this is fixed per app
-         var private_key = "com.crossbario.fabric.key.seed";
-
-         // the activation code must be set exactly once during exchange
-         var activation_code = null;
-         //var activation_code = "X9RE-7VWF-GPR5";
-
-         // this is an optional feature (see below)
-         var request_new_activation_code = false;
+         } else {
+            config.url = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
+                          document.location.host + "/ws";
+         }
 
          // this will auto-generate a new key seed (a secret) and store that
          // in browser local storage if there isn't a key already
-         var pkey = autobahn.auth_cryptosign.load_private_key(private_key);
+         config.pkey = autobahn.auth_cryptosign.load_private_key(config.private_key);
 
          // this will create and configure a connection using WAMP-cryptosign authentication
          // the parameters are used as follows:
@@ -41,13 +47,14 @@
          //    - pkey: the private key to be used (eg from load_private_key())
          //    - activation_code: The activation code to be used (only once!).
          //    - request_new_activation_code:
-         var connection = autobahn.auth_cryptosign.create_connection(url, authid, pkey, activation_code, request_new_activation_code);
+         var connection = autobahn.auth_cryptosign.create_connection(config);
 
          // main app entry point
          connection.onopen = function (session, details) {
             console.log("Connected:", session.id, details);
 
             // HERE: place app code here.
+            console.log("READY!!!");
          };
 
          // TODO: handle different failing cases appropriately in the app
