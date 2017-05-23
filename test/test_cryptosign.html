@@ -12,6 +12,7 @@
             // a specific management realm to which the user must have
             // access permissions.
             realm: null,
+            //realm: "oberstet1",
 
             // the user email (used as authid)
             authid: "tobias.oberstein@gmail.com",
@@ -53,8 +54,43 @@
          connection.onopen = function (session, details) {
             console.log("Connected:", session.id, details);
 
-            // HERE: place app code here.
-            console.log("READY!!!");
+            //
+            // HERE: place app code here, eg calls into Crossbar.io Fabric Service API:
+            //   - com.crossbario.fabric.show_fabric
+            //
+            session.call('com.crossbario.fabric.show_fabric', null, {verbose: true}).then(
+               function (fabric_info) {
+                  console.log("Fabric run-time information", fabric_info);
+
+                  if (fabric_info.type == 'users') {
+                     console.log("Connected to global users realm.");
+                     session.call('com.crossbario.fabric.list_management_realms', null, {verbose: true}).then(
+                        function (mrealms) {
+                           if (mrealms.length == 0) {
+                              session.call('com.crossbario.fabric.create_management_realm', ["oberstet1"]).then(
+                                 function (created) {
+                                    console.log("Management realm created", created);
+                                 },
+                                 function (err) {
+                                    console.log(err);
+                                 }
+                              );
+                           } else {
+                              console.log("Management realms:", mrealms);
+                           }
+                        },
+                        function (err) {
+                           console.log(err);
+                        }
+                     );
+                  } else {
+                     console.log("Connected to management realm ", fabric_info.name);
+                  }
+               },
+               function (err) {
+                  console.log(err);
+               }
+            );
          };
 
          // TODO: handle different failing cases appropriately in the app
