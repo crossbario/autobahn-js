@@ -32,6 +32,7 @@ build: build_browser build_npm
 
 build_browser:
 	scons
+	java -jar /usr/local/lib/node_modules/google-closure-compiler/compiler.jar --version
 
 build_npm:
 	@echo "Ok, npm doesn't need a build step"
@@ -55,6 +56,7 @@ crossbar:
 
 test:
 	npm test
+	npm list ws bufferutil when crypto-js
 
 test_connect:
 	nodeunit test/test_connect.js
@@ -64,3 +66,21 @@ test_serialization_cbor:
 
 test_pubsub_multiple_matching_subs:
 	nodeunit test/test_pubsub_multiple_matching_subs.js
+
+
+toolchain_build:
+	docker build -t autobahnjs-toolchain -f Dockerfile .
+
+toolchain_run: toolchain_build
+	docker run -it --rm \
+		--net=host \
+		-v ${PWD}:/work \
+		autobahnjs-toolchain \
+		make browser_deps build
+
+toolchain_shell:
+	docker run -it --rm \
+		--net=host \
+		-v ${PWD}:/work \
+		autobahnjs-toolchain \
+		bash
