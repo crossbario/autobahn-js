@@ -1,5 +1,11 @@
 # AutobahnJS - Change Log
 
+## v17.5.2
+
+* new: WAMP-cryptosign authentication support
+
+---
+
 ## v0.9.1
  * compatibility with latest WAMP v2 spec ("RC-2, 2014/02/22")
 
