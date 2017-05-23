@@ -22,7 +22,7 @@
 
             // the activation code must be set exactly once during exchange
             activation_code: null,
-            //activation_code: "WHTG-ENYA-3VPF",
+            //activation_code: "YK9Y-33A6-WEW3",
 
             // this is an optional feature (see below)
             request_new_activation_code: false
@@ -36,6 +36,9 @@
             config.url = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
                           document.location.host + "/ws";
          }
+
+         // set WAMP serializer to use (we know Fabric supports MessagePack)
+         config.serializers = [new autobahn.serializer.MsgpackSerializer()];
 
          // this will auto-generate a new key seed (a secret) and store that
          // in browser local storage if there isn't a key already
@@ -62,10 +65,16 @@
                function (fabric_info) {
                   console.log("Fabric run-time information", fabric_info);
 
+                  //
+                  // if we are connected to the global users realm, we can list our management realms:
+                  //
                   if (fabric_info.type == 'users') {
                      console.log("Connected to global users realm.");
                      session.call('com.crossbario.fabric.list_management_realms', null, {verbose: true}).then(
                         function (mrealms) {
+                           //
+                           // if we won't have a management realm already, we create one:
+                           //
                            if (mrealms.length == 0) {
                               session.call('com.crossbario.fabric.create_management_realm', ["oberstet1"]).then(
                                  function (created) {
