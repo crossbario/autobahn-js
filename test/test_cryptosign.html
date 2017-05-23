@@ -11,8 +11,8 @@
             // either null, to connect to the global user management realm or
             // a specific management realm to which the user must have
             // access permissions.
-            realm: null,
-            //realm: "oberstet1",
+            //realm: null,
+            realm: "oberstet1",
 
             // the user email (used as authid)
             authid: "tobias.oberstein@gmail.com",
@@ -22,7 +22,7 @@
 
             // the activation code must be set exactly once during exchange
             activation_code: null,
-            //activation_code: "YK9Y-33A6-WEW3",
+            //activation_code: "TLLE-G39P-5C7M",
 
             // this is an optional feature (see below)
             request_new_activation_code: false
@@ -70,6 +70,8 @@
                   //
                   if (fabric_info.type == 'users') {
                      console.log("Connected to global users realm.");
+
+                     // list management realms
                      session.call('com.crossbario.fabric.list_management_realms', null, {verbose: true}).then(
                         function (mrealms) {
                            //
@@ -94,6 +96,16 @@
                      );
                   } else {
                      console.log("Connected to management realm ", fabric_info.name);
+
+                     // list nodes
+                     session.call('com.crossbario.fabric.list_nodes', null, {verbose: true}).then(
+                        function (nodes) {
+                           console.log("Nodes:", nodes);
+                        },
+                        function (err) {
+                           console.log(err);
+                        }
+                     );
                   }
                },
                function (err) {

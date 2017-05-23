@@ -27,7 +27,7 @@ sources = [os.path.join(sourcedir, d) for d in os.listdir(sourcedir)]
 # browserified
 ab = env.Command("build/autobahn.js",
                  "lib/autobahn.js",
-                 "/usr/local/lib/node_modules/browserify/bin/cmd.js $SOURCE --ignore-missing --standalone autobahn -o $TARGET")
+                 "./node_modules/browserify/bin/cmd.js $SOURCE --ignore-missing --standalone autobahn -o $TARGET")
 Depends(ab, sources)
 
 # minimized (with Google Closure)
