@@ -467,7 +467,7 @@ Complete Examples:
 
 -   [PubSub Basic](https://github.com/crossbario/autobahn-python/tree/master/examples/twisted/wamp/pubsub/basic)
 
-Patter-Based Subscriptions
+Pattern-Based Subscriptions
 --------------------------
 
 As a default, topic URIs in subscriptions are matched exactly.
