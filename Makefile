@@ -28,8 +28,6 @@ browser_deps:
 	npm update
 
 
-build: build_browser build_npm
-
 build_browser:
 	scons
 	java -jar /usr/local/lib/node_modules/google-closure-compiler/compiler.jar --version
@@ -38,9 +36,29 @@ build_npm:
 	@echo "Ok, npm doesn't need a build step"
 
 
+# build Docker toolchain image
+build_toolchain:
+	docker build -t autobahnjs-toolchain -f Dockerfile .
+
+# use the Docker toolchain image to build AutobahnJS
+build:
+	docker run -it --rm \
+		--net=host \
+		-v ${PWD}:/work \
+		autobahnjs-toolchain \
+		make browser_deps build_browser
+
+build_shell:
+	docker run -it --rm \
+		--net=host \
+		-v ${PWD}:/work \
+		autobahnjs-toolchain \
+		bash
+
+
 publish: publish_browser publish_npm
 
-publish_browser: build_browser
+publish_browser:
 	git -C ../autobahn-js-built pull
 	cp ./build/* ../autobahn-js-built/
 	cp ./build/* ../crossbar-examples/_shared-web-resources/autobahn/
@@ -66,21 +84,3 @@ test_serialization_cbor:
 
 test_pubsub_multiple_matching_subs:
 	nodeunit test/test_pubsub_multiple_matching_subs.js
-
-
-toolchain_build:
-	docker build -t autobahnjs-toolchain -f Dockerfile .
-
-toolchain_run: toolchain_build
-	docker run -it --rm \
-		--net=host \
-		-v ${PWD}:/work \
-		autobahnjs-toolchain \
-		make browser_deps build
-
-toolchain_shell:
-	docker run -it --rm \
-		--net=host \
-		-v ${PWD}:/work \
-		autobahnjs-toolchain \
-		bash
