@@ -176,9 +176,9 @@ oberstet@office-corei7:~$ node -e "var autobahn = require('autobahn'); console.l
 
 For more information, take a look at the [project documentation](/doc/README.md). This provides:
 
-* [a quick 'Getting Started'](/doc/gettingstarted.md)
+* [a quick 'Getting Started'](/doc/getting-started.md)
 * [a basic introduction to programming with Autobahn|JS](/doc/programming.md)
-* [a list of all examples in this repo](/doc/examples_overview.md)
+* [a list of all examples in this repo](/doc/examples.md)
 * [a full API reference](/doc/reference.md)
 
 
