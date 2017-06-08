@@ -218,7 +218,7 @@ To check whether the connection (the underlying transport for the session) has b
 
     Connection.isConnected
 
-which returns `true` if the Conncetion is open.
+which returns `true` if the Connection is open.
 
 A read-only property that signals if the **underlying session is open** and attached to a realm:
 
