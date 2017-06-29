@@ -36,6 +36,13 @@ The following example implements all four roles that **Autobahn**|JS offers
 **The code runs unaltered in the browser or Node.js!**
 
 ```javascript
+try {
+   // for Node.js
+   var autobahn = require('autobahn');
+} catch (e) {
+   // for browsers (where AutobahnJS is available globally)
+}
+
 var autobahn = require('autobahn');
 
 var connection = new autobahn.Connection({url: 'ws://127.0.0.1:9000/', realm: 'realm1'});
