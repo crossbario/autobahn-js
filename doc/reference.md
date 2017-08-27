@@ -208,22 +208,39 @@ Options that control **WebSocket subprotocol handling**:
 Options that define **Custom error handlers:**
 -   `on_user_error`: *function* - This error handler is called in the following cases: 
     - an exception raised in `onopen`, `onclose`, `onchallenge` callbacks,
-    - an exception raised in a handler function of subscription or a register methods,
+    - an exception raised in the event handler in the subscriber role,
+    - an error occurred in the invocation handler in the callee role (the handler called in the client, before 
+      the error message is sent back to the Dealer.)
 -   `on_internal_error`: *function* - This error handler is called in the following cases:
     - not able to create a Wamp transport,
     - when a protocol violation is occured,
     - when no `onchallenge` defined, but a challenge request is received due to authenticate the client,
 
-```js
-    
+```javascript
+    var connection = new autobahn.Connection({
+       on_user_error: function (error, customErrorMessage) {
+           // here comes your custom error handling, when a 
+           // something went wrong in a user defined callback.
+        },
+        on_internal_error: function (error, customErrorMessage) {
+           // here comes your custom error handling, when a 
+           // something went wrong in the autobahn core.
+        }
+        // ... other options
+    });
 
 ```
 
+> **note**
+>
+> If no error handler is defined for these functions, an error level consol log will be written. 
 
 > **note**
 >
-> If no error handler is defined for these functions, an error level consol log will be logged. 
->
+> In a case of error handling in the Callee role, when the invocation handler is executed, the error
+> is reported on the Callee side (with the custom error handler or an error log), but despite that the
+> error is sent back to the Dealer, and the Caller will receive a `runtime.error` wamp message.
+  
   
 Connection Properties
 ---------------------
