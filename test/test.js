@@ -70,3 +70,8 @@ exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
 exports.testPubsubPrefixSub = pubsub_prefix_sub.testPubsubPrefixSub;
 exports.testPubsubWildcardSub = pubsub_wildcard_sub.testPubsubWildcardSub;
 exports.testPubsubMultipleMatchingSubs = pubsub_multiple_matching_subs.testPubsubMultipleMatchingSubs;
+
+exports.errorHandlingOnOpen = require('./test_error_handling').errorHandlingOnOpen;
+exports.errorHandlingOnClose = require('./test_error_handling').errorHandlingOnClose;
+exports.errorHandlingOnEvent = require('./test_error_handling').errorHandlingOnEvent;
+exports.errorHandlingOnInvocation = require('./test_error_handling').errorHandlingOnInvocation;
