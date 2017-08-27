@@ -1,0 +1,7 @@
+0 "Step 1: make two connections"
+1 "Step 2: subscribe to a topic"
+2 "step 3: publish to a topic"
+3 "Step 4: the event handler is called"
+4 "Step 5: an error thrown in the event handler"
+5 "Step 6: the on user error is called"
+6 "Step 7: finishing the test cases"
