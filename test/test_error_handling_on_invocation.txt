@@ -1,0 +1,8 @@
+0 "Step 1: Create two sessions."
+1 "Step 2: Register an invocation handler in the callee role."
+2 "Step 3: Call the topic in the caller role."
+3 "Step 4: The invocation handler is called."
+4 "Step 5: An is error occurred in the handler."
+5 "Step 7: The error handler is called"
+6 "Step 8: The error is received on the callee side."
+7 "Step 9: Finish the  test case."
