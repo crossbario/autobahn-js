@@ -1,0 +1,5 @@
+0 "Step 1: open a connection."
+1 "Step 2: The onopen handler is called."
+2 "Step 3: A user error is occurred in the handler."
+3 "Step 4: The user error handler is called"
+4 "Step 5: Finish the test case"

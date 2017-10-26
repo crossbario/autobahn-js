@@ -28,6 +28,22 @@ var config = {
 }
 */
 
+var create_timeout_handler = function(testcase) {
+    var TIMEOUT = 3000;
+    var timer;
+    return {
+        set: function () {
+            timer = setTimeout(function() {
+                testcase.ok(false, 'Timeout!');
+                testcase.done();
+            }, TIMEOUT);
+        },
+        clear: function () {
+            clearTimeout(timer);
+        }
+    }
+}
+
 // shortcut config
 var default_config = {
    url: 'ws://127.0.0.1:8080/ws',
@@ -150,3 +166,4 @@ Testlog.prototype.check = function () {
 exports.Testlog = Testlog;
 exports.config = default_config;
 exports.connect_n = connect_n;
+exports.create_timeout_handler = create_timeout_handler;
