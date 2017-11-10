@@ -135,7 +135,7 @@ autobahn.Connection.onclose = function (reason, details) {
 -   `"closed"`: The connection was closed explicitly (by the application or server). No automatic reconnection will be tried.
 -   `"lost"`: The connection had been formerly established at least once, but now was lost. Automatic reconnection will happen **unless you return truthy** from this callback.
 -   `"unreachable"`: The connection could not be established in the first place. No automatic reattempt will happen, since most often the cause is fatal (e.g. invalid server URL or server unreachable)
--   `unsupported`: No WebSocket transport could be created. For security reasons the WebSocket spec states that there should not be any specific errors for network-related issues, so no details are returned in this case either.
+-   `"unsupported"`: No WebSocket transport could be created. For security reasons the WebSocket spec states that there should not be any specific errors for network-related issues, so no details are returned in this case either.
 
 `details` is an object containing the `reason` and `message` passed to  `autobahn.Connection.close()`, and thus does not apply in case of `"lost"` or `"unreachable"`.
 
