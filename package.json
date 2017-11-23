@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "crypto-js": ">= 3.1.8",
-    "int64-buffer": ">= 0.1.9",
-    "msgpack-lite": ">= 0.1.26",
+    "msgpack5": ">= 3.6.0",
     "cbor": ">= 3.0.0",
     "tweetnacl": ">= 0.14.3",
     "when": ">= 3.7.7",
