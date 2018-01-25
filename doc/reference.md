@@ -397,7 +397,7 @@ The log method will log the WAMP session ID and the realm of the session, as wel
 URI Shortcuts
 -------------
 
-Establish an URI prefix to be used as a shortcut in WAMp interactions on `session`:
+Establish an URI prefix to be used as a shortcut in WAMP interactions on `session`:
 
     Session.prefix(shortcut, prefix)
 
