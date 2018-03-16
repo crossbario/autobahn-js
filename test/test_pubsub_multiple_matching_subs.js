@@ -120,19 +120,19 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
                var dl3 = [];
 
                // these are received in sessions b-e
-               dl3.push(publish_later(session_a, 100, 'com.myapp.topic1', [msg, counter++], null, options));
+               dl3.push(publish_later(session_a, 500, 'com.myapp.topic1', [msg, counter++], null, options));
 
                // these are received in sessions c and d
-               dl3.push(publish_later(session_a, 200, 'com.myapp.topic123', [msg, counter++], null, options));
+               dl3.push(publish_later(session_a, 1000, 'com.myapp.topic123', [msg, counter++], null, options));
 
                // these are received in sessions c and d
-               dl3.push(publish_later(session_a, 300, 'com.myapp.topic1.foobar', [msg, counter++], null, options));
+               dl3.push(publish_later(session_a, 1500, 'com.myapp.topic1.foobar', [msg, counter++], null, options));
 
                // these are received in no session at all
-               dl3.push(publish_later(session_a, 400, 'de.myapp.topic1', [msg, counter++], null, options));
+               dl3.push(publish_later(session_a, 2000, 'de.myapp.topic1', [msg, counter++], null, options));
 
                // these are received in session d only
-               dl3.push(publish_later(session_a, 500, 'com.foobar', [msg, counter++], null, options));
+               dl3.push(publish_later(session_a, 2500, 'com.foobar', [msg, counter++], null, options));
 
                autobahn.when.all(dl3).then(
                   function (res) {

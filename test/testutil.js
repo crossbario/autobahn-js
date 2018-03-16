@@ -47,7 +47,8 @@ var create_timeout_handler = function(testcase) {
 // shortcut config
 var default_config = {
    url: 'ws://127.0.0.1:8080/ws',
-   realm: 'realm1'
+   //realm: 'realm1'
+   realm: 'crossbardemo'
 }
 
 function connect_n(n, config) {

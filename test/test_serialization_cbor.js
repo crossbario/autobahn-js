@@ -14,7 +14,6 @@
 var autobahn = require('./../index.js');
 var testutil = require('./testutil.js');
 
-
 exports.testCBORSerialization = function (testcase) {
 
    testcase.expect(1);

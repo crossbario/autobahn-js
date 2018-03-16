@@ -34,7 +34,8 @@ Depends(ab, sources)
 ab_min = env.JavaScript("build/autobahn.min.js",
                         ab,
                         #JS_COMPILATION_LEVEL = "ADVANCED_OPTIMIZATIONS")
-                        JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS")
+                        JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS",
+                        JS_OUTPUT_LANG = "ES5")
 
 # minimized & compressed
 ab_min_gz = env.GZip("build/autobahn.min.jgz",
