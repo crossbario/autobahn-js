@@ -91,7 +91,7 @@ publish_npm: build_npm
 # Test targets
 #
 crossbar:
-	crossbar start
+	crossbar start --personality=community
 
 test:
 	npm test
