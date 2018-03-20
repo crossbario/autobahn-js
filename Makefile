@@ -77,11 +77,11 @@ build_npm:
 publish: publish_browser publish_npm
 
 publish_browser:
-	git -C ../autobahn-js-built pull
-	cp ./build/* ../autobahn-js-built/
+	git -C ../autobahn-js-browser pull
+	cp ./build/* ../autobahn-js-browser/
 	cp ./build/* ../crossbar-examples/_shared-web-resources/autobahn/
 	cp ./build/* ../crossbar/crossbar/templates/default/web/js/
-	@echo "Now commit and push these repos: autobahn-js-built, crossbar"
+	@echo "Now commit and push these repos: autobahn-js-browser, crossbar"
 
 publish_npm: build_npm
 	npm publish
