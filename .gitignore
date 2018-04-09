@@ -1,3 +1,5 @@
+.build
+.qemu
 node-v*-linux-x64/
 .sconsign.dblite
 *.sublime-workspace
