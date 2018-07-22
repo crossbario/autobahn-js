@@ -93,7 +93,7 @@ Features
 
 The *latest* built release of AutobahnJS can be retrieved by cloning [this](https://github.com/crossbario/autobahn-js-built) repository. You can then host the library wherever you need to.
 
-This also contains a complete history of previous releases and can be used with **[Bower](http://bower.io/)** to:
+This also contains a complete history of previous releases and can be used with **[Bower](http://bower.io/)**. To install:
 
 	bower install autobahn
 
