@@ -205,6 +205,17 @@ Options that control **WebSocket subprotocol handling**:
 -   `skip_subprotocol_check`: Not yet implemented.
 -   `skip_subprotocol_announce`: Not yet implemented.
 
+Options that control **WebSocket heartbeat on NodeJS**:
+
+> **note**
+>
+> Below options only work when the transport is `websocket` and the underlying platform is NodeJS/Electron.
+
+-   `autoping_interval`: Seconds between automatic pings
+-   `autoping_timeout`: Seconds until a ping is considered timed-out
+-   `autoping_size`: bytes of random data to send in ping messages (default: 4)
+
+
 Options that define **Custom error handlers:**
 -   `on_user_error`: *function* - This error handler is called in the following cases: 
     - an exception raised in `onopen`, `onclose`, `onchallenge` callbacks,
