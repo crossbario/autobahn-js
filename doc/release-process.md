@@ -25,7 +25,7 @@ Update `package.json` with the new release number.
 In the root directory, do
 
 ```
-make build
+make build_browser
 ```
 
 which will package the library for browser use into the `build` directory. For npm, there is nothing to build.
@@ -36,7 +36,7 @@ which will package the library for browser use into the `build` directory. For n
 E.g. by doing
 
 ```
-git tag -a v0.9.7 -m "tagged release"
+git tag -a v18.6.1 -m "tagged release"
 ```
 
 before you commit. (Add the hash of a commit at the end of the above to tag at a later time.)
