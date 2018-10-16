@@ -16,7 +16,7 @@ and we will cover all four interactions involved in above patterns
 
 > **tip**
 >
-> If you are new to WAMP or want to learn more about the design principles behind WAMP, we have a longer text [here](http://wamp.ws/why/).
+> If you are new to WAMP or want to learn more about the design principles behind WAMP, we have a longer text [here](https://wamp-proto.org/why/index.html).
 
 ------------------------------------------------------------------------
 
@@ -219,4 +219,4 @@ Where to go from here
 
 -   For more features of **Autobahn|JS** and details about RPC and PubSub, see the [Reference](reference.md).
 -   There's an overview of example code for specific WAMP features [Examples Overview](examples.md).
--   Read about [the idea behind WAMP.](http://wamp.ws/why/)
+-   Read about [the idea behind WAMP.](https://wamp-proto.org/why/index.html)

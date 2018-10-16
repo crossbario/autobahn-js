@@ -205,6 +205,17 @@ Options that control **WebSocket subprotocol handling**:
 -   `skip_subprotocol_check`: Not yet implemented.
 -   `skip_subprotocol_announce`: Not yet implemented.
 
+Options that control **WebSocket heartbeat on NodeJS**:
+
+> **note**
+>
+> Below options only work when the transport is `websocket` and the underlying platform is NodeJS/Electron.
+
+-   `autoping_interval`: Seconds between automatic pings
+-   `autoping_timeout`: Seconds until a ping is considered timed-out
+-   `autoping_size`: bytes of random data to send in ping messages (default: 4)
+
+
 Options that define **Custom error handlers:**
 -   `on_user_error`: *function* - This error handler is called in the following cases: 
     - an exception raised in `onopen`, `onclose`, `onchallenge` callbacks,
@@ -215,6 +226,7 @@ Options that define **Custom error handlers:**
     - not able to create a Wamp transport,
     - when a protocol violation is occured,
     - when no `onchallenge` defined, but a challenge request is received due to authenticate the client,
+
 
 ```javascript
     var connection = new autobahn.Connection({
@@ -240,7 +252,13 @@ Options that define **Custom error handlers:**
 > In a case of error handling in the Callee role, when the invocation handler is executed, the error
 > is reported on the Callee side (with the custom error handler or an error log), but despite that the
 > error is sent back to the Dealer, and the Caller will receive a `runtime.error` wamp message.
-  
+
+
+ Options that control **tls connection**:
+ -   `tlsConfiguration`: *object*
+     - `ca`: *Buffer | String* - CA
+     - `cert`: *Buffer | String* - Certificate Public Key
+     - `key`: *Buffer | String* - Certificate Private Key
   
 Connection Properties
 ---------------------

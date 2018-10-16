@@ -1,6 +1,6 @@
 {
   "name": "autobahn",
-  "version": "18.3.2",
+  "version": "18.10.1",
   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
   "main": "index.js",
   "scripts": {
@@ -10,9 +10,11 @@
     "node": ">= 4.2.6"
   },
   "dependencies": {
-    "crypto-js": ">= 3.1.8",
-    "msgpack5": ">= 3.6.0",
     "cbor": ">= 3.0.0",
+    "crypto-js": ">=3.1.8",
+    "md5": "^2.2.1",
+    "msgpack5": ">= 3.6.0",
+    "s3": "^4.4.0",
     "tweetnacl": ">= 0.14.3",
     "when": ">= 3.7.7",
     "ws": ">= 1.1.4"
