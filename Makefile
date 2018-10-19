@@ -14,11 +14,8 @@ default:
 # Cleanup targets
 #
 clean:
-	sudo rm -rf build
-
-dist_clean: clean
-	sudo rm -rf ./node_modules
-	sudo rm -f .sconsign.dblite
+	-sudo rm -rf ./build ./node_modules
+	-sudo rm -f .sconsign.dblite
 
 
 #

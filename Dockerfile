@@ -1,8 +1,9 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 RUN    apt-get update \
     && apt-get install -y npm \
-                          nodejs-legacy \
+                          nodejs \
+                          nodejs-dev \
                           default-jre \
                           python \
                           python-pip \
@@ -18,7 +19,7 @@ RUN    apt-get update \
                           scons \
                           zlib1g-dev \
                           libbz2-dev \
-                          libssl-dev \
+                          libssl1.0-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
