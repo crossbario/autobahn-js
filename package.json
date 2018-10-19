@@ -12,9 +12,8 @@
   "dependencies": {
     "cbor": ">= 3.0.0",
     "crypto-js": ">=3.1.8",
-    "md5": "^2.2.1",
     "msgpack5": ">= 3.6.0",
-    "s3": "^4.4.0",
+    "randombytes": ">=2.0.6",
     "tweetnacl": ">= 0.14.3",
     "when": ">= 3.7.7",
     "ws": ">= 1.1.4"
@@ -32,7 +31,8 @@
   "browser": {
     "ws": false,
     "lib/transport/rawsocket.js": false,
-    "cbor": false
+    "cbor": false,
+    "randombytes": false
   },
   "repository": {
     "type": "git",
