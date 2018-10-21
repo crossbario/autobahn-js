@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:edge
 
 MAINTAINER The Crossbar.io Project <support@crossbario.com>
 
@@ -34,7 +34,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # install node
-RUN apk add --update nodejs build-base python \
+RUN apk add --update nodejs nodejs-npm nodejs-dev build-base python \
     && rm -rf /var/cache/apk/*
 
 # install Autobahn|JS

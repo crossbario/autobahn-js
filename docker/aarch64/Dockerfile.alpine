@@ -1,4 +1,4 @@
-FROM aarch64/alpine
+FROM aarch64/alpine:edge
 
 COPY .qemu/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
@@ -36,7 +36,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # install node
-RUN apk add --update nodejs build-base python \
+RUN apk add --update nodejs nodejs-npm nodejs-dev build-base python \
     && rm -rf /var/cache/apk/*
 
 # see:
