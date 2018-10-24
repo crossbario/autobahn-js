@@ -30,7 +30,7 @@
   },
   "browser": {
     "ws": false,
-    "lib/transport/rawsocket.js": false,
+    "./lib/transport/rawsocket.js": false,
     "cbor": false,
     "randombytes": false
   },
