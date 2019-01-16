@@ -217,10 +217,10 @@ Options that control **WebSocket heartbeat on NodeJS**:
 
 
 Options that define **Custom error handlers:**
--   `on_user_error`: *function* - This error handler is called in the following cases: 
+-   `on_user_error`: *function* - This error handler is called in the following cases:
     - an exception raised in `onopen`, `onclose`, `onchallenge` callbacks,
     - an exception raised in the event handler in the subscriber role,
-    - an error occurred in the invocation handler in the callee role (the handler called in the client, before 
+    - an error occurred in the invocation handler in the callee role (the handler called in the client, before
       the error message is sent back to the Dealer.)
 -   `on_internal_error`: *function* - This error handler is called in the following cases:
     - not able to create a Wamp transport,
@@ -231,11 +231,11 @@ Options that define **Custom error handlers:**
 ```javascript
     var connection = new autobahn.Connection({
        on_user_error: function (error, customErrorMessage) {
-           // here comes your custom error handling, when a 
+           // here comes your custom error handling, when a
            // something went wrong in a user defined callback.
         },
         on_internal_error: function (error, customErrorMessage) {
-           // here comes your custom error handling, when a 
+           // here comes your custom error handling, when a
            // something went wrong in the autobahn core.
         }
         // ... other options
@@ -245,7 +245,7 @@ Options that define **Custom error handlers:**
 
 > **note**
 >
-> If no error handler is defined for these functions, an error level consol log will be written. 
+> If no error handler is defined for these functions, an error level consol log will be written.
 
 > **note**
 >
@@ -259,7 +259,14 @@ Options that define **Custom error handlers:**
      - `ca`: *Buffer | String* - CA
      - `cert`: *Buffer | String* - Certificate Public Key
      - `key`: *Buffer | String* - Certificate Private Key
-  
+
+Options that provides additional opening information:
+ -    `helloDetails`: *object*
+
+ > **note**
+ >
+ > `helloDetails` object will be passed into the initial message sent by client after transport is established.
+
 Connection Properties
 ---------------------
 
