@@ -260,12 +260,12 @@ Options that define **Custom error handlers:**
      - `cert`: *Buffer | String* - Certificate Public Key
      - `key`: *Buffer | String* - Certificate Private Key
 
-Options that provides additional opening information:
- -    `helloDetails`: *object*
+Options that provide additional opening information:
+ -    `hello_custom_details`: *object*
 
  > **note**
  >
- > `helloDetails` object will be passed into the initial message sent by client after transport is established.
+ > `hello_custom_details` object contains custom attributes that will be passed into the initial message sent by client after transport is established.
 
 Connection Properties
 ---------------------
