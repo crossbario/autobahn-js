@@ -6,7 +6,15 @@ taschenmesser = pkg_resources.resource_filename('taschenmesser', '..')
 #taschenmesser = "../../infrequent/taschenmesser"
 ENV=os.environ
 
-ENV['JS_COMPILER'] = '/usr/local/lib/node_modules/google-closure-compiler/compiler.jar'
+if 'JAVA_HOME' in ENV:
+    print('Using from environment: JAVA_HOME={}'.format(ENV['JAVA_HOME']))
+
+if 'JS_COMPILER' in ENV:
+    print('Using from environment: JS_COMPILER={}'.format(ENV['JS_COMPILER']))
+else:
+    #ENV['JS_COMPILER'] = '/usr/local/lib/node_modules/google-closure-compiler-java/compiler.jar'
+    ENV['JS_COMPILER'] = '/work/node_modules/google-closure-compiler-java/compiler.jar'
+    print('Using builtin: JS_COMPILER={}'.format(ENV['JS_COMPILER']))
 
 env = Environment(tools = ['default', 'taschenmesser'],
                   toolpath = [taschenmesser],

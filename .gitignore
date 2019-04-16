@@ -12,3 +12,4 @@ node_modules
 .*.swp
 .lock-*
 package/.crossbar/
+package-lock.json

@@ -29,14 +29,12 @@ RUN    apt-get update \
 #     sudo ln -s /opt/node/bin/npm /usr/local/bin/npm
 
 
-RUN npm install -g google-closure-compiler nodeunit
-
 RUN pip install -U scons boto taschenmesser
 
 VOLUME /work
-
 WORKDIR /work
 
 ENV JAVA_HOME /usr/lib/jvm/default-java
+ENV JS_COMPILER /work/node_modules/google-closure-compiler-java/compiler.jar
 
-CMD ["make", "browser_deps", "build"]
+CMD ["make", "build_browser_docker"]

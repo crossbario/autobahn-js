@@ -11,11 +11,15 @@ default:
 
 
 #
-# Cleanup targets
+# Cleanup targets (we use "sudo" to cleanup when building not on host, but via target "docker_build_browser")
 #
+distclean: clean
+	-sudo rm -rf ./node_modules
+	-sudo rm -f ./package-lock.json
+
 clean:
-	-sudo rm -rf ./build ./node_modules
 	-sudo rm -f .sconsign.dblite
+	-sudo rm -rf ./build
 
 
 #
@@ -43,7 +47,7 @@ docker_build_browser:
 		--net=host \
 		-v ${PWD}:/work \
 		autobahnjs-toolchain \
-		make browser_deps build_browser
+		make build_browser_docker
 
 
 #
@@ -52,19 +56,20 @@ docker_build_browser:
 requirements:
 	pip install -U scons boto taschenmesser
 	sudo apt update
-	sudo apt install -y npm nodejs-legacy default-jre
+	sudo apt install -y npm nodejs default-jre
 	node -v
-	sudo npm install -g google-closure-compiler nodeunit
 
-browser_deps:
+build_browser_docker:
+	npm install --only=dev
 	npm install
-	npm update
-
-build_browser:
 	scons
-	java -jar /usr/local/lib/node_modules/google-closure-compiler/compiler.jar --version
 
-build_npm:
+build_browser_host:
+	npm install --only=dev
+	npm install
+	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/node_modules/google-closure-compiler-java/compiler.jar scons
+
+build_build_npm:
 	@echo "Ok, npm doesn't need a build step"
 
 
@@ -87,7 +92,7 @@ publish_npm: build_npm
 # Test targets
 #
 crossbar:
-	crossbar start --personality=community
+	crossbar start
 
 test:
 	npm test

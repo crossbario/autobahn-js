@@ -5,7 +5,7 @@
             "type": "router",
             "realms": [
                 {
-                    "name": "crossbardemo",
+                    "name": "realm1",
                     "roles": [
                         {
                             "name": "anonymous",
