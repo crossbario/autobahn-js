@@ -35,7 +35,7 @@ var rpc_request_id_sequence = require('./test_rpc_request_id_sequence.js');
 
 var pubsub_basic = require('./test_pubsub_basic.js');
 var pubsub_complex = require('./test_pubsub_complex.js');
-var pubsub_options = require('./test_pubsub_options.js');
+// var pubsub_options = require('./test_pubsub_options.js');
 var pubsub_excludme = require('./test_pubsub_excludeme.js');
 var pubsub_exclude = require('./test_pubsub_exclude.js');
 var pubsub_eligible = require('./test_pubsub_eligible.js');
@@ -65,7 +65,7 @@ exports.testRpcRequestIdSequence = rpc_request_id_sequence.testRpcRequestIdSeque
 
 exports.testPubsubBasic = pubsub_basic.testPubsubBasic;
 exports.testPubsubComplex = pubsub_complex.testPubsubComplex;
-exports.testPubsubOptions = pubsub_options.testPubsubOptions;
+// exports.testPubsubOptions = pubsub_options.testPubsubOptions;
 exports.testPubsubExcludeMe = pubsub_excludme.testPubsubExcludeMe;
 exports.testPubsubExclude = pubsub_exclude.testPubsubExclude;
 exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
