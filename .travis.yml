@@ -7,24 +7,18 @@ sudo: true
 services:
   - docker
 
-cache:
-  directories:
-    - $HOME/.cache/pip
-
 addons:
   apt:
     update: true
     packages:
-      - libsnappy-dev
-      - libunwind-dev
-      - make
       - python3-pip
 
 before_install:
-  - sudo pip3 install -U scons boto taschenmesser
+  - sudo pip3 install --no-cache-dir -U scons boto taschenmesser
 
 before_script:
   - docker run -d -v $PWD/.crossbar:/node/config -p 8080:8080 crossbario/crossbar --config /node/config/config.json
+  - sleep 5
 
 script:
   - nodeunit test/test_connect.js
