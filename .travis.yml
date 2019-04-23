@@ -19,4 +19,4 @@ addons:
       - python3-pip
 
 before_install:
-  - pip install -U scons boto taschenmesser
+  - sudo pip3 install -U scons boto taschenmesser
