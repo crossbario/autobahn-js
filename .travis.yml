@@ -1,0 +1,34 @@
+# py3.7/travis: https://github.com/travis-ci/travis-ci/issues/9815#issue-336465122
+language: python
+python: 3.7
+dist: xenial
+sudo: true
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+addons:
+  apt:
+    update: true
+    packages:
+      - nodejs
+      - nodejs-dev
+      - npm
+      - nodeunit
+      - libsnappy-dev
+      - libunwind-dev
+      - default-jre
+      - make
+
+before_install:
+  # build ID (eg, "20180513-28114a1")
+  - export AUTOBAHN_BUILD_ID="$(date --utc "+%Y%m%d")-$(git rev-parse --short ${TRAVIS_COMMIT})"
+
+  - pip install -U scons boto taschenmesser
+
+install:
+  - npm install
+
+script:
+  - make test
