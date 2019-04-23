@@ -19,9 +19,3 @@ before_install:
 before_script:
   - docker run -d -v $PWD/.crossbar:/node/config -p 8080:8080 crossbario/crossbar --config /node/config/config.json
   - sleep 5
-
-script:
-  - nodeunit test/test_connect.js
-  - nodeunit test/test_serialization_cbor.js
-  - nodeunit test/test_pubsub_multiple_matching_subs.js
-  - npm test
