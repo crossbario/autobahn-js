@@ -1,6 +1,7 @@
 # py3.7/travis: https://github.com/travis-ci/travis-ci/issues/9815#issue-336465122
 language: node_js
-python: 3.7
+node_js:
+  - "8"
 dist: xenial
 sudo: true
 
