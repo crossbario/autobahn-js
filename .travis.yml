@@ -4,6 +4,8 @@ node_js:
   - "8"
 dist: xenial
 sudo: true
+services:
+  - docker
 
 cache:
   directories:
@@ -19,4 +21,5 @@ addons:
       - python3-pip
 
 before_install:
+  - docker run -d -v $PWD/.crossbar:/node/config -p 8080:8080 crossbario/crossbar --config /node/config/config.json
   - sudo pip3 install -U scons boto taschenmesser
