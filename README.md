@@ -5,6 +5,7 @@ WAMP for Browsers and NodeJS.
 [![NPM](https://nodei.co/npm/autobahn.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/autobahn/)
 
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/crossbario/autobahn-js/)
+[![Build Status](https://travis-ci.org/crossbario/autobahn-js.svg?branch=master)](https://travis-ci.org/crossbario/autobahn-js)
 
 ---
 
