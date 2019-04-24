@@ -18,3 +18,15 @@ before_install:
 before_script:
   - docker run -d -v $PWD/.crossbar:/node/config -p 8080:8080 crossbario/crossbar --config /node/config/config.json
   - sleep 5
+
+# CI notifications
+notifications:
+  # IRC: chat messages on #crossbar-ci @ freenode
+  irc:
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: always    # options: [always|never|change] default: always
+    channels:
+      - "irc.freenode.org#crossbar-ci"
+    use_notice: false
+    skip_join: false
