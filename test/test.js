@@ -42,6 +42,7 @@ var pubsub_eligible = require('./test_pubsub_eligible.js');
 var pubsub_prefix_sub = require('./test_pubsub_prefix_sub.js');
 var pubsub_wildcard_sub = require('./test_pubsub_wildcard_sub.js');
 // var pubsub_multiple_matching_subs = require('./test_pubsub_multiple_matching_subs.js');
+var sealedbox = require('./test_sealedbox.js');
 
 exports.testSync = sync.testSync;
 exports.testAsync = async.testAsync;
@@ -72,6 +73,7 @@ exports.testPubsubEligible = pubsub_eligible.testPubsubEligible;
 exports.testPubsubPrefixSub = pubsub_prefix_sub.testPubsubPrefixSub;
 exports.testPubsubWildcardSub = pubsub_wildcard_sub.testPubsubWildcardSub;
 // exports.testPubsubMultipleMatchingSubs = pubsub_multiple_matching_subs.testPubsubMultipleMatchingSubs;
+exports.testSealedBoxSealUnseal = sealedbox;
 
 exports.errorHandlingOnOpen = require('./test_error_handling').errorHandlingOnOpen;
 exports.errorHandlingOnClose = require('./test_error_handling').errorHandlingOnClose;
