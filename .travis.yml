@@ -35,5 +35,5 @@ notifications:
     on_failure: always  # options: [always|never|change] default: always
     on_start: always    # options: [always|never|change] default: always
     rooms:
-      # travis encrypt --org --repo crossbario/ "crossbario:FYg..."
+      # travis encrypt --org --repo crossbario/autobahn-js "crossbario:FYg..."
       - secure: "J5IKtd+BlVHWVDrtoCGpesVE7nASw1yg/DcKDtd/dVoj6dJimXoYXFPdJTjBvsDg54Zd41KMshe5fSRlEOkg9r0333OxtXySK/v66ncI6ipnSo2eM5kuOJ6E2Kg3A8AdhcV3IxG3awbHYxgtQVcCpOGIZ2bkaHNqxj2smiNAKK0="
