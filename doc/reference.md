@@ -224,7 +224,7 @@ Options that define **Custom error handlers:**
       the error message is sent back to the Dealer.)
 -   `on_internal_error`: *function* - This error handler is called in the following cases:
     - not able to create a Wamp transport,
-    - when a protocol violation is occured,
+    - when a protocol violation is occurred,
     - when no `onchallenge` defined, but a challenge request is received due to authenticate the client,
 
 
