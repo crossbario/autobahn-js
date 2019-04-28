@@ -118,7 +118,7 @@ When the registration succeeds, authorized callers will immediately be able to c
 
 A registration may also fail, e.g. when a procedure is already registered under the given URI or when the session is not authorized to register procedures.
 
-Function registration needs to provide an **indentifier** which is used by the client when calling the function. For these WAMP uses **URIs**, (i.e. here `'com.myapp.add2'`), in Java packet notation. URIs are an established, easy way for namespace management.
+Function registration needs to provide an **identifier** which is used by the client when calling the function. For these WAMP uses **URIs**, (i.e. here `'com.myapp.add2'`), in Java packet notation. URIs are an established, easy way for namespace management.
 
 Calling Procedures
 ------------------
