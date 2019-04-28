@@ -245,7 +245,7 @@ Options that define **Custom error handlers:**
 
 > **note**
 >
-> If no error handler is defined for these functions, an error level consol log will be written. 
+> If no error handler is defined for these functions, an error level console log will be written. 
 
 > **note**
 >
