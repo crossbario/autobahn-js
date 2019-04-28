@@ -461,7 +461,7 @@ session.resolve('api:add2');
 Session Meta-Events & Procedures
 --------------------------------
 
-Some WAMP routers (such as [Crossbar.io](http://crossbar.io)) provide the possibility to subscribe to events which are created by the router based on session lifecycle, as well as procedures which allow the retrieval of information about current sessions. For more information see the [Crossbar.io documenation](http://crossbar.io/docs/Session-Metaevents-and-Procedures/).
+Some WAMP routers (such as [Crossbar.io](http://crossbar.io)) provide the possibility to subscribe to events which are created by the router based on session lifecycle, as well as procedures which allow the retrieval of information about current sessions. For more information see the [Crossbar.io documentation](http://crossbar.io/docs/Session-Metaevents-and-Procedures/).
 
 Subscribe
 =========
