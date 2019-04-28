@@ -472,7 +472,7 @@ To subscribe to a topic on a `session`:
 
 where
 
-* `topic` is the URI of the topic to susbscribe to
+* `topic` is the URI of the topic to subscribe to
 * `handler` is the event handler which should consume events
 * `options` - options object (see below)
 
@@ -597,7 +597,7 @@ Complete Examples:
 Subscription Meta-Events and Procedures
 ---------------------------------------
 
-Some WAMP routers (such as [Crossbar.io](http://crossbar.io)) provide the possibility to subscribe to events which are created by the router based on subscription lifecycle, as well as procedures which allow the retrieval of information about current subscriptions. For more information see the [Crossbar.io documenation](http://crossbar.io/docs/Subscription-Meta-Events-and-Procedures/).
+Some WAMP routers (such as [Crossbar.io](http://crossbar.io)) provide the possibility to subscribe to events which are created by the router based on subscription lifecycle, as well as procedures which allow the retrieval of information about current subscriptions. For more information see the [Crossbar.io documentation](http://crossbar.io/docs/Subscription-Meta-Events-and-Procedures/).
 
 Publish
 =======
