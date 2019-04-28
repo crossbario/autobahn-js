@@ -461,7 +461,7 @@ session.resolve('api:add2');
 Session Meta-Events & Procedures
 --------------------------------
 
-Some WAMP routers (such as [Crossbar.io](http://crossbar.io)) provide the possibility to subscribe to events which are created by the router based on session lifecycle, as well as procedures which allow the retrieval of information about current sessions. For more information see the [Crossbar.io documenation](http://crossbar.io/docs/Session-Metaevents-and-Procedures/).
+Some WAMP routers (such as [Crossbar.io](http://crossbar.io)) provide the possibility to subscribe to events which are created by the router based on session lifecycle, as well as procedures which allow the retrieval of information about current sessions. For more information see the [Crossbar.io documentation](http://crossbar.io/docs/Session-Metaevents-and-Procedures/).
 
 Subscribe
 =========
@@ -561,7 +561,7 @@ You can unsubscribe a previously established `subscription`
 
     Session.unsubscribe(subscription)
 
-where `subscription` is an instance of `autobahn.Subscrioption` and which returns a *promise* that resolves to a boolean when successful or rejects with an instance of `autobahn.Error` when unsuccessful.
+where `subscription` is an instance of `autobahn.Subscription` and which returns a *promise* that resolves to a boolean when successful or rejects with an instance of `autobahn.Error` when unsuccessful.
 
 > **note**
 >
@@ -608,7 +608,7 @@ To publish an event on a `session`:
 
 where
 
-* `topic`is the URI of the topic to publish to
+* `topic` is the URI of the topic to publish to
 * `args` is an *optional* array as application event payload
 * `kwargs` is an *optional* object as application event payload
 * `options` is an *optional* object which specifies options for publication (see below)
