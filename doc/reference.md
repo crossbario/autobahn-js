@@ -737,7 +737,7 @@ session.register('com.myapp.proc1', myproc1).then(
       // registration succeeded, registration is an instance of autobahn.Registration
    },
    function (error) {
-      // registration failed, error is an isntance of autobahn.Error
+      // registration failed, error is an instance of autobahn.Error
    }
 );
 ```
