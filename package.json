@@ -16,6 +16,7 @@
     "randombytes": ">=2.0.6",
     "tweetnacl": ">= 0.14.3",
     "tweetnacl-sealedbox-js": ">=1.1.0",
+    "web3": ">=1.0.0-beta.53",
     "when": ">= 3.7.7",
     "ws": ">= 1.1.4"
   },
