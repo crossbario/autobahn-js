@@ -793,7 +793,7 @@ It is possible to have shared registrations, i.e. more than one registration for
 
 -   `first` - first registration in the list is invoked
 -   `last` - last registration in the list is invoked
--   `roundrobing` - the registration following the last invoked registration on the list is invoked
+-   `roundrobin` - the registration following the last invoked registration on the list is invoked
 -   `random` - a random registration from the list is invoked
 
 The invocation policy for an URI is determined by the first registration for that URI, and only subsequent registration attemps which set the same invocation rule may be successful. For example, with a first registration of
