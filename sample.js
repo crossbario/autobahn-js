@@ -14,12 +14,13 @@ var onRotate = function(series) {
 
 connection.onopen = function (session, details) {
     console.log("OPENED");
-    // var simple_seller = new seller.SimpleSeller("0x3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266", 100);
-    // simple_seller.start(session);
-    var s = new series.KeySeries("OMER", 10, 10000, "io.crossbar", onRotate);
-    s.start();
-    var encrypted = s.encrypt("adsas");
-    console.log(encrypted);
+    var simple_seller = new seller.SimpleSeller("0x3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266", 100);
+    simple_seller.add(new Buffer("THIS"), "io.crossbar", 10, 10000);
+    simple_seller.start(session);
+    // var s = new series.KeySeries("OMER", 10, 10000, "io.crossbar", onRotate);
+    // s.start();
+    // var encrypted = s.encrypt("adsas");
+    // console.log(encrypted);
 };
 
 connection.onclose = function (reason, details) {
