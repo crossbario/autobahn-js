@@ -1,5 +1,6 @@
 var autobahn = require('./lib/autobahn.js');
 var seller = require('./lib/xbr/seller.js');
+var buyer = require('./lib/xbr/buyer.js');
 
 
 var connection = new autobahn.Connection({
@@ -13,10 +14,17 @@ var onRotate = function(series) {
 };
 
 connection.onopen = function (session, details) {
-    console.log("OPENED");
-    var simple_seller = new seller.SimpleSeller("0x3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266", 100);
-    simple_seller.add(autobahn.nacl.randomBytes(16), "io.crossbar", 10, 10000);
-    simple_seller.start(session);
+    // console.log("OPENED");
+    // var simple_seller = new seller.SimpleSeller("0x3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266", 100);
+    // simple_seller.add(autobahn.nacl.randomBytes(16), "io.crossbar", 10, 10000);
+    // simple_seller.start(session);
+
+    var simple_buyer = new buyer.SimpleBuyer("0x3a1076bf45ab87712ad64ccb3b10217737f7faacbf2872e88fdd9a537d8fe266", 200);
+    simple_buyer.start(session);
+    // simple_buyer.openChannel();
+    var b = simple_buyer.balance();
+    console.log(typeof b);
+    console.log(b)
 };
 
 connection.onclose = function (reason, details) {
