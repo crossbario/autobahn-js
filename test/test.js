@@ -22,6 +22,8 @@ var serialization_json = require('./test_serialization_json.js');
 var serialization_msgpack = require('./test_serialization_msgpack.js');
 var serialization_cbor = require('./test_serialization_cbor.js');
 
+var binary = require('./test_binary.js');
+
 var rawsocket_transport = require('./test_rawsocket_transport.js');
 
 var rpc_complex = require('./test_rpc_complex.js');
@@ -52,6 +54,12 @@ exports.testConnect = connect.testConnect;
 exports.testJSONSerialization = serialization_json.testJSONSerialization;
 exports.testMsgpackSerialization = serialization_msgpack.testMsgpackSerialization;
 exports.testCBORSerialization = serialization_cbor.testCBORSerialization;
+
+exports.testBinaryCBOR = binary.testBinaryCBOR;
+
+// FIXME:
+// exports.testBinaryMsgPack = binary.testBinaryMsgPack;
+// exports.testBinaryJSON = binary.testBinaryJSON;
 
 exports.testRawSocketTransport = rawsocket_transport.testRawSocketTransport;
 

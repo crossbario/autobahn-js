@@ -106,3 +106,6 @@ test_serialization_cbor:
 
 test_pubsub_multiple_matching_subs:
 	nodeunit test/test_pubsub_multiple_matching_subs.js
+
+test_binary:
+	nodeunit test/test_binary.js -t testBinaryCBOR
