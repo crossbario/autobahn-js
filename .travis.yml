@@ -16,7 +16,7 @@ before_install:
   - sudo pip3 install --no-cache-dir -U scons boto taschenmesser
 
 before_script:
-  - docker run -d -v $PWD/.crossbar:/node/config -p 8080:8080 crossbario/crossbar --config /node/config/config.json
+  - docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -u $UID crossbario/crossbar --cbdir /node
   - sleep 5
 
 # CI notifications
