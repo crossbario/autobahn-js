@@ -18,6 +18,13 @@ var testutil = require('./testutil.js');
 var seed = require('random-bytes-seed')
 var randomBytes = seed('a seed')
 
+/*
+AutobahnJS supports use of native binary values in application payload args/kwargs
+of WAMP calls or events. Use the following JavaScript types:
+
+* browsers: Uint8Array (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array)
+* node: Buffer (https://nodejs.org/api/buffer.html)
+*/
 
 function run_test (test, ser) {
 
@@ -33,7 +40,7 @@ function run_test (test, ser) {
 
    connection.onopen = function (session) {
 
-      test.log('Connected');
+      test.log('Connected: ' + session._socket.info.protocol);
 
       function echo(args) {
          return args[0];
@@ -93,35 +100,39 @@ function run_test (test, ser) {
                ));
             }
 
-            for (var i = 0; i < vals1.length; ++i) {
+            autobahn.when.all(pl2).then(function () {
+               var pl3 = [];
 
-                pl2.push(session.call('any.echo', [vals1[i]]).then(
-                   function (res) {
-                      if (Buffer.isBuffer(res)) {
-                        test.log("Result [any.echo]: " + res.toString('hex'));
-                      } else if (res && res.constructor == Object) {
-                          test.log("Result [any.echo]:");
-                          for (var key in res) {
-                            if (res[key] && Buffer.isBuffer(res[key])) {
-                                test.log("  " + key + ", " + res[key].toString('hex'));
-                            } else {
-                                test.log("  " + key + ", " + res[key]);
+               for (var i = 0; i < vals1.length; ++i) {
+
+                    pl3.push(session.call('any.echo', [vals1[i]]).then(
+                    function (res) {
+                        if (Buffer.isBuffer(res)) {
+                            test.log("Result [any.echo]: " + res.toString('hex'));
+                        } else if (res && res.constructor == Object) {
+                            test.log("Result [any.echo]:");
+                            for (var key in res) {
+                                if (res[key] && Buffer.isBuffer(res[key])) {
+                                    test.log("  " + key + ", " + res[key].toString('hex'));
+                                } else {
+                                    test.log("  " + key + ", " + res[key]);
+                                }
                             }
-                          }
-                      } else {
-                        test.log("Result [any.echo]: " + res);
-                      }
-                   },
-                   function (err) {
-                      test.log("Error [any.echo]:", err.error, err.args, err.kwargs);
-                   }
-                ));
-             }
+                        } else {
+                            test.log("Result [any.echo]: " + res);
+                        }
+                    },
+                    function (err) {
+                        test.log("Error [any.echo]:", err.error, err.args, err.kwargs);
+                    }
+                    ));
+                }
 
-             autobahn.when.all(pl2).then(function () {
-               test.log("All finished.");
-               connection.close();
-               done.resolve();
+                autobahn.when.all(pl3).then(function () {
+                    test.log("All finished.");
+                    connection.close();
+                    done.resolve();
+                });
             });
          },
          function () {

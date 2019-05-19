@@ -112,3 +112,4 @@ test_pubsub_multiple_matching_subs:
 
 test_binary:
 	nodeunit test/test_binary.js -t testBinaryCBOR
+	nodeunit test/test_binary.js -t testBinaryMsgPack
