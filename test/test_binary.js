@@ -71,7 +71,11 @@ function run_test (test, ser) {
 
                pl2.push(session.call('com.myapp.echo', [vals1[i]]).then(
                   function (res) {
-                     test.log("Result [com.myapp.echo]:", res);
+                      if (Buffer.isBuffer(res)) {
+                        test.log("Result [com.myapp.echo]:", res.toString('hex'));
+                      } else {
+                        test.log("Result [com.myapp.echo]:", res);
+                      }                     
                   },
                   function (err) {
                      test.log("Error [com.myapp.echo]:", err.error, err.args, err.kwargs);
@@ -83,7 +87,11 @@ function run_test (test, ser) {
 
                 pl2.push(session.call('any.echo', [vals1[i]]).then(
                    function (res) {
-                      test.log("Result [any.echo]:", res);
+                      if (Buffer.isBuffer(res)) {
+                        test.log("Result [any.echo]:", res.toString('hex'));
+                      } else {
+                        test.log("Result [any.echo]:", res);
+                      }
                    },
                    function (err) {
                       test.log("Error [any.echo]:", err.error, err.args, err.kwargs);
