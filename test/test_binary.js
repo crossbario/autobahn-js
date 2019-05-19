@@ -15,8 +15,7 @@ var autobahn = require('./../index.js');
 var testutil = require('./testutil.js');
 
 // var randomBytes = require('randombytes');
-var seed = require('random-bytes-seed')
-var randomBytes = seed('a seed')
+var seed = require('random-bytes-seed');
 
 /*
 AutobahnJS supports use of native binary values in application payload args/kwargs
@@ -27,6 +26,8 @@ of WAMP calls or events. Use the following JavaScript types:
 */
 
 function run_test (test, ser) {
+
+   var randomBytes = seed('a seed');
 
    var done = autobahn.when.defer();
 
