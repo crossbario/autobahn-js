@@ -56,7 +56,7 @@ exports.testMsgpackSerialization = serialization_msgpack.testMsgpackSerializatio
 exports.testCBORSerialization = serialization_cbor.testCBORSerialization;
 
 exports.testBinaryCBOR = binary.testBinaryCBOR;
-exports.testBinaryMsgPack = binary.testBinaryMsgPack;
+// exports.testBinaryMsgPack = binary.testBinaryMsgPack;
 // exports.testBinaryJSON = binary.testBinaryJSON;
 
 exports.testRawSocketTransport = rawsocket_transport.testRawSocketTransport;

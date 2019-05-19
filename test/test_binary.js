@@ -71,6 +71,11 @@ function run_test (test, ser) {
                 {a: 5, b: "hello2", c: [1, 2, 3]},
                 [-9007199254740991, 9007199254740991],
                 null,
+                // UTC of today
+                BigInt('1558266424841951553'),
+                // 2**255-1 : NotImplementedError TODO: TAG BIGNUM for bigger bignum bytes_info=24, len(ull)=8
+                // BigInt('57896044618658097711785492504343953926634992332820282019728792003956564819967'),
+                BigInt('340282366920938463463374607431768211455'),
                 Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7]),
                 randomBytes(32),
                 {a: 5, b: "hello2", c: randomBytes(32)}
