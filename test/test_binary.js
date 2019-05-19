@@ -60,11 +60,12 @@ function run_test (test, ser) {
                 1.7,
                 "hello",
                 [1, 2, -3],
-                {a: 5, b: "hello2"},
+                {a: 5, b: "hello2", c: [1, 2, 3]},
                 [-9007199254740991, 9007199254740991],
                 null,
                 Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7]),
-                randomBytes(32)
+                randomBytes(32),
+                {a: 5, b: "hello2", c: randomBytes(32)}
             ];
 
             for (var i = 0; i < vals1.length; ++i) {
@@ -73,6 +74,15 @@ function run_test (test, ser) {
                   function (res) {
                       if (Buffer.isBuffer(res)) {
                         test.log("Result [com.myapp.echo]:", res.toString('hex'));
+                      } else if (res && res.constructor == Object) {
+                          test.log("Result [com.myapp.echo]:");
+                          for (var key in res) {
+                            if (res[key] && Buffer.isBuffer(res[key])) {
+                                test.log("  ", key, res[key].toString('hex'));
+                            } else {
+                                test.log("  ", key, res[key]);
+                            }
+                          }
                       } else {
                         test.log("Result [com.myapp.echo]:", res);
                       }                     
@@ -89,6 +99,15 @@ function run_test (test, ser) {
                    function (res) {
                       if (Buffer.isBuffer(res)) {
                         test.log("Result [any.echo]:", res.toString('hex'));
+                      } else if (res && res.constructor == Object) {
+                          test.log("Result [any.echo]:");
+                          for (var key in res) {
+                            if (res[key] && Buffer.isBuffer(res[key])) {
+                                test.log("  ", key, res[key].toString('hex'));
+                            } else {
+                                test.log("  ", key, res[key]);
+                            }
+                          }
                       } else {
                         test.log("Result [any.echo]:", res);
                       }

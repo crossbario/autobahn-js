@@ -94,6 +94,9 @@ publish_npm: build_npm
 crossbar:
 	crossbar start
 
+crossbar_docker:
+	docker run -it --rm -v ${PWD}/.crossbar:/node -p 8080:8080 -p 8090:8090 -u 1000 crossbario/crossbar --cbdir /node
+
 test:
 	npm test
 	npm list ws bufferutil when crypto-js
