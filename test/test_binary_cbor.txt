@@ -1,34 +1,34 @@
 0 "Connected"
 1 "All registered."
 2 "Serializer ID: cbor"
-3 "Result [any.echo]:" 1.7
-4 "Result [any.echo]:" "hello"
-5 "Result [any.echo]:" [1,2,-3]
+3 "Result [any.echo]: 1.7"
+4 "Result [any.echo]: hello"
+5 "Result [any.echo]: 1,2,-3"
 6 "Result [any.echo]:"
-7 "  " "a" 5
-8 "  " "b" "hello2"
-9 "  " "c" [1,2,3]
-10 "Result [any.echo]:" [-9007199254740991,9007199254740991]
-11 "Result [any.echo]:" null
-12 "Result [any.echo]:" "0001020304050607"
-13 "Result [any.echo]:" "8f44d509e0492acec4fc109a030a5c751f063fb743cc388f0ed722bacc3bc66c"
+7 "  a, 5"
+8 "  b, hello2"
+9 "  c, 1,2,3"
+10 "Result [any.echo]: -9007199254740991,9007199254740991"
+11 "Result [any.echo]: null"
+12 "Result [any.echo]: 0001020304050607"
+13 "Result [any.echo]: 8f44d509e0492acec4fc109a030a5c751f063fb743cc388f0ed722bacc3bc66c"
 14 "Result [any.echo]:"
-15 "  " "a" 5
-16 "  " "b" "hello2"
-17 "  " "c" "035e7711c8da2e9434aab5039dc3d72046dee4e57af0e957e948fbbad15e48f8"
-18 "Result [com.myapp.echo]:" 1.7
-19 "Result [com.myapp.echo]:" "hello"
-20 "Result [com.myapp.echo]:" [1,2,-3]
+15 "  a, 5"
+16 "  b, hello2"
+17 "  c, 035e7711c8da2e9434aab5039dc3d72046dee4e57af0e957e948fbbad15e48f8"
+18 "Result [com.myapp.echo]: 1.7"
+19 "Result [com.myapp.echo]: hello"
+20 "Result [com.myapp.echo]: 1,2,-3"
 21 "Result [com.myapp.echo]:"
-22 "  " "a" 5
-23 "  " "b" "hello2"
-24 "  " "c" [1,2,3]
-25 "Result [com.myapp.echo]:" [-9007199254740991,9007199254740991]
-26 "Result [com.myapp.echo]:" null
-27 "Result [com.myapp.echo]:" "0001020304050607"
-28 "Result [com.myapp.echo]:" "8f44d509e0492acec4fc109a030a5c751f063fb743cc388f0ed722bacc3bc66c"
+22 "  a, 5"
+23 "  b, hello2"
+24 "  c, 1,2,3"
+25 "Result [com.myapp.echo]: -9007199254740991,9007199254740991"
+26 "Result [com.myapp.echo]: null"
+27 "Result [com.myapp.echo]: 0001020304050607"
+28 "Result [com.myapp.echo]: 8f44d509e0492acec4fc109a030a5c751f063fb743cc388f0ed722bacc3bc66c"
 29 "Result [com.myapp.echo]:"
-30 "  " "a" 5
-31 "  " "b" "hello2"
-32 "  " "c" "035e7711c8da2e9434aab5039dc3d72046dee4e57af0e957e948fbbad15e48f8"
+30 "  a, 5"
+31 "  b, hello2"
+32 "  c, 035e7711c8da2e9434aab5039dc3d72046dee4e57af0e957e948fbbad15e48f8"
 33 "All finished."
