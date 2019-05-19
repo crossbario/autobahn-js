@@ -22,7 +22,13 @@ connection.onopen = function (session, details) {
     var simple_buyer = new buyer.SimpleBuyer("0x395df67f0c2d2d9fe1ad08d1bc8b6627011959b79c53d7dd6a3536a33ab8a4fd", 200);
     simple_buyer.start(session, details.authid);
     // simple_buyer.openChannel("0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc", 200);
-    simple_buyer.balance();
+    simple_buyer.balance(
+        function (balance) {
+            console.log(balance)
+        },
+        function (failure) {
+
+        });
     // var b = simple_buyer.balance();
     // console.log(typeof b);
     // console.log(b)
