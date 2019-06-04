@@ -1,6 +1,6 @@
 {
   "name": "autobahn",
-  "version": "19.4.1",
+  "version": "19.6.1",
   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
   "main": "index.js",
   "scripts": {
@@ -45,7 +45,15 @@
     "WAMP",
     "WebSocket",
     "RPC",
-    "PubSub"
+    "PubSub",
+    "ethereum",
+    "solidity",
+    "xbr",
+    "crossbar",
+    "autobahn",
+    "wamp",
+    "data-service",
+    "data-monetization"
   ],
   "author": "Crossbar.io Technologies GmbH",
   "license": "MIT"
