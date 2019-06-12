@@ -13,7 +13,6 @@
     "cbor": ">= 3.0.0",
     "crypto-js": ">=3.1.8",
     "msgpack5": ">= 3.6.0",
-    "randombytes": ">=2.0.6",
     "tweetnacl": ">= 0.14.3",
     "tweetnacl-sealedbox-js": ">=1.1.0",
     "web3": ">=1.0.0-beta.53",
@@ -37,8 +36,7 @@
   "browser": {
     "ws": false,
     "./lib/transport/rawsocket.js": false,
-    "cbor": false,
-    "randombytes": false
+    "cbor": false
   },
   "repository": {
     "type": "git",
