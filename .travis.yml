@@ -14,6 +14,7 @@ addons:
 
 before_install:
   - sudo pip3 install --no-cache-dir -U scons boto taschenmesser
+  - rm -rf node_modules/websocket
 
 before_script:
   - docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID crossbario/crossbar --cbdir /node
