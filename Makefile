@@ -82,6 +82,7 @@ publish_browser:
 	git -C ../autobahn-js-browser pull
 	cp ./build/* ../autobahn-js-browser/
 	cp ./build/* ../crossbar-examples/_shared-web-resources/autobahn/
+	cp ./build/* ../crossbarfx/test/_shared_web/autobahn/
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
 publish_npm: build_npm
