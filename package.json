@@ -12,15 +12,17 @@
   "dependencies": {
     "cbor": ">= 3.0.0",
     "crypto-js": ">=3.1.8",
+    "eth-sig-util": ">=2.2.0",
     "msgpack5": ">= 3.6.0",
-    "tweetnacl": ">= 0.14.3",
-    "tweetnacl-sealedbox-js": ">=1.1.0",
-    "web3": ">=1.0.0-beta.53",
-    "when": ">= 3.7.7",
-    "ws": ">= 1.1.4",
     "sha3": ">=2.0.1",
     "truffle-contract": ">=4.0.10",
-    "uuid": ">=3.3.2"
+    "tweetnacl": ">=0.14.3",
+    "tweetnacl-sealedbox-js": ">=1.1.0",
+    "uuid": ">=3.3.2",
+    "web3": ">=1.0.0-beta.53",
+    "web3-utils": ">=1.0.0",
+    "when": ">= 3.7.7",
+    "ws": ">= 1.1.4"
   },
   "optionalDependencies": {
     "bufferutil": ">= 1.2.1",
