@@ -36,7 +36,7 @@
     "web3": "^1.0.0-beta.50"
   },
   "devDependencies": {},
-  "main": "index.js",
+  "main": "index-xbr.js",
   "scripts": {
     "test": "truffle test --network ganache",
     "coverage": "solidity-coverage"
