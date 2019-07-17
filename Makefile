@@ -16,16 +16,13 @@ default:
 distclean: clean
 	-sudo rm -rf ./node_modules
 	-sudo rm -rf ./packages/autobahn/node_modules
-	-sudo rm -rf ./packages/autobahn-xbr/node_modules
 	-sudo rm -f ./package-lock.json
 	-sudo rm -f ./packages/autobahn/package-lock.json
-	-sudo rm -f ./packages/autobahn-xbr/package-lock.json
 
 clean:
 	-sudo rm -f .sconsign.dblite
 	-sudo rm -rf ./build
 	-sudo rm -rf ./packages/autobahn/build
-	-sudo rm -rf ./packages/autobahn-xbr/build
 
 
 #
@@ -92,8 +89,7 @@ publish_browser:
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
 publish_npm: build_npm
-	cd packages/autobahn; npm publish --dry-run
-	cd packages/autobahn-xbr; npm publish --dry-run
+	cd packages/autobahn; npm publish
 
 
 #
