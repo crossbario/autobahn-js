@@ -2,7 +2,7 @@ var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
 var key_series = require('./keyseries');
 var nacl = require('tweetnacl');
-var util = require('../util.js');
+var util = require('./util.js');
 
 
 var Seller = function (sellerKey) {
