@@ -3,6 +3,10 @@
   "version": "19.7.3",
   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "/lib"
+  ],
   "engines": {
     "node": ">= 4.2.6"
   },
