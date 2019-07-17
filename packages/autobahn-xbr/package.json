@@ -1,0 +1,27 @@
+{
+  "name": "xbr",
+  "version": "19.7.3",
+  "description": "The XBR Protocol (smart contracts package)",
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "xbr",
+    "crossbar",
+    "autobahn",
+    "wamp",
+    "data-service",
+    "data-monetization"
+  ],
+  "author": "Crossbar.io Technologies GmbH",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/crossbario/autobahn-js.git"
+  },
+  "dependencies": {
+    "autobahn": ">= 19.7.2",
+    "web3": ">=1.0.0-beta.53",
+    "truffle-contract": ">=4.0.10"
+  },
+  "main": "index.js"
+}
