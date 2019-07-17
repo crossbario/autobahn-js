@@ -24,6 +24,8 @@ distclean: clean
 clean:
 	-sudo rm -f .sconsign.dblite
 	-sudo rm -rf ./build
+	-sudo rm -rf ./packages/autobahn/build
+	-sudo rm -rf ./packages/autobahn-xbr/build
 
 
 #
@@ -64,14 +66,14 @@ requirements:
 	node -v
 
 build_browser_docker:
-	npm install --only=dev
-	npm install
-	scons
+	cd packages/autobahn; npm install --only=dev
+	cd packages/autobahn; npm install
+	cd packages/autobahn; scons
 
 build_browser_host:
-	npm install --only=dev
-	npm install
-	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/node_modules/google-closure-compiler-java/compiler.jar scons
+	cd packages/autobahn; npm install --only=dev
+	cd packages/autobahn; npm install
+	cd packages/autobahn; JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons
 
 build_build_npm:
 	@echo "Ok, npm doesn't need a build step"
@@ -84,9 +86,9 @@ publish: publish_browser publish_npm
 
 publish_browser:
 	git -C ../autobahn-js-browser pull
-	cp ./build/* ../autobahn-js-browser/
-	cp ./build/* ../crossbar-examples/_shared-web-resources/autobahn/
-	cp ./build/* ../crossbarfx/test/_shared_web/autobahn/
+	cp ./packages/autobahn/build/* ../autobahn-js-browser/
+	cp ./packages/autobahn/build/* ../crossbar-examples/_shared-web-resources/autobahn/
+	cp ./packages/autobahn/build/* ../crossbarfx/test/_shared_web/autobahn/
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
 publish_npm: build_npm
