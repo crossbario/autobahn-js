@@ -90,7 +90,8 @@ publish_browser:
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
 publish_npm: build_npm
-	npm publish
+	cd packages/autobahn; npm publish --dry-run
+	cd packages/autobahn-xbr; npm publish --dry-run
 
 
 #

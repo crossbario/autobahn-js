@@ -1,5 +1,5 @@
 {
-  "name": "xbr",
+  "name": "autobahn-xbr",
   "version": "19.7.3",
   "description": "The XBR Protocol (smart contracts package)",
   "main": "index.js",
