@@ -15,11 +15,8 @@
     "crypto-js": ">=3.1.8",
     "msgpack5": ">= 3.6.0",
     "tweetnacl": ">= 0.14.3",
-    "tweetnacl-sealedbox-js": ">=1.1.0",
     "when": ">= 3.7.7",
-    "ws": ">= 1.1.4",
-    "sha3": ">=2.0.1",
-    "uuid": ">=3.3.2"
+    "ws": ">= 1.1.4"
   },
   "optionalDependencies": {
     "bufferutil": ">= 1.2.1",
