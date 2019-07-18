@@ -16,7 +16,7 @@
 // that the publisher doesn't receive an event
 // for its own publication
 
-var autobahn = require('./../index.js');
+var autobahn = require('./../packages/autobahn/index.js');
 var testutil = require('./testutil.js');
 
 exports.testPubsubExcludeMe = function (testcase) {

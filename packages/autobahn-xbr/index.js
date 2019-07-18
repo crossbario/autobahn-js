@@ -11,17 +11,4 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
-var testutil = require('./testutil.js');
-
-exports.testSync = function (testcase) {
-
-   testcase.expect(1);
-
-   var test = new testutil.Testlog("test/test_basic_sync.txt");
-
-   test.log(true);
-   var chk = test.check();
-   testcase.ok(!chk, chk);
-   testcase.done();
-}
+module.exports = require('./lib/xbr.js');

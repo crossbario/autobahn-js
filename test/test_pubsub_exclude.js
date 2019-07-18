@@ -15,7 +15,7 @@
 
 // Tests "exclude" option on publication.
 
-var autobahn = require('./../index.js');
+var autobahn = require('./../packages/autobahn/index.js');
 var testutil = require('./testutil.js');
 
 exports.testPubsubExclude = function (testcase) {

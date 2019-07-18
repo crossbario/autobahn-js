@@ -11,7 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../index.js');
+var autobahn = require('./../packages/autobahn/index.js');
 var fs = require("fs");
 
 /*
