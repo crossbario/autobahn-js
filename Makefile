@@ -63,14 +63,14 @@ requirements:
 	node -v
 
 build_browser_docker:
-	cd packages/autobahn; npm install --only=dev
-	cd packages/autobahn; npm install
-	cd packages/autobahn; scons
+	npm install --only=dev --prefix ./packages/autobahn
+	npm install --prefix ./packages/autobahn
+	scons -C ./packages/autobahn
 
 build_browser_host:
-	cd packages/autobahn; npm install --only=dev
-	cd packages/autobahn; npm install
-	cd packages/autobahn; JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons
+	npm install --only=dev --prefix ./packages/autobahn
+	npm install --prefix ./packages/autobahn
+	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn
 
 build_build_npm:
 	@echo "Ok, npm doesn't need a build step"
