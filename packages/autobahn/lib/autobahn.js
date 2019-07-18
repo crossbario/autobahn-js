@@ -22,7 +22,6 @@ var when = require('when');
 var msgpack = require('msgpack5');
 var cbor = require('cbor');
 var nacl = require('tweetnacl');
-nacl.sealedbox = require('tweetnacl-sealedbox-js');
 
 if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG) {
    // https://github.com/cujojs/when/blob/master/docs/api.md#whenmonitor

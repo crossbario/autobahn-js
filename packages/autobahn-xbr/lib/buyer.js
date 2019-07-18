@@ -1,6 +1,6 @@
 var cbor = require('cbor');
 var nacl = require('tweetnacl');
-var sealedbox = require('tweetnacl-sealedbox-js');
+nacl.sealedbox = require('tweetnacl-sealedbox-js');
 var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
 var util = require('./util.js');
@@ -116,7 +116,7 @@ SimpleBuyer.prototype.unwrap = function (keyID, ciphertext) {
             function (receipt) {
                 var sealedKey = receipt['sealed_key'];
                 try {
-                    self._keys[keyID] = sealedbox.open(sealedKey, self._keyPair.publicKey,
+                    self._keys[keyID] = nacl.sealedbox.open(sealedKey, self._keyPair.publicKey,
                         self._keyPair.secretKey);
                     decryptPayload(ciphertext, self._keys[keyID], d);
                 } catch (e) {
