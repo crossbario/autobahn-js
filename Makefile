@@ -89,6 +89,7 @@ build_browser_xbr_host:
 	npm install --prefix ./packages/autobahn-xbr
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn-xbr
 	ls -la packages/autobahn-xbr/build/
+	cp ./packages/autobahn-xbr/build/autobahn-xbr.js ./test/xbr/onchain/
 
 build_build_npm:
 	@echo "Ok, npm doesn't need a build step"
