@@ -58,6 +58,8 @@ docker_build_browser:
 #
 requirements:
 	pip install -U scons boto taschenmesser
+	-rm -rf ./node_modules/websocket
+	npm install browserify
 	sudo apt update
 	sudo apt install -y npm nodejs default-jre
 	node -v
@@ -67,10 +69,26 @@ build_browser_docker:
 	npm install --prefix ./packages/autobahn
 	scons -C ./packages/autobahn
 
-build_browser_host:
+build_browser_host: build_browser_ab_host build_browser_xbr_host
+
+build_browser_ab_host:
+	-rm -rf ./packages/autobahn/node_modules/websocket
 	npm install --only=dev --prefix ./packages/autobahn
 	npm install --prefix ./packages/autobahn
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn
+	ls -la packages/autobahn/build/
+
+# FIXME: fails at minimization
+#
+# "ERROR - [JSC_CANNOT_CONVERT] This code cannot be converted from ES6. extending native class: Map"
+# even already with "--compilation_level WHITESPACE_ONLY"
+# see: https://gist.github.com/oberstet/8c3ad6d0ae58293cb34027054f1c02b2
+build_browser_xbr_host:
+	-rm -rf ./packages/autobahn-xbr/node_modules/websocket
+	npm install --only=dev --prefix ./packages/autobahn-xbr
+	npm install --prefix ./packages/autobahn-xbr
+	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn-xbr
+	ls -la packages/autobahn-xbr/build/
 
 build_build_npm:
 	@echo "Ok, npm doesn't need a build step"
