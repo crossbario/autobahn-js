@@ -101,8 +101,8 @@ async function setup_test (account) {
 
     // display addresses of XBR smart contract instances
     document.getElementById('account').innerHTML = '' + account;
-    //document.getElementById('xbr_network_address').innerHTML = '' + xbrnetwork.address;
-    //document.getElementById('xbr_token_address').innerHTML = '' + xbrtoken.address;
+    document.getElementById('xbr_network_address').innerHTML = '' + xbrnetwork.address;
+    document.getElementById('xbr_token_address').innerHTML = '' + xbrtoken.address;
 
     // set main account as default in form elements
     document.getElementById('new_member_address').value = '' + account;
@@ -162,8 +162,8 @@ async function test_create_market () {
     var terms = document.getElementById('new_market_terms').value;
     var meta = document.getElementById('new_market_meta').value;
     var maker = document.getElementById('new_market_maker_address').value;
-    var providerSecurity = document.getElementById('new_market_provider_security').value;
-    var consumerSecurity = document.getElementById('new_market_consumer_security').value;
+    var providerSecurity = parseInt(document.getElementById('new_market_provider_security').value);
+    var consumerSecurity = parseInt(document.getElementById('new_market_consumer_security').value);
     var marketFee = document.getElementById('new_market_fee').value;
 
     providerSecurity = providerSecurity * (10 ** decimals);
@@ -174,8 +174,14 @@ async function test_create_market () {
 
     console.log('test_create_market(marketId=' + marketId + ', maker=' + maker + ', terms=' + terms + ', providerSecurity=' + providerSecurity + ', consumerSecurity=' + consumerSecurity + ', marketFee=' + marketFee + ')');
 
-    // bytes32 marketId, address maker, bytes32 terms, uint providerSecurity, uint consumerSecurity
-    await xbrnetwork.createMarket(marketId, terms, meta, maker, providerSecurity, consumerSecurity, marketFee, {from: metamask_account});
+    // function createMarket
+    //      (bytes16 marketId, string memory terms, string memory meta, address maker,
+    //       uint256 providerSecurity, uint256 consumerSecurity, uint256 marketFee)
+    //
+    await xbrnetwork.createMarket(marketId, terms, meta, maker, 0, 0, 0, {from: metamask_account});
+
+    // FIXME: number/token conversion
+    // await xbrnetwork.createMarket(marketId, terms, meta, maker, providerSecurity, consumerSecurity, marketFee, {from: metamask_account});
 }
 
 
