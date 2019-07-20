@@ -1,8 +1,9 @@
 var cbor = require('cbor');
 var nacl = require('tweetnacl');
+nacl.sealedbox = require('tweetnacl-sealedbox-js');
 var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
-var util = require('../util.js');
+var util = require('./util.js');
 
 
 var SimpleBuyer = function (buyerKey, maxPrice) {

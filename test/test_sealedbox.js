@@ -13,7 +13,7 @@
 
 // this works via https://github.com/caolan/nodeunit
 
-var autobahn = require('./../index.js');
+var autobahn = require('./../packages/autobahn/index.js');
 
 
 exports.testSealUnseal = function (testcase) {

@@ -22,7 +22,6 @@ var when = require('when');
 var msgpack = require('msgpack5');
 var cbor = require('cbor');
 var nacl = require('tweetnacl');
-nacl.sealedbox = require('tweetnacl-sealedbox-js');
 
 if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG) {
    // https://github.com/cujojs/when/blob/master/docs/api.md#whenmonitor
@@ -42,7 +41,6 @@ var serializer = require('./serializer.js');
 var persona = require('./auth/persona.js');
 var cra = require('./auth/cra.js');
 var cryptosign = require('./auth/cryptosign.js');
-var xbr = require('./xbr/xbr.js');
 
 exports.version = pjson.version;
 
@@ -72,4 +70,3 @@ exports.nacl = nacl;
 
 exports.util = util;
 exports.log = log;
-exports.xbr = xbr;

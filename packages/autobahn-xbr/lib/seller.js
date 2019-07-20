@@ -1,8 +1,8 @@
-var autobahn = require("../autobahn.js");
 var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
 var key_series = require('./keyseries');
-var util = require('../util.js');
+var nacl = require('tweetnacl');
+var util = require('./util.js');
 
 
 var Seller = function (sellerKey) {
@@ -62,7 +62,7 @@ var _onRotate = function (series) {
     self._session.call(
         'xbr.marketmaker.place_offer',
         [series.keyID, series.apiID, series.prefix, BigInt(Date.now() * 1000000 - 10 * 10 ** 9),
-            self._addr, autobahn.nacl.randomBytes(64)],
+            self._addr, nacl.randomBytes(64)],
         {price: series.price, provider_id: self._providerID}
     ).then(
         function (result) {
