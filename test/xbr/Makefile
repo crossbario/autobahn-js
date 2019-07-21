@@ -1,2 +1,2 @@
 web:
-	twistd -n web --listen tcp:8080 --path ./onchain
+	twistd -n web --listen tcp:8050 --path ./onchain
