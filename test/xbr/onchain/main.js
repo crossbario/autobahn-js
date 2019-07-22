@@ -97,7 +97,7 @@ function on_metamask_changed (changed) {
 
 // setup test
 async function setup_test (account) {
-    console.log('setup testing for account ' + account);
+    console.log('*************** setup testing for account ' + account);
 
     // display addresses of XBR smart contract instances
     document.getElementById('account').innerHTML = '' + account;
@@ -272,6 +272,8 @@ async function test_get_market_actor_type () {
 
 
 async function test_open_payment_channel () {
+    console.log('test_open_payment_channel() ...');
+
     var name = document.getElementById('open_channel_market_name').value;
     var owner = document.getElementById('open_channel_market_owner').value;
 
@@ -279,9 +281,11 @@ async function test_open_payment_channel () {
 
     var consumer = document.getElementById('open_channel_consumer_address').value;
 
-    const decimals = parseInt('' + await xbrtoken.decimals())
     var amount = document.getElementById('open_channel_amount').value;
-    amount = amount * (10 ** decimals);
+    const decimals = parseInt('' + await xbrtoken.decimals())
+    amount = String(amount) + String(10 ** decimals).substring(1);
+
+    console.log('market, consumer, amount', marketId, consumer, amount);
 
     const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
 
@@ -354,5 +358,54 @@ async function test_close_payment_channel () {
 
 
 async function test_request_paying_channel () {
+    console.log('test_request_paying_channel() ...');
 
+    var owner = document.getElementById('open_paying_channel_market_owner').value;
+    var name = document.getElementById('open_paying_channel_market_name').value;
+
+    var marketId = web3.sha3((owner, name));
+
+    var provider = document.getElementById('open_paying_channel_delegate_address').value;
+
+    var amount = document.getElementById('open_paying_channel_amount').value;
+    const decimals = parseInt('' + await xbrtoken.decimals())
+    amount = String(amount) + String(10 ** decimals).substring(1);
+
+    console.log('market, provider, amount', marketId, provider, amount);
+
+    const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
+
+    if (!success) {
+        throw 'transfer was not approved';
+    }
+
+    var watch = {
+        tx: null
+    }
+
+    const options = {};
+    xbrnetwork.PayingChannelRequestCreated(options, function (error, event)
+        {
+            console.log('PayingChannelRequestCreated', event);
+            if (event) {
+                if (watch.tx && event.transactionHash == watch.tx) {
+                    console.log('new paying channel request created: marketId=' + event.args.marketId + ', channel=' + event.args.channel + '');
+                }
+            }
+            else {
+                console.error(error);
+            }
+        }
+    );
+
+    console.log('requestPayingChannel(marketId=' + marketId + ', provider=' + provider + ', amount=' + amount + ')');
+
+    // bytes32 marketId, address provider, uint256 amount
+    const tx = await xbrnetwork.requestPayingChannel(marketId, provider, amount, {from: metamask_account});
+
+    console.log(tx);
+
+    watch.tx = tx.tx;
+
+    console.log('transaction completed: tx=' + tx.tx + ', gasUsed=' + tx.receipt.gasUsed);
 }

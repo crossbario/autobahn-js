@@ -242,8 +242,50 @@
                     </table>
                     <button onclick="test_get_payment_channel();">Get payment channel</button>
                 </p>
-            </div>
 
+                <br><br><br>
+
+                <h2>XBR Paying Channels</h2>
+
+                <h3>Request a new XBR Paying Channel</h3>
+                <div>
+                    <p>
+                    Request the XBR market maker to open a new paying channel that can be used by the specified seller delegate
+                    to earn from XBR transactions selling data encryption keys.
+                    </p>
+                    <table>
+                        <tr>
+                            <td>Market owner</td>
+                            <td><input class="address" type="text" id="open_paying_channel_market_owner" name="open_paying_channel_market_owner" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
+                            <td>Market name</td>
+                            <td><input type="text" id="open_paying_channel_market_name" name="open_paying_channel_market_name" size="12" maxlength="12" value="Market1"></td>
+                        </tr>
+                        <tr>
+                            <td>Provider delegate address</td>
+                            <td><input class="address" type="text" id="open_paying_channel_delegate_address" name="open_paying_channel_delegate_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
+                            <td>Amount (XBR)</td>
+                            <td><input type="number" id="open_paying_channel_amount" name="open_paying_channel_amount" size="12" maxlength="12" value="0"></td>
+                        </tr>
+                    </table>
+                    <button onclick="test_request_paying_channel();">Request Paying Channel</button>
+                </div>
+
+                <h3>Get XBR Paying Channel information</h3>
+                <p>
+                    Get info on paying channel within market.
+                    <table>
+                        <tr>
+                            <td>Paying channel address</td>
+                            <td><input class="address" type="text" id="get_paying_channel_address" name="get_paying_channel_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                    </table>
+                    <button onclick="test_get_paying_channel();">Get paying channel</button>
+                </p>
+            </div>
         </div>
     </body>
 </html>
