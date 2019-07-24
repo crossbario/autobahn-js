@@ -35,11 +35,11 @@ exports.XBRNetwork = XBRNetwork;
 exports.XBRPaymentChannel = XBRPaymentChannel;
 
 // a Web3 provider must be set by the user first to use this library
-function setProvider (provider) {
+async function setProvider (provider) {
     XBRToken.setProvider(provider);
     XBRNetwork.setProvider(provider);
     XBRPaymentChannel.setProvider(provider);
-    init_xbr();
+    await init_xbr();
 }
 
 exports.setProvider = setProvider;
@@ -56,19 +56,19 @@ if ('XBR_DEBUG' in global && XBR_DEBUG) {
 // on the (private) network the user is connecting to and where
 // the XBR contracts need to be deployed
 //
-function init_xbr() {
+async function init_xbr() {
     if ('XBR_DEBUG_TOKEN_ADDR' in global && XBR_DEBUG_TOKEN_ADDR) {
-        exports.xbrtoken = XBRToken.at(XBR_DEBUG_TOKEN_ADDR);
+        exports.xbrtoken = await XBRToken.at(XBR_DEBUG_TOKEN_ADDR);
     } else {
         console.log('WARNING: The XBR smart contracts are not yet depoyed to public networks. Please set XBR_DEBUG_TOKEN_ADDR manually.');
-        exports.xbrtoken = XBRToken.at("0xcfeb869f69431e42cdb54a4f4f105c19c080a601");
+        exports.xbrtoken = await XBRToken.at("0xcfeb869f69431e42cdb54a4f4f105c19c080a601");
     }
 
     if ('XBR_DEBUG_NETWORK_ADDR' in global && XBR_DEBUG_NETWORK_ADDR) {
-        exports.xbrnetwork = XBRNetwork.at(XBR_DEBUG_NETWORK_ADDR);
+        exports.xbrnetwork = await XBRNetwork.at(XBR_DEBUG_NETWORK_ADDR);
     } else {
         console.log('WARNING: The XBR smart contracts are not yet depoyed to public networks. Please set XBR_DEBUG_NETWORK_ADDR manually.');
-        exports.xbrnetwork = XBRNetwork.at("0x254dffcd3277c0b1660f6d42efbb754edababc2b");
+        exports.xbrnetwork = await XBRNetwork.at("0x254dffcd3277c0b1660f6d42efbb754edababc2b");
     }
 }
 

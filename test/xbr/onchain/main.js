@@ -13,6 +13,10 @@
 
 ////////////////////
 
+var xbr = autobahnXbr;
+var xbrtoken = null;
+var xbrnetwork = null;
+
 // the XBR Project
 window.addr_owner = '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1';
 
@@ -65,9 +69,10 @@ async function unlock_metamask () {
         web3.currentProvider.publicConfigStore.on('update', on_metamask_changed);
 
         // set new provider on XBR library
-        xbr.setProvider(window.web3.currentProvider);
+        await xbr.setProvider(window.web3.currentProvider);
+        xbrtoken = await xbr.xbrtoken;
+        xbrnetwork = await xbr.xbrnetwork;
         console.log('library versions: web3="' + window.web3.version.api + '", xbr="' + xbr.version + '"');
-
     } else {
         // no MetaMask (or other modern Ethereum integrated browser) .. redirect
         var win = window.open('https://metamask.io/', '_blank');
@@ -92,12 +97,12 @@ function on_metamask_changed (changed) {
 
 // setup test
 async function setup_test (account) {
-    console.log('setup testing for account ' + account);
+    console.log('*************** setup testing for account ' + account);
 
     // display addresses of XBR smart contract instances
     document.getElementById('account').innerHTML = '' + account;
-    document.getElementById('xbr_network_address').innerHTML = '' + xbr.xbrNetwork.address;
-    document.getElementById('xbr_token_address').innerHTML = '' + xbr.xbrToken.address;
+    document.getElementById('xbr_network_address').innerHTML = '' + xbrnetwork.address;
+    document.getElementById('xbr_token_address').innerHTML = '' + xbrtoken.address;
 
     // set main account as default in form elements
     document.getElementById('new_member_address').value = '' + account;
@@ -115,7 +120,7 @@ async function test_get_member () {
     var get_member_address = document.getElementById('get_member_address').value;
 
     // ask for current balance in XBR
-    var balance = await xbr.xbrToken.balanceOf(get_member_address);
+    var balance = await xbrtoken.balanceOf(get_member_address);
     if (balance > 0) {
         balance = balance / 10**18;
         console.log('account holds ' + balance + ' XBR');
@@ -124,11 +129,11 @@ async function test_get_member () {
     }
 
     // ask for XBR network membership level
-    const level = await xbr.xbrNetwork.getMemberLevel(get_member_address);
+    const level = await xbrnetwork.getMemberLevel(get_member_address);
     if (level > 0) {
         console.log('account is already member in the XBR network (level=' + level + ')');
-        const eula = await xbr.xbrNetwork.getMemberEula(get_member_address);
-        const profile = await xbr.xbrNetwork.getMemberProfile(get_member_address);
+        const eula = await xbrnetwork.getMemberEula(get_member_address);
+        const profile = await xbrnetwork.getMemberProfile(get_member_address);
         console.log('eula:', eula);
         console.log('profile:', profile);
     } else {
@@ -145,19 +150,20 @@ async function test_register () {
     console.log('test_register(new_member_address=' + new_member_address + ', new_member_eula=' + new_member_eula + ', new_member_profile=' + new_member_profile + ')');
 
     // bytes32 eula, bytes32 profile
-    await xbr.xbrNetwork.register(new_member_eula, new_member_profile, {from: metamask_account});
+    console.log(xbr, xbrnetwork, xbrnetwork.register);
+    await xbrnetwork.register(new_member_eula, new_member_profile, {from: metamask_account});
 }
 
 
 async function test_create_market () {
-    const decimals = parseInt('' + await xbr.xbrToken.decimals())
+    const decimals = parseInt('' + await xbrtoken.decimals())
 
     var name = document.getElementById('new_market_name').value;
     var terms = document.getElementById('new_market_terms').value;
     var meta = document.getElementById('new_market_meta').value;
     var maker = document.getElementById('new_market_maker_address').value;
-    var providerSecurity = document.getElementById('new_market_provider_security').value;
-    var consumerSecurity = document.getElementById('new_market_consumer_security').value;
+    var providerSecurity = parseInt(document.getElementById('new_market_provider_security').value);
+    var consumerSecurity = parseInt(document.getElementById('new_market_consumer_security').value);
     var marketFee = document.getElementById('new_market_fee').value;
 
     providerSecurity = providerSecurity * (10 ** decimals);
@@ -168,14 +174,20 @@ async function test_create_market () {
 
     console.log('test_create_market(marketId=' + marketId + ', maker=' + maker + ', terms=' + terms + ', providerSecurity=' + providerSecurity + ', consumerSecurity=' + consumerSecurity + ', marketFee=' + marketFee + ')');
 
-    // bytes32 marketId, address maker, bytes32 terms, uint providerSecurity, uint consumerSecurity
-    await xbr.xbrNetwork.createMarket(marketId, terms, meta, maker, providerSecurity, consumerSecurity, marketFee, {from: metamask_account});
+    // function createMarket
+    //      (bytes16 marketId, string memory terms, string memory meta, address maker,
+    //       uint256 providerSecurity, uint256 consumerSecurity, uint256 marketFee)
+    //
+    await xbrnetwork.createMarket(marketId, terms, meta, maker, 0, 0, 0, {from: metamask_account});
+
+    // FIXME: number/token conversion
+    // await xbrnetwork.createMarket(marketId, terms, meta, maker, providerSecurity, consumerSecurity, marketFee, {from: metamask_account});
 }
 
 
 async function test_get_market () {
-    const totalSupply = parseInt('' + await xbr.xbrToken.totalSupply())
-    const decimals = parseInt('' + await xbr.xbrToken.decimals())
+    const totalSupply = parseInt('' + await xbrtoken.totalSupply())
+    const decimals = parseInt('' + await xbrtoken.decimals())
 
     var name = document.getElementById('get_market_name').value;
     var owner = document.getElementById('get_market_owner').value;
@@ -184,13 +196,13 @@ async function test_get_market () {
 
     console.log('test_get_market(marketId=' + marketId + ')');
 
-    owner = await xbr.xbrNetwork.getMarketOwner(marketId);
-    var terms = await xbr.xbrNetwork.getMarketTerms(marketId);
-    var meta = await xbr.xbrNetwork.getMarketMeta(marketId);
-    var maker = await xbr.xbrNetwork.getMarketMaker(marketId);
-    var providerSecurity = await xbr.xbrNetwork.getMarketProviderSecurity(marketId);
-    var consumerSecurity = await xbr.xbrNetwork.getMarketConsumerSecurity(marketId);
-    var marketFee = await xbr.xbrNetwork.getMarketFee(marketId);
+    owner = await xbrnetwork.getMarketOwner(marketId);
+    var terms = await xbrnetwork.getMarketTerms(marketId);
+    var meta = await xbrnetwork.getMarketMeta(marketId);
+    var maker = await xbrnetwork.getMarketMaker(marketId);
+    var providerSecurity = await xbrnetwork.getMarketProviderSecurity(marketId);
+    var consumerSecurity = await xbrnetwork.getMarketConsumerSecurity(marketId);
+    var marketFee = await xbrnetwork.getMarketFee(marketId);
 
     providerSecurity = providerSecurity / (10 ** decimals);
     consumerSecurity = consumerSecurity / (10 ** decimals);
@@ -226,7 +238,7 @@ async function test_join_market () {
     console.log('test_join_market(marketId=' + marketId + ', actorType=' + actorType + ')');
 
     // bytes32 marketId, ActorType actorType
-    await xbr.xbrNetwork.joinMarket(marketId, actorType, {from: metamask_account, gas: 1000000});
+    await xbrnetwork.joinMarket(marketId, actorType, {from: metamask_account, gas: 1000000});
 }
 
 
@@ -239,7 +251,7 @@ async function test_get_market_actor_type () {
     var actor = document.getElementById('get_market_actor_address').value;
 
     // bytes32 marketId, address actor
-    const actorType = await xbr.xbrNetwork.getMarketActorType(marketId, actor);
+    const actorType = await xbrnetwork.getMarketActorType(marketId, actor);
 
     if (actorType > 0) {
         if (actorType == xbr.ActorType.CONSUMER) {
@@ -260,6 +272,8 @@ async function test_get_market_actor_type () {
 
 
 async function test_open_payment_channel () {
+    console.log('test_open_payment_channel() ...');
+
     var name = document.getElementById('open_channel_market_name').value;
     var owner = document.getElementById('open_channel_market_owner').value;
 
@@ -267,11 +281,13 @@ async function test_open_payment_channel () {
 
     var consumer = document.getElementById('open_channel_consumer_address').value;
 
-    const decimals = parseInt('' + await xbr.xbrToken.decimals())
     var amount = document.getElementById('open_channel_amount').value;
-    amount = amount * (10 ** decimals);
+    const decimals = parseInt('' + await xbrtoken.decimals())
+    amount = String(amount) + String(10 ** decimals).substring(1);
 
-    const success = await xbr.xbrToken.approve(xbr.xbrNetwork.address, amount, {from: metamask_account});
+    console.log('market, consumer, amount', marketId, consumer, amount);
+
+    const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
 
     if (!success) {
         throw 'transfer was not approved';
@@ -282,7 +298,7 @@ async function test_open_payment_channel () {
     }
 
     const options = {};
-    xbr.xbrNetwork.PaymentChannelCreated(options, function (error, event)
+    xbrnetwork.PaymentChannelCreated(options, function (error, event)
         {
             console.log('PaymentChannelCreated', event);
             if (event) {
@@ -299,7 +315,7 @@ async function test_open_payment_channel () {
     console.log('test_open_payment_channel(marketId=' + marketId + ', consumer=' + consumer + ', amount=' + amount + ')');
 
     // bytes32 marketId, address consumer, uint256 amount
-    const tx = await xbr.xbrNetwork.openPaymentChannel(marketId, consumer, amount, {from: metamask_account});
+    const tx = await xbrnetwork.openPaymentChannel(marketId, consumer, amount, {from: metamask_account});
 
     console.log(tx);
 
@@ -342,5 +358,54 @@ async function test_close_payment_channel () {
 
 
 async function test_request_paying_channel () {
+    console.log('test_request_paying_channel() ...');
 
+    var owner = document.getElementById('open_paying_channel_market_owner').value;
+    var name = document.getElementById('open_paying_channel_market_name').value;
+
+    var marketId = web3.sha3((owner, name));
+
+    var provider = document.getElementById('open_paying_channel_delegate_address').value;
+
+    var amount = document.getElementById('open_paying_channel_amount').value;
+    const decimals = parseInt('' + await xbrtoken.decimals())
+    amount = String(amount) + String(10 ** decimals).substring(1);
+
+    console.log('market, provider, amount', marketId, provider, amount);
+
+    const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
+
+    if (!success) {
+        throw 'transfer was not approved';
+    }
+
+    var watch = {
+        tx: null
+    }
+
+    const options = {};
+    xbrnetwork.PayingChannelRequestCreated(options, function (error, event)
+        {
+            console.log('PayingChannelRequestCreated', event);
+            if (event) {
+                if (watch.tx && event.transactionHash == watch.tx) {
+                    console.log('new paying channel request created: marketId=' + event.args.marketId + ', channel=' + event.args.channel + '');
+                }
+            }
+            else {
+                console.error(error);
+            }
+        }
+    );
+
+    console.log('requestPayingChannel(marketId=' + marketId + ', provider=' + provider + ', amount=' + amount + ')');
+
+    // bytes32 marketId, address provider, uint256 amount
+    const tx = await xbrnetwork.requestPayingChannel(marketId, provider, amount, {from: metamask_account});
+
+    console.log(tx);
+
+    watch.tx = tx.tx;
+
+    console.log('transaction completed: tx=' + tx.tx + ', gasUsed=' + tx.receipt.gasUsed);
 }
