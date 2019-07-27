@@ -30,22 +30,19 @@ data = {
             {'name': 'verifyingContract', 'type': 'address'},
         ],
         'Transaction': [
-            // The buyer delegate Ethereum address. The technical buyer is usually the
-            // XBR delegate of the XBR consumer/buyer of the data being bought.
-            {'name': 'buyer_adr', 'type': 'address'},
+            // The buyer/seller delegate Ed25519 public key.
+            {'name': 'pubkey', 'type': 'uint256'},
 
-            // The buyer delegate Ed25519 public key.
-            {'name': 'buyer_pubkey', 'type': 'uint256'},
-
-            // The UUID of the data encryption key to buy.
+            // The UUID of the data encryption key bought/sold in the transaction.
             {'name': 'key_id', 'type': 'uint128'},
 
-            // Amount signed off to pay. The actual amount paid is always less than or
-            // equal to this, but the amount must be greater than or equal to the price in the
-            // offer for selling the data encryption key being bought.
+            // Channel transaction sequence number.
+            {'name': 'channel_seq', 'type': 'uint32'},
+
+            // Amount paid / earned.
             {'name': 'amount', 'type': 'uint256'},
 
-            // Amount remaining in the payment channel after the transaction.
+            // Amount remaining in the payment/paying channel after the transaction.
             {'name': 'balance', 'type': 'uint256'},
         ],
     },
@@ -61,9 +58,9 @@ data = {
         'verifyingContract': '0x254dffcd3277c0b1660f6d42efbb754edababc2b',
     },
     'message': {
-        'buyer_adr': '0x78Abb38526c7F70d10EBcDf77941B61f193856f5',
-        'buyer_pubkey': '0xebdfef6d225155873355bd4afeb2ed3100b0e0b5fddad12bd3cd498c1e0c1fbd',
+        'pubkey': '0xebdfef6d225155873355bd4afeb2ed3100b0e0b5fddad12bd3cd498c1e0c1fbd',
         'key_id': '0xc37ba03c32608744c3c06302bf81d174',
+        'channel_seq': 1,
         'amount': '35000000000000000000',
         'balance': 2000,
     },
