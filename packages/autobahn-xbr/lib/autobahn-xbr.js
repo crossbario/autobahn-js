@@ -86,14 +86,14 @@ exports.MemberLevel = {
     RETIRED: 3,
     PENALTY: 4,
     BLOCKED: 5,
-}
+};
 
 exports.NodeType = {
     NONE: 0,
     MASTER: 1,
     CORE: 2,
     EDGE: 3,
-}
+};
 
 exports.ActorType = {
     NONE: 0,
@@ -101,7 +101,7 @@ exports.ActorType = {
     MARKET: 2,
     PROVIDER: 3,
     CONSUMER: 4,
-}
+};
 
 const uuidv4 = require('uuid/v4');
 
@@ -109,4 +109,4 @@ exports.uuid = function () {
     const buffer = new Array();
     uuidv4(null, buffer);
     return buffer;
-}
+};
