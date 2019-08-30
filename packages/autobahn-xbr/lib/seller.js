@@ -1,3 +1,16 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  XBR Open Data Markets - https://xbr.network
+//
+//  JavaScript client library for the XBR Network.
+//
+//  Copyright (C) Crossbar.io Technologies GmbH and contributors
+//
+//  Licensed under the Apache 2.0 License:
+//  https://opensource.org/licenses/Apache-2.0
+//
+///////////////////////////////////////////////////////////////////////////////
+
 var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
 var key_series = require('./keyseries');
