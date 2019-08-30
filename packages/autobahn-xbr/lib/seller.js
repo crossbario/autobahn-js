@@ -72,10 +72,13 @@ Seller.prototype.add = function (apiID, prefix, price, interval) {
 var _onRotate = function (series) {
     self.keysMap[series.keyID] = series;
 
+    // FIXME
+    var delegate_signature = nacl.randomBytes(65);
+
     self._session.call(
         'xbr.marketmaker.place_offer',
         [series.keyID, series.apiID, series.prefix, BigInt(Date.now() * 1000000 - 10 * 10 ** 9),
-            self._addr, nacl.randomBytes(64)],
+            self._addr, delegate_signature],
         {price: series.price, provider_id: self._providerID}
     ).then(
         function (result) {

@@ -41,11 +41,19 @@ SimpleBuyer.prototype.start = function(session, consumerID) {
 
     var d = this._deferred_factory();
 
-    session.call('xbr.marketmaker.get_payment_channel', [self._addr]).then(
+    session.call('xbr.marketmaker.get_active_payment_channel', [self._addr]).then(
         function (paymentChannel) {
             self._channel = paymentChannel;
-            self._balance = paymentChannel['remaining'];
-            d.resolve(self._balance);
+            session.call('xbr.marketmaker.get_payment_channel_balance', [paymentChannel['channel']]).then(
+                function (paymentBalance) {
+                    self._balance = paymentBalance['remaining'];
+                    d.resolve(self._balance);
+                },
+                function (error) {
+                    console.log("Call failed:", error);
+                    d.reject(error['error']);
+                }
+            );
         },
         function (error) {
             console.log("Call failed:", error);
@@ -62,7 +70,7 @@ SimpleBuyer.prototype.stop = function () {
 
 SimpleBuyer.prototype.balance = function () {
     var d = this._deferred_factory();
-    this._session.call('xbr.marketmaker.get_payment_channel', [self._addr]).then(
+    this._session.call('xbr.marketmaker.get_payment_channel', [self._channel['channel']]).then(
         function (paymentChannel) {
             var balance = {
                 amount: paymentChannel['amount'],
