@@ -108,11 +108,15 @@ async function setup_test (account) {
     document.getElementById('new_member_address').value = '' + account;
     document.getElementById('get_member_address').value = '' + account;
     document.getElementById('get_market_actor_address').value = '' + account;
-    document.getElementById('get_market_owner').value = '' + account;
-    document.getElementById('join_market_owner').value = '' + account;
-    document.getElementById('get_market_actor_market_owner').value = '' + account;
-    document.getElementById('open_channel_market_owner').value = '' + account;
-    document.getElementById('new_market_maker_address').value = '' + account;
+
+    // const market_adr = '0xa1b8d6741ae8492017fafd8d4f8b67a2';
+    const market_adr = '0x00000000000000000000000000000000';
+
+    document.getElementById('get_market_market_adr').value = '' + market_adr;
+    document.getElementById('join_market_market_adr').value = '' + market_adr;
+    document.getElementById('get_market_actor_market_adr').value = '' + market_adr;
+    document.getElementById('open_channel_market_adr').value = '' + market_adr;
+    document.getElementById('new_market_maker_address').value = '' + market_adr;
 }
 
 
@@ -158,7 +162,6 @@ async function test_register () {
 async function test_create_market () {
     const decimals = parseInt('' + await xbrtoken.decimals())
 
-    var name = document.getElementById('new_market_name').value;
     var terms = document.getElementById('new_market_terms').value;
     var meta = document.getElementById('new_market_meta').value;
     var maker = document.getElementById('new_market_maker_address').value;
@@ -189,10 +192,8 @@ async function test_get_market () {
     const totalSupply = parseInt('' + await xbrtoken.totalSupply())
     const decimals = parseInt('' + await xbrtoken.decimals())
 
-    var name = document.getElementById('get_market_name').value;
-    var owner = document.getElementById('get_market_owner').value;
-
-    var marketId = web3.sha3((owner, name));
+    // 0xa1b8d6741ae8492017fafd8d4f8b67a2
+    var marketId = document.getElementById('get_market_market_adr').value;
 
     console.log('test_get_market(marketId=' + marketId + ')');
 
@@ -219,10 +220,8 @@ async function test_get_market () {
 
 
 async function test_join_market () {
-    var name = document.getElementById('join_market_name').value;
-    var owner = document.getElementById('join_market_owner').value;
-
-    var marketId = web3.sha3((owner, name));
+    // 0xa1b8d6741ae8492017fafd8d4f8b67a2
+    var marketId = document.getElementById('join_market_market_adr').value;
 
     var actorType = xbr.ActorType.NONE;
     if (document.getElementById('join_market_actor_type_provider').checked) {
@@ -243,27 +242,27 @@ async function test_join_market () {
 
 
 async function test_get_market_actor_type () {
-    var name = document.getElementById('get_market_actor_market_name').value;
-    var owner = document.getElementById('get_market_actor_market_owner').value;
-
-    var marketId = web3.sha3((owner, name));
+    // 0xa1b8d6741ae8492017fafd8d4f8b67a2
+    var marketId = document.getElementById('get_market_actor_market_adr').value;
 
     var actor = document.getElementById('get_market_actor_address').value;
 
     // bytes32 marketId, address actor
-    const actorType = await xbrnetwork.getMarketActorType(marketId, actor);
+    var actorType = await xbrnetwork.getMarketActorType(marketId, actor);
+    actorType = parseInt('' + actorType);
 
+    // enum ActorType { NULL, NETWORK, MARKET, PROVIDER, CONSUMER }
     if (actorType > 0) {
         if (actorType == xbr.ActorType.CONSUMER) {
             console.log('account is CONSUMER actor in this market');
         } else if (actorType == xbr.ActorType.PROVIDER) {
             console.log('account is PROVIDER actor in this market');
-        } else if (actorType == xbr.ActorType.MAKER) {
+        } else if (actorType == xbr.ActorType.MARKET) {
             console.log('account is MARKET actor in this market');
         } else if (actorType == xbr.ActorType.NETWORK) {
             console.log('account is NETWORK actor in this market');
         } else {
-            console.log('unexpected actor type:', actorType);
+            console.log('unexpected actor type:', actorType, [xbr.ActorType.CONSUMER, xbr.ActorType.PROVIDER, xbr.ActorType.MARKET, xbr.ActorType.NETWORK]);
         }
     } else {
         console.log('account is not an actor in this market');
@@ -274,10 +273,8 @@ async function test_get_market_actor_type () {
 async function test_open_payment_channel () {
     console.log('test_open_payment_channel() ...');
 
-    var name = document.getElementById('open_channel_market_name').value;
-    var owner = document.getElementById('open_channel_market_owner').value;
-
-    var marketId = web3.sha3((owner, name));
+    // 0xa1b8d6741ae8492017fafd8d4f8b67a2
+    var marketId = document.getElementById('open_channel_market_adr').value;
 
     var consumer = document.getElementById('open_channel_consumer_address').value;
 
@@ -360,12 +357,10 @@ async function test_close_payment_channel () {
 async function test_request_paying_channel () {
     console.log('test_request_paying_channel() ...');
 
-    var owner = document.getElementById('open_paying_channel_market_owner').value;
-    var name = document.getElementById('open_paying_channel_market_name').value;
+    // 0xa1b8d6741ae8492017fafd8d4f8b67a2
+    var marketId = document.getElementById('get_market_adr').value;
 
-    var marketId = web3.sha3((owner, name));
-
-    var provider = document.getElementById('open_paying_channel_delegate_address').value;
+    var provider = document.getElementById('open_paying_channel_market_adr').value;
 
     var amount = document.getElementById('open_paying_channel_amount').value;
     const decimals = parseInt('' + await xbrtoken.decimals())
