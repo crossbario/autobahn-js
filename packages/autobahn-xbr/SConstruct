@@ -48,25 +48,28 @@ ab = env.Command("build/autobahn-xbr.js",
                  "../../node_modules/browserify/bin/cmd.js $SOURCE --ignore-missing --standalone autobahn-xbr -o $TARGET")
 Depends(ab, sources)
 
-# minimized (with Google Closure)
-ab_min = env.JavaScript("build/autobahn-xbr.min.js",
-                        ab,
-                        #JS_COMPILATION_LEVEL = "ADVANCED_OPTIMIZATIONS")
-                        #JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS",
-                        JS_COMPILATION_LEVEL = "WHITESPACE_ONLY",
-                        # --allow_method_call_decomposing
-                        #JS_OUTPUT_LANG = "ES5",
-                        )
+if False:
+    # minimized (with Google Closure)
+    ab_min = env.JavaScript("build/autobahn-xbr.min.js",
+                            ab,
+                            #JS_COMPILATION_LEVEL = "ADVANCED_OPTIMIZATIONS")
+                            #JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS",
+                            JS_COMPILATION_LEVEL = "WHITESPACE_ONLY",
+                            # --allow_method_call_decomposing
+                            #JS_OUTPUT_LANG = "ES5",
+                            )
 
-# minimized & compressed
-ab_min_gz = env.GZip("build/autobahn-xbr.min.jgz",
-                     ab_min)
+    # minimized & compressed
+    ab_min_gz = env.GZip("build/autobahn-xbr.min.jgz",
+                        ab_min)
 
 
-# list of generated artifacts
-artifacts = [ab,
-             ab_min,
-             ab_min_gz]
+    # list of generated artifacts
+    artifacts = [ab,
+                ab_min,
+                ab_min_gz]
+else:
+    artifacts = [ab]
 
 # generate checksum files
 checksums = []

@@ -55,12 +55,26 @@ Seller.prototype.start = function (session) {
 };
 
 Seller.prototype.sell = function (args) {
+    // proc_buy
+    // eth_adr_raw
+    // buyer_pubkey
+    // key_id
+    // paying_channel_adr
+    // seq_after
+    // amount_paid
+    // balance_after
+    // marketmaker_signature
     const key_id = Uint8Array.from(args[0]);
     const buyer_pubkey = Uint8Array.from(args[1]);
+
     if (!self.keysMap.hasOwnProperty(key_id)) {
         throw "no key with ID " + key_id;
     }
-    return self.keysMap[key_id].encryptKey(key_id, buyer_pubkey)
+    seller_receipt = {
+        signature: null,
+        sealed_key: self.keysMap[key_id].encryptKey(key_id, buyer_pubkey)
+    }
+    return seller_receipt
 };
 
 Seller.prototype.add = function (apiID, prefix, price, interval) {
@@ -72,14 +86,22 @@ Seller.prototype.add = function (apiID, prefix, price, interval) {
 var _onRotate = function (series) {
     self.keysMap[series.keyID] = series;
 
-    // FIXME
-    var delegate_signature = nacl.randomBytes(65);
-
+    const key_id = series.keyID;
+    const api_id = series.apiID;
+    const uri = series.prefix;
+    const valid_from = BigInt(Date.now() * 1000000 - 10 * 10 ** 9);
+    const delegate_adr = self._addr;
+    const delegate_signature = nacl.randomBytes(65);
+    // const privkey = null;
+    const price = series.price;
+    // const categories = null;
+    // const expires = null;
+    // const copies = null;
+    const provider_id = self._providerID;
     self._session.call(
         'xbr.marketmaker.place_offer',
-        [series.keyID, series.apiID, series.prefix, BigInt(Date.now() * 1000000 - 10 * 10 ** 9),
-            self._addr, delegate_signature],
-        {price: series.price, provider_id: self._providerID}
+        [key_id, api_id, uri, valid_from, delegate_adr, delegate_signature],
+        {price: price, provider_id: provider_id}
     ).then(
         function (result) {
             console.log("Offer placed for key", result['key']);

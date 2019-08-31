@@ -44,6 +44,7 @@ SimpleBuyer.prototype.start = function(session, consumerID) {
     session.call('xbr.marketmaker.get_active_payment_channel', [self._addr]).then(
         function (paymentChannel) {
             self._channel = paymentChannel;
+            self._channel_adr = paymentChannel['channel'];
             session.call('xbr.marketmaker.get_payment_channel_balance', [paymentChannel['channel']]).then(
                 function (paymentBalance) {
                     self._balance = paymentBalance['remaining'];
@@ -130,9 +131,18 @@ SimpleBuyer.prototype.unwrap = function (keyID, ciphertext) {
     var d = self._deferred_factory();
     if (!self._keys.hasOwnProperty(keyID)) {
         self._keys[keyID] = false;
+
+        const delegate_adr = self._addr;
+        const buyer_pubkey = self._keyPair.publicKey;
+        const key_id = keyID;
+        const channel_adr = self._channel_adr;
+        const channel_seq = 0;
+        const amount = self._maxPrice;
+        const balance = 0;
+        const signature = nacl.randomBytes(65);
         self._session.call(
             'xbr.marketmaker.buy_key',
-            [self._addr, self._keyPair.publicKey, keyID, self._maxPrice, nacl.randomBytes(64)]
+            [delegate_adr, buyer_pubkey, key_id, channel_adr, channel_seq, amount, balance, signature]
         ).then(
             function (receipt) {
                 var sealedKey = receipt['sealed_key'];
