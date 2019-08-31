@@ -30,22 +30,8 @@ data = {
             {'name': 'verifyingContract', 'type': 'address'},
         ],
         'Transaction': [
-            // The buyer delegate Ethereum address. The technical buyer is usually the
-            // XBR delegate of the XBR consumer/buyer of the data being bought.
-            {'name': 'buyer_adr', 'type': 'address'},
-
-            // The buyer delegate Ed25519 public key.
-            {'name': 'buyer_pubkey', 'type': 'uint256'},
-
-            // The UUID of the data encryption key to buy.
-            {'name': 'key_id', 'type': 'uint128'},
-
-            // Amount signed off to pay. The actual amount paid is always less than or
-            // equal to this, but the amount must be greater than or equal to the price in the
-            // offer for selling the data encryption key being bought.
-            {'name': 'amount', 'type': 'uint256'},
-
-            // Amount remaining in the payment channel after the transaction.
+            {'name': 'channel_adr', 'type': 'address'},
+            {'name': 'channel_seq', 'type': 'uint256'},
             {'name': 'balance', 'type': 'uint256'},
         ],
     },
@@ -53,26 +39,23 @@ data = {
     'domain': {
         'name': 'XBR',
         'version': '1',
-
-        // test chain/network ID
         'chainId': 5777,
-
-        // XBRNetwork contract address
         'verifyingContract': '0x254dffcd3277c0b1660f6d42efbb754edababc2b',
     },
-    'message': {
-        'buyer_adr': '0x78Abb38526c7F70d10EBcDf77941B61f193856f5',
-        'buyer_pubkey': '0xebdfef6d225155873355bd4afeb2ed3100b0e0b5fddad12bd3cd498c1e0c1fbd',
-        'key_id': '0xc37ba03c32608744c3c06302bf81d174',
-        'amount': '35000000000000000000',
-        'balance': 2000,
-    },
+    'message': null,
 }
 
 //console.log(data);
 
 //var key = eth_util.toBuffer(buyer_key_bytes);
 var key = eth_util.toBuffer(buyer_key);
+
+var msg = {
+    channel_adr: '0x254dffcd3277c0b1660f6d42efbb754edababc2b',
+    channel_seq: 1,
+    balance: 0,
+}
+data['message'] = msg;
 
 // eth_util.toBuffer
 var sig = eth_sig_utils.signTypedData(key, {data: data})
