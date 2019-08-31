@@ -52,10 +52,11 @@ var key = eth_util.toBuffer(buyer_key);
 
 var msg = {
     channel_adr: '0x254dffcd3277c0b1660f6d42efbb754edababc2b',
-    channel_seq: 1,
-    balance: 0,
+    channel_seq: 13,
+    balance: 2000,
 }
 data['message'] = msg;
+// signature: 0x1d2388c1bdccd5e86f7424dec52f9b81f75de6102f352a0f4c5e2373c2c62c5068eb5da4be564cacf49125eaf6cf1d65cdcf3f2f7093da621cd1a23d6acd1eaa1b
 
 // eth_util.toBuffer
 var sig = eth_sig_utils.signTypedData(key, {data: data})
