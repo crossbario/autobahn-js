@@ -11,4 +11,4 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-module.exports = require('./lib/xbr.js');
+module.exports = require('./lib/autobahn-xbr.js');

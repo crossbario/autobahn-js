@@ -17,17 +17,17 @@ const uuidv4 = require('uuid/v4');
 
 var XBRToken_json = require("./contracts/XBRToken.json");
 var XBRNetwork_json = require("./contracts/XBRNetwork.json");
-var XBRPaymentChannel_json = require("./contracts/XBRPaymentChannel.json");
+var XBRChannel_json = require("./contracts/XBRChannel.json");
 
 var XBRToken = contract(XBRToken_json);
 var XBRNetwork = contract(XBRNetwork_json);
-var XBRPaymentChannel = contract(XBRPaymentChannel_json);
+var XBRChannel = contract(XBRChannel_json);
 
 // a Web3 provider must be set by the user first to use this library
 var setProvider = async function (provider) {
     XBRToken.setProvider(provider);
     XBRNetwork.setProvider(provider);
-    XBRPaymentChannel.setProvider(provider);
+    XBRChannel.setProvider(provider);
     await init_xbr();
 };
 
@@ -83,7 +83,7 @@ async function init_xbr() {
 
 exports.XBRToken = XBRToken;
 exports.XBRNetwork = XBRNetwork;
-exports.XBRPaymentChannel = XBRPaymentChannel;
+exports.XBRChannel = XBRChannel;
 exports.MemberLevel = MemberLevel;
 exports.NodeType = NodeType;
 exports.ActorType = ActorType;
