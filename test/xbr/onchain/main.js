@@ -133,11 +133,12 @@ async function test_get_member () {
     }
 
     // ask for XBR network membership level
-    const level = await xbrnetwork.getMemberLevel(get_member_address);
+    const member = await xbrnetwork.members(get_member_address);
+    const level = member.level.toNumber();
     if (level > 0) {
         console.log('account is already member in the XBR network (level=' + level + ')');
-        const eula = await xbrnetwork.getMemberEula(get_member_address);
-        const profile = await xbrnetwork.getMemberProfile(get_member_address);
+        const eula = member.eula;
+        const profile = member.profile;
         console.log('eula:', eula);
         console.log('profile:', profile);
     } else {
@@ -197,18 +198,24 @@ async function test_get_market () {
 
     console.log('test_get_market(marketId=' + marketId + ')');
 
-    owner = await xbrnetwork.getMarketOwner(marketId);
-    var terms = await xbrnetwork.getMarketTerms(marketId);
-    var meta = await xbrnetwork.getMarketMeta(marketId);
-    var maker = await xbrnetwork.getMarketMaker(marketId);
-    var providerSecurity = await xbrnetwork.getMarketProviderSecurity(marketId);
-    var consumerSecurity = await xbrnetwork.getMarketConsumerSecurity(marketId);
-    var marketFee = await xbrnetwork.getMarketFee(marketId);
+    const market = await xbrnetwork.markets(marketId);
+
+    const created = market.created.toNumber();
+    const marketSeq = market.marketSeq.toNumber();
+    const owner = market.owner;
+    const terms = market.terms;
+    const meta = market.meta;
+    const maker = market.maker;
+    var providerSecurity = market.providerSecurity;
+    var consumerSecurity = market.consumerSecurity;
+    var marketFee = market.marketFee;
 
     providerSecurity = providerSecurity / (10 ** decimals);
     consumerSecurity = consumerSecurity / (10 ** decimals);
     marketFee = marketFee / totalSupply;
 
+    console.log('market ' + marketId + ' created:', created);
+    console.log('market ' + marketId + ' marketSeq:', marketSeq);
     console.log('market ' + marketId + ' owner:', owner);
     console.log('market ' + marketId + ' terms:', terms);
     console.log('market ' + marketId + ' meta:', meta);
@@ -225,10 +232,12 @@ async function test_join_market () {
 
     var actorType = xbr.ActorType.NONE;
     if (document.getElementById('join_market_actor_type_provider').checked) {
-        actorType = xbr.ActorType.PROVIDER;
+        // actorType = xbr.ActorType.PROVIDER;
+        actorType = 1;
     }
     else if (document.getElementById('join_market_actor_type_consumer').checked) {
-        actorType = xbr.ActorType.CONSUMER;
+        // actorType = xbr.ActorType.CONSUMER;
+        actorType = 2;
     }
     else {
         assert(false);
@@ -236,37 +245,25 @@ async function test_join_market () {
 
     console.log('test_join_market(marketId=' + marketId + ', actorType=' + actorType + ')');
 
+    const meta = "";
+
     // bytes32 marketId, ActorType actorType
-    await xbrnetwork.joinMarket(marketId, actorType, {from: metamask_account, gas: 1000000});
+    await xbrnetwork.joinMarket(marketId, actorType, meta, {from: metamask_account, gas: 1000000});
 }
 
 
 async function test_get_market_actor_type () {
     // 0xa1b8d6741ae8492017fafd8d4f8b67a2
     var marketId = document.getElementById('get_market_actor_market_adr').value;
-
     var actor = document.getElementById('get_market_actor_address').value;
 
-    // bytes32 marketId, address actor
-    var actorType = await xbrnetwork.getMarketActorType(marketId, actor);
-    actorType = parseInt('' + actorType);
+    // PROVIDER: joined, security, meta
+    const provider_actor = await xbrnetwork.getMarketActor(marketId, actor, 1);
+    console.log("PROVIDER: joined=" + provider_actor[0].toNumber(), "security=" + provider_actor[1].toNumber(), "meta=" + provider_actor[2]);
 
-    // enum ActorType { NULL, NETWORK, MARKET, PROVIDER, CONSUMER }
-    if (actorType > 0) {
-        if (actorType == xbr.ActorType.CONSUMER) {
-            console.log('account is CONSUMER actor in this market');
-        } else if (actorType == xbr.ActorType.PROVIDER) {
-            console.log('account is PROVIDER actor in this market');
-        } else if (actorType == xbr.ActorType.MARKET) {
-            console.log('account is MARKET actor in this market');
-        } else if (actorType == xbr.ActorType.NETWORK) {
-            console.log('account is NETWORK actor in this market');
-        } else {
-            console.log('unexpected actor type:', actorType, [xbr.ActorType.CONSUMER, xbr.ActorType.PROVIDER, xbr.ActorType.MARKET, xbr.ActorType.NETWORK]);
-        }
-    } else {
-        console.log('account is not an actor in this market');
-    }
+    // CONSUMER: joined, security, meta
+    const consumer_actor = await xbrnetwork.getMarketActor(marketId, actor, 2);
+    console.log("CONSUMER: joined=" + consumer_actor[0].toNumber(), "security=" + consumer_actor[1].toNumber(), "meta=" + consumer_actor[2]);
 }
 
 
@@ -274,15 +271,18 @@ async function test_open_payment_channel () {
     console.log('test_open_payment_channel() ...');
 
     // 0xa1b8d6741ae8492017fafd8d4f8b67a2
-    var marketId = document.getElementById('open_channel_market_adr').value;
-
-    var consumer = document.getElementById('open_channel_consumer_address').value;
+    const marketId = document.getElementById('open_channel_market_adr').value;
+    //const recipient = metamask_account;
+    const recipient = "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0";
+    const delegate = document.getElementById('open_channel_consumer_address').value;
 
     var amount = document.getElementById('open_channel_amount').value;
     const decimals = parseInt('' + await xbrtoken.decimals())
     amount = String(amount) + String(10 ** decimals).substring(1);
 
-    console.log('market, consumer, amount', marketId, consumer, amount);
+    const timeout = 0;
+
+    console.log('market, recipient, delegate, amount, timeout', marketId, recipient, delegate, amount, timeout);
 
     const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
 
@@ -295,7 +295,7 @@ async function test_open_payment_channel () {
     }
 
     const options = {};
-    xbrnetwork.PaymentChannelCreated(options, function (error, event)
+    xbrnetwork.ChannelCreated(options, function (error, event)
         {
             console.log('PaymentChannelCreated', event);
             if (event) {
@@ -309,10 +309,10 @@ async function test_open_payment_channel () {
         }
     );
 
-    console.log('test_open_payment_channel(marketId=' + marketId + ', consumer=' + consumer + ', amount=' + amount + ')');
+    console.log('test_open_payment_channel(marketId=' + marketId + ', delegate=' + delegate + ', amount=' + amount + ')');
 
     // bytes32 marketId, address consumer, uint256 amount
-    const tx = await xbrnetwork.openPaymentChannel(marketId, consumer, amount, {from: metamask_account});
+    const tx = await xbrnetwork.openPaymentChannel(marketId, recipient, delegate, amount, timeout, {from: metamask_account, gas: 6900000});
 
     console.log(tx);
 
@@ -357,18 +357,18 @@ async function test_close_payment_channel () {
 async function test_request_paying_channel () {
     console.log('test_request_paying_channel() ...');
 
-    // 0xa1b8d6741ae8492017fafd8d4f8b67a2
-    var marketId = document.getElementById('get_market_adr').value;
-
-    var provider = document.getElementById('open_paying_channel_market_adr').value;
-
+    const marketId = document.getElementById('open_paying_channel_market_adr').value;
+    const delegate = document.getElementById('open_paying_channel_delegate_address').value;
+    const recipient = document.getElementById('open_paying_channel_recipient_address').value;
     var amount = document.getElementById('open_paying_channel_amount').value;
     const decimals = parseInt('' + await xbrtoken.decimals())
     amount = String(amount) + String(10 ** decimals).substring(1);
+    const timeout = 0;
 
-    console.log('market, provider, amount', marketId, provider, amount);
+    console.log('marketId, recipient, delegate, amount, timeout', marketId, recipient, delegate, amount, timeout);
 
-    const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
+    // const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
+    const success = true;
 
     if (!success) {
         throw 'transfer was not approved';
@@ -393,10 +393,10 @@ async function test_request_paying_channel () {
         }
     );
 
-    console.log('requestPayingChannel(marketId=' + marketId + ', provider=' + provider + ', amount=' + amount + ')');
+    console.log('requestPayingChannel(marketId=' + marketId + ', delegate=' + delegate + ', amount=' + amount + ')');
 
     // bytes32 marketId, address provider, uint256 amount
-    const tx = await xbrnetwork.requestPayingChannel(marketId, provider, amount, {from: metamask_account});
+    const tx = await xbrnetwork.requestPayingChannel(marketId, recipient, delegate, amount, timeout, {from: metamask_account});
 
     console.log(tx);
 
