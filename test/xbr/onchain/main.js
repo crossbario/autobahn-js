@@ -367,11 +367,6 @@ async function test_get_payment_channel () {
 }
 
 
-async function test_close_payment_channel () {
-    // https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsign
-}
-
-
 async function test_request_paying_channel () {
     console.log('test_request_paying_channel() ...');
 
@@ -464,14 +459,60 @@ async function test_open_paying_channel () {
         }
     );
 
-    console.log('test_open_payment_channel(marketId=' + marketId + ', delegate=' + delegate + ', amount=' + amount + ')');
+    console.log('test_open_paying_channel(marketId=' + marketId + ', delegate=' + delegate + ', amount=' + amount + ')');
 
     // bytes32 marketId, address consumer, uint256 amount
-    const tx = await xbrnetwork.openPaymentChannel(marketId, recipient, delegate, amount, timeout, {from: metamask_account, gas: 6900000});
+    const tx = await xbrnetwork.openPayingChannel(marketId, recipient, delegate, amount, timeout, {from: metamask_account, gas: 6900000});
 
     console.log(tx);
 
     watch.tx = tx.tx;
 
     console.log('transaction completed: tx=' + tx.tx + ', gasUsed=' + tx.receipt.gasUsed);
+}
+
+
+async function test_get_paying_channel () {
+    const channelAddress = document.getElementById('get_paying_channel_address').value;
+
+    channel = await xbr.XBRChannel.at(channelAddress);
+
+    console.log(channel);
+
+    const organization = await channel.organization();
+    const network = await channel.network();
+
+    const marketId = await channel.marketId();
+    const marketmaker = await channel.marketmaker();
+    const sender = await channel.sender();
+    const delegate = await channel.delegate();
+    const recipient = await channel.recipient();
+
+    const amount = await channel.amount();
+    const timeout = await channel.timeout();
+
+    const openedAt = await channel.openedAt();
+    const closedAt = await channel.closedAt();
+    const closingAt = await channel.closingAt();
+
+    const ctype = await channel.ctype();
+    const state = await channel.state();
+
+    console.log('organization=' + organization);
+    console.log('network=' + network);
+    console.log('marketId=' + marketId);
+    console.log('marketmaker=' + marketmaker);
+    console.log('sender=' + sender);
+    console.log('delegate=' + delegate);
+    console.log('recipient=' + recipient);
+
+    console.log('amount=' + amount);
+    console.log('timeout=' + timeout);
+
+    console.log('openedAt=' + openedAt);
+    console.log('closingAt=' + closingAt);
+    console.log('closedAt=' + closedAt);
+
+    console.log('ctype=' + ctype);
+    console.log('state=' + state);
 }
