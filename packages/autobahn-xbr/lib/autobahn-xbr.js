@@ -15,6 +15,9 @@
 //var web3 = require('web3');
 //exports.web3 = web3;
 
+var pjson = require('../package.json');
+exports.version = pjson.version;
+
 var ethereum = require('./ethereum.js');
 
 exports.SimpleBuyer = require('./buyer.js').SimpleBuyer;
@@ -24,7 +27,7 @@ exports.SimpleBlockchain = require('./blockchain.js');
 // export XBR smart contract Web3 generated classes
 exports.XBRToken = ethereum.XBRToken;
 exports.XBRNetwork = ethereum.XBRNetwork;
-exports.XBRPaymentChannel = ethereum.XBRPaymentChannel;
+exports.XBRChannel = ethereum.XBRChannel;
 
 var setProvider = async function(provider) {
     await ethereum.setProvider(provider);

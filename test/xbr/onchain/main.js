@@ -272,8 +272,7 @@ async function test_open_payment_channel () {
 
     // 0xa1b8d6741ae8492017fafd8d4f8b67a2
     const marketId = document.getElementById('open_channel_market_adr').value;
-    //const recipient = metamask_account;
-    const recipient = "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0";
+    const recipient = document.getElementById('open_channel_recipient_address').value;
     const delegate = document.getElementById('open_channel_consumer_address').value;
 
     var amount = document.getElementById('open_channel_amount').value;
@@ -297,7 +296,7 @@ async function test_open_payment_channel () {
     const options = {};
     xbrnetwork.ChannelCreated(options, function (error, event)
         {
-            console.log('PaymentChannelCreated', event);
+            console.log('ChannelCreated', event);
             if (event) {
                 if (watch.tx && event.transactionHash == watch.tx) {
                     console.log('new payment channel created: marketId=' + event.args.marketId + ', channel=' + event.args.channel + '');
@@ -325,27 +324,46 @@ async function test_open_payment_channel () {
 async function test_get_payment_channel () {
     const channelAddress = document.getElementById('get_channel_channel_address').value;
 
-    channel = xbr.XBRPaymentChannel.at(channelAddress);
+    channel = await xbr.XBRChannel.at(channelAddress);
 
     console.log(channel);
 
+    const organization = await channel.organization();
+    const network = await channel.network();
+
     const marketId = await channel.marketId();
+    const marketmaker = await channel.marketmaker();
     const sender = await channel.sender();
     const delegate = await channel.delegate();
     const recipient = await channel.recipient();
+
     const amount = await channel.amount();
+    const timeout = await channel.timeout();
+
     const openedAt = await channel.openedAt();
     const closedAt = await channel.closedAt();
-    const channelTimeout = await channel.channelTimeout();
+    const closingAt = await channel.closingAt();
 
+    const ctype = await channel.ctype();
+    const state = await channel.state();
+
+    console.log('organization=' + organization);
+    console.log('network=' + network);
     console.log('marketId=' + marketId);
+    console.log('marketmaker=' + marketmaker);
     console.log('sender=' + sender);
     console.log('delegate=' + delegate);
     console.log('recipient=' + recipient);
+
     console.log('amount=' + amount);
+    console.log('timeout=' + timeout);
+
     console.log('openedAt=' + openedAt);
+    console.log('closingAt=' + closingAt);
     console.log('closedAt=' + closedAt);
-    console.log('channelTimeout=' + channelTimeout);
+
+    console.log('ctype=' + ctype);
+    console.log('state=' + state);
 }
 
 
@@ -397,6 +415,59 @@ async function test_request_paying_channel () {
 
     // bytes32 marketId, address provider, uint256 amount
     const tx = await xbrnetwork.requestPayingChannel(marketId, recipient, delegate, amount, timeout, {from: metamask_account});
+
+    console.log(tx);
+
+    watch.tx = tx.tx;
+
+    console.log('transaction completed: tx=' + tx.tx + ', gasUsed=' + tx.receipt.gasUsed);
+}
+
+
+async function test_open_paying_channel () {
+    console.log('test_open_paying_channel() ...');
+
+    const marketId = document.getElementById('open_paying_channel_market_adr').value;
+    const recipient = document.getElementById('open_paying_channel_recipient_address').value;
+    const delegate = document.getElementById('open_paying_channel_consumer_address').value;
+
+    var amount = document.getElementById('open_paying_channel_amount').value;
+    const decimals = parseInt('' + await xbrtoken.decimals())
+    amount = String(amount) + String(10 ** decimals).substring(1);
+
+    const timeout = 0;
+
+    console.log('market, recipient, delegate, amount, timeout', marketId, recipient, delegate, amount, timeout);
+
+    const success = await xbrtoken.approve(xbrnetwork.address, amount, {from: metamask_account});
+
+    if (!success) {
+        throw 'transfer was not approved';
+    }
+
+    var watch = {
+        tx: null
+    }
+
+    const options = {};
+    xbrnetwork.ChannelCreated(options, function (error, event)
+        {
+            console.log('ChannelCreated', event);
+            if (event) {
+                if (watch.tx && event.transactionHash == watch.tx) {
+                    console.log('new paying channel created: marketId=' + event.args.marketId + ', channel=' + event.args.channel + '');
+                }
+            }
+            else {
+                console.error(error);
+            }
+        }
+    );
+
+    console.log('test_open_payment_channel(marketId=' + marketId + ', delegate=' + delegate + ', amount=' + amount + ')');
+
+    // bytes32 marketId, address consumer, uint256 amount
+    const tx = await xbrnetwork.openPaymentChannel(marketId, recipient, delegate, amount, timeout, {from: metamask_account, gas: 6900000});
 
     console.log(tx);
 
