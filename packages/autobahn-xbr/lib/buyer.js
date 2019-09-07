@@ -6,8 +6,8 @@
 //
 //  Copyright (C) Crossbar.io Technologies GmbH and contributors
 //
-//  Licensed under the Apache 2.0 License:
-//  https://opensource.org/licenses/Apache-2.0
+//  Licensed under the MIT License.
+//  http://www.opensource.org/licenses/mit-license.php
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,38 +17,56 @@ nacl.sealedbox = require('tweetnacl-sealedbox-js');
 var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
 var util = require('./util.js');
+var eip712 = require('./eip712.js');
+var w3_utils = require("web3-utils");
 
+var SimpleBuyer = function (marketMakerAdr, buyerKey, maxPrice) {
+    self = this;
 
-var SimpleBuyer = function (buyerKey, maxPrice) {
-    this._running = false;
-    this._session = null;
-    this._channel = null;
-    this._balance = null;
-    this._keys = {};
-    this._maxPrice = maxPrice;
-    this._deferred_factory = util.deferred_factory();
+    self._running = false;
+    self._session = null;
+    self._channel = null;
+    self._balance = null;
+    self._keys = {};
+    self._marketMakerAdr = marketMakerAdr;
+    self._maxPrice = maxPrice;
+    self._deferred_factory = util.deferred_factory();
 
-    var account = new eth_accounts().privateKeyToAccount(buyerKey);
-    this._addr = eth_util.toBuffer(account.address);
+    self._pkey_raw = eth_util.toBuffer(buyerKey);
+    self._acct = new eth_accounts().privateKeyToAccount(buyerKey);
+    self._addr = eth_util.toBuffer(self._acct.address);
 
-    this._keyPair = nacl.box.keyPair();
+    self._keyPair = nacl.box.keyPair();
 };
 
 SimpleBuyer.prototype.start = function(session, consumerID) {
     self = this;
     self._session = session;
     self._running = true;
+    self._channel = null;
+    self._channel_adr = null;
+    self._balance = null;
+    self._seq = null;
 
     var d = this._deferred_factory();
 
     session.call('xbr.marketmaker.get_active_payment_channel', [self._addr]).then(
         function (paymentChannel) {
+            console.log(paymentChannel);
             self._channel = paymentChannel;
-            self._channel_adr = paymentChannel['channel'];
+            //self._channel_adr = eth_util.toBuffer(paymentChannel['channel']);
+            self._channel_adr_raw = paymentChannel['channel'];
+            //self._channel_adr = paymentChannel['channel'].toString("hex");
+            self._channel_adr = w3_utils.toChecksumAddress(paymentChannel['channel'].toString("hex"));
+
+
             session.call('xbr.marketmaker.get_payment_channel_balance', [paymentChannel['channel']]).then(
                 function (paymentBalance) {
-                    self._balance = paymentBalance['remaining'];
-                    d.resolve(self._balance);
+                    console.log(paymentBalance);
+                    self._balance_raw = paymentBalance['remaining'];
+                    self._balance_dec = BigInt('0x' + paymentBalance['remaining'].toString("hex"));
+                    self._seq = paymentBalance['seq'];
+                    d.resolve(self._balance_dec);
                 },
                 function (error) {
                     console.log("Call failed:", error);
@@ -136,13 +154,18 @@ SimpleBuyer.prototype.unwrap = function (keyID, ciphertext) {
         const buyer_pubkey = self._keyPair.publicKey;
         const key_id = keyID;
         const channel_adr = self._channel_adr;
-        const channel_seq = 0;
-        const amount = self._maxPrice;
-        const balance = 0;
-        const signature = nacl.randomBytes(65);
+        const channel_seq = self._seq;
+        const amount = Number(self._maxPrice);
+        const balance = 0; //Number(self._balance_dec);
+        const is_final = false;
+
+        console.log(channel_adr, channel_seq, balance, is_final);
+
+        const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, channel_seq, balance, is_final);
+
         self._session.call(
             'xbr.marketmaker.buy_key',
-            [delegate_adr, buyer_pubkey, key_id, channel_adr, channel_seq, amount, balance, signature]
+            [delegate_adr, buyer_pubkey, key_id, self._channel_adr_raw, channel_seq, amount, balance, signature]
         ).then(
             function (receipt) {
                 var sealedKey = receipt['sealed_key'];

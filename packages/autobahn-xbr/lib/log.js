@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  AutobahnJS - http://autobahn.ws, http://wamp.ws
+//  XBR Open Data Markets - https://xbr.network
 //
-//  A JavaScript library for WAMP ("The Web Application Messaging Protocol").
+//  JavaScript client library for the XBR Network.
 //
-//  Copyright (c) Crossbar.io Technologies GmbH and contributors
+//  Copyright (C) Crossbar.io Technologies GmbH and contributors
 //
 //  Licensed under the MIT License.
 //  http://www.opensource.org/licenses/mit-license.php
