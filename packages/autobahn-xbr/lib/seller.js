@@ -62,27 +62,51 @@ Seller.prototype.start = function (session) {
                     self._balance = new BN(balance.remaining);
                     self._seq = balance.seq;
 
+                    var topics = {
+                        on_channel_closed: self.on_channel_closed
+                    }
+
+                    var pl1 = [];
+                    for (var topic in topics) {
+                        pl1.push(session.subscribe('xbr.provider.' + self._provider_id + '.' + topic, topics[topic]));
+                    }
+                    var d1 = when.all(pl1).then(
+                        function (subscriptions) {
+                            self._session_subs = subscriptions;
+                        },
+                        function (error) {
+                            console.log("subscription of seller delegate topics failed:", error);
+                            d.reject(error);
+                        }
+                    );
+
                     var endpoints = {
                         sell: self.sell,
                         close_channel: self.close_channel
                     };
 
-                    var pl1 = [];
-
+                    var pl2 = [];
                     for (var proc in endpoints) {
-                        pl1.push(session.register('xbr.provider.' + self._provider_id + '.' + proc, endpoints[proc]));
+                        pl2.push(session.register('xbr.provider.' + self._provider_id + '.' + proc, endpoints[proc]));
                     }
-
-                    when.all(pl1).then(
+                    var d2 = when.all(pl2).then(
                         function (registrations) {
                             self._session_regs = registrations;
                             for (var key in self.keys) {
                                 self.keys[key].start();
                             }
-                            d.resolve(self._balance);
                         },
                         function (error) {
                             console.log("registration of seller delegate procedures failed:", error);
+                            d.reject(error);
+                        }
+                    );
+
+                    when.all([d1, d2]).then(
+                        function () {
+                            d.resolve(self._balance);
+                        },
+                        function (err) {
                             d.reject(error);
                         }
                     );
@@ -188,6 +212,16 @@ Seller.prototype.sell = function (args) {
 
     return seller_receipt
 };
+
+
+Seller.prototype.on_channel_closed = function (args) {
+
+    let [paying_channel_adr, channel_seq, channel_balance, channel_is_final] = args;
+
+    console.log('ON_CHANNEL_CLOSED', paying_channel_adr, channel_seq, channel_balance, channel_is_final);
+
+    self._session.leave();
+}
 
 
 Seller.prototype.close_channel = function (args) {
