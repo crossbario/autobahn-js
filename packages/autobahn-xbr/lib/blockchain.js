@@ -6,8 +6,8 @@
 //
 //  Copyright (C) Crossbar.io Technologies GmbH and contributors
 //
-//  Licensed under the Apache 2.0 License:
-//  https://opensource.org/licenses/Apache-2.0
+//  Licensed under the MIT License.
+//  http://www.opensource.org/licenses/mit-license.php
 //
 ///////////////////////////////////////////////////////////////////////////////
 

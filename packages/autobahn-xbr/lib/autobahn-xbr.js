@@ -6,8 +6,8 @@
 //
 //  Copyright (C) Crossbar.io Technologies GmbH and contributors
 //
-//  Licensed under the Apache 2.0 License:
-//  https://opensource.org/licenses/Apache-2.0
+//  Licensed under the MIT License.
+//  http://www.opensource.org/licenses/mit-license.php
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +15,14 @@
 //var web3 = require('web3');
 //exports.web3 = web3;
 
+var pjson = require('../package.json');
+exports.version = pjson.version;
+
 var ethereum = require('./ethereum.js');
+
+var eip712 = require('./eip712.js');
+exports.sign_eip712_data = eip712.sign_eip712_data;
+exports.recover_eip712_signer = eip712.recover_eip712_signer;
 
 exports.SimpleBuyer = require('./buyer.js').SimpleBuyer;
 exports.SimpleSeller = require('./seller.js').SimpleSeller;
@@ -24,7 +31,7 @@ exports.SimpleBlockchain = require('./blockchain.js');
 // export XBR smart contract Web3 generated classes
 exports.XBRToken = ethereum.XBRToken;
 exports.XBRNetwork = ethereum.XBRNetwork;
-exports.XBRPaymentChannel = ethereum.XBRPaymentChannel;
+exports.XBRChannel = ethereum.XBRChannel;
 
 var setProvider = async function(provider) {
     await ethereum.setProvider(provider);

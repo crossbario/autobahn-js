@@ -5,6 +5,7 @@
 // https://github.com/MetaMask/eth-sig-util#signtypeddata-privatekeybuffer-msgparams
 // https://github.com/MetaMask/eth-sig-util#signtypeddata-privatekeybuffer-msgparams
 
+var BigNumber = require('bignumber.js');
 var w3_utils = require("web3-utils");
 var eth_sig_utils = require("eth-sig-util");
 var eth_accounts = require("web3-eth-accounts");
@@ -61,7 +62,7 @@ data = {
         'pubkey': '0xebdfef6d225155873355bd4afeb2ed3100b0e0b5fddad12bd3cd498c1e0c1fbd',
         'key_id': '0xc37ba03c32608744c3c06302bf81d174',
         'channel_seq': 1,
-        'amount': '35000000000000000000',
+        'amount': new BigNumber('35000000000000000000'),
         'balance': 2000,
     },
 }

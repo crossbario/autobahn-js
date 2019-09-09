@@ -37,10 +37,29 @@
         </style>
     </head>
     <body>
+        <!--
         <script>
             XBR_DEBUG_TOKEN_ADDR = '0xcfeb869f69431e42cdb54a4f4f105c19c080a601';
             XBR_DEBUG_NETWORK_ADDR = '0x254dffcd3277c0b1660f6d42efbb754edababc2b';
         </script>
+        -->
+        <script>
+            XBR_DEBUG_TOKEN_ADDR = '0x23c2fa26399c94E78a4602C38d20b9B264484633';
+            XBR_DEBUG_NETWORK_ADDR = '0x33270FAc65C792A049C757b9A4807101483750EF';
+        </script>
+
+        <!--
+        marketId=0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
+
+        0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
+
+        -->
+        <!--
+        <script>
+            XBR_DEBUG_TOKEN_ADDR = '0x78890bF748639B82D225FA804553FcDBe5819576';
+            XBR_DEBUG_NETWORK_ADDR = '0x96f2b95733066aD7982a7E8ce58FC91d12bfbB2c';
+        </script>
+        -->
         <script src="autobahn-xbr.js"></script>
         <script src="main.js"></script>
 
@@ -200,6 +219,10 @@
                             <td><input class="address" type="text" id="open_channel_market_adr" name="open_channel_market_adr" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
                         </tr>
                         <tr>
+                            <td>Channel recipient address</td>
+                            <td><input class="address" type="text" id="open_channel_recipient_address" name="open_channel_recipient_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
                             <td>Consumer delegate address</td>
                             <td><input class="address" type="text" id="open_channel_consumer_address" name="open_channel_consumer_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
                         </tr>
@@ -239,6 +262,10 @@
                             <td><input class="address" type="text" id="open_paying_channel_market_adr" name="open_paying_channel_market_adr" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
                         </tr>
                         <tr>
+                            <td>Channel recipient address</td>
+                            <td><input class="address" type="text" id="open_paying_channel_recipient_address" name="open_paying_channel_recipient_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
                             <td>Provider delegate address</td>
                             <td><input class="address" type="text" id="open_paying_channel_delegate_address" name="open_paying_channel_delegate_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
                         </tr>
@@ -248,6 +275,33 @@
                         </tr>
                     </table>
                     <button onclick="test_request_paying_channel();">Request Paying Channel</button>
+                </div>
+
+                <h3>Open a new XBR Paying Channel</h3>
+                <div>
+                    <p>
+                        This is normally only called by the market maker, upon noticing a new request for
+                        a paying channel.
+                    </p>
+                    <table>
+                        <tr>
+                            <td>Market address</td>
+                            <td><input class="address" type="text" id="open_paying_channel_market_adr" name="open_paying_channel_market_adr" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
+                            <td>Channel recipient address</td>
+                            <td><input class="address" type="text" id="open_paying_channel_recipient_address" name="open_paying_channel_recipient_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
+                            <td>Consumer delegate address</td>
+                            <td><input class="address" type="text" id="open_paying_channel_consumer_address" name="open_paying_channel_consumer_address" size="42" maxlength="42" value="0x0000000000000000000000000000000000000000"></td>
+                        </tr>
+                        <tr>
+                            <td>Amount (XBR)</td>
+                            <td><input type="number" id="open_paying_channel_amount" name="open_paying_channel_amount" size="12" maxlength="12" value="0"></td>
+                        </tr>
+                    </table>
+                    <button onclick="test_open_paying_channel();">Open Payment Channel</button>
                 </div>
 
                 <h3>Get XBR Paying Channel information</h3>
