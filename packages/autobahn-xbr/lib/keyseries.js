@@ -25,13 +25,15 @@ var KeySeries = function(apiID, prefix, price, interval, onRotate) {
     this._started = false;
 };
 
-KeySeries.prototype.encrypt = function(payload) {
+KeySeries.prototype.encrypt = function (payload) {
+    const self = this;
+
     var nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
-    var box = nacl.secretbox(cbor.encode(payload), nonce, this._archive[this.keyID]);
+    var box = nacl.secretbox(cbor.encode(payload), nonce, self._archive[self.keyID]);
     var fullMessage = new Uint8Array(nonce.length + box.length);
     fullMessage.set(nonce);
     fullMessage.set(box, nonce.length);
-    return {keyID: this.keyID, enc: 'cbor', cipherText: fullMessage};
+    return [self.keyID, 'cbor', fullMessage];
 };
 
 KeySeries.prototype.encryptKey = function(keyID, buyerPubKey) {
@@ -45,8 +47,8 @@ KeySeries.prototype.start = function() {
     }
 };
 
-KeySeries.prototype._rotate = function(context) {
-    context.keyID = nacl.randomBytes(16);
+KeySeries.prototype._rotate = function (context) {
+    context.keyID = Buffer.from(nacl.randomBytes(16));
     context._archive[context.keyID] = nacl.randomBytes(nacl.secretbox.keyLength);
     context.onRotate(context);
     // Rotate the keys

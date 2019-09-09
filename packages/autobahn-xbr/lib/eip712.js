@@ -11,10 +11,14 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var assert = require('assert');
+
 var w3_utils = require("web3-utils");
 var eth_sig_utils = require("eth-sig-util");
 var eth_util = require("ethereumjs-util");
 
+var web3 = require('web3');
+var BN = web3.utils.BN;
 
 function _create_eip712_data (verifying_adr, channel_adr, channel_seq, balance, is_final) {
     const _EIP712_MSG = {
@@ -57,12 +61,16 @@ function _create_eip712_data (verifying_adr, channel_adr, channel_seq, balance, 
 }
 
 function sign_eip712_data (eth_privkey, channel_adr, channel_seq, balance, is_final) {
+    assert.equal((typeof channel_seq === "number") && Math.floor(channel_seq) === channel_seq && channel_seq > 0, true);
+    assert.equal(BN.isBN(balance), true);
+    assert.equal(typeof is_final === "boolean", true);
+
     const verifying_adr = '0x254dffcd3277C0b1660F6d42EFbB754edaBAbC2B';
-    console.log('.................', verifying_adr, channel_adr, channel_seq, balance, is_final);
+    balance = '0x' + balance.toString('hex');
+    //console.log('.................', verifying_adr, channel_adr, channel_seq, balance, is_final);
     const msg = _create_eip712_data(verifying_adr, channel_adr, channel_seq, balance, is_final);
     //const msg = _create_eip712_data(verifying_adr, channel_adr, 0, 0, false);
     const sig = eth_sig_utils.signTypedData(eth_privkey, {data: msg});
-    console.log('.................', sig);
     return eth_util.toBuffer(sig);
 }
 
