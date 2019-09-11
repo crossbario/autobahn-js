@@ -16,18 +16,17 @@ var nacl = require('tweetnacl');
 nacl.sealedbox = require('tweetnacl-sealedbox-js');
 var eth_accounts = require("web3-eth-accounts");
 var eth_util = require("ethereumjs-util");
-var util = require('./util.js');
-var eip712 = require('./eip712.js');
 var w3_utils = require("web3-utils");
 var web3 = require('web3');
 var BN = web3.utils.BN;
+
+var util = require('./util.js');
+var eip712 = require('./eip712.js');
 
 // https://www.npmjs.com/package/uuid
 // const uuid = require('uuid/v4');
 // var u = uuid();
 // console.log(u);
-
-const decimals = new BN('1000000000000000000');
 
 
 var SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
@@ -191,7 +190,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
                 const close_is_final = true;
                 const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, close_seq, close_balance, close_is_final);
 
-                console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance.div(decimals), close_is_final);
+                console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance.div(eip712.decimals), close_is_final);
 
                 await self._session.call('xbr.marketmaker.close_channel', [self._channel_adr_raw,
                     close_seq, util.pack_uint256(close_balance), close_is_final, signature]);
@@ -217,7 +216,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
             function (receipt) {
                 // ok, we've got the key!
                 const remaining = new BN(receipt.remaining);
-                console.log(' SimpleBuyer.unwrap() - XBR BUY    key 0x' + key_id.toString('hex') + ' bought for ' + amount.div(decimals) + ' XBR [payment_channel=' + self._channel_adr + ', remaining=' + remaining.div(decimals) + ' XBR]');
+                console.log(' SimpleBuyer.unwrap() - XBR BUY    key 0x' + key_id.toString('hex') + ' bought for ' + amount.div(eip712.decimals) + ' XBR [payment_channel=' + self._channel_adr + ', remaining=' + remaining.div(eip712.decimals) + ' XBR]');
 
                 var sealedKey = receipt['sealed_key'];
                 try {

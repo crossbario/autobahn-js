@@ -13,7 +13,9 @@
 
 // FIXME: this breaks MetaMask!?
 var web3 = require('web3');
+var BN = web3.utils.BN;
 exports.web3 = web3;
+exports.BN = BN;
 
 var cbor = require('cbor');
 exports.cbor = cbor;
@@ -59,4 +61,7 @@ exports.MemberLevel = ethereum.MemberLevel;
 exports.NodeType = ethereum.NodeType;
 exports.ActorType = ethereum.ActorType;
 
-exports.uuid = ethereum.uuid;
+var util = require('./util.js');
+
+exports.uuid = util.uuid;
+exports.pack_uint256 = util.pack_uint256;

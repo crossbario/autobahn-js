@@ -13,7 +13,6 @@
 
 // https://truffleframework.com/docs/truffle/getting-started/package-management-via-npm#within-javascript-code
 var contract = require("truffle-contract");
-const uuidv4 = require('uuid/v4');
 
 var XBRToken_json = require("./contracts/XBRToken.json");
 var XBRNetwork_json = require("./contracts/XBRNetwork.json");
@@ -29,12 +28,6 @@ var setProvider = async function (provider) {
     XBRNetwork.setProvider(provider);
     XBRChannel.setProvider(provider);
     await init_xbr();
-};
-
-var uuid = function () {
-    const buffer = [];
-    uuidv4(null, buffer);
-    return buffer;
 };
 
 var MemberLevel = {
@@ -88,4 +81,3 @@ exports.MemberLevel = MemberLevel;
 exports.NodeType = NodeType;
 exports.ActorType = ActorType;
 exports.setProvider = setProvider;
-exports.uuid = uuid;

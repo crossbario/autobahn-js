@@ -25,7 +25,6 @@ const BN = web3.utils.BN;
 const key_series = require('./keyseries');
 const util = require('./util.js');
 const eip712 = require('./eip712.js');
-const decimals = new BN('1000000000000000000');
 
 
 var Seller = function (market_maker_adr, seller_key) {
@@ -106,7 +105,7 @@ Seller.prototype.start = function (session) {
                         function () {
                             d.resolve(self._balance);
                         },
-                        function (err) {
+                        function (error) {
                             d.reject(error);
                         }
                     );
@@ -208,7 +207,7 @@ Seller.prototype.sell = function (args) {
         'signature': seller_signature,
     }
 
-    console.log(' SimpleSeller.sell() - XBR SELL   key 0x' + key_id.toString('hex') + ' sold for ' + amount.div(decimals) + ' XBR [paying_channel=' + self._channel_adr + ', remaining=' + self._balance.div(decimals) + ' XBR]');
+    console.log(' SimpleSeller.sell() - XBR SELL   key 0x' + key_id.toString('hex') + ' sold for ' + amount.div(eip712.decimals) + ' XBR [paying_channel=' + self._channel_adr + ', remaining=' + self._balance.div(eip712.decimals) + ' XBR]');
 
     return seller_receipt
 };
@@ -267,7 +266,7 @@ Seller.prototype.close_channel = function (args) {
         'signature': seller_signature,
     }
 
-    console.log(' SimpleSeller.close_channel() - XBR CLOSE closing channel 0x' + channel_adr.toString('hex') + ', closing balance ' + channel_balance.div(decimals) + ', closing sequence ' + channel_seq);
+    console.log(' SimpleSeller.close_channel() - XBR CLOSE closing channel 0x' + channel_adr.toString('hex') + ', closing balance ' + channel_balance.div(eip712.decimals) + ', closing sequence ' + channel_seq);
 
     return receipt;
 }
@@ -284,7 +283,11 @@ Seller.prototype.add = function (api_id, prefix, price, interval) {
         const key_id = series.key_id;
         const api_id = series.api_id;
         const uri = series.prefix;
-        const valid_from = BigInt(Date.now() * 1000000 - 10 * 10 ** 9);
+
+        // FIXME
+        //const valid_from = BigInt(Date.now() * 1000000 - 10 * 10 ** 9);
+        const valid_from = 0;
+
         const delegate_adr = self._addr;
 
         // FIXME: sign the offer
@@ -297,6 +300,8 @@ Seller.prototype.add = function (api_id, prefix, price, interval) {
         // const copies = null;
         const provider_id = self._provider_id;
 
+        console.log("Placing offer for key ..", key_id);
+
         // offer the key for sale with the market maker
         self._session.call(
             'xbr.marketmaker.place_offer',
@@ -304,7 +309,7 @@ Seller.prototype.add = function (api_id, prefix, price, interval) {
             {price: util.pack_uint256(price), provider_id: provider_id}
         ).then(
             function (result) {
-                console.log("Offer placed for key", result['key']);
+                console.log("Offer placed for key:", result['key']);
             },
             function (error) {
                 console.log("Call failed:", error);
