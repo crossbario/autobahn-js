@@ -1,0 +1,47 @@
+{
+  "name": "xbr",
+  "version": "19.9.1",
+  "description": "The XBR Protocol (smart contracts package)",
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "xbr",
+    "crossbar",
+    "autobahn",
+    "wamp",
+    "data-service",
+    "data-monetization"
+  ],
+  "author": "Crossbar.io Technologies GmbH",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xbr/xbr-protocol.git"
+  },
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "coveralls": "^3.0.3",
+    "ganache-cli": "^6.4.1",
+    "google-closure-compiler": "^20190301.0.0",
+    "node-buffer": "^1.0.3",
+    "nodeunit": "^0.11.3",
+    "openzeppelin-solidity": "^2.2.0",
+    "remix-ide": "^0.7.6",
+    "sha3": "^2.0.1",
+    "solhint": "^2.0.0",
+    "solidity-coverage": "^0.5.11",
+    "truffle": "^5.0.9",
+    "truffle-contract": "^4.0.10",
+    "uuid": "^3.3.2",
+    "web3": "^1.0.0-beta.50"
+  },
+  "devDependencies": {},
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test --network ganache",
+    "coverage": "solidity-coverage"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
