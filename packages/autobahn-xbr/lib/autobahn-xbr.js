@@ -11,9 +11,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-// this breaks MetaMask!
-//var web3 = require('web3');
-//exports.web3 = web3;
+// FIXME: this breaks MetaMask!?
+var web3 = require('web3');
+exports.web3 = web3;
+
+var cbor = require('cbor');
+exports.cbor = cbor;
 
 var pjson = require('../package.json');
 exports.version = pjson.version;

@@ -199,10 +199,10 @@ Seller.prototype.sell = function (args) {
         'channel_seq': self._seq,
 
         // amount paid for the key
-        'amount': amount.toBuffer('big', 32),
+        'amount': util.pack_uint256(amount),
 
         // paying channel amount remaining
-        'balance': self._balance.toBuffer('big', 32),
+        'balance': util.pack_uint256(self._balance),
 
         // seller (delegate) signature
         'signature': seller_signature,
@@ -262,7 +262,7 @@ Seller.prototype.close_channel = function (args) {
     receipt = {
         'delegate': self._addr,
         'seq': channel_seq,
-        'balance': channel_balance.toBuffer('big', 32),
+        'balance': util.pack_uint256(channel_balance),
         'is_final': channel_is_final,
         'signature': seller_signature,
     }
@@ -301,7 +301,7 @@ Seller.prototype.add = function (api_id, prefix, price, interval) {
         self._session.call(
             'xbr.marketmaker.place_offer',
             [key_id, api_id, uri, valid_from, delegate_adr, delegate_signature],
-            {price: price.toBuffer('big', 32), provider_id: provider_id}
+            {price: util.pack_uint256(price), provider_id: provider_id}
         ).then(
             function (result) {
                 console.log("Offer placed for key", result['key']);

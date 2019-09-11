@@ -11,9 +11,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+var assert = require('assert');
+var when = require('when');
+var web3 = require('web3');
+var BN = web3.utils.BN;
+
 var log = require('./log.js');
 
-var when = require('when');
 
 var deferred_factory = function(options) {
     var defer = null;
@@ -58,6 +62,7 @@ var deferred_factory = function(options) {
     return defer;
 };
 
+
 var promise = function(d) {
     if (d.promise.then) {
         // whenjs has the actual user promise in an attribute
@@ -68,5 +73,32 @@ var promise = function(d) {
 };
 
 
+function pack_uint256 (value) {
+    assert(BN.isBN(value));
+
+    // if (typeof Buffer !== 'undefined') {
+    if (global.process && global.process.versions.node) {
+        // running on Node
+        return value.toBuffer('be', 32);
+    } else {
+        // running in Browser
+        /*
+            https://github.com/indutny/bn.js/issues/147
+            https://github.com/browserify/insert-module-globals
+            https://github.com/browserify/browserify#compatibility
+
+            we need Buffer, because of the following assert in BN:
+
+            BN.prototype.toBuffer = function toBuffer (endian, length) {
+                assert(typeof Buffer !== 'undefined');
+                return this.toArrayLike(Buffer, endian, length);
+            };
+        */
+        return new Uint8Array(value.toArray('be', 32));
+    }
+}
+
+
 exports.deferred_factory = deferred_factory;
 exports.promise = promise;
+exports.pack_uint256 = pack_uint256;

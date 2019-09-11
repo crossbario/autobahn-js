@@ -194,7 +194,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
                 console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance.div(decimals), close_is_final);
 
                 await self._session.call('xbr.marketmaker.close_channel', [self._channel_adr_raw,
-                    close_seq, close_balance.toBuffer('big', 32), close_is_final, signature]);
+                    close_seq, util.pack_uint256(close_balance), close_is_final, signature]);
 
                 throw new ErrorInsufficientBalance(key_id, self._channel_adr, self._balance, amount);
 
@@ -212,7 +212,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
         const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, channel_seq, balance, is_final);
 
         self._session.call('xbr.marketmaker.buy_key', [delegate_adr, buyer_pubkey, key_id, self._channel_adr_raw,
-            channel_seq, amount.toBuffer('big', 32), balance.toBuffer('big', 32), signature]
+            channel_seq, util.pack_uint256(amount), util.pack_uint256(balance), signature]
         ).then(
             function (receipt) {
                 // ok, we've got the key!
@@ -233,6 +233,8 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
                 }
             },
             async function (error) {
+                console.log('ERR', error);
+
                 // failed to purchase the key
                 if (error.error === 'xbr.error.insufficient_payment_balance') {
                     const channel_adr = self._channel_adr;
@@ -244,7 +246,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
                     console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance, close_is_final);
 
                     await self._session.call('xbr.marketmaker.close_channel', [self._channel_adr_raw,
-                        close_seq, close_balance.toBuffer('big', 32), close_is_final, signature]);
+                        close_seq, util.pack_uint256(close_balance), close_is_final, signature]);
                 }
                 d.reject(error);
             }
