@@ -73,10 +73,12 @@ build_browser_host: build_browser_ab_host build_browser_xbr_host
 
 build_browser_ab_host:
 	-rm -rf ./packages/autobahn/node_modules/websocket
+	-rm -f ./packages/autobahn/build/*
 	npm install --only=dev --prefix ./packages/autobahn
 	npm install --prefix ./packages/autobahn
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn
 	ls -la packages/autobahn/build/
+	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/dsq-examples/examples/js/browser/
 
 # FIXME: fails at minimization
 #
@@ -85,10 +87,12 @@ build_browser_ab_host:
 # see: https://gist.github.com/oberstet/8c3ad6d0ae58293cb34027054f1c02b2
 build_browser_xbr_host:
 	-rm -rf ./packages/autobahn-xbr/node_modules/websocket
+	-rm -f ./packages/autobahn-xbr/build/*
 	npm install --only=dev --prefix ./packages/autobahn-xbr
 	npm install --prefix ./packages/autobahn-xbr
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn-xbr
 	ls -la packages/autobahn-xbr/build/
+	cp ./packages/autobahn-xbr/build/autobahn-xbr.js ~/scm/crossbario/dsq-examples/examples/js/browser/
 	# cp ./packages/autobahn-xbr/build/autobahn-xbr.js ./test/xbr/onchain/
 
 build_build_npm:

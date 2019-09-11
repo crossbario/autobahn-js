@@ -30,9 +30,9 @@
     "random-bytes-seed": ">=1.0.3"
   },
   "browser": {
+    "cbor": false,
     "ws": false,
-    "./lib/transport/rawsocket.js": false,
-    "cbor": false
+    "./lib/transport/rawsocket.js": false
   },
   "repository": {
     "type": "git",
