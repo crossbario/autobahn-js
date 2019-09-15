@@ -18,6 +18,7 @@ build_full:
 		--build-arg BUILD_DATE=${BUILD_DATE} \
 		--build-arg AUTOBAHN_JS_VCS_REF=${AUTOBAHN_JS_VCS_REF} \
 		--build-arg AUTOBAHN_JS_VERSION=${AUTOBAHN_JS_VERSION} \
+		--build-arg AUTOBAHN_JS_XBR_VERSION=${AUTOBAHN_JS_XBR_VERSION} \
 		-t crossbario/autobahn-js-armhf \
 		-t crossbario/autobahn-js-armhf:latest \
 		-t crossbario/autobahn-js-armhf:full \
@@ -30,6 +31,7 @@ build_alpine:
 		--build-arg BUILD_DATE=${BUILD_DATE} \
 		--build-arg AUTOBAHN_JS_VCS_REF=${AUTOBAHN_JS_VCS_REF} \
 		--build-arg AUTOBAHN_JS_VERSION=${AUTOBAHN_JS_VERSION} \
+		--build-arg AUTOBAHN_JS_XBR_VERSION=${AUTOBAHN_JS_XBR_VERSION} \
 		-t crossbario/autobahn-js-armhf:alpine \
 		-t crossbario/autobahn-js-armhf:alpine-${AUTOBAHN_JS_VERSION} \
 		-f Dockerfile.alpine .

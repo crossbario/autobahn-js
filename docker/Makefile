@@ -31,4 +31,4 @@ list:
 	docker images crossbario/autobahn-js*:*
 
 clean:
-	./removeall.sh
+	-./removeall.sh

@@ -13,6 +13,7 @@ build_full:
 		--build-arg BUILD_DATE=${BUILD_DATE} \
 		--build-arg AUTOBAHN_JS_VCS_REF=${AUTOBAHN_JS_VCS_REF} \
 		--build-arg AUTOBAHN_JS_VERSION=${AUTOBAHN_JS_VERSION} \
+		--build-arg AUTOBAHN_JS_XBR_VERSION=${AUTOBAHN_JS_XBR_VERSION} \
 		-t crossbario/autobahn-js:full \
 		-t crossbario/autobahn-js:full-${AUTOBAHN_JS_VERSION} \
 		-f Dockerfile.full .
@@ -22,6 +23,7 @@ build_alpine:
 		--build-arg BUILD_DATE=${BUILD_DATE} \
 		--build-arg AUTOBAHN_JS_VCS_REF=${AUTOBAHN_JS_VCS_REF} \
 		--build-arg AUTOBAHN_JS_VERSION=${AUTOBAHN_JS_VERSION} \
+		--build-arg AUTOBAHN_JS_XBR_VERSION=${AUTOBAHN_JS_XBR_VERSION} \
 		-t crossbario/autobahn-js \
 		-t crossbario/autobahn-js:alpine \
 		-t crossbario/autobahn-js:alpine-${AUTOBAHN_JS_VERSION} \

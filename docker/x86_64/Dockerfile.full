@@ -4,6 +4,7 @@ MAINTAINER The Crossbar.io Project <support@crossbario.com>
 
 # Metadata
 ARG AUTOBAHN_JS_VERSION
+ARG AUTOBAHN_JS_XBR_VERSION
 ARG BUILD_DATE
 ARG AUTOBAHN_JS_VCS_REF
 
@@ -37,6 +38,7 @@ WORKDIR /app
 #https://github.com/npm/npm/issues/17431#issuecomment-325892798
 RUN npm install -g --unsafe-perm node-gyp
 RUN npm install -g --unsafe-perm autobahn@${AUTOBAHN_JS_VERSION}
+RUN npm install -g --unsafe-perm autobahn-xbr@${AUTOBAHN_JS_XBR_VERSION}
 
 # add example service
 COPY ./app/* /app/
