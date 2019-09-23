@@ -1,0 +1,22 @@
+{
+  "name": "xbr-example",
+  "version": "1.0.0",
+  "description": "Install dependencies using ```bash make deps ``` To start the seller run ```bash make seller ``` For buyer ```bash make buyer ```",
+  "main": "seller.js",
+  "dependencies": {
+    "autobahn": ">=19.9.2",
+    "autobahn-xbr": ">=19.9.3",
+    "cbor": "^4.3.0",
+    "ethereumjs-util": "^6.1.0",
+    "uuid-buffer": "^1.0.3",
+    "web3": "^1.2.1",
+    "when": "^3.7.8",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
