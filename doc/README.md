@@ -16,3 +16,4 @@ And finally, we suggest visiting the [Crossbar.io site](http://crossbar.io). Cro
 * [Examples Overview](examples.md) - An overview of the available code examples
 * [Building](building.md) - Instructions for how to build Autobahn|JS from source
 * [Release Process](release-process.md) - Instructions on how to do a new release (only relevant for project members)
+* [Utilities](utils.md) - Autobahn utilities.

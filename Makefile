@@ -20,9 +20,10 @@ distclean: clean
 	-sudo rm -f ./packages/autobahn/package-lock.json
 
 clean:
-	-sudo rm -f .sconsign.dblite
-	-sudo rm -rf ./build
-	-sudo rm -rf ./packages/autobahn/build
+	-rm -f .sconsign.dblite
+	-rm -rf ./build
+	-rm -rf ./packages/autobahn/build
+	-rm -rf ./packages/autobahn-xbr/build
 
 
 #
@@ -79,6 +80,7 @@ build_browser_ab_host:
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn
 	ls -la packages/autobahn/build/
 	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/dsq-examples/examples/js/browser/
+	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/crossbar-examples/rlinks/router_cluster/ha_setup/web/
 
 # FIXME: fails at minimization
 #
