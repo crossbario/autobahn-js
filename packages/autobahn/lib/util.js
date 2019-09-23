@@ -185,6 +185,72 @@ var http_post = function (url, data, timeout) {
    }
 };
 
+// Helper to do HTTP/GET requests returning JSON parsed result as a promise.
+var http_get_json = function (url, timeout) {
+
+   var d = when.defer();
+   var req = new XMLHttpRequest();
+   req.withCredentials = true; // pass along cookies
+   req.onreadystatechange = function () {
+
+      if (req.readyState === 4) {
+
+         // Normalize IE's response to HTTP 204 when Win error 1223.
+         // http://stackoverflow.com/a/10047236/884770
+         //
+         var status = (req.status === 1223) ? 204 : req.status;
+
+         if (status === 200) {
+
+            // parse response
+            var data = JSON.parse(req.responseText);
+
+            // response with content
+            //
+            d.resolve(data);
+
+         } if (status === 204) {
+
+            // empty response
+            //
+            d.resolve();
+
+         } else {
+
+            // anything else is a fail
+            //
+            var statusText = null;
+            try {
+               statusText = req.statusText;
+            } catch (e) {
+               // IE8 fucks up on this
+            }
+            d.reject({code: status, text: statusText});
+         }
+      }
+   }
+
+   req.open("GET", url, true);
+   req.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+   if (timeout > 0) {
+      req.timeout = timeout; // request timeout in ms
+
+      req.ontimeout = function () {
+         d.reject({code: 501, text: "request timeout"});
+      }
+   }
+
+   req.send();
+
+   if (d.promise.then) {
+      // whenjs has the actual user promise in an attribute
+      return d.promise;
+   } else {
+      return d;
+   }
+};
+
 /**
  * Merge a list of objects from left to right
  *
@@ -345,6 +411,7 @@ exports.handle_error = handle_error;
 exports.rand_normal = rand_normal;
 exports.assert = assert;
 exports.http_post = http_post;
+exports.http_get_json = http_get_json;
 exports.defaults = defaults;
 exports.new_global_id = new_global_id;
 exports.deferred_factory = deferred_factory;
