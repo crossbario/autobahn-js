@@ -27,6 +27,19 @@ ENV HOME /app
 ENV DEBIAN_FRONTEND noninteractive
 ENV NODE_PATH /usr/local/lib/node_modules
 
+RUN    apt-get update \
+    && apt-get install -y --no-install-recommends \
+               ca-certificates \
+               git \
+               build-essential \
+               libssl-dev \
+               libffi-dev \
+               libunwind-dev \
+               libsnappy-dev \
+               libbz2-dev \
+    && rm -rf ~/.cache \
+    && rm -rf /var/lib/apt/lists/*
+
 # Crossbar.io connection defaults
 ENV CBURL ws://crossbar:8080/ws
 ENV CBREALM realm1

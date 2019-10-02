@@ -26,6 +26,10 @@ ENV HOME /app
 ENV DEBIAN_FRONTEND noninteractive
 ENV NODE_PATH /usr/lib/node_modules
 
+# we need a toolchain for the (optional) binary extensions used by Autobahn
+RUN apk add --update git build-base libffi-dev openssl-dev \
+    && rm -rf /var/cache/apk/*
+
 # Crossbar.io connection defaults
 ENV CBURL ws://crossbar:8080/ws
 ENV CBREALM realm1

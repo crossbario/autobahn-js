@@ -80,7 +80,7 @@ build_browser_ab_host:
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn
 	ls -la packages/autobahn/build/
 	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/dsq-examples/examples/js/browser/
-	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/crossbar-examples/rlinks/router_cluster/ha_setup/web/
+	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/crossbar-examples/rlinks/ha_setup/web/
 
 # FIXME: fails at minimization
 #
@@ -115,6 +115,7 @@ publish_browser:
 
 publish_npm: build_npm
 	cd packages/autobahn; npm publish
+	cd packages/autobahn-xbr; npm publish
 
 
 #
