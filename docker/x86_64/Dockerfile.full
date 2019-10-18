@@ -1,4 +1,4 @@
-FROM node
+FROM node:10.16.3
 
 MAINTAINER The Crossbar.io Project <support@crossbario.com>
 

@@ -1,4 +1,4 @@
-FROM armhf/node
+FROM arm32v7/node:10.16.3
 
 COPY .qemu/qemu-arm-static /usr/bin/qemu-arm-static
 
