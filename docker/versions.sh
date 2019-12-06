@@ -3,8 +3,8 @@
 #
 # CHANGE FOR NEW RELEASES (these need to be proper Git tags in the respective repo):
 #
-export AUTOBAHN_JS_VERSION='19.10.1'
-export AUTOBAHN_JS_XBR_VERSION='19.10.1'
+export AUTOBAHN_JS_VERSION='19.12.1'
+export AUTOBAHN_JS_XBR_VERSION='19.12.1'
 #
 # END OF CONFIG
 #
