@@ -121,6 +121,7 @@ crossbar_docker:
 	docker run -it --rm -v ${PWD}/.crossbar:/node -p 8080:8080 -p 8090:8090 -u 1000 crossbario/crossbar --cbdir /node
 
 test:
+	# npm install
 	cd packages/autobahn && npm test
 	# FIXME: add xbr specific unit tests
 	# cd packages/autobahn-xbr && npm test

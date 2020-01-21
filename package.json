@@ -1,0 +1,21 @@
+{
+  "name": "autobahn-development",
+  "description": "Local development package (never pubished) for autobahn and autobahn-xbr library development and CI.",
+  "private": true,
+  "engines": {
+    "node": ">= 4.2.6"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.0",
+    "deep-equal": ">= 1.0.1",
+    "google-closure-compiler": ">= 20170218.0.0",
+    "nodeunit": ">= 0.11.3",
+    "random-bytes-seed": ">=1.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/crossbario/autobahn-js.git"
+  },
+  "author": "Crossbar.io Technologies GmbH",
+  "license": "MIT"
+}
