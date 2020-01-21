@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // https://truffleframework.com/docs/truffle/getting-started/package-management-via-npm#within-javascript-code
-var contract = require("truffle-contract");
+var contract = require("@truffle/contract");
 
 var XBRToken_json = require("./contracts/XBRToken.json");
 var XBRNetwork_json = require("./contracts/XBRNetwork.json");
