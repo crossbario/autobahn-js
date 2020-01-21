@@ -22,7 +22,7 @@ before_script:
 
 script:
   - npm install -g nodeunit
-  - cd packages/autobahn && npm test
+  - cd packages/autobahn && npm install && npm test
 
 # CI notifications
 notifications:
