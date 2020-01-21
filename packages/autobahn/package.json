@@ -1,12 +1,15 @@
 {
   "name": "autobahn",
-  "version": "19.12.1",
+  "version": "20.1.1",
   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
   "main": "index.js",
   "files": [
     "index.js",
     "/lib"
   ],
+  "scripts": {
+    "test": "nodeunit test/test.js"
+  },
   "engines": {
     "node": ">= 6.17.1"
   },

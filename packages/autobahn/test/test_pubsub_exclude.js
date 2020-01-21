@@ -13,16 +13,18 @@
 
 
 
-// Tests "eligible" option on publication.
+// Tests "exclude" option on publication.
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
-exports.testPubsubEligible = function (testcase) {
+exports.testPubsubExclude = function (testcase) {
+
+
 
    testcase.expect(4);
 
-   var test = new testutil.Testlog("test/test_pubsub_eligible.txt");
+   var test = new testutil.Testlog("test/test_pubsub_exclude.txt");
 
    var dl = testutil.connect_n(3);
 
@@ -49,14 +51,14 @@ exports.testPubsubEligible = function (testcase) {
             testcase.done();
          }
 
-         // Case 1: "eligible" unset
-         // 
-         // Expected: 
+         // Case 1: "exclude" unset
+         //
+         // Expected:
          //    - both session2 and session3 receive events
 
          function case1 () {
             test.log("");
-            test.log("Case 1: 'eligible' unset");
+            test.log("Case 1: 'exclude' unset");
             test.log("===========================");
 
             var counter = 0;
@@ -74,7 +76,7 @@ exports.testPubsubEligible = function (testcase) {
             var testLog2 = [];
             var testLog3 = [];
 
-            
+
             function onevent2 (args) {
                testLog2.push("Session 2 got event: " + args[0]);
 
@@ -86,7 +88,7 @@ exports.testPubsubEligible = function (testcase) {
 
             function onevent3 (args) {
                testLog3.push("Session 3 got event: " + args[0]);
-               
+
                received3 += 1;
                if (received3 > 5) {
                   session3Finished.resolve(true);
@@ -120,20 +122,20 @@ exports.testPubsubEligible = function (testcase) {
 
 
 
-         // Case 2: "eligible" session 3
-         // 
-         // Expected: 
-         //    - only session3 receives events
+         // Case 2: "exclude" session 2
+         //
+         // Expected:
+         //    - session3 receives events
 
          function case2 () {
             test.log("");
-            test.log("Case 2: 'eligible' session3 ");
+            test.log("Case 2: 'exclude' session2 ");
             test.log("===========================");
 
             var counter = 0;
 
             var t2 = setInterval(function () {
-               session1.publish('com.myapp.topic2', [counter], {}, { eligible: [ session3.id ]});
+               session1.publish('com.myapp.topic2', [counter], {}, { exclude: [ session2.id ]});
                counter += 1;
             }, delay);
 
@@ -146,7 +148,7 @@ exports.testPubsubEligible = function (testcase) {
                test.log("Session 2 got event even though it should have been excluded.");
             }
 
-            // Should be called 
+            // Should be called
             function onevent3 (args) {
                // console.log("case 2 started - 3");
                test.log("Session 3 got event:", args[0]);
@@ -177,65 +179,58 @@ exports.testPubsubEligible = function (testcase) {
 
 
 
-         // Case 3: "eligible" both session 2 and session 3
-         // 
-         // Expected: 
-         //    - both sessions receive events
+         // Case 3: "exclude" both session 2 and session 3
+         //
+         // Expected:
+         //    - neither receives events
 
          function case3 () {
             test.log("");
-            test.log("Case 3: 'eligible' session 2 + session 3");
-            test.log("===========================");
+            test.log("Case 3: 'exclude' sessions 2 and 3");
+            test.log("==================================");
 
             var counter = 0;
 
-            var t1 = setInterval(function () {
-               session1.publish('com.myapp.topic3', [counter], {}, { eligible: [ session2.id, session3.id ]});
+            var t3 = setInterval(function () {
+               session1.publish('com.myapp.topic3', [counter], {}, { exclude: [ session2.id, session3.id ]});
                counter += 1;
+
+               if(counter > 5) {
+                  session1.publish('com.myapp.topic3', [counter]);
+                  clearInterval(t3);
+               }
             }, delay);
+
 
             var received2 = 0;
             var received3 = 0;
 
             var session2Finished = autobahn.when.defer();
             var session3Finished = autobahn.when.defer();
+
             var testLog2 = [];
             var testLog3 = [];
 
-            
-            function onevent2 (args) {
-               testLog2.push("Session 2 got event: " + args[0]);
 
+            function onevent2 (args) {
                received2 += 1;
-               if(received2 > 5) {
-                  session2Finished.resolve(true);
-               }
+
+               // testLog2.push("Session 2 got stopper event");
+               session2Finished.resolve(true);
             }
 
             function onevent3 (args) {
-               testLog3.push("Session 3 got event: " + args[0]);
-               
                received3 += 1;
-               if (received3 > 5) {
-                  session3Finished.resolve(true);
-               }
+
+               // testLog3.push("Session 3 got stopper event");
+               session3Finished.resolve(true);
             }
 
             autobahn.when.all([session2Finished.promise, session3Finished.promise]).then(function() {
 
-               clearInterval(t1);
+               // clearInterval(t3);
 
-               testcase.ok(true, "Case 3: Both clients received events");
-
-               // write the log
-               var logs = [testLog2, testLog3];
-               logs.forEach(function(log) {
-                  test.log("-----------")
-                  log.forEach(function(line) {
-                     test.log(line);
-                  })
-                  test.log("----------");
-               })
+               testcase.ok(received2 === 1 && received3 === 1, "Case 3: Both clients received final event");
 
                onTestFinished();
             });
@@ -243,6 +238,7 @@ exports.testPubsubEligible = function (testcase) {
             // both sessions subscribe
             session2.subscribe('com.myapp.topic3', onevent2);
             session3.subscribe('com.myapp.topic3', onevent3);
+
 
          }
 

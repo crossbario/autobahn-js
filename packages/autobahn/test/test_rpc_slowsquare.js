@@ -11,15 +11,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testRpcProgress = function (testcase) {
+exports.testRpcSlowsquare = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_rpc_progress.txt");
+   var test = new testutil.Testlog("test/test_rpc_slowsquare.txt");
 
    var connection = new autobahn.Connection(testutil.config);
 
@@ -27,39 +27,31 @@ exports.testRpcProgress = function (testcase) {
 
       test.log('Connected');
 
-      function longop(args, kwargs, details) {
+      // a "fast" function or a function that returns
+      // a direct value (not a promise)
+      function square(x) {
+         return x * x;
+      }
 
-         test.log("longop()", args, kwargs);
+      // simulates a "slow" function or a function that
+      // returns a promise
+      function slowsquare(x) {
 
-         var n = args[0];
-         var interval_id = null;
-
-         if (details.progress) {
-            var i = 0;
-            details.progress([i]);
-            i += 1;
-            interval_id = setInterval(function () {
-               if (i < n) {
-                  test.log("longop() - progress", i);
-                  details.progress([i]);
-                  i += 1;               
-               } else {
-                  clearInterval(interval_id);
-               }
-            }, 100);
-         }
-
+         // create a deferred
          var d = autobahn.when.defer();
 
+         // resolve the promise after 1s
          setTimeout(function () {
-            d.resolve(n);
-         }, 1000 * n);
+            d.resolve(x * x);
+         }, 500);
 
+         // need to return the promise
          return d.promise;
       }
 
       var endpoints = {
-         'com.myapp.longop': longop
+         'com.math.square': square,
+         'com.math.slowsquare': slowsquare
       };
 
       var pl1 = [];
@@ -74,15 +66,25 @@ exports.testRpcProgress = function (testcase) {
 
             var pl2 = [];
 
-            pl2.push(session.call('com.myapp.longop', [3], {}, {receive_progress: true}).then(
+            var t1 = process.hrtime();
+            pl2.push(session.call('com.math.slowsquare', [3]).then(
                function (res) {
-                  test.log("Final:", res);
+                  var duration = process.hrtime(t1);
+                  test.log("Slow Square:", res);
                },
                function (err) {
-                  test.log("Error:", err);
+                  test.log("Error", err);
+               }
+            ));
+
+            var t2 = process.hrtime();
+            pl2.push(session.call('com.math.square', [3]).then(
+               function (res) {
+                  var duration = process.hrtime(t2);
+                  test.log("Quick Square:", res);
                },
-               function (progress) {
-                  test.log("Progress:", progress);
+               function (err) {
+                  test.log("Error", err);
                }
             ));
 
@@ -98,7 +100,7 @@ exports.testRpcProgress = function (testcase) {
          function () {
             test.log("Registration failed!", arguments);
          }
-      );  
+      );
    };
 
    connection.open();

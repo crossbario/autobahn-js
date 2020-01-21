@@ -12,11 +12,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // Tests "exclude_me" option on publication,
-// which overrides the default WAMP routing behaviour, i.e. 
+// which overrides the default WAMP routing behaviour, i.e.
 // that the publisher doesn't receive an event
 // for its own publication
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 exports.testPubsubExcludeMe = function (testcase) {
@@ -52,8 +52,8 @@ exports.testPubsubExcludeMe = function (testcase) {
          }
 
          // Case 1: "exclude_me" unset
-         // 
-         // Expected: 
+         //
+         // Expected:
          //    - session1 (publisher) receives no events
          //    - session2 (other subscriber) receives events
          function case1 () {
@@ -77,7 +77,7 @@ exports.testPubsubExcludeMe = function (testcase) {
                session1Received = true;
             }
 
-            // Should be called 
+            // Should be called
             function onevent2 (args) {
                test.log("Session 2 got event:", args[0]);
                received += 1;
@@ -102,8 +102,8 @@ exports.testPubsubExcludeMe = function (testcase) {
          }
 
          // Case 2: "exclude_me: true"
-         // 
-         // Expected: 
+         //
+         // Expected:
          //    - session1 (publisher) receives no events
          //    - session2 (other subscriber) receives events
          function case2 () {
@@ -127,7 +127,7 @@ exports.testPubsubExcludeMe = function (testcase) {
                test.log("Session 1 got event even though it should have been excluded.");
             }
 
-            // Should be called 
+            // Should be called
             function onevent2 (args) {
                test.log("Session 2 got event:", args[0]);
                received += 1;
@@ -153,8 +153,8 @@ exports.testPubsubExcludeMe = function (testcase) {
          }
 
          // Case 3: "exclude_me: false"
-         // 
-         // Expected: 
+         //
+         // Expected:
          //    - session1 (publisher) receives events
          //    - session2 (other subscriber) receives events
          function case3 () {
@@ -177,7 +177,7 @@ exports.testPubsubExcludeMe = function (testcase) {
             var testLog1 = [];
             var testLog2 = [];
 
-            
+
             function onevent1 (args) {
                testLog1.push("Session 1 got event: " + args[0]);
 
@@ -189,7 +189,7 @@ exports.testPubsubExcludeMe = function (testcase) {
 
             function onevent2 (args) {
                testLog2.push("Session 2 got event: " + args[0]);
-               
+
                received2 += 1;
                if (received2 > 5) {
                   session2Finished.resolve(true);

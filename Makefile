@@ -55,7 +55,7 @@ docker_build_browser:
 
 
 #
-# host native build targets
+# Build js packages for autobahn and autobahn-xbr
 #
 requirements:
 	pip install -U scons boto taschenmesser
@@ -65,39 +65,31 @@ requirements:
 	sudo apt install -y npm nodejs default-jre
 	node -v
 
-build_browser_docker:
-	npm install --only=dev --prefix ./packages/autobahn
-	npm install --prefix ./packages/autobahn
-	scons -C ./packages/autobahn
+build: build_browser build_npm
 
-build_browser_host: build_browser_ab_host build_browser_xbr_host
+build_browser: build_browser_ab build_browser_xbr
 
-build_browser_ab_host:
+build_browser_ab:
 	-rm -rf ./packages/autobahn/node_modules/websocket
 	-rm -f ./packages/autobahn/build/*
 	npm install --only=dev --prefix ./packages/autobahn
 	npm install --prefix ./packages/autobahn
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn
 	ls -la packages/autobahn/build/
-	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/dsq-examples/examples/js/browser/
-	cp ./packages/autobahn/build/autobahn.js ~/scm/crossbario/crossbar-examples/rlinks/ha_setup/web/
+	mkdir -p ../../xbr/xbr-www/backend/xbrnetwork/static/autobahn/
+	cp ./packages/autobahn/build/autobahn.js ../../xbr/xbr-www/backend/xbrnetwork/static/autobahn/
 
-# FIXME: fails at minimization
-#
-# "ERROR - [JSC_CANNOT_CONVERT] This code cannot be converted from ES6. extending native class: Map"
-# even already with "--compilation_level WHITESPACE_ONLY"
-# see: https://gist.github.com/oberstet/8c3ad6d0ae58293cb34027054f1c02b2
-build_browser_xbr_host:
+build_browser_xbr:
 	-rm -rf ./packages/autobahn-xbr/node_modules/websocket
 	-rm -f ./packages/autobahn-xbr/build/*
 	npm install --only=dev --prefix ./packages/autobahn-xbr
 	npm install --prefix ./packages/autobahn-xbr
 	JAVA_HOME=/usr/lib/jvm/default-java JS_COMPILER=${PWD}/packages/autobahn/node_modules/google-closure-compiler-java/compiler.jar scons -C ./packages/autobahn-xbr
 	ls -la packages/autobahn-xbr/build/
-	cp ./packages/autobahn-xbr/build/autobahn-xbr.js ~/scm/crossbario/dsq-examples/examples/js/browser/
-	# cp ./packages/autobahn-xbr/build/autobahn-xbr.js ./test/xbr/onchain/
+	mkdir -p ../../xbr/xbr-www/backend/xbrnetwork/static/autobahn-xbr/
+	cp ./packages/autobahn-xbr/build/autobahn-xbr.js ../../xbr/xbr-www/backend/xbrnetwork/static/autobahn-xbr/
 
-build_build_npm:
+build_npm:
 	@echo "Ok, npm doesn't need a build step"
 
 
@@ -108,9 +100,10 @@ publish: publish_browser publish_npm
 
 publish_browser:
 	git -C ../autobahn-js-browser pull
-	cp ./packages/autobahn/build/* ../autobahn-js-browser/
-	cp ./packages/autobahn/build/* ../crossbar-examples/_shared-web-resources/autobahn/
-	cp ./packages/autobahn/build/* ../crossbarfx/test/_shared_web/autobahn/
+	cp ./packages/autobahn-xbr/build/* ../autobahn-js-browser/autobahn-xbr
+	cp ./packages/autobahn/build/* ../autobahn-js-browser/autobahn
+	# cp ./packages/autobahn/build/* ../crossbar-examples/_shared-web-resources/autobahn/
+	# cp ./packages/autobahn/build/* ../crossbarfx/test/_shared_web/autobahn/
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
 publish_npm: build_npm
@@ -128,23 +121,19 @@ crossbar_docker:
 	docker run -it --rm -v ${PWD}/.crossbar:/node -p 8080:8080 -p 8090:8090 -u 1000 crossbario/crossbar --cbdir /node
 
 test:
-	npm test
-	npm list ws bufferutil when crypto-js
+	# npm install
+	cd packages/autobahn && npm test
+	# FIXME: add xbr specific unit tests
+	# cd packages/autobahn-xbr && npm test
 
 test_connect:
-	nodeunit test/test_connect.js
+	cd packages/autobahn && nodeunit test/test_connect.js
 
 test_serialization_cbor:
-	nodeunit test/test_serialization_cbor.js
+	cd packages/autobahn && nodeunit test/test_serialization_cbor.js
 
 test_pubsub_multiple_matching_subs:
-	nodeunit test/test_pubsub_multiple_matching_subs.js
+	cd packages/autobahn && nodeunit test/test_pubsub_multiple_matching_subs.js
 
 test_binary:
-	nodeunit test/test_binary.js -t testBinaryCBOR
-
-	# bigint not implemented
-	# nodeunit test/test_binary.js -t testBinaryMsgPack
-
-	# binary not implemented
-	# nodeunit test/test_binary.js -t testBinaryJSON
+	cd packages/autobahn && nodeunit test/test_binary.js -t testBinaryCBOR

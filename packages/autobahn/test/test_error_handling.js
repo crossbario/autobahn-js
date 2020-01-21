@@ -3,7 +3,7 @@
  * handlers (onopen, onclose, oninvoke, onevent).
  */
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 // It should call the on_user_error handler, when an exception is thrown in the onopen callback.

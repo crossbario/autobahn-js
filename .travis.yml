@@ -20,6 +20,10 @@ before_script:
   - docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID crossbario/crossbar --cbdir /node
   - sleep 5
 
+script:
+  - npm install -g nodeunit
+  - cd packages/autobahn && npm install && npm test
+
 # CI notifications
 notifications:
   # IRC: chat messages on #crossbar-ci @ freenode

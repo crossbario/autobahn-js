@@ -11,16 +11,17 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
-exports.testCBORSerialization = function (testcase) {
+
+exports.testJSONSerialization = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_serialization_cbor.txt");
+   var test = new testutil.Testlog("test/test_serialization_json.txt");
 
-   var ser = new autobahn.serializer.CBORSerializer();
+   var ser = new autobahn.serializer.JSONSerializer();
 
    var config = {
       url: testutil.config.url,

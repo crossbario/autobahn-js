@@ -11,35 +11,37 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testMsgpackSerialization = function (testcase) {
+exports.testRpcError = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_serialization_msgpack.txt");
+   var test = new testutil.Testlog("test/test_rpc_error.txt");
 
-   var ser = new autobahn.serializer.MsgpackSerializer();
-
-   var config = {
-      url: testutil.config.url,
-      realm: testutil.config.realm,
-      serializers: [ser]
-   };
-   var connection = new autobahn.Connection(config);
+   var connection = new autobahn.Connection(testutil.config);
 
    connection.onopen = function (session) {
 
       test.log('Connected');
 
-      function echo(args) {
-         return args[0];
+      function sqrt(args) {
+         var x = args[0];
+         if (x === 0) {
+            throw "don't ask folly questions;)";
+         }
+         var res = Math.sqrt(x);
+         if (res !== res) {
+            //throw "cannot take sqrt of negative";
+            throw new autobahn.Error('com.myapp.error', ['fuck'], {a: 23, b: 9});
+         }
+         return res.toFixed(6);
       }
 
       var endpoints = {
-         'com.myapp.echo': echo
+         'com.myapp.sqrt': sqrt
       };
 
       var pl1 = [];
@@ -51,15 +53,14 @@ exports.testMsgpackSerialization = function (testcase) {
       autobahn.when.all(pl1).then(
          function () {
             test.log("All registered.");
-            test.log("Serializer ID: " + session._socket.serializer.SERIALIZER_ID);
 
             var pl2 = [];
 
-            var vals1 = [1.7, "hello", [1, 2, -3], {a: 5, b: "hello2"}, [-9007199254740991, 9007199254740991], null];
+            var vals1 = [2, 0, -2];
 
             for (var i = 0; i < vals1.length; ++i) {
 
-               pl2.push(session.call('com.myapp.echo', [vals1[i]]).then(
+               pl2.push(session.call('com.myapp.sqrt', [vals1[i]]).then(
                   function (res) {
                      test.log("Result:", res);
                   },
@@ -73,7 +74,7 @@ exports.testMsgpackSerialization = function (testcase) {
                test.log("All finished.");
                connection.close();
 
-               var chk = test.check();
+               var chk = test.check()
                testcase.ok(!chk, chk);
                testcase.done();
             });
@@ -85,4 +86,4 @@ exports.testMsgpackSerialization = function (testcase) {
    };
 
    connection.open();
-};
+}
