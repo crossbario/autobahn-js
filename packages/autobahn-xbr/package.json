@@ -1,6 +1,6 @@
 {
   "name": "autobahn-xbr",
-  "version": "19.12.1",
+  "version": "20.1.1",
   "description": "The XBR Protocol (smart contracts package)",
   "main": "index.js",
   "files": [
@@ -24,7 +24,7 @@
     "tweetnacl": ">= 0.14.3",
     "tweetnacl-sealedbox-js": ">=1.1.0",
     "web3": ">=1.2.1",
-    "@truffle/contract": ">=4.0.36"
+    "@truffle/contract": ">=4.1.5"
   },
   "browser": {
     "ws": false
