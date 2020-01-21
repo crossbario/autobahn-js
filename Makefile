@@ -121,23 +121,18 @@ crossbar_docker:
 	docker run -it --rm -v ${PWD}/.crossbar:/node -p 8080:8080 -p 8090:8090 -u 1000 crossbario/crossbar --cbdir /node
 
 test:
-	npm test
-	npm list ws bufferutil when crypto-js
+	cd packages/autobahn && npm test
+	# FIXME: add xbr specific unit tests
+	# cd packages/autobahn-xbr && npm test
 
 test_connect:
-	nodeunit test/test_connect.js
+	cd packages/autobahn && nodeunit test/test_connect.js
 
 test_serialization_cbor:
-	nodeunit test/test_serialization_cbor.js
+	cd packages/autobahn && nodeunit test/test_serialization_cbor.js
 
 test_pubsub_multiple_matching_subs:
-	nodeunit test/test_pubsub_multiple_matching_subs.js
+	cd packages/autobahn && nodeunit test/test_pubsub_multiple_matching_subs.js
 
 test_binary:
-	nodeunit test/test_binary.js -t testBinaryCBOR
-
-	# bigint not implemented
-	# nodeunit test/test_binary.js -t testBinaryMsgPack
-
-	# binary not implemented
-	# nodeunit test/test_binary.js -t testBinaryJSON
+	cd packages/autobahn && nodeunit test/test_binary.js -t testBinaryCBOR

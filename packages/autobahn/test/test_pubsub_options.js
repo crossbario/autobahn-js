@@ -11,15 +11,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testPubsubComplex = function (testcase) {
+exports.testPubsubOptions = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_pubsub_complex.txt");
+   var test = new testutil.Testlog("test/test_pubsub_options.txt");
 
    var dl = testutil.connect_n(2);
 
@@ -31,35 +31,17 @@ exports.testPubsubComplex = function (testcase) {
          var session2 = res[1];
 
          var counter = 0;
-
-         var t1 = setInterval(function () {
-            var lst = [];
-            for (var i = 0; i < counter; ++i) {
-               lst.push(i);
-            }
-            var obj = {
-               'counter': counter,
-               'foo': [1, counter, 2 * counter],
-               'bar': 'This is a test text.',
-               'baz': {
-                  'a': 1.23456, 'b': 10000, 'c': null, 'd': 'foo'
-               }
-            };
-            session1.publish('com.myapp.topic1', lst, obj);
-
-            counter += 1;
-
-            test.log("events published", counter);
-         }, 100);
-
-
          var received = 0;
+         var sub;
 
-         function on_topic1(args, kwargs) {
-            test.log("got event:", args, kwargs);
+         function onevent1(args, kwargs, details) {
+            // FIXME: publisher disclosure now is a strictly router configured
+            // test.log("got event:", typeof(details), typeof(details.publication), typeof(details.publisher), details.publisher == session1.id, args[0]);
+            test.log("got event:", typeof(details), typeof(details.publication), args[0]);
+
             received += 1;
             if (received > 5) {
-               test.log("closing ..");
+               test.log("Closing ..");
 
                clearInterval(t1);
 
@@ -72,7 +54,18 @@ exports.testPubsubComplex = function (testcase) {
             }
          }
 
-         session2.subscribe('com.myapp.topic1', on_topic1);
+         sub = session2.subscribe('com.myapp.topic1', onevent1);
+
+         var t1 = setInterval(function () {
+            var options = {acknowledge: true};
+
+            session1.publish('com.myapp.topic1', [counter], {}, options).then(
+               function (pub) {
+                  test.log("event published", typeof(pub), typeof(pub.id));
+               }
+            );
+            counter += 1;
+         }, 1000);
       },
       function (err) {
          test.log(err);

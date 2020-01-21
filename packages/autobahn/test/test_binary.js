@@ -11,7 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 // var randomBytes = require('randombytes');
@@ -98,7 +98,7 @@ function run_test (test, ser) {
                           }
                       } else {
                         test.log("Result [com.myapp.echo]: " + res);
-                      }                     
+                      }
                   },
                   function (err) {
                      test.log("Error [com.myapp.echo]:", err.error, err.args, err.kwargs);
@@ -159,13 +159,13 @@ exports.testBinaryCBOR = function (testcase) {
     var test = new testutil.Testlog("test/test_binary_cbor.txt");
 
     var dl = [];
- 
+
     dl.push(run_test(test, new autobahn.serializer.CBORSerializer()));
 
     autobahn.when.all(dl).then(function () {
         var chk = test.check();
         testcase.ok(!chk, chk);
-        testcase.done();    
+        testcase.done();
     });
 };
 
@@ -175,13 +175,13 @@ exports.testBinaryMsgPack = function (testcase) {
     var test = new testutil.Testlog("test/test_binary_msgpack.txt");
 
     var dl = [];
- 
+
     dl.push(run_test(test, new autobahn.serializer.MsgpackSerializer()));
 
     autobahn.when.all(dl).then(function () {
         var chk = test.check();
         testcase.ok(!chk, chk);
-        testcase.done();    
+        testcase.done();
     });
 };
 
@@ -191,12 +191,12 @@ exports.testBinaryJSON = function (testcase) {
     var test = new testutil.Testlog("test/test_binary_json.txt");
 
     var dl = [];
- 
+
     dl.push(run_test(testcase, test, new autobahn.serializer.JSONSerializer()));
 
     autobahn.when.all(dl).then(function () {
         var chk = test.check();
         testcase.ok(!chk, chk);
-        testcase.done();    
+        testcase.done();
     });
 };

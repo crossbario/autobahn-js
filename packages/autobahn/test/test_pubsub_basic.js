@@ -11,15 +11,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
 
-exports.testPubsubOptions = function (testcase) {
+exports.testPubsubBasic = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_pubsub_options.txt");
+   var test = new testutil.Testlog("test/test_pubsub_basic.txt");
 
    var dl = testutil.connect_n(2);
 
@@ -31,14 +31,18 @@ exports.testPubsubOptions = function (testcase) {
          var session2 = res[1];
 
          var counter = 0;
+
+         var t1 = setInterval(function () {
+            test.log("publishing to topic 'com.myapp.topic1': " + counter);
+            session1.publish('com.myapp.topic1', [counter]);
+            counter += 1;
+         }, 100);
+
          var received = 0;
+
          var sub;
-
-         function onevent1(args, kwargs, details) {
-            // FIXME: publisher disclosure now is a strictly router configured
-            // test.log("got event:", typeof(details), typeof(details.publication), typeof(details.publisher), details.publisher == session1.id, args[0]);
-            test.log("got event:", typeof(details), typeof(details.publication), args[0]);
-
+         function onevent1(args) {
+            test.log("Got event:", args[0]);
             received += 1;
             if (received > 5) {
                test.log("Closing ..");
@@ -55,17 +59,6 @@ exports.testPubsubOptions = function (testcase) {
          }
 
          sub = session2.subscribe('com.myapp.topic1', onevent1);
-
-         var t1 = setInterval(function () {
-            var options = {acknowledge: true};
-
-            session1.publish('com.myapp.topic1', [counter], {}, options).then(
-               function (pub) {
-                  test.log("event published", typeof(pub), typeof(pub.id));
-               }
-            );
-            counter += 1;
-         }, 1000);
       },
       function (err) {
          test.log(err);

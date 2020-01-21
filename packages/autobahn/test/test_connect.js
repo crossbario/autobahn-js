@@ -11,21 +11,29 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var autobahn = require('./../packages/autobahn/index.js');
+var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
-exports.testAsync = function (testcase) {
+exports.testConnect = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_basic_async.txt");
+   var test = new testutil.Testlog("test/test_connect.txt");
+   var N = 10;
 
-   var d1 = autobahn.when.defer();
-   var d2 = autobahn.when.defer();
+   test.log("connecting " + N + " sessions ...");
 
-   var df = autobahn.when.all([d1.promise, d2.promise]).then(
+   var dl = testutil.connect_n(N);
+
+   autobahn.when.all(dl).then(
       function (res) {
-         test.log(res);
+         test.log("all " + res.length + " sessions connected");
+
+         for (var i = 0; i < res.length; ++i) {
+            test.log("leaving session " + i);
+            res[i].leave();
+         }
+
          var chk = test.check();
          testcase.ok(!chk, chk);
          testcase.done();
@@ -35,7 +43,4 @@ exports.testAsync = function (testcase) {
          testcase.done();
       }
    );
-
-   d1.resolve(23);
-   d2.resolve(42);
 }

@@ -7,6 +7,9 @@
     "index.js",
     "/lib"
   ],
+  "scripts": {
+    "test": "nodeunit test/test.js"
+  },
   "engines": {
     "node": ">= 6.17.1"
   },
