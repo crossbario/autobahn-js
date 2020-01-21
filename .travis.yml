@@ -21,7 +21,7 @@ before_script:
   - sleep 5
 
 script:
-  - npm install
+  - npm install -g nodeunit
   - cd packages/autobahn && npm test
 
 # CI notifications
