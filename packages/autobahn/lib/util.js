@@ -101,7 +101,7 @@ var rand_normal = function (mean, sd) {
 
 
 var is_object = function(variable) {
-   return variable instanceof Object || typeof variable === 'object'
+   return !Array.isArray(variable) && (variable instanceof Object || typeof variable === 'object')
 };
 
 
