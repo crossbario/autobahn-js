@@ -100,6 +100,12 @@ var rand_normal = function (mean, sd) {
 
 
 
+var is_object = function(variable) {
+   return variable instanceof Object || typeof variable === 'object'
+};
+
+
+
 var assert = function (cond, text) {
 	if (cond) {
       return;
@@ -409,6 +415,7 @@ var promise = function(d) {
 
 exports.handle_error = handle_error;
 exports.rand_normal = rand_normal;
+exports.is_object = is_object;
 exports.assert = assert;
 exports.http_post = http_post;
 exports.http_get_json = http_get_json;
