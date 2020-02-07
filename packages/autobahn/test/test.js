@@ -45,6 +45,12 @@ var pubsub_prefix_sub = require('./test_pubsub_prefix_sub.js');
 var pubsub_wildcard_sub = require('./test_pubsub_wildcard_sub.js');
 // var pubsub_multiple_matching_subs = require('./test_pubsub_multiple_matching_subs.js');
 var sealedbox = require('./test_sealedbox.js');
+var util_is_object = require('./test_util_is_object');
+
+exports.testUtilIsObjectSucceed = util_is_object.utilIsObjectSucceed;
+exports.testUtilIsObjectFail = util_is_object.utilIsObjectFail;
+exports.testUtilIsObjectVmFail = util_is_object.utilIsObjectVmFail;
+exports.testUtilIsObjectVmSucceed = util_is_object.utilIsObjectVmSucceed;
 
 exports.testSync = sync.testSync;
 exports.testAsync = async.testAsync;
