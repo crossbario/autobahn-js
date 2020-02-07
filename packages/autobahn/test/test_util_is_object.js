@@ -48,13 +48,17 @@ exports.utilIsObjectVmFail = function (testcase) {
 exports.utilIsObjectVmSucceed = function (testcase) {
     testcase.expect(1);
     var test = new testutil.Testlog("test/test_util_is_object_vm.txt");
-
-    var context = {kwargs: {foo: 'bar'}, isObj: false};
+    var context = {
+        kwargs: {foo: 'bar'},
+        util: autobahn.util,
+        check1: null,
+        check2: null
+    };
     vm.createContext(context);
-    var code = 'kwargs.baz = \'bax\'; isObj = kwargs instanceof Object';
+    var code = 'kwargs.baz = \'bax\'; check1 = kwargs instanceof Object; check2 = util.is_object(kwargs);';
     vm.runInContext(code, context);
-    var isObj = autobahn.util.is_object(context.kwargs);
-    test.log(isObj);
+    test.log(context.check1);
+    test.log(context.check2);
     var chk = test.check();
     testcase.ok(!chk, chk);
     testcase.done();
