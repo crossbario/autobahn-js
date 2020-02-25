@@ -1,9 +1,18 @@
 # AutobahnJS - Change Log
 
+## 20.2.2
+
+* new: update XBR contract ABI files to v20.2.2
+* fix: assert issue when running under different nodejs vm contexts (#490)
+
+## 20.2.1
+
+* new: update XBR contract ABI files to v20.2.1
+
 ## 20.1.1
 
 * fix: upstream truffle dependency renaming - must use `@truffle/contract`
-* fix: update XBR contract ABI files
+* new: update XBR contract ABI files
 
 ## v19.12.1
 
