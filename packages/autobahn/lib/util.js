@@ -11,9 +11,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var log = require('./log.js');
-
-var when = require('when');
+const log = require('./log.js');
+const when = require('when');
+const fs = require('fs');
 
 
 /// Convert base64 string to array of bytes.

@@ -19,7 +19,8 @@
     "msgpack5": ">= 3.6.0",
     "tweetnacl": ">= 0.14.3",
     "when": ">= 3.7.7",
-    "ws": ">= 1.1.4"
+    "ws": ">= 1.1.4",
+    "fs": "0.0.1-security"
   },
   "optionalDependencies": {
     "bufferutil": ">= 1.2.1",
