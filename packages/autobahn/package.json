@@ -19,8 +19,7 @@
     "msgpack5": ">= 3.6.0",
     "tweetnacl": ">= 0.14.3",
     "when": ">= 3.7.7",
-    "ws": ">= 1.1.4",
-    "fs": "0.0.1-security"
+    "ws": ">= 1.1.4"
   },
   "optionalDependencies": {
     "bufferutil": ">= 1.2.1",
@@ -36,8 +35,7 @@
   "browser": {
     "cbor": false,
     "ws": false,
-    "./lib/transport/rawsocket.js": false,
-    "fs": false
+    "./lib/transport/rawsocket.js": false
   },
   "repository": {
     "type": "git",

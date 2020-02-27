@@ -15,9 +15,6 @@ var log = require('./log.js');
 
 var when = require('when');
 
-// Stole from https://github.com/flexdinesh/browser-or-node/blob/dd3970eabf095f22d710de485961e21e2c1c92fa/src/index.js#L3
-const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
-
 
 /// Convert base64 string to array of bytes.
 function _atob (s) {
@@ -420,11 +417,7 @@ let sleep = async function sleep (ms) {
    return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-let read_file = async function read_file (path) {
-   if (isBrowser) {
-      throw new Error("read_file: Not supported in browsers.");
-   }
-
+let _read_file = async function read_file (path) {
    let fs = require("fs");
    return new Promise((resolve, reject) => {
       fs.readFile(path, function (err, data) {
@@ -436,6 +429,12 @@ let read_file = async function read_file (path) {
       });
    });
 };
+
+if ('fs' in global) {
+   exports.read_file = _read_file;
+} else {
+   exports.read_file = null;
+}
 
 
 exports.handle_error = handle_error;
