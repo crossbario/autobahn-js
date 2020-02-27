@@ -448,4 +448,3 @@ exports.new_global_id = new_global_id;
 exports.deferred_factory = deferred_factory;
 exports.promise = promise;
 exports.sleep = sleep;
-exports.read_file = read_file;
