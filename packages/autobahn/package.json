@@ -36,7 +36,8 @@
   "browser": {
     "cbor": false,
     "ws": false,
-    "./lib/transport/rawsocket.js": false
+    "./lib/transport/rawsocket.js": false,
+    "fs": false
   },
   "repository": {
     "type": "git",

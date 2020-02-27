@@ -11,9 +11,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-const log = require('./log.js');
-const when = require('when');
-const fs = require('fs');
+var log = require('./log.js');
+
+var when = require('when');
+
+// Stole from https://github.com/flexdinesh/browser-or-node/blob/dd3970eabf095f22d710de485961e21e2c1c92fa/src/index.js#L3
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
 
 /// Convert base64 string to array of bytes.
@@ -418,6 +421,11 @@ let sleep = async function sleep (ms) {
 };
 
 let read_file = async function read_file (path) {
+   if (isBrowser) {
+      throw new Error("read_file: Not supported in browsers.");
+   }
+
+   let fs = require("fs");
    return new Promise((resolve, reject) => {
       fs.readFile(path, function (err, data) {
          if (err) {
