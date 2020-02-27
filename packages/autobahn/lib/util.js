@@ -417,7 +417,8 @@ let sleep = async function sleep (ms) {
    return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-let read_file = async function read_file (path) {
+let _read_file = async function read_file (path) {
+   let fs = require("fs");
    return new Promise((resolve, reject) => {
       fs.readFile(path, function (err, data) {
          if (err) {
@@ -428,6 +429,12 @@ let read_file = async function read_file (path) {
       });
    });
 };
+
+if ('fs' in global) {
+   exports.read_file = _read_file;
+} else {
+   exports.read_file = null;
+}
 
 
 exports.handle_error = handle_error;
@@ -441,4 +448,3 @@ exports.new_global_id = new_global_id;
 exports.deferred_factory = deferred_factory;
 exports.promise = promise;
 exports.sleep = sleep;
-exports.read_file = read_file;
