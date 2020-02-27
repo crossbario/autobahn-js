@@ -413,6 +413,23 @@ var promise = function(d) {
    }
 };
 
+let sleep = async function sleep (ms) {
+   return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+let read_file = async function read_file (path) {
+   return new Promise((resolve, reject) => {
+      fs.readFile(path, function (err, data) {
+         if (err) {
+            reject(err);
+         } else {
+            resolve(data);
+         }
+      });
+   });
+};
+
+
 exports.handle_error = handle_error;
 exports.rand_normal = rand_normal;
 exports.is_object = is_object;
@@ -423,3 +440,5 @@ exports.defaults = defaults;
 exports.new_global_id = new_global_id;
 exports.deferred_factory = deferred_factory;
 exports.promise = promise;
+exports.sleep = sleep;
+exports.read_file = read_file;
