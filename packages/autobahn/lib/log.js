@@ -11,16 +11,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
-var debug = function () {};
-
-if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
-   debug = function () {
-      console.log.apply(console, arguments);
-   }
-}
-
-var warn = console.warn;
+let debug = console.debug.bind(console);
+let warn = console.warn.bind(console);
 
 exports.debug = debug;
 exports.warn = warn;
