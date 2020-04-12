@@ -11,7 +11,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-let debug = console.debug.bind(console);
+
+let debug = function () {};
+
+if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
+   debug = function () {
+      console.log.apply(console, arguments);
+   }
+}
+
 let warn = console.warn.bind(console);
 
 exports.debug = debug;
