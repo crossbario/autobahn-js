@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-var debug = function () {};
+let debug = function () {};
 
 if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
    debug = function () {
@@ -20,7 +20,7 @@ if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
    }
 }
 
-var warn = console.warn;
+let warn = console.warn.bind(console);
 
 exports.debug = debug;
 exports.warn = warn;
