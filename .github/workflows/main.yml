@@ -24,8 +24,9 @@ jobs:
 
     - name: Install apt dependencies
       run: sudo pip3 install --no-cache-dir -U scons boto taschenmesser
+
     - name: Install npm dependencens
       run: sudo npm install -g nodeunit
+
     - name: Run tests
       run: cd packages/autobahn && npm install && npm test
-
