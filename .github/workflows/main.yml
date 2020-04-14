@@ -1,0 +1,33 @@
+name: Autobahn JS CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    # Run this a bit early in the CI, so we don't have to "sleep".
+    - name: Run crossbar
+      run: docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID crossbario/crossbar --cbdir /node
+
+    - name: Update apt cache
+      run: sudo apt update
+
+    - name: Install apt dependencies
+      run: sudo pip3 install --no-cache-dir -U scons boto taschenmesser
+
+    - name: Install npm dependencens
+      run: sudo npm install -g nodeunit
+
+    - name: Run tests
+      run: cd packages/autobahn && npm install && npm test
