@@ -65,6 +65,13 @@ requirements:
 	sudo apt install -y npm nodejs default-jre
 	node -v
 
+contracts:
+	rm -f /tmp/xbr-protocol-latest.zip
+	curl -s https://xbr.network/lib/abi/xbr-protocol-latest.zip -o /tmp/xbr-protocol-latest.zip
+	rm -rf packages/autobahn-xbr/contracts
+	mkdir packages/autobahn-xbr/contracts
+	unzip /tmp/xbr-protocol-latest.zip -d packages/autobahn-xbr/contracts
+
 build: build_browser build_npm
 
 build_browser: build_browser_ab build_browser_xbr
