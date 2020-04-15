@@ -113,7 +113,7 @@ publish_browser:
 	# cp ./packages/autobahn/build/* ../crossbarfx/test/_shared_web/autobahn/
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
-publish_npm: build_npm
+publish_npm: contracts build_npm
 	cd packages/autobahn; npm publish
 	cd packages/autobahn-xbr; npm publish
 
