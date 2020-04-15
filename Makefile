@@ -74,7 +74,7 @@ contracts:
 
 build: build_browser build_npm
 
-build_browser: build_browser_ab build_browser_xbr
+build_browser: contracts build_browser_ab build_browser_xbr
 
 build_browser_ab:
 	-rm -rf ./packages/autobahn/node_modules/websocket
