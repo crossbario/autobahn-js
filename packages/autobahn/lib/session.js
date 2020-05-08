@@ -1428,16 +1428,27 @@ Session.prototype.unsubscribe = function (subscription) {
 
    var self = this;
 
+   var subs = self._subscriptions[subscription.id];
+   var i = subs.indexOf(subscription);
+
    if (!self.isOpen) {
+      if (i !== -1) {
+         // remove handler subscription
+         subs.splice(i, 1);
+         subscription.active = false;
+      }
       throw "session not open";
    }
 
    if (!subscription.active || !(subscription.id in self._subscriptions)) {
+      if (i !== -1) {
+         // remove handler subscription
+         subs.splice(i, 1);
+         subscription.active = false;
+      }
+
       throw "subscription not active";
    }
-
-   var subs = self._subscriptions[subscription.id];
-   var i = subs.indexOf(subscription);
 
    if (i === -1) {
       throw "subscription not active";
