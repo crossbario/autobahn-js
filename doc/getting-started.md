@@ -9,7 +9,7 @@ WAMP router
 
 **Autobahn|JS** does not connect application components directly to each other, but enables a connection to a WAMP router. This connects the application components. The routing is rule-based - no application code runs inside the router.
 
-You can find a [list of WAMP v2 compatible routers](http://wamp.ws/implementations/) at the WAMP project site. We recommend using [Crossbar.io](https://github.com/crossbario/crossbar), which offers a lot of features, but the examples here should work with any WAMP router.
+You can find a [list of WAMP v2 compatible routers](https://wamp-proto.org/implementations.html) at the WAMP project site. We recommend using [Crossbar.io](https://github.com/crossbario/crossbar), which offers a lot of features, but the examples here should work with any WAMP router.
 
 Example Code
 ============
