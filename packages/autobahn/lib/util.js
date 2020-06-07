@@ -13,8 +13,6 @@
 
 var log = require('./log.js');
 
-var when = require('when');
-
 
 /// Convert base64 string to array of bytes.
 function _atob (s) {
@@ -99,11 +97,9 @@ var rand_normal = function (mean, sd) {
 };
 
 
-
 var is_object = function(variable) {
    return !Array.isArray(variable) && (variable instanceof Object || typeof variable === 'object')
 };
-
 
 
 var assert = function (cond, text) {
@@ -127,7 +123,7 @@ var http_post = function (url, data, timeout) {
 
    log.debug("new http_post request", url, data, timeout);
 
-   var d = when.defer();
+   var d = deferred_factory();
    var req = new XMLHttpRequest();
    req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {
@@ -194,7 +190,7 @@ var http_post = function (url, data, timeout) {
 // Helper to do HTTP/GET requests returning JSON parsed result as a promise.
 var http_get_json = function (url, timeout) {
 
-   var d = when.defer();
+   var d = deferred_factory();
    var req = new XMLHttpRequest();
    req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {

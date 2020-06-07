@@ -12,7 +12,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-var when = require('when');
 var util = require('../util.js');
 var log = require('../log.js');
 var serializer = require('../serializer.js');
@@ -25,7 +24,7 @@ function Factory (options) {
    util.assert(typeof options.url === "string", "options.url must be a string");
 
    self._options = options;
-};
+}
 
 
 Factory.prototype.type = "longpoll";

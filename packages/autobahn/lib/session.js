@@ -14,7 +14,6 @@
 // require('assert') would be nice .. but it does not
 // work with Google Closure after Browserify
 
-var when = require('when');
 var when_fn = require("when/function");
 
 var log = require('./log.js');

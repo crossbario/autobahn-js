@@ -11,8 +11,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var when = require('when');
-
 var session = require('./session.js');
 var util = require('./util.js');
 var log = require('./log.js');

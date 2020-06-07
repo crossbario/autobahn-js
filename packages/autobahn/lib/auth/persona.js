@@ -11,10 +11,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var when = require('when');
-var when_fn = require("when/function");
-
-
 function auth(session, user, extra) {
 
    // Persona Issues:
