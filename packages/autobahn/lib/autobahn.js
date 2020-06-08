@@ -17,7 +17,6 @@ require('./polyfill.js');
 var pjson = require('../package.json');
 
 var when = require('when');
-//var fn = require("when/function");
 
 var msgpack = require('msgpack5');
 var cbor = require('cbor');
