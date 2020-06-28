@@ -11,6 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+let autobahn = require('autobahn');
 var cbor = require('cbor');
 var nacl = require('tweetnacl');
 nacl.sealedbox = require('tweetnacl-sealedbox-js');
@@ -22,11 +23,6 @@ var BN = web3.utils.BN;
 
 var util = require('./util.js');
 var eip712 = require('./eip712.js');
-
-// https://www.npmjs.com/package/uuid
-// const uuid = require('uuid/v4');
-// var u = uuid();
-// console.log(u);
 
 
 var SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
@@ -41,7 +37,7 @@ var SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
     self._keys = {};
     self._market_maker_adr = market_maker_adr;
     self._max_price = max_price;
-    self._deferred_factory = util.deferred_factory();
+    self._deferred_factory = autobahn.util.deferred_factory();
 
     self._pkey_raw = eth_util.toBuffer(buyer_key);
     self._acct = new eth_accounts().privateKeyToAccount(buyer_key);
@@ -86,7 +82,7 @@ SimpleBuyer.prototype.start = function(session, consumerID) {
         }
     );
 
-    return util.promise(d);
+    return autobahn.util.promise(d);
 };
 
 SimpleBuyer.prototype.stop = function () {
@@ -109,7 +105,7 @@ SimpleBuyer.prototype.balance = function () {
             d.reject(error['error']);
         }
     );
-    return util.promise(d);
+    return autobahn.util.promise(d);
 };
 
 SimpleBuyer.prototype.openChannel = function (buyerAddr, amount) {
@@ -132,7 +128,7 @@ SimpleBuyer.prototype.openChannel = function (buyerAddr, amount) {
             d.reject(error['error']);
         }
     );
-    return util.promise(d);
+    return autobahn.util.promise(d);
 };
 
 SimpleBuyer.prototype.closeChannel = function () {
@@ -265,7 +261,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
         };
         waitForPurchase()
     }
-    return util.promise(d);
+    return autobahn.util.promise(d);
 };
 
 exports.SimpleBuyer = SimpleBuyer;

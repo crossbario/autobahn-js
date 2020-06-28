@@ -11,10 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//const autobahn = require('autobahn');
-
-const when = require('when');
-
+const autobahn = require('autobahn');
 const eth_accounts = require("web3-eth-accounts");
 const eth_util = require("ethereumjs-util");
 const nacl = require('tweetnacl');
@@ -37,7 +34,7 @@ var Seller = function (market_maker_adr, seller_key) {
     self._provider_id = eth_util.bufferToHex(eth_util.privateToPublic(seller_key));
     self._session = null;
     self._session_regs = [];
-    self._deferred_factory = util.deferred_factory();
+    self._deferred_factory = autobahn.util.deferred_factory();
 
     self._pkey_raw = eth_util.toBuffer(seller_key);
     self._acct = new eth_accounts().privateKeyToAccount(seller_key);
@@ -69,7 +66,7 @@ Seller.prototype.start = function (session) {
                     for (var topic in topics) {
                         pl1.push(session.subscribe('xbr.provider.' + self._provider_id + '.' + topic, topics[topic]));
                     }
-                    var d1 = when.all(pl1).then(
+                    var d1 = Promise.all(pl1).then(
                         function (subscriptions) {
                             self._session_subs = subscriptions;
                         },
@@ -88,7 +85,7 @@ Seller.prototype.start = function (session) {
                     for (var proc in endpoints) {
                         pl2.push(session.register('xbr.provider.' + self._provider_id + '.' + proc, endpoints[proc]));
                     }
-                    var d2 = when.all(pl2).then(
+                    var d2 = Promise.all(pl2).then(
                         function (registrations) {
                             self._session_regs = registrations;
                             for (var key in self.keys) {
@@ -101,7 +98,7 @@ Seller.prototype.start = function (session) {
                         }
                     );
 
-                    when.all([d1, d2]).then(
+                    Promise.all([d1, d2]).then(
                         function () {
                             d.resolve(self._balance);
                         },
@@ -122,7 +119,7 @@ Seller.prototype.start = function (session) {
         }
     );
 
-    return util.promise(d);
+    return autobahn.util.promise(d);
 };
 
 
