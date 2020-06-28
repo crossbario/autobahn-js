@@ -11,9 +11,16 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var when = require('when');
+let HAS_WHEN;
+let when;
+try {
+   when = require('when');
+   HAS_WHEN = true;
+} catch (e) {
+   HAS_WHEN = false;
+}
 
-var log = require('./log.js');
+let log = require('./log.js');
 
 
 /// Convert base64 string to array of bytes.
@@ -359,44 +366,66 @@ var new_global_id = function() {
     return Math.floor(Math.random() * 9007199254740992) + 1;
 };
 
-var deferred_factory = function(options) {
-   var defer = null;
+let deferred_factory = function(options) {
+   let defer;
 
-   if (options && options.use_es6_promises) {
+   // Our strategy is to default to whenjs-based promise if a promise
+   // preference is not provided *and* whenjs is available.
+   // In the absence of whenjs and promise preference, we
+   // use the ES6 Promise because we are ES6+ so always expect
+   // that to be available.
 
-      if ('Promise' in global) {
+   let get_es6_promise_factory = function () {
+      return function () {
+         let deferred = {};
+
+         deferred.promise = new Promise(function (resolve, reject) {
+            deferred.resolve = resolve;
+            deferred.reject = reject;
+         });
+
+         return deferred;
+      };
+   }
+
+   if (options) {
+      if (options.use_es6_promises) {
+
          // ES6-based deferred factory
          //
-         defer = function () {
-            var deferred = {};
+         defer = get_es6_promise_factory();
 
-            deferred.promise = new Promise(function (resolve, reject) {
-               deferred.resolve = resolve;
-               deferred.reject = reject;
-            });
+      } else if (options.use_deferred) {
 
-            return deferred;
-         };
-      } else {
+         // use explicit deferred factory, e.g. jQuery.Deferred or Q.defer
+         //
+         defer = options.use_deferred;
 
-         log.debug("Warning: ES6 promises requested, but not found! Falling back to whenjs.");
+      } else if (HAS_WHEN) {
 
          // whenjs-based deferred factory
          //
          defer = when.defer;
+
+      } else {
+
+         // ES6-based deferred factory
+         //
+         defer = get_es6_promise_factory();
+
       }
-
-   } else if (options && options.use_deferred) {
-
-      // use explicit deferred factory, e.g. jQuery.Deferred or Q.defer
-      //
-      defer = options.use_deferred;
-
-   } else {
+   } else if (HAS_WHEN) {
 
       // whenjs-based deferred factory
       //
       defer = when.defer;
+
+   } else {
+
+      // ES6-based deferred factory
+      //
+      defer = get_es6_promise_factory();
+
    }
 
    return defer;
