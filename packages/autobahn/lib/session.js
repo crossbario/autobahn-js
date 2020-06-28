@@ -14,8 +14,6 @@
 // require('assert') would be nice .. but it does not
 // work with Google Closure after Browserify
 
-const { promisify } = require("es6-promisify");
-
 const log = require('./log.js');
 const util = require('./util.js');
 
@@ -792,13 +790,7 @@ var Session = function (socket, defer, onchallenge, on_user_error, on_internal_e
                                  details.caller_authrole
                       );
 
-         // We use promisify, which automatically wraps a plain,
-         // non-promise value in a (immediately resolved) promise
-         //
-         // See: https://www.npmjs.com/package/es6-promisify
-         //
-         let func = promisify(reg.endpoint);
-         func(args, kwargs, cd).then(
+         util.as_promise(reg.endpoint, args, kwargs, cd).then(
 
             function (res) {
                // construct YIELD message
@@ -940,8 +932,7 @@ var Session = function (socket, defer, onchallenge, on_user_error, on_internal_e
                var method = msg[1];
                var extra = msg[2];
 
-               let func = promisify(self._onchallenge);
-               func(self, method, extra).then(
+               util.as_promise(self._onchallenge, self, method, extra).then(
                   function (signature) {
 
                      if(typeof signature === "string"){

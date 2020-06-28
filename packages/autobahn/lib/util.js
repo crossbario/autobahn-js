@@ -457,6 +457,16 @@ let _read_file = async function read_file (path) {
    });
 };
 
+let as_promise = function (func, ...args) {
+   return new Promise((resolve, reject) => {
+      try {
+         resolve(func.call(this, ...args));
+      } catch (e) {
+         reject(e);
+      }
+   });
+}
+
 if ('fs' in global) {
    exports.read_file = _read_file;
 } else {
@@ -475,3 +485,4 @@ exports.new_global_id = new_global_id;
 exports.deferred_factory = deferred_factory;
 exports.promise = promise;
 exports.sleep = sleep;
+exports.as_promise = as_promise;
