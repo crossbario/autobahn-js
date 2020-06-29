@@ -1,6 +1,6 @@
 {
   "name": "autobahn-xbr",
-  "version": "20.4.1",
+  "version": "20.6.1",
   "description": "The XBR Protocol (smart contracts package)",
   "main": "index.js",
   "files": [
