@@ -6,7 +6,8 @@ default:
 	@echo "Targets: build, test, publish, .."
 
 
-build: build_full build_alpine
+#build: build_full build_alpine
+build: build_full
 
 build_full:
 	time docker build \

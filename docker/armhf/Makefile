@@ -11,7 +11,8 @@ qemu_deps:
 	cp /usr/bin/qemu-arm-static ./.qemu/
 
 
-build: build_full build_alpine
+#build: build_full build_alpine
+build: build_full
 
 build_full:
 	time docker build \

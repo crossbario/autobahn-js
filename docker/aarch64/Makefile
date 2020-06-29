@@ -11,7 +11,8 @@ qemu_deps:
 	cp /usr/bin/qemu-aarch64-static ./.qemu/
 
 
-build: build_full build_alpine
+#build: build_full build_alpine
+build: build_full
 
 build_full:
 	time docker build \
@@ -70,7 +71,8 @@ test_alpine:
 	docker run -it --rm --link crossbar crossbario/autobahn-js-aarch64:alpine
 
 
-publish: publish_full publish_alpine
+#publish: publish_full publish_alpine
+publish: publish_full
 
 publish_alpine: build_alpine
 	docker push crossbario/autobahn-js-aarch64:alpine

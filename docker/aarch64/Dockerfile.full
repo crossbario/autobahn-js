@@ -1,5 +1,5 @@
 #FROM aarch64/node
-FROM arm64v8/node:10.16.3
+FROM arm64v8/node
 
 COPY .qemu/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
