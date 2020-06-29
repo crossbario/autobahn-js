@@ -14,10 +14,8 @@
 // require('assert') would be nice .. but it does not
 // work with Google Closure after Browserify
 
-var when_fn = require("when/function");
-
-var log = require('./log.js');
-var util = require('./util.js');
+const log = require('./log.js');
+const util = require('./util.js');
 
 // IE fallback (http://afuchs.tumblr.com/post/23550124774/date-now-in-ie8)
 Date.now = Date.now || function() { return +new Date; };
@@ -792,12 +790,7 @@ var Session = function (socket, defer, onchallenge, on_user_error, on_internal_e
                                  details.caller_authrole
                       );
 
-         // We use the following whenjs call wrapper, which automatically
-         // wraps a plain, non-promise value in a (immediately resolved) promise
-         //
-         // See: https://github.com/cujojs/when/blob/master/docs/api.md#fncall
-         //
-         when_fn.call(reg.endpoint, args, kwargs, cd).then(
+         util.as_promise(reg.endpoint, args, kwargs, cd).then(
 
             function (res) {
                // construct YIELD message
@@ -939,7 +932,7 @@ var Session = function (socket, defer, onchallenge, on_user_error, on_internal_e
                var method = msg[1];
                var extra = msg[2];
 
-               when_fn.call(self._onchallenge, self, method, extra).then(
+               util.as_promise(self._onchallenge, self, method, extra).then(
                   function (signature) {
 
                      if(typeof signature === "string"){

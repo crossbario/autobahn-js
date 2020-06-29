@@ -16,7 +16,14 @@ require('./polyfill.js');
 
 var pjson = require('../package.json');
 
-var when = require('when');
+let when;
+let HAS_WHEN;
+try {
+   when = require('when');
+   HAS_WHEN = true;
+} catch (e) {
+   HAS_WHEN = false;
+}
 
 var msgpack = require('msgpack5');
 var cbor = require('cbor');
@@ -62,7 +69,9 @@ exports.auth_persona = persona.auth;
 exports.auth_cra = cra;
 exports.auth_cryptosign = cryptosign;
 
-exports.when = when;
+if (HAS_WHEN) {
+   exports.when = when;
+}
 exports.msgpack = msgpack;
 exports.cbor = cbor;
 exports.nacl = nacl;
