@@ -16,7 +16,7 @@ WAMP for Browsers and NodeJS.
 
 **XBR quicklinks:**
 
-* [XBR Network]([XBR](https://xbr.network/)) - The XBR Network homepage.
+* [XBR Network](https://xbr.network/) - The XBR Network homepage.
 * [XBR Protocol](https://github.com/crossbario/xbr-protocol) - The XBR Protocol source repository.
 * [XBR Docs](https://xbr.network/docs/protocol/index.html) - XBR Protocol and APIs Documentation.
 
