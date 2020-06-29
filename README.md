@@ -7,6 +7,19 @@ WAMP for Browsers and NodeJS.
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/crossbario/autobahn-js/)
 [![Build Status](https://travis-ci.org/crossbario/autobahn-js.svg?branch=master)](https://travis-ci.org/crossbario/autobahn-js)
 
+**npm quicklinks:**
+
+* [**autobahn**](https://www.npmjs.com/package/autobahn/) - Autobahn for NodeJS
+* [**autobahn-browser**](https://www.npmjs.com/package/autobahn-browser/) - Autobahn for browsers
+* [**autobahn-xbr**](https://www.npmjs.com/package/autobahn-xbr/) - Autobahn-[XBR](https://xbr.network/) for NodeJS
+* [**autobahn-xbr-browser**](https://www.npmjs.com/package/autobahn-xbr-browser/) - Autobahn-[XBR](https://xbr.network/) for browsers
+
+**XBR quicklinks:**
+
+* [XBR Network]([XBR](https://xbr.network/)) - The XBR Network homepage.
+* [XBR Protocol](https://github.com/crossbario/xbr-protocol) - The XBR Protocol source repository.
+* [XBR Docs](https://xbr.network/docs/protocol/index.html) - XBR Protocol and APIs Documentation.
+
 ---
 
 **Autobahn**|JS is a subproject of the [Autobahn project](http://autobahn.ws/) and provides an open-source implementation of the **[Web Application Messaging Protocol V2](http://wamp.ws/)** in JavaScript under the [MIT license](/LICENSE).
