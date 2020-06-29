@@ -26,6 +26,12 @@ clean:
 	-rm -rf ./packages/autobahn-xbr/build
 
 
+abi_files:
+	curl -s https://xbr.network/lib/abi/xbr-protocol-latest.zip -o /tmp/xbr-protocol-latest.zip
+	unzip -t /tmp/xbr-protocol-latest.zip
+	rm -rf ${PWD}/packages/autobahn-xbr/lib/contracts/
+	unzip /tmp/xbr-protocol-latest.zip -d ${PWD}/packages/autobahn-xbr/lib/contracts/
+
 #
 # Docker based build targets (normally, use these!)
 #
