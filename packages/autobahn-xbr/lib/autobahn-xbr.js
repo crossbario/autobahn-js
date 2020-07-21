@@ -42,11 +42,13 @@ var setProvider = async function(provider) {
     await ethereum.setProvider(provider);
     exports.xbrtoken = ethereum.xbrtoken;
     exports.xbrnetwork = ethereum.xbrnetwork;
+    exports.xbrchannel = ethereum.xbrchannel;
 };
 
 exports.setProvider = setProvider;
 exports.xbrtoken = null;
 exports.xbrnetwork = null;
+exports.xbrchannel = null;
 
 // debug log output
 if ('XBR_DEBUG' in global && XBR_DEBUG) {

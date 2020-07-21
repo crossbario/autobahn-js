@@ -63,14 +63,21 @@ async function init_xbr() {
         exports.xbrtoken = await XBRToken.at(XBR_DEBUG_TOKEN_ADDR);
     } else {
         console.log('WARNING: The XBR smart contracts are not yet depoyed to public networks. Please set XBR_DEBUG_TOKEN_ADDR manually.');
-        exports.xbrtoken = await XBRToken.at("0xcfeb869f69431e42cdb54a4f4f105c19c080a601");
+        exports.xbrtoken = await XBRToken.at("0xaCef957D54c639575f4DB68b1992B36504f33FEA");
     }
 
     if ('XBR_DEBUG_NETWORK_ADDR' in global && XBR_DEBUG_NETWORK_ADDR) {
         exports.xbrnetwork = await XBRNetwork.at(XBR_DEBUG_NETWORK_ADDR);
     } else {
         console.log('WARNING: The XBR smart contracts are not yet depoyed to public networks. Please set XBR_DEBUG_NETWORK_ADDR manually.');
-        exports.xbrnetwork = await XBRNetwork.at("0x254dffcd3277c0b1660f6d42efbb754edababc2b");
+        exports.xbrnetwork = await XBRNetwork.at("0x7A3d22c59e8F8f1b88ba7205f3f5a65Bc86D04Bc");
+    }
+
+    if ('XBR_DEBUG_CHANNEL_ADDR' in global && XBR_DEBUG_CHANNEL_ADDR) {
+        exports.xbrchannel = await XBRChannel.at(XBR_DEBUG_CHANNEL_ADDR);
+    } else {
+        console.log('WARNING: The XBR smart contracts are not yet depoyed to public networks. Please set XBR_DEBUG_CHANNEL_ADDR manually.');
+        exports.xbrchannel = await XBRChannel.at("0x670497A012322B99a5C18B8463940996141Cb952");
     }
 }
 
