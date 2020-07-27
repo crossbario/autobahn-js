@@ -81,16 +81,22 @@ function uuid (value) {
 }
 
 function without0x (string) {
+    assert(typeof string === 'string')
+
     if (string.startsWith("0x")) {
         return string.substring(2);
     }
+
     return string;
 };
 
-function without0x (string) {
+function with0x (string) {
+    assert(typeof string === 'string')
+
     if (!string.startsWith("0x")) {
         return '0x' + string;
     }
+
     return string;
 };
 
