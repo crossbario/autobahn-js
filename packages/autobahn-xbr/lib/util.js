@@ -49,7 +49,6 @@ function pack_uint256 (value) {
 
 
 function unpack_uint256 (value) {
-    // FIXME: wont work in browser ?
     let buffer = Buffer.from(value);
     return buffer.readUIntBE(0, value.length);
 }
@@ -88,7 +87,7 @@ function uuid (value) {
 }
 
 
-function without0x (string) {
+function without_0x (string) {
     assert(typeof string === 'string', 'Input must be a string')
 
     if (string.startsWith("0x")) {
@@ -99,7 +98,7 @@ function without0x (string) {
 }
 
 
-function with0x (string) {
+function with_0x (string) {
     assert(typeof string === 'string', 'Input must be a string')
 
     if (!string.startsWith("0x")) {
@@ -113,5 +112,5 @@ function with0x (string) {
 exports.pack_uint256 = pack_uint256;
 exports.unpack_uint256 = unpack_uint256;
 exports.uuid = uuid;
-exports.without0x = without0x;
-exports.with0x = with0x;
+exports.without_0x = without_0x;
+exports.with_0x = with_0x;
