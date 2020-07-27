@@ -88,7 +88,7 @@ function without0x (string) {
     }
 
     return string;
-};
+}
 
 function with0x (string) {
     assert(typeof string === 'string', 'Input must be a string')
@@ -98,8 +98,7 @@ function with0x (string) {
     }
 
     return string;
-};
-
+}
 
 exports.pack_uint256 = pack_uint256;
 exports.uuid = uuid;
