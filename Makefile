@@ -65,7 +65,7 @@ docker_build_browser:
 #
 requirements:
 	pip install -U scons boto taschenmesser
-	-rm -rf ./node_modules/websocket
+	rm -rf ./node_modules/websocket
 	npm install browserify
 	sudo apt update
 	sudo apt install -y npm nodejs default-jre
