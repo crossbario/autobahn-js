@@ -42,6 +42,7 @@ var setProvider = async function(provider) {
     await ethereum.setProvider(provider);
     exports.xbrtoken = ethereum.xbrtoken;
     exports.xbrnetwork = ethereum.xbrnetwork;
+    exports.xbrchannel = ethereum.xbrchannel;
 };
 
 exports.setProvider = setProvider;
@@ -61,8 +62,10 @@ exports.MemberLevel = ethereum.MemberLevel;
 exports.NodeType = ethereum.NodeType;
 exports.ActorType = ethereum.ActorType;
 
-var util = require('./util.js');
+let util = require('./util.js');
 
 exports.uuid = util.uuid;
 exports.pack_uint256 = util.pack_uint256;
 exports.unpack_uint256 = util.unpack_uint256;
+exports.with_0x = util.with_0x;
+exports.without_0x = util.without_0x;
