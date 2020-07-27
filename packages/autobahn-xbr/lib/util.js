@@ -80,5 +80,22 @@ function uuid (value) {
     }
 }
 
+function without0x (string) {
+    if (string.startsWith("0x")) {
+        return string.substring(2);
+    }
+    return string;
+};
+
+function without0x (string) {
+    if (!string.startsWith("0x")) {
+        return '0x' + string;
+    }
+    return string;
+};
+
+
 exports.pack_uint256 = pack_uint256;
 exports.uuid = uuid;
+exports.without0x = without0x;
+exports.with0x = with0x;
