@@ -65,3 +65,4 @@ var util = require('./util.js');
 
 exports.uuid = util.uuid;
 exports.pack_uint256 = util.pack_uint256;
+exports.unpack_uint256 = util.unpack_uint256;

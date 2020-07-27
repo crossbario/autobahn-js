@@ -16,7 +16,7 @@ const web3 = require('web3');
 const BN = web3.utils.BN;
 
 // https://www.npmjs.com/package/uuid
-const uuidv4 = require('uuid/v4');
+const _uuid = require('uuid');
 
 // https://www.npmjs.com/package/uuid-parse
 const uuid_parse = require('uuid-parse');
@@ -48,18 +48,25 @@ function pack_uint256 (value) {
 }
 
 
+function unpack_uint256 (value) {
+    // FIXME: wont work in browser ?
+    let buffer = Buffer.from(value);
+    return buffer.readUIntBE(0, value.length);
+}
+
+
 function uuid (value) {
 
-    if (value !== 'undefined') {
+    if (value !== undefined) {
         // parse UUID string
 
         // if (typeof Buffer !== 'undefined') {
         if (global.process && global.process.versions.node) {
             // running on Node
-            return new Uint8Array(uuid_parse.parse(value));
+            return Buffer.from(uuid_parse.parse(value));
         } else {
             // running in Browser
-            return Buffer(uuid_parse.parse(value));
+            return new Uint8Array(uuid_parse.parse(value));
         }
 
     } else {
@@ -69,16 +76,17 @@ function uuid (value) {
         if (global.process && global.process.versions.node) {
             // running on Node
             const buffer = [];
-            uuidv4(null, buffer);
-            return Buffer(buffer);
+            _uuid.v4(null, buffer);
+            return Buffer.from(buffer);
         } else {
             // running in Browser
             const buffer = [];
-            uuidv4(null, buffer);
+            _uuid.v4(null, buffer);
             return new Uint8Array(buffer);
         }
     }
 }
+
 
 function without0x (string) {
     assert(typeof string === 'string', 'Input must be a string')
@@ -90,6 +98,7 @@ function without0x (string) {
     return string;
 }
 
+
 function with0x (string) {
     assert(typeof string === 'string', 'Input must be a string')
 
@@ -100,7 +109,9 @@ function with0x (string) {
     return string;
 }
 
+
 exports.pack_uint256 = pack_uint256;
+exports.unpack_uint256 = unpack_uint256;
 exports.uuid = uuid;
 exports.without0x = without0x;
 exports.with0x = with0x;
