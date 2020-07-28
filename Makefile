@@ -24,6 +24,7 @@ clean:
 	-rm -rf ./build
 	-rm -rf ./packages/autobahn/build
 	-rm -rf ./packages/autobahn-xbr/build
+	-rm -rf ./packages/autobahn-xbr/lib/contracts
 
 
 abi_files:
