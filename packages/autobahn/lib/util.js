@@ -445,7 +445,6 @@ let sleep = async function sleep (ms) {
 };
 
 let _read_file = async function read_file (path) {
-   let fs = require("fs");
    return new Promise((resolve, reject) => {
       fs.readFile(path, function (err, data) {
          if (err) {
