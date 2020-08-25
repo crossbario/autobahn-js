@@ -22,7 +22,7 @@ const _uuid = require('uuid');
 const uuid_parse = require('uuid-parse');
 
 // the XBR token has 18 decimals
-const decimals = new xbr.BN('1000000000000000000');
+const decimals = new BN('1000000000000000000');
 
 
 function pack_uint256 (value) {
