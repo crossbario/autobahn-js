@@ -21,6 +21,9 @@ const _uuid = require('uuid');
 // https://www.npmjs.com/package/uuid-parse
 const uuid_parse = require('uuid-parse');
 
+// the XBR token has 18 decimals
+const decimals = new xbr.BN('1000000000000000000');
+
 
 function pack_uint256 (value) {
     assert(BN.isBN(value));
@@ -109,8 +112,14 @@ function with_0x (string) {
 }
 
 
+function XBR(value) {
+    return new BN(value).mul(decimals);
+}
+
+
 exports.pack_uint256 = pack_uint256;
 exports.unpack_uint256 = unpack_uint256;
 exports.uuid = uuid;
 exports.without_0x = without_0x;
 exports.with_0x = with_0x;
+exports.XBR = XBR;
