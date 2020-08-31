@@ -28,6 +28,7 @@ var ethereum = require('./ethereum.js');
 var eip712 = require('./eip712.js');
 exports.sign_eip712_data = eip712.sign_eip712_data;
 exports.recover_eip712_signer = eip712.recover_eip712_signer;
+exports.create_market_member_login = eip712.create_market_member_login;
 
 exports.SimpleBuyer = require('./buyer.js').SimpleBuyer;
 exports.SimpleSeller = require('./seller.js').SimpleSeller;
@@ -69,3 +70,4 @@ exports.pack_uint256 = util.pack_uint256;
 exports.unpack_uint256 = util.unpack_uint256;
 exports.with_0x = util.with_0x;
 exports.without_0x = util.without_0x;
+exports.XBR = util.XBR;

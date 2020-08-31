@@ -25,101 +25,49 @@ const eip712 = require('./eip712.js');
 
 
 var Seller = function (market_maker_adr, seller_key) {
+    console.log(market_maker_adr, seller_key)
     self = this;
 
+    self._acct = new eth_accounts().privateKeyToAccount(seller_key);
+
     self._market_maker_adr = eth_util.toBuffer(market_maker_adr);
+    self._pkey_raw = eth_util.toBuffer(util.with_0x(seller_key));
     self.seller_key = seller_key;
     self.keys = {};
     self.keysMap = {};
-    self._provider_id = eth_util.bufferToHex(eth_util.privateToPublic(seller_key));
+    self._provider_id = eth_util.bufferToHex(eth_util.privateToPublic(self._pkey_raw));
     self._session = null;
     self._session_regs = [];
     self._deferred_factory = autobahn.util.deferred_factory();
 
-    self._pkey_raw = eth_util.toBuffer(seller_key);
-    self._acct = new eth_accounts().privateKeyToAccount(seller_key);
     self._addr = eth_util.toBuffer(self._acct.address);
 };
 
 
-Seller.prototype.start = function (session) {
+Seller.prototype.start = async function (session) {
     self._session = session;
 
-    var d = self._deferred_factory();
+    let d = self._deferred_factory();
 
-    session.call('xbr.marketmaker.get_active_paying_channel', [self._addr]).then(
-        function (channel) {
-            self._channel = channel;
-            self._channel_adr_raw = channel.channel;
-            self._channel_adr = w3_utils.toChecksumAddress(channel.channel.toString("hex"));
+    try {
+        self._channel = await session.call('xbr.marketmaker.get_active_paying_channel', [self._addr]);
+        self._channel_oid = self._channel.channel_oid;
 
-            session.call('xbr.marketmaker.get_paying_channel_balance', [channel.channel]).then(
-                function (balance) {
-                    self._balance = new BN(balance.remaining);
-                    self._seq = balance.seq;
+        let procedure = `xbr.provider.${self._provider_id}.sell`
+        let reg = await session.register(procedure, self.sell);
 
-                    var topics = {
-                        on_channel_closed: self.on_channel_closed
-                    }
-
-                    var pl1 = [];
-                    for (var topic in topics) {
-                        pl1.push(session.subscribe('xbr.provider.' + self._provider_id + '.' + topic, topics[topic]));
-                    }
-                    var d1 = Promise.all(pl1).then(
-                        function (subscriptions) {
-                            self._session_subs = subscriptions;
-                        },
-                        function (error) {
-                            console.log("subscription of seller delegate topics failed:", error);
-                            d.reject(error);
-                        }
-                    );
-
-                    var endpoints = {
-                        sell: self.sell,
-                        close_channel: self.close_channel
-                    };
-
-                    var pl2 = [];
-                    for (var proc in endpoints) {
-                        pl2.push(session.register('xbr.provider.' + self._provider_id + '.' + proc, endpoints[proc]));
-                    }
-                    var d2 = Promise.all(pl2).then(
-                        function (registrations) {
-                            self._session_regs = registrations;
-                            for (var key in self.keys) {
-                                self.keys[key].start();
-                            }
-                        },
-                        function (error) {
-                            console.log("registration of seller delegate procedures failed:", error);
-                            d.reject(error);
-                        }
-                    );
-
-                    Promise.all([d1, d2]).then(
-                        function () {
-                            d.resolve(self._balance);
-                        },
-                        function (error) {
-                            d.reject(error);
-                        }
-                    );
-                },
-                function (error) {
-                    console.log("get_paying_channel_balance failed:", error);
-                    d.reject(error);
-                }
-            );
-        },
-        function (error) {
-            console.log("get_active_paying_channel failed:", error);
-            d.reject(error);
+        for (let key in self.keys) {
+            await self.keys[key].start();
         }
-    );
 
-    return autobahn.util.promise(d);
+        self._xbrmm_config = await session.call('xbr.marketmaker.get_config');
+
+        let paying_balance = await session.call('xbr.marketmaker.get_paying_channel_balance', [self._channel_oid]);
+        return new BN(paying_balance.remaining);
+    } catch (e) {
+        d.reject(e);
+        return autobahn.util.promise(d);
+    }
 };
 
 

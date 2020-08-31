@@ -86,7 +86,45 @@ function recover_eip712_signer (channel_adr, channel_seq, balance, is_final, sig
 }
 
 
+function create_market_member_login(member, clientPubKey) {
+    return {
+        'types': {
+            'EIP712Domain': [
+                {
+                    'name': 'name',
+                    'type': 'string'
+                },
+                {
+                    'name': 'version',
+                    'type': 'string'
+                },
+            ],
+            'EIP712MarketMemberLogin': [
+                {
+                    'name': 'member',
+                    'type': 'address'
+                },
+                {
+                    'name': 'client_pubkey',
+                    'type': 'bytes32',
+                },
+            ]
+        },
+        'primaryType': 'EIP712MarketMemberLogin',
+        'domain': {
+            'name': 'XBR',
+            'version': '1',
+        },
+        'message': {
+            'member': member,
+            'client_pubkey': clientPubKey,
+        }
+    }
+}
+
+
 exports.sign_eip712_data = sign_eip712_data;
 exports.recover_eip712_signer = recover_eip712_signer;
 exports.decimals = decimals;
 exports.verifying_adr = verifying_adr;
+exports.create_market_member_login = create_market_member_login;
