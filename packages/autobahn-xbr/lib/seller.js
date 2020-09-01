@@ -49,7 +49,6 @@ Seller.prototype.start = async function (session) {
 
     try {
         self._channel = await session.call('xbr.marketmaker.get_active_paying_channel', [self._addr]);
-        console.log(self._channel)
         self._channel_oid = self._channel.channel_oid;
         self._seq = self._channel.seq;
 
@@ -194,19 +193,19 @@ Seller.prototype.close_channel = function (args) {
     const channel_balance = new BN(channel_balance_);
 
     // check that the market_maker_adr fits what we expect for the market maker
-    if (Buffer.compare(market_maker_adr, self._market_maker_adr) != 0) {
+    if (Buffer.compare(market_maker_adr, self._market_maker_adr) !== 0) {
         throw "xbr.error.unexpected_marketmaker_adr";
     }
 
     // FIXME: must be the currently active channel .. and we need to track all of these
-    if (Buffer.compare(channel_adr, self._channel.channel) != 0) {
+    if (Buffer.compare(channel_adr, self._channel.channel_oid) !== 0) {
         throw "xbr.error.unexpected_channel_adr";
     }
 
     // check that we agree on what the market maker state provides (balance, seq):
 
     // channel sequence number: check we have consensus on off-chain channel state with peer (which is the market maker)
-    if (channel_seq != self._seq) {
+    if (channel_seq !== self._seq) {
         throw "xbr.error.unexpected_channel_seq";
     }
 
@@ -215,10 +214,16 @@ Seller.prototype.close_channel = function (args) {
         throw "xbr.error.unexpected_channel_balance";
     }
 
-    // XBRSIG: compute EIP712 typed data signature
-    seller_signature = eip712.sign_eip712_data(self._pkey_raw, self._channel_adr, self._seq, self._balance, channel_is_final);
+    let verifying_contract = self._xbrmm_config.verifying_contract_adr;
+    let chain_id = self._xbrmm_config.verifying_chain_id;
+    // FIXME
+    let block_number = 1;
 
-    receipt = {
+    // XBRSIG: compute EIP712 typed data signature
+    let seller_signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
+        self._channel.market_oid, self._channel_oid, self._seq, self._balance, channel_is_final);
+
+    let receipt = {
         'delegate': self._addr,
         'seq': channel_seq,
         'balance': util.pack_uint256(channel_balance),

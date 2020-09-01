@@ -95,7 +95,7 @@ connection.onopen = async function (session, details) {
         );
     };
     function on_cardata (args) {
-        data = args[0];
+        let data = args[0];
         do_publish(data);
         console.log("on_counter() event received with counter " + data);
     }
