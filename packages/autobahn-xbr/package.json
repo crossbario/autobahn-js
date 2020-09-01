@@ -18,7 +18,7 @@
     "autobahn": "^20.4.1",
     "cbor": ">=3.0.0",
     "crypto-js": ">=3.1.8",
-    "eth-sig-util": ">=2.4.4",
+    "eth-sig-util": "^2.5.3",
     "ethereumjs-util": ">=6.1.0",
     "msgpack5": ">= 3.6.0",
     "sha3": ">=2.0.1",

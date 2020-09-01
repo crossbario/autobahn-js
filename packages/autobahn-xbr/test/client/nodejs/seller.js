@@ -58,7 +58,7 @@ connection.onopen = async function (session, details) {
     const decimals = new xbr.BN('1000000000000000000');
 
     // price in XBR per key
-    const price = new xbr.BN(35).mul(decimals);
+    const price = new xbr.BN(1).mul(decimals);
 
     // key rotation interval in seconds
     const key_rotation_interval = 10;
@@ -113,8 +113,6 @@ connection.onopen = async function (session, details) {
     seller.start(session).then(
         // success: we've got an active paying channel with remaining balance ..
         function (balance) {
-            console.log(balance)
-            console.log("STARTED")
             console.log("Seller has started, remaining balance in active paying channel is " + balance.div(decimals) + " XBR");
             do_publish();
         },

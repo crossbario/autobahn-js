@@ -15,7 +15,6 @@ const autobahn = require('autobahn');
 const eth_accounts = require("web3-eth-accounts");
 const eth_util = require("ethereumjs-util");
 const nacl = require('tweetnacl');
-const w3_utils = require("web3-utils");
 const web3 = require('web3');
 const BN = web3.utils.BN;
 
@@ -24,8 +23,7 @@ const util = require('./util.js');
 const eip712 = require('./eip712.js');
 
 
-var Seller = function (market_maker_adr, seller_key) {
-    console.log(market_maker_adr, seller_key)
+let Seller = function (market_maker_adr, seller_key) {
     self = this;
 
     self._acct = new eth_accounts().privateKeyToAccount(seller_key);
@@ -51,7 +49,9 @@ Seller.prototype.start = async function (session) {
 
     try {
         self._channel = await session.call('xbr.marketmaker.get_active_paying_channel', [self._addr]);
+        console.log(self._channel)
         self._channel_oid = self._channel.channel_oid;
+        self._seq = self._channel.seq;
 
         let procedure = `xbr.provider.${self._provider_id}.sell`
         let reg = await session.register(procedure, self.sell);
@@ -61,8 +61,12 @@ Seller.prototype.start = async function (session) {
         }
 
         self._xbrmm_config = await session.call('xbr.marketmaker.get_config');
+        self._xbrmm_status = await session.call('xbr.marketmaker.get_status');
 
         let paying_balance = await session.call('xbr.marketmaker.get_paying_channel_balance', [self._channel_oid]);
+        console.log(paying_balance.remaining, "APY")
+        self._balance = new BN(paying_balance.remaining);
+        console.log(self._balance.div(new BN('1000000000000000000')).toString())
         return new BN(paying_balance.remaining);
     } catch (e) {
         d.reject(e);
@@ -73,7 +77,7 @@ Seller.prototype.start = async function (session) {
 
 Seller.prototype.sell = function (args) {
 
-    let [market_maker_adr, buyer_pubkey, key_id, channel_adr, channel_seq, amount_, balance_, signature] = args;
+    let [market_maker_adr, buyer_pubkey, key_id, channel_oid, channel_seq, amount_, balance_, signature] = args;
 
     // console.log('SELL', market_maker_adr, buyer_pubkey, key_id, channel_adr, channel_seq, amount_, balance_, signature);
 
@@ -83,7 +87,7 @@ Seller.prototype.sell = function (args) {
     const balance = new BN(balance_);
 
     // check that the market_maker_adr fits what we expect for the market maker
-    if (Buffer.compare(market_maker_adr, self._market_maker_adr) != 0) {
+    if (Buffer.compare(market_maker_adr, self._market_maker_adr) !== 0) {
         throw "xbr.error.unexpected_marketmaker_adr";
     }
 
@@ -94,7 +98,7 @@ Seller.prototype.sell = function (args) {
     }
 
     // FIXME: must be the currently active channel .. and we need to track all of these
-    if (Buffer.compare(channel_adr, self._channel.channel) != 0) {
+    if (Buffer.compare(channel_oid, self._channel.channel_oid) !== 0) {
         throw "xbr.error.unexpected_channel_adr";
     }
 
@@ -103,22 +107,30 @@ Seller.prototype.sell = function (args) {
     // FIXME: check amount == quote price for key
 
     // channel sequence number: check we have consensus on off-chain channel state with peer (which is the market maker)
-    if (channel_seq != self._seq + 1) {
-        throw "xbr.error.unexpected_channel_seq";
-    }
+    // if (channel_seq !== self._seq + 1) {
+    //     throw "xbr.error.unexpected_channel_seq";
+    // }
 
     // channel balance: check we have consensus on off-chain channel state with peer (which is the market maker)
     if (!balance.eq(self._balance.sub(amount))) {
         throw "xbr.error.unexpected_channel_balance";
     }
 
+    console.log(self._balance.div(new BN('1000000000000000000')))
     // ok, we agree with the market maker about the off-chain state .. advance state
     // FIXME: rollback to previous state when the code below fails
-    self._seq += 1
+    self._seq += channel_seq
     self._balance = self._balance.sub(amount)
 
+    let verifying_contract = self._xbrmm_config.verifying_contract_adr;
+    let chain_id = self._xbrmm_config.chain;
+    let block_number = self._xbrmm_status.block.number;
+    let market_oid = util.with_0x(autobahn.util.btoh(self._channel.market_oid));
+    let channel_id = util.with_0x(autobahn.util.btoh(self._channel_oid));
+
     // XBRSIG[5/8]: compute EIP712 typed data signature
-    seller_signature = eip712.sign_eip712_data(self._pkey_raw, self._channel_adr, self._seq, self._balance, false);
+    let seller_signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
+        market_oid, channel_id, self._seq, self._balance, false);
 
     // now seal (end-to-end encrypt) the data encryption key to the public (Ed25519) key of the buyer delegate
     sealed_key = self.keysMap[key_id].encryptKey(key_id, buyer_pubkey)
@@ -146,7 +158,7 @@ Seller.prototype.sell = function (args) {
         'amount': util.pack_uint256(amount),
 
         // paying channel amount remaining
-        'balance': util.pack_uint256(self._balance),
+        'balance': self._balance,
 
         // seller (delegate) signature
         'signature': seller_signature,
@@ -260,9 +272,9 @@ Seller.prototype.add = function (api_id, prefix, price, interval) {
                 console.log("Call failed:", error);
             }
         )
-    };
+    }
 
-    var series = new key_series.KeySeries(api_id, prefix, price, interval, rotate);
+    let series = new key_series.KeySeries(api_id, prefix, price, interval, rotate);
 
     self.keys[api_id] = series;
 
@@ -272,11 +284,11 @@ Seller.prototype.add = function (api_id, prefix, price, interval) {
 
 Seller.prototype.stop = function () {
 
-    for (var key in self.keys) {
+    for (let key in self.keys) {
         self.keys[key].stop()
     }
 
-    for (var i = 0; i < self._session_regs.length; i++) {
+    for (let i = 0; i < self._session_regs.length; i++) {
         self._session_regs[i].unregister()
     }
 };

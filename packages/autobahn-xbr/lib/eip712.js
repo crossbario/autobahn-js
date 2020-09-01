@@ -27,60 +27,82 @@ const decimals = new BN('1000000000000000000');
 const verifying_adr = '0x254dffcd3277C0b1660F6d42EFbB754edaBAbC2B';
 
 
-function _create_eip712_data (verifying_adr, channel_adr, channel_seq, balance, is_final) {
-    const _EIP712_MSG = {
+function _create_eip712_data (chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq, balance,
+                              is_final) {
+    return {
         'types': {
             'EIP712Domain': [
-                {'name': 'name', 'type': 'string'},
-                {'name': 'version', 'type': 'string'},
-                {'name': 'chainId', 'type': 'uint256'},
-                {'name': 'verifyingContract', 'type': 'address'},
+                {
+                    'name': 'name',
+                    'type': 'string'
+                },
+                {
+                    'name': 'version',
+                    'type': 'string'
+                },
             ],
-            'ChannelClose': [
-                // The channel contract address.
-                {'name': 'channel_adr', 'type': 'address'},
-
-                // Channel off-chain transaction sequence number.
-                {'name': 'channel_seq', 'type': 'uint32'},
-
-                // Balance remaining in after the transaction.
-                {'name': 'balance', 'type': 'uint256'},
-
-                // Transaction is marked as final.
-                {'name': 'is_final', 'type': 'bool'},
-            ],
+            'EIP712ChannelClose': [{
+                'name': 'chainId',
+                'type': 'uint256'
+            }, {
+                'name': 'verifyingContract',
+                'type': 'address'
+            }, {
+                'name': 'closeAt',
+                'type': 'uint256'
+            }, {
+                'name': 'marketId',
+                'type': 'bytes16'
+            }, {
+                'name': 'channelId',
+                'type': 'bytes16'
+            }, {
+                'name': 'channelSeq',
+                'type': 'uint32'
+            }, {
+                'name': 'balance',
+                'type': 'uint256'
+            }, {
+                'name': 'isFinal',
+                'type': 'bool'
+            }]
         },
-        'primaryType': 'ChannelClose',
+        'primaryType': 'EIP712ChannelClose',
         'domain': {
             'name': 'XBR',
             'version': '1',
-            'chainId': 1,
-            'verifyingContract': verifying_adr,
         },
         'message': {
-            'channel_adr': channel_adr,
-            'channel_seq': channel_seq,
+            'chainId': chain_id,
+            'verifyingContract': verifying_contract,
+            'closeAt': close_at,
+            'marketId': market_oid,
+            'channelId': channel_oid,
+            'channelSeq': channel_seq,
             'balance': balance,
-            'is_final': is_final,
-        },
+            'isFinal': is_final
+        }
     }
-    return _EIP712_MSG;
 }
 
 
-function sign_eip712_data (eth_privkey, channel_adr, channel_seq, balance, is_final) {
-    assert.equal((typeof channel_seq === "number") && Math.floor(channel_seq) === channel_seq && channel_seq > 0, true);
-    assert.equal(BN.isBN(balance), true);
-    assert.equal(typeof is_final === "boolean", true);
-    balance = '0x' + balance.toString('hex');
-    const msg = _create_eip712_data(verifying_adr, channel_adr, channel_seq, balance, is_final);
+function sign_eip712_data(eth_privkey, chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
+                          balance, is_final) {
+    // assert.equal(BN.isBN(balance), true);
+    // assert.equal(typeof is_final === "boolean", true);
+    // balance = '0x' + balance.toString('hex');
+    const msg = _create_eip712_data(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
+        balance, is_final);
+    console.log(eth_privkey, {data: msg})
     const sig = eth_sig_utils.signTypedData(eth_privkey, {data: msg});
     return eth_util.toBuffer(sig);
 }
 
 
-function recover_eip712_signer (channel_adr, channel_seq, balance, is_final, signature) {
-    const msg = _create_eip712_data(verifying_adr, channel_adr, channel_seq, balance, is_final);
+function recover_eip712_signer(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq, balance,
+                               is_final, signature) {
+    const msg = _create_eip712_data(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
+        balance, is_final);
     const signer = eth_sig_utils.recoverTypedSignature({msg, signature});
     return w3_utils.toChecksumAddress(signer);
 }

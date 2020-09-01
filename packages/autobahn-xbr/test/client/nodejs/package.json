@@ -7,6 +7,7 @@
     "autobahn": ">=19.9.2",
     "autobahn-xbr": ">=19.9.3",
     "cbor": "^4.3.0",
+    "eth-sig-util": "^2.5.3",
     "ethereumjs-util": "^6.1.0",
     "uuid-buffer": "^1.0.3",
     "web3": "^1.2.1",
