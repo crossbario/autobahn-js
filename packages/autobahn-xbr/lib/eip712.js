@@ -91,6 +91,7 @@ function sign_eip712_data(eth_privkey, chain_id, verifying_contract, close_at, m
     assert.equal(typeof is_final === "boolean", true);
     const msg = _create_eip712_data(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
         balance, is_final);
+    console.log(msg)
     const sig = eth_sig_utils.signTypedData(eth_privkey, {data: msg});
     return eth_util.toBuffer(sig);
 }

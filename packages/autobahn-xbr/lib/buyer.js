@@ -12,20 +12,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 let autobahn = require('autobahn');
-var cbor = require('cbor');
-var nacl = require('tweetnacl');
+let cbor = require('cbor');
+let nacl = require('tweetnacl');
 nacl.sealedbox = require('tweetnacl-sealedbox-js');
-var eth_accounts = require("web3-eth-accounts");
-var eth_util = require("ethereumjs-util");
-var w3_utils = require("web3-utils");
-var web3 = require('web3');
-var BN = web3.utils.BN;
+let eth_accounts = require("web3-eth-accounts");
+let eth_util = require("ethereumjs-util");
+let w3_utils = require("web3-utils");
+let web3 = require('web3');
+let BN = web3.utils.BN;
 
-var util = require('./util.js');
-var eip712 = require('./eip712.js');
+let util = require('./util.js');
+let eip712 = require('./eip712.js');
 
 
-var SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
+let SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
     self = this;
 
     self._auto_close_channel = true;
@@ -39,14 +39,14 @@ var SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
     self._max_price = max_price;
     self._deferred_factory = autobahn.util.deferred_factory();
 
-    self._pkey_raw = eth_util.toBuffer(buyer_key);
-    self._acct = new eth_accounts().privateKeyToAccount(buyer_key);
+    self._pkey_raw = eth_util.toBuffer(util.with_0x(buyer_key));
+    self._acct = new eth_accounts().privateKeyToAccount(util.with_0x(buyer_key));
     self._addr = eth_util.toBuffer(self._acct.address);
 
     self._receive_key = nacl.box.keyPair();
 };
 
-SimpleBuyer.prototype.start = function(session, consumerID) {
+SimpleBuyer.prototype.start = async function(session, consumerID) {
     self = this;
     self._session = session;
     self._running = true;
@@ -56,31 +56,28 @@ SimpleBuyer.prototype.start = function(session, consumerID) {
     self._balance_dec = null;
     self._seq = null;
 
-    var d = this._deferred_factory();
+    let d = self._deferred_factory();
 
-    session.call('xbr.marketmaker.get_active_payment_channel', [self._addr]).then(
-        function (paymentChannel) {
-            self._channel = paymentChannel;
-            self._channel_adr_raw = paymentChannel.channel;
-            self._channel_adr = w3_utils.toChecksumAddress(paymentChannel.channel.toString("hex"));
+    try {
+        self._channel = await session.call('xbr.marketmaker.get_active_payment_channel', [self._addr]);
+        self._channel_oid = self._channel.channel_oid;
 
-            session.call('xbr.marketmaker.get_payment_channel_balance', [paymentChannel.channel]).then(
-                function (paymentBalance) {
-                    self._balance = new BN(paymentBalance.remaining);
-                    self._seq = paymentBalance.seq;
-                    d.resolve(self._balance);
-                },
-                function (error) {
-                    console.log("get_payment_channel_balance failed:", error);
-                    d.reject(error);
-                }
-            );
-        },
-        function (error) {
-            console.log("get_active_payment_channel failed:", error);
-            d.reject(error);
+        self._xbrmm_config = await session.call('xbr.marketmaker.get_config');
+        self._xbrmm_status = await session.call('xbr.marketmaker.get_status');
+
+        let payment_balance = await session.call('xbr.marketmaker.get_payment_channel_balance', [self._channel_oid]);
+        let remaining = new BN(payment_balance.remaining);
+        self._seq = payment_balance.seq;
+
+        if (remaining.eq(new BN(0))) {
+            d.reject(new Error("xbr.error.payment_channel_empty"));
+        } else {
+            self._balance = remaining;
+            d.resolve(remaining);
         }
-    );
+    } catch (e) {
+        d.reject(e);
+    }
 
     return autobahn.util.promise(d);
 };
@@ -90,10 +87,10 @@ SimpleBuyer.prototype.stop = function () {
 };
 
 SimpleBuyer.prototype.balance = function () {
-    var d = this._deferred_factory();
-    this._session.call('xbr.marketmaker.get_payment_channel', [self._channel['channel']]).then(
+    let d = this._deferred_factory();
+    this._session.call('xbr.marketmaker.get_payment_channel', [self._channel.channel_oid]).then(
         function (paymentChannel) {
-            var balance = {
+            let balance = {
                 amount: paymentChannel['amount'],
                 remaining: paymentChannel['remaining'],
                 inflight: paymentChannel['inflight']
@@ -109,14 +106,14 @@ SimpleBuyer.prototype.balance = function () {
 };
 
 SimpleBuyer.prototype.openChannel = function (buyerAddr, amount) {
-    var signature = nacl.randomBytes(64);
-    var d = this._deferred_factory();
+    let signature = nacl.randomBytes(64);
+    let d = this._deferred_factory();
     this._session.call(
         'xbr.marketmaker.open_payment_channel',
         [buyerAddr, this._addr, amount, signature]
     ).then(
         function (paymentChannel) {
-            var balance = {
+            let balance = {
                 amount: paymentChannel['amount'],
                 remaining: paymentChannel['remaining'],
                 inflight: paymentChannel['inflight']
@@ -135,11 +132,11 @@ SimpleBuyer.prototype.closeChannel = function () {
     throw "not implemented";
 };
 
-var decrypt_payload = function(ciphertext, key) {
-    var nonce = ciphertext.slice(0, nacl.secretbox.nonceLength);
-    var message = ciphertext.slice(nacl.secretbox.nonceLength, ciphertext.length);
-    var decrypted = Buffer.from(nacl.secretbox.open(message, nonce, key));
-    var payload = cbor.decode(decrypted);
+let decrypt_payload = function(ciphertext, key) {
+    let nonce = ciphertext.slice(0, nacl.secretbox.nonceLength);
+    let message = ciphertext.slice(nacl.secretbox.nonceLength, ciphertext.length);
+    let decrypted = Buffer.from(nacl.secretbox.open(message, nonce, key));
+    let payload = cbor.decode(decrypted);
     return payload;
 };
 
@@ -158,9 +155,14 @@ function ErrorInsufficientBalance (key_id, channel_adr, remaining, required) {
 
 SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
     self = this;
-    var d = self._deferred_factory();
+    let d = self._deferred_factory();
     if (!self._keys.hasOwnProperty(key_id)) {
         self._keys[key_id] = false;
+
+        let verifying_contract = self._xbrmm_config.verifying_contract_adr;
+        let chain_id = self._xbrmm_config.verifying_chain_id;
+        // FIXME
+        let block_number = 1;
 
         // get (current) price for key we want to buy
         const quote = await self._session.call('xbr.marketmaker.get_quote', [key_id]);
@@ -180,16 +182,18 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
         if (balance.isNeg()) {
             if (self._auto_close_channel) {
                 // auto-close the payment channel
-                const channel_adr = self._channel_adr;
                 const close_seq = self._seq;
                 const close_balance = self._balance;
                 const close_is_final = true;
-                const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, close_seq, close_balance, close_is_final);
+                const signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
+                    self._channel.market_oid, self._channel_oid, close_seq, close_balance, close_is_final);
 
-                console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance.div(eip712.decimals), close_is_final);
+                console.log("auto-closing payment channel:", self._channel.market_oid, close_seq,
+                    close_balance.div(eip712.decimals), close_is_final);
 
-                await self._session.call('xbr.marketmaker.close_channel', [self._channel_adr_raw,
-                    close_seq, util.pack_uint256(close_balance), close_is_final, signature]);
+                await self._session.call('xbr.marketmaker.close_channel', [self._channel.market_oid,
+                    chain_id, verifying_contract, block_number, util.pack_uint256(close_balance), close_seq,
+                    close_is_final, signature]);
 
                 throw new ErrorInsufficientBalance(key_id, self._channel_adr, self._balance, amount);
 
@@ -201,12 +205,12 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
         // buy the key
         const delegate_adr = self._addr;
         const buyer_pubkey = self._receive_key.publicKey;
-        const channel_adr = self._channel_adr;
         const channel_seq = self._seq;
         const is_final = false;
-        const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, channel_seq, balance, is_final);
+        const signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
+            self._channel.market_oid, self._channel_oid, channel_seq, self._balance, is_final);
 
-        self._session.call('xbr.marketmaker.buy_key', [delegate_adr, buyer_pubkey, key_id, self._channel_adr_raw,
+        self._session.call('xbr.marketmaker.buy_key', [delegate_adr, buyer_pubkey, key_id, self._channel_oid,
             channel_seq, util.pack_uint256(amount), util.pack_uint256(balance), signature]
         ).then(
             function (receipt) {
@@ -214,7 +218,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
                 const remaining = new BN(receipt.remaining);
                 console.log(' SimpleBuyer.unwrap() - XBR BUY    key 0x' + key_id.toString('hex') + ' bought for ' + amount.div(eip712.decimals) + ' XBR [payment_channel=' + self._channel_adr + ', remaining=' + remaining.div(eip712.decimals) + ' XBR]');
 
-                var sealedKey = receipt['sealed_key'];
+                let sealedKey = receipt['sealed_key'];
                 try {
                     self._keys[key_id] = nacl.sealedbox.open(sealedKey, self._receive_key.publicKey, self._receive_key.secretKey);
                     try {
@@ -236,7 +240,8 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
                     const close_seq = self._seq;
                     const close_balance = self._balance;
                     const close_is_final = true;
-                    const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, close_seq, close_balance, close_is_final);
+                    const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, close_seq, close_balance,
+                        close_is_final);
 
                     console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance, close_is_final);
 
@@ -247,7 +252,7 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
             }
         );
     } else {
-        var waitForPurchase = function() {
+        let waitForPurchase = function() {
             if (!self._keys[key_id]) {
                 setTimeout(waitForPurchase, 200)
             } else {

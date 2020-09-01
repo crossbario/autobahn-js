@@ -3,7 +3,6 @@ let xbr = require('autobahn-xbr');
 const ethAccounts = require("web3-eth-accounts");
 const ethSigUtils = require("eth-sig-util");
 const ethUtil = require("ethereumjs-util");
-const w3Utils = require("web3-utils");
 
 console.log('Running on Autobahn ' + autobahn.version);
 console.log('Running Autobahn-XBR ' + xbr.version);
