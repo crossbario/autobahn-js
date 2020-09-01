@@ -64,9 +64,7 @@ Seller.prototype.start = async function (session) {
         self._xbrmm_status = await session.call('xbr.marketmaker.get_status');
 
         let paying_balance = await session.call('xbr.marketmaker.get_paying_channel_balance', [self._channel_oid]);
-        console.log(paying_balance.remaining, "APY")
         self._balance = new BN(paying_balance.remaining);
-        console.log(self._balance.div(new BN('1000000000000000000')).toString())
         return new BN(paying_balance.remaining);
     } catch (e) {
         d.reject(e);
@@ -117,18 +115,25 @@ Seller.prototype.sell = function (args) {
     }
 
     let verifying_contract = self._xbrmm_config.verifying_contract_adr;
-    let chain_id = self._xbrmm_config.chain;
-    let block_number = self._xbrmm_status.block.number;
-    let market_oid = util.with_0x(autobahn.util.btoh(self._channel.market_oid));
-    let channel_id = util.with_0x(autobahn.util.btoh(self._channel_oid));
+    let chain_id = self._xbrmm_config.verifying_chain_id;
+    // FIXME
+    let block_number = 1;
+
+    let signer_address = eip712.recover_eip712_signer(chain_id, verifying_contract, block_number,
+        self._channel.market_oid, self._channel_oid, channel_seq, balance, false, signature);
+
+    let signer_address_raw = autobahn.util.htob(util.without_0x(signer_address));
+    if (Buffer.compare(signer_address_raw, market_maker_adr)) {
+        throw "xbr.error.bad_maker_signature";
+    }
+
+    // FIXME: rollback to previous state when the code below fails
+    self._seq += channel_seq;
+    self._balance = self._balance.sub(amount);
 
     // XBRSIG[5/8]: compute EIP712 typed data signature
     let seller_signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
-        market_oid, channel_id, self._seq, balance.toString(), false);
-
-    // FIXME: rollback to previous state when the code below fails
-    self._seq += channel_seq
-    self._balance = self._balance.sub(amount)
+        self._channel.market_oid, self._channel_oid, self._seq, self._balance, false);
 
     // now seal (end-to-end encrypt) the data encryption key to the public (Ed25519) key of the buyer delegate
     sealed_key = self.keysMap[key_id].encryptKey(key_id, buyer_pubkey)

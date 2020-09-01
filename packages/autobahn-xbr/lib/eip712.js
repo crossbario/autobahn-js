@@ -13,7 +13,6 @@
 
 var assert = require('assert');
 
-var w3_utils = require("web3-utils");
 var eth_sig_utils = require("eth-sig-util");
 var eth_util = require("ethereumjs-util");
 
@@ -88,12 +87,10 @@ function _create_eip712_data (chain_id, verifying_contract, close_at, market_oid
 
 function sign_eip712_data(eth_privkey, chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
                           balance, is_final) {
-    // assert.equal(BN.isBN(balance), true);
-    // assert.equal(typeof is_final === "boolean", true);
-    // balance = '0x' + balance.toString('hex');
+    assert.equal(BN.isBN(balance), true);
+    assert.equal(typeof is_final === "boolean", true);
     const msg = _create_eip712_data(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
         balance, is_final);
-    console.log(eth_privkey, {data: msg})
     const sig = eth_sig_utils.signTypedData(eth_privkey, {data: msg});
     return eth_util.toBuffer(sig);
 }
@@ -103,8 +100,7 @@ function recover_eip712_signer(chain_id, verifying_contract, close_at, market_oi
                                is_final, signature) {
     const msg = _create_eip712_data(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
         balance, is_final);
-    const signer = eth_sig_utils.recoverTypedSignature({msg, signature});
-    return w3_utils.toChecksumAddress(signer);
+    return eth_sig_utils.recoverTypedSignature({data: msg, sig: signature});
 }
 
 
