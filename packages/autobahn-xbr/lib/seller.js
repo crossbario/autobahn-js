@@ -116,12 +116,6 @@ Seller.prototype.sell = function (args) {
         throw "xbr.error.unexpected_channel_balance";
     }
 
-    console.log(self._balance.div(new BN('1000000000000000000')))
-    // ok, we agree with the market maker about the off-chain state .. advance state
-    // FIXME: rollback to previous state when the code below fails
-    self._seq += channel_seq
-    self._balance = self._balance.sub(amount)
-
     let verifying_contract = self._xbrmm_config.verifying_contract_adr;
     let chain_id = self._xbrmm_config.chain;
     let block_number = self._xbrmm_status.block.number;
@@ -130,7 +124,11 @@ Seller.prototype.sell = function (args) {
 
     // XBRSIG[5/8]: compute EIP712 typed data signature
     let seller_signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
-        market_oid, channel_id, self._seq, self._balance, false);
+        market_oid, channel_id, self._seq, balance.toString(), false);
+
+    // FIXME: rollback to previous state when the code below fails
+    self._seq += channel_seq
+    self._balance = self._balance.sub(amount)
 
     // now seal (end-to-end encrypt) the data encryption key to the public (Ed25519) key of the buyer delegate
     sealed_key = self.keysMap[key_id].encryptKey(key_id, buyer_pubkey)
@@ -158,7 +156,7 @@ Seller.prototype.sell = function (args) {
         'amount': util.pack_uint256(amount),
 
         // paying channel amount remaining
-        'balance': self._balance,
+        'balance': util.pack_uint256(self._balance),
 
         // seller (delegate) signature
         'signature': seller_signature,
