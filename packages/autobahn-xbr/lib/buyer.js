@@ -11,18 +11,17 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-let autobahn = require('autobahn');
-let cbor = require('cbor');
-let nacl = require('tweetnacl');
+const autobahn = require('autobahn');
+const cbor = require('cbor');
+const nacl = require('tweetnacl');
 nacl.sealedbox = require('tweetnacl-sealedbox-js');
-let eth_accounts = require("web3-eth-accounts");
-let eth_util = require("ethereumjs-util");
-let w3_utils = require("web3-utils");
-let web3 = require('web3');
-let BN = web3.utils.BN;
+const eth_accounts = require("web3-eth-accounts");
+const eth_util = require("ethereumjs-util");
+const web3 = require('web3');
+const BN = web3.utils.BN;
 
-let util = require('./util.js');
-let eip712 = require('./eip712.js');
+const util = require('./util.js');
+const eip712 = require('./eip712.js');
 
 
 let SimpleBuyer = function (market_maker_adr, buyer_key, max_price) {
