@@ -11,7 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-import assert from "assert";
+const assert = require('assert');
 
 const eth_sig_utils = require("eth-sig-util");
 const eth_util = require("ethereumjs-util");
