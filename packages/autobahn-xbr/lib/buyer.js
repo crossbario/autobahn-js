@@ -208,49 +208,45 @@ SimpleBuyer.prototype.unwrap = async function (key_id, enc_ser, ciphertext) {
         const channel_seq = self._seq;
         const is_final = false;
         const signature = eip712.sign_eip712_data(self._pkey_raw, chain_id, verifying_contract, block_number,
-            self._channel.market_oid, self._channel_oid, channel_seq, self._balance, is_final);
+            self._channel.market_oid, self._channel_oid, channel_seq, balance, is_final);
 
-        self._session.call('xbr.marketmaker.buy_key', [delegate_adr, buyer_pubkey, key_id, self._channel_oid,
-            channel_seq, util.pack_uint256(amount), util.pack_uint256(balance), signature]
-        ).then(
-            function (receipt) {
-                // ok, we've got the key!
-                const remaining = new BN(receipt.remaining);
-                console.log(' SimpleBuyer.unwrap() - XBR BUY    key 0x' + key_id.toString('hex') + ' bought for ' + amount.div(eip712.decimals) + ' XBR [payment_channel=' + self._channel_adr + ', remaining=' + remaining.div(eip712.decimals) + ' XBR]');
+        try {
+            console.log("Buying key...")
+            let receipt = await self._session.call('xbr.marketmaker.buy_key', [delegate_adr, buyer_pubkey, key_id,
+                self._channel_oid, channel_seq, util.pack_uint256(amount), util.pack_uint256(balance), signature]);
+            // ok, we've got the key!
+            const remaining = new BN(receipt.remaining);
+            console.log(' SimpleBuyer.unwrap() - XBR BUY    key 0x' + key_id.toString('hex') + ' bought for ' + amount.div(eip712.decimals) + ' XBR [payment_channel=' + self._channel_adr + ', remaining=' + remaining.div(eip712.decimals) + ' XBR]');
 
-                let sealedKey = receipt['sealed_key'];
+            let sealedKey = receipt['sealed_key'];
+            try {
+                self._keys[key_id] = nacl.sealedbox.open(sealedKey, self._receive_key.publicKey, self._receive_key.secretKey);
                 try {
-                    self._keys[key_id] = nacl.sealedbox.open(sealedKey, self._receive_key.publicKey, self._receive_key.secretKey);
-                    try {
-                        const payload = decrypt_payload(ciphertext, self._keys[key_id]);
-                        d.resolve(payload);
-                    } catch (e) {
-                        d.reject(e);
-                    }
+                    const payload = decrypt_payload(ciphertext, self._keys[key_id]);
+                    d.resolve(payload);
                 } catch (e) {
-                    d.reject(e)
+                    d.reject(e);
                 }
-            },
-            async function (error) {
-                console.log('ERR', error);
-
-                // failed to purchase the key
-                if (error.error === 'xbr.error.insufficient_payment_balance') {
-                    const channel_adr = self._channel_adr;
-                    const close_seq = self._seq;
-                    const close_balance = self._balance;
-                    const close_is_final = true;
-                    const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, close_seq, close_balance,
-                        close_is_final);
-
-                    console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance, close_is_final);
-
-                    await self._session.call('xbr.marketmaker.close_channel', [self._channel_adr_raw,
-                        close_seq, util.pack_uint256(close_balance), close_is_final, signature]);
-                }
-                d.reject(error);
+            } catch (e) {
+                d.reject(e)
             }
-        );
+        } catch (error) {
+            // failed to purchase the key
+            if (error.error === 'xbr.error.insufficient_payment_balance') {
+                const channel_adr = self._channel_adr;
+                const close_seq = self._seq;
+                const close_balance = self._balance;
+                const close_is_final = true;
+                const signature = eip712.sign_eip712_data(self._pkey_raw, channel_adr, close_seq, close_balance,
+                    close_is_final);
+
+                console.log("auto-closing payment channel:", channel_adr, close_seq, close_balance, close_is_final);
+
+                await self._session.call('xbr.marketmaker.close_channel', [self._channel_adr_raw,
+                    close_seq, util.pack_uint256(close_balance), close_is_final, signature]);
+            }
+            d.reject(error);
+        }
     } else {
         let waitForPurchase = function() {
             if (!self._keys[key_id]) {

@@ -11,13 +11,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-var assert = require('assert');
+import assert from "assert";
 
-var eth_sig_utils = require("eth-sig-util");
-var eth_util = require("ethereumjs-util");
+const eth_sig_utils = require("eth-sig-util");
+const eth_util = require("ethereumjs-util");
 
-var web3 = require('web3');
-var BN = web3.utils.BN;
+const web3 = require('web3');
+const BN = web3.utils.BN;
 
 // the XBR token has 18 decimals
 const decimals = new BN('1000000000000000000');
@@ -91,7 +91,6 @@ function sign_eip712_data(eth_privkey, chain_id, verifying_contract, close_at, m
     assert.equal(typeof is_final === "boolean", true);
     const msg = _create_eip712_data(chain_id, verifying_contract, close_at, market_oid, channel_oid, channel_seq,
         balance, is_final);
-    console.log(msg)
     const sig = eth_sig_utils.signTypedData(eth_privkey, {data: msg});
     return eth_util.toBuffer(sig);
 }
