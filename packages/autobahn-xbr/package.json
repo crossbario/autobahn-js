@@ -18,7 +18,7 @@
     "autobahn": "^20.4.1",
     "cbor": ">=3.0.0",
     "crypto-js": ">=3.1.8",
-    "eth-sig-util": ">=2.4.4",
+    "eth-sig-util": "^2.5.3",
     "ethereumjs-util": ">=6.1.0",
     "msgpack5": ">= 3.6.0",
     "sha3": ">=2.0.1",
@@ -27,6 +27,7 @@
     "uuid": "^8.3.0",
     "uuid-parse": ">=1.1.0",
     "web3": ">=1.2.1",
+    "web3-eth-accounts": "^1.2.11",
     "when": ">= 3.7.7",
     "ws": ">= 1.1.4"
   },
