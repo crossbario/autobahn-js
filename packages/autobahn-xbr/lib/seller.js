@@ -48,7 +48,6 @@ class SimpleSeller {
         try {
             this._channel = await session.call('xbr.marketmaker.get_active_paying_channel', [this._addr]);
             this._channel_oid = this._channel.channel_oid;
-            this._seq = this._channel.seq;
 
             let procedure = `xbr.provider.${this._provider_id}.sell`
             let reg = await session.register(procedure, this.sell.bind(this));
@@ -62,6 +61,7 @@ class SimpleSeller {
 
             let paying_balance = await session.call('xbr.marketmaker.get_paying_channel_balance', [this._channel_oid]);
             this._balance = new BN(paying_balance.remaining);
+            this._seq = paying_balance.seq;
             return new BN(paying_balance.remaining);
         } catch (e) {
             d.reject(e);
@@ -72,7 +72,7 @@ class SimpleSeller {
     sell(args) {
         let [market_maker_adr, buyer_pubkey, key_id, channel_oid, channel_seq, amount_, balance_, signature] = args;
 
-        // console.log('SELL', market_maker_adr, buyer_pubkey, key_id, channel_adr, channel_seq, amount_, balance_, signature);
+        // console.log('SELL', market_maker_adr, buyer_pubkey, key_id, channel_oid, channel_seq, amount_, balance_, signature);
 
         // FIXME: check market maker signature
 
@@ -100,9 +100,9 @@ class SimpleSeller {
         // FIXME: check amount == quote price for key
 
         // channel sequence number: check we have consensus on off-chain channel state with peer (which is the market maker)
-        // if (channel_seq !== this._seq + 1) {
-        //     throw "xbr.error.unexpected_channel_seq";
-        // }
+        if (channel_seq !== this._seq + 1) {
+            throw "xbr.error.unexpected_channel_seq";
+        }
 
         // channel balance: check we have consensus on off-chain channel state with peer (which is the market maker)
         if (!balance.eq(this._balance.sub(amount))) {
@@ -123,7 +123,7 @@ class SimpleSeller {
         }
 
         // FIXME: rollback to previous state when the code below fails
-        this._seq += channel_seq;
+        this._seq += 1;
         this._balance = this._balance.sub(amount);
 
         // XBRSIG[5/8]: compute EIP712 typed data signature
@@ -230,7 +230,7 @@ class SimpleSeller {
     }
 
     add(api_id, prefix, price, interval) {
-        function rotate (series) {
+        const rotate = (series) => {
 
             this.keysMap[series.key_id] = series;
 
@@ -271,7 +271,7 @@ class SimpleSeller {
             )
         }
 
-        let series = new key_series.KeySeries(api_id, prefix, price, interval, rotate.bind(this));
+        let series = new key_series.KeySeries(api_id, prefix, price, interval, rotate);
 
         this.keys[api_id] = series;
 
