@@ -135,6 +135,7 @@ class SimpleBuyer {
     }
 
     async unwrap(key_id, enc_ser, ciphertext) {
+
         let d = this._deferred_factory();
         if (!this._keys.hasOwnProperty(key_id)) {
             this._keys[key_id] = false;
@@ -228,7 +229,7 @@ class SimpleBuyer {
                 d.reject(error);
             }
         } else {
-            let waitForPurchase = function() {
+            let waitForPurchase = () => {
                 if (!this._keys[key_id]) {
                     setTimeout(waitForPurchase, 200)
                 } else {

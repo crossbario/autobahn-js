@@ -74,16 +74,9 @@ requirements:
 	sudo apt install -y npm nodejs default-jre
 	node -v
 
-contracts:
-	rm -f /tmp/xbr-protocol-latest.zip
-	curl -s https://xbr.network/lib/abi/xbr-protocol-latest.zip -o /tmp/xbr-protocol-latest.zip
-	rm -rf packages/autobahn-xbr/contracts
-	mkdir packages/autobahn-xbr/contracts
-	unzip /tmp/xbr-protocol-latest.zip -d packages/autobahn-xbr/contracts
-
 build: build_browser build_npm
 
-build_browser: contracts build_browser_ab build_browser_xbr
+build_browser: abi_files build_browser_ab build_browser_xbr
 
 build_browser_ab:
 	-rm -rf ./packages/autobahn/node_modules/websocket
@@ -122,7 +115,7 @@ publish_browser:
 	# cp ./packages/autobahn/build/* ../crossbarfx/test/_shared_web/autobahn/
 	@echo "Now commit and push these repos: autobahn-js-browser, crossbar-examples"
 
-publish_npm: contracts build_npm
+publish_npm: abi_files build_npm
 	cd packages/autobahn; npm publish
 	cd packages/autobahn-xbr; npm publish
 
