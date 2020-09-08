@@ -16,8 +16,10 @@ default:
 distclean: clean
 	-sudo rm -rf ./node_modules
 	-sudo rm -rf ./packages/autobahn/node_modules
+	-sudo rm -rf ./packages/autobahn-xbr/node_modules
 	-sudo rm -f ./package-lock.json
 	-sudo rm -f ./packages/autobahn/package-lock.json
+	-sudo rm -f ./packages/autobahn-xbr/package-lock.json
 
 clean:
 	-rm -f .sconsign.dblite
