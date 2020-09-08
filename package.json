@@ -6,7 +6,7 @@
     "node": ">= 4.2.6"
   },
   "devDependencies": {
-    "browserify": "^16.5.1",
+    "browserify": "^16.5.2",
     "deep-equal": ">= 1.0.1",
     "google-closure-compiler": ">= 20170218.0.0",
     "nodeunit": ">= 0.11.3",
