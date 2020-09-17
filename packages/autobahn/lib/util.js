@@ -132,7 +132,8 @@ let http_post = function (url, data, timeout) {
 
    log.debug("new http_post request", url, data, timeout);
 
-   let d = deferred_factory();
+   let factory = deferred_factory();
+   let d = factory();
    let req = new XMLHttpRequest();
    req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {
@@ -199,7 +200,8 @@ let http_post = function (url, data, timeout) {
 // Helper to do HTTP/GET requests returning JSON parsed result as a promise.
 let http_get_json = function (url, timeout) {
 
-   let d = deferred_factory();
+   let factory = deferred_factory();
+   let d = factory();
    let req = new XMLHttpRequest();
    req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {
