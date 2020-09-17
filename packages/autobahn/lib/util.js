@@ -50,8 +50,8 @@ exports.btoa = _btoa
 /// Convert array of bytes to hex string.
 function _btoh (bytes) {
    if (bytes) {
-      var res = '';
-      for (var i = 0; i < bytes.length; ++i) {
+      let res = '';
+      for (let i = 0; i < bytes.length; ++i) {
          res += ('0' + (bytes[i] & 0xFF).toString(16)).slice(-2);
       }
       return res;
@@ -74,9 +74,9 @@ function _htob (hex) {
          throw new RangeError('Expected string to be an even number of characters')
       }
 
-      var view = new Uint8Array(hex.length / 2)
+      let view = new Uint8Array(hex.length / 2)
 
-      for (var i = 0; i < hex.length; i += 2) {
+      for (let i = 0; i < hex.length; i += 2) {
          view[i / 2] = parseInt(hex.substring(i, i + 2), 16)
       }
 
@@ -89,10 +89,10 @@ function _htob (hex) {
 exports.htob = _htob
 
 
-var rand_normal = function (mean, sd) {
+let rand_normal = function (mean, sd) {
    // Derive a Gaussian from Uniform random variables
    // http://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
-   var x1, x2, rad;
+   let x1, x2, rad;
 
    do {
       x1 = 2 * Math.random() - 1;
@@ -100,18 +100,18 @@ var rand_normal = function (mean, sd) {
       rad = x1 * x1 + x2 * x2;
    } while (rad >= 1 || rad == 0);
 
-   var c = Math.sqrt(-2 * Math.log(rad) / rad);
+   let c = Math.sqrt(-2 * Math.log(rad) / rad);
 
    return (mean || 0) + (x1 * c) * (sd || 1);
 };
 
 
-var is_object = function(variable) {
+let is_object = function(variable) {
    return !Array.isArray(variable) && (variable instanceof Object || typeof variable === 'object')
 };
 
 
-var assert = function (cond, text) {
+let assert = function (cond, text) {
 	if (cond) {
       return;
    }
@@ -128,12 +128,13 @@ var assert = function (cond, text) {
 // supposed to work on IE8, IE9 and old Android WebKit browsers. We don't care
 // if it works with other browsers.
 //
-var http_post = function (url, data, timeout) {
+let http_post = function (url, data, timeout) {
 
    log.debug("new http_post request", url, data, timeout);
 
-   var d = deferred_factory();
-   var req = new XMLHttpRequest();
+   let factory = deferred_factory();
+   let d = factory();
+   let req = new XMLHttpRequest();
    req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {
 
@@ -142,7 +143,7 @@ var http_post = function (url, data, timeout) {
          // Normalize IE's response to HTTP 204 when Win error 1223.
          // http://stackoverflow.com/a/10047236/884770
          //
-         var status = (req.status === 1223) ? 204 : req.status;
+         let status = (req.status === 1223) ? 204 : req.status;
 
          if (status === 200) {
 
@@ -160,7 +161,7 @@ var http_post = function (url, data, timeout) {
 
             // anything else is a fail
             //
-            var statusText = null;
+            let statusText = null;
             try {
                statusText = req.statusText;
             } catch (e) {
@@ -197,10 +198,11 @@ var http_post = function (url, data, timeout) {
 };
 
 // Helper to do HTTP/GET requests returning JSON parsed result as a promise.
-var http_get_json = function (url, timeout) {
+let http_get_json = function (url, timeout) {
 
-   var d = deferred_factory();
-   var req = new XMLHttpRequest();
+   let factory = deferred_factory();
+   let d = factory();
+   let req = new XMLHttpRequest();
    req.withCredentials = true; // pass along cookies
    req.onreadystatechange = function () {
 
@@ -209,12 +211,12 @@ var http_get_json = function (url, timeout) {
          // Normalize IE's response to HTTP 204 when Win error 1223.
          // http://stackoverflow.com/a/10047236/884770
          //
-         var status = (req.status === 1223) ? 204 : req.status;
+         let status = (req.status === 1223) ? 204 : req.status;
 
          if (status === 200) {
 
             // parse response
-            var data = JSON.parse(req.responseText);
+            let data = JSON.parse(req.responseText);
 
             // response with content
             //
@@ -230,7 +232,7 @@ var http_get_json = function (url, timeout) {
 
             // anything else is a fail
             //
-            var statusText = null;
+            let statusText = null;
             try {
                statusText = req.statusText;
             } catch (e) {
@@ -290,13 +292,13 @@ var http_get_json = function (url, timeout) {
  *     (default: false)
  * @returns {Object} The mutated `base` object
  */
-var defaults = function () {
+let defaults = function () {
    // Return an empty object if no arguments are passed
    if (arguments.length === 0) return {};
 
-   var base = arguments[0];
-   var recursive = false;
-   var len = arguments.length;
+   let base = arguments[0];
+   let recursive = false;
+   let len = arguments.length;
 
    // Check for recursive mode param
    if (typeof arguments[len - 1] === 'boolean') {
@@ -305,8 +307,8 @@ var defaults = function () {
    }
 
    // Merging function used by Array#forEach()
-   var do_merge = function (key) {
-      var val = obj[key];
+   let do_merge = function (key) {
+      let val = obj[key];
 
       // Set if unset
       if (!(key in base)) {
@@ -321,8 +323,8 @@ var defaults = function () {
    };
 
    // Iterate over source objects
-   for (var i=1; i < len; i++) {
-      var obj = arguments[i];
+   for (let i=1; i < len; i++) {
+      let obj = arguments[i];
 
       // Ignore falsy values
       if (!obj) continue;
@@ -349,7 +351,7 @@ var defaults = function () {
  * @param {object | Error} error - The error instance.
  * @param {string} [error_message] - The custom error message, optional.
  */
-var handle_error = function(handler, error, error_message) {
+let handle_error = function(handler, error, error_message) {
     if(typeof handler === 'function') {
         handler(error, error_message);
     } else {
@@ -362,7 +364,7 @@ var handle_error = function(handler, error, error_message) {
  * Represented as a JavaScript Number (double float), so ensure that an appropriate serialization
  * for an integer is used for use in transported WAMP protocol messages.
  */
-var new_global_id = function() {
+let new_global_id = function() {
     return Math.floor(Math.random() * 9007199254740992) + 1;
 };
 
@@ -431,7 +433,7 @@ let deferred_factory = function(options) {
    return defer;
 };
 
-var promise = function(d) {
+let promise = function(d) {
    if (d.promise.then) {
       // whenjs has the actual user promise in an attribute
       return d.promise;
@@ -471,7 +473,6 @@ if ('fs' in global) {
 } else {
    exports.read_file = null;
 }
-
 
 exports.handle_error = handle_error;
 exports.rand_normal = rand_normal;
