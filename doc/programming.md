@@ -103,7 +103,7 @@ Registering Procedures
 To make a procedure available for remote calling, the procedure needs to be *registered*. Registering a procedure is done by calling the `register` method on the `session` object:
 
 ``` js
-connection.onopen(session, details) {
+connection.onopen = function (session) {
    var add2 = function(args) {
       return args[0] + args[1];
    };
