@@ -13,14 +13,18 @@
 
 
 let debug = function () {};
-
 if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
    debug = function () {
       console.log.apply(console, arguments);
    }
 }
 
-let warn = console.warn.bind(console);
+let warn = function () {};
+if ('console' in global) {
+    warn = function () {
+        console.warn.apply(console, arguments);
+    }
+}
 
 exports.debug = debug;
 exports.warn = warn;
