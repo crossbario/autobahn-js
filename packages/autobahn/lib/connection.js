@@ -75,7 +75,7 @@ var Connection = function (options) {
 
    // the SD of a Gaussian to jitter the delay on each retry cycle
    // as a fraction of the mean
-   self._retry_delay_jitter = self._options.retry_delay_jitter || 0.1;
+   self._retry_delay_jitter = self._options.retry_delay_jitter !== 'undefined' ? self._options.retry_delay_jitter : 0.1;
 
    // reconnection tracking
    //
