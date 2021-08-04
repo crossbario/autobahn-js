@@ -41,6 +41,12 @@ var Connection = function (options) {
          }
       ];
    }
+
+   // Specifies a default protocol
+   if(!self._options.protocols) {
+      self._options.protocols = ['wamp.2.msgpack'];
+   }
+
    self._transport_factories = [];
    self._init_transport_factories();
 
