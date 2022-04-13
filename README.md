@@ -203,7 +203,7 @@ For more information, take a look at the [project documentation](/doc/README.md)
 
 ## Get in touch
 
-Get in touch on IRC `#autobahn` on `chat.freenode.net` or the [mailing list](http://groups.google.com/group/autobahnws).
+Get in touch on our [user forum](https://crossbar.discourse.group/).
 
 
 ## Acknowledgements
