@@ -306,22 +306,6 @@ let defaults = function () {
       len -= 1; // Ignore the last arg
    }
 
-   // Merging function used by Array#forEach()
-   let do_merge = function (key) {
-      let val = obj[key];
-
-      // Set if unset
-      if (!(key in base)) {
-         base[key] = val;
-      // If the value is an object and we use recursive mode, use defaults on
-      // the value
-      } else if (recursive && typeof val === 'object' &&
-                 typeof base[key] === 'object') {
-         defaults(base[key], val);
-      }
-      // Otherwise ignore the value
-   };
-
    // Iterate over source objects
    for (let i=1; i < len; i++) {
       let obj = arguments[i];
@@ -334,6 +318,23 @@ let defaults = function () {
          throw new Error('Expected argument at index ' + i +
                          ' to be an object');
       }
+
+      // Merging function used by Array#forEach()
+      let do_merge = function (key) {
+
+         let val = obj[key];
+
+         // Set if unset
+         if (!(key in base)) {
+            base[key] = val;
+            // If the value is an object and we use recursive mode, use defaults on
+            // the value
+         } else if (recursive && typeof val === 'object' &&
+             typeof base[key] === 'object') {
+            defaults(base[key], val);
+         }
+         // Otherwise ignore the value
+      };
 
       // Merge keys
       Object.keys(obj).forEach(do_merge);
