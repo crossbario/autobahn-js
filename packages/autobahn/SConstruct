@@ -52,7 +52,8 @@ if True:
                             ab,
                             #JS_COMPILATION_LEVEL = "ADVANCED_OPTIMIZATIONS")
                             JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS",
-                            JS_OUTPUT_LANG = "ES5")
+                            JS_OUTPUT_LANG = "ECMASCRIPT_2018",
+                            JS_STRICT_MODE = "0")
 
     # minimized & compressed
     ab_min_gz = env.GZip("build/autobahn.min.jgz",
