@@ -85,3 +85,32 @@ exports.testCBORSerialization = function (testcase) {
 
    connection.open();
 };
+
+exports.testCBORLargePayload = function (testcase) {
+   let ser = new autobahn.serializer.CBORSerializer();
+
+   let config = {
+      url: testutil.config.url,
+      realm: testutil.config.realm,
+      serializers: [ser]
+   };
+   let connection = new autobahn.Connection(config);
+
+   connection.onopen = async function (session) {
+      let payload = []
+      for (let i = 0; i < 1000; i++) {
+         payload.push({message: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", size: 6000000000000000})
+      }
+
+      await session.register("com.myapp.payload", function (args) {
+         return args[0]
+      })
+
+      let response = await session.call("com.myapp.payload", [payload])
+
+      testcase.ok(response.length === payload.length);
+      testcase.done();
+   }
+
+   connection.open();
+}

@@ -140,8 +140,8 @@ Factory.prototype.create = function () {
          // websocket.onclose() for errors also)
          //websocket.onerror = websocket.onclose;
 
-         transport.send = function (msg) {
-            var payload = transport.serializer.serialize(msg);
+         transport.send = async function (msg) {
+            let payload = await transport.serializer.serialize(msg);
             log.debug("WebSocket transport send", payload);
             websocket.send(payload);
          }
@@ -199,8 +199,8 @@ Factory.prototype.create = function () {
 
          websocket = new WebSocket(self._options.url, protocols, options);
 
-         transport.send = function (msg) {
-            var payload = transport.serializer.serialize(msg);
+         transport.send = async function (msg) {
+            let payload = await transport.serializer.serialize(msg);
             websocket.send(payload, {binary: transport.serializer.BINARY});
          };
 

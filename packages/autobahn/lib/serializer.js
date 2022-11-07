@@ -88,9 +88,9 @@ try {
       this.BINARY = true;
    }
 
-   CBORSerializer.prototype.serialize = function (obj) {
+   CBORSerializer.prototype.serialize = async function (obj) {
       try {
-         var payload = cbor.encode(obj);
+         var payload = await cbor.encodeAsync(obj);
          return payload;
       } catch (e) {
          log.warn('CBOR encoding error', e);
