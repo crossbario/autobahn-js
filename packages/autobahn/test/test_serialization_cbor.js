@@ -11,9 +11,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+const {randomBytes} = require("tweetnacl");
+
 var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
-const {randomBytes} = require("tweetnacl");
 
 exports.testCBORSerialization = function (testcase) {
 
