@@ -100,14 +100,13 @@ exports.testCBORLargePayload = function (testcase) {
    let connection = new autobahn.Connection(config);
 
    connection.onopen = async function (session) {
-      let payload = []
-      let data = randomBytes(16350)
-      payload.push({data1: data, city: "x"})
-
       await session.register("com.myapp.payload", function (args) {
          return args[0]
       })
 
+      let payload = []
+      let data = randomBytes(16350)
+      payload.push({data1: data, city: "x"})
       let response = await session.call("com.myapp.payload", [payload])
 
       testcase.ok(response.length === payload.length);
