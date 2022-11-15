@@ -11,6 +11,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+const {randomBytes} = require("tweetnacl");
+
 var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
@@ -85,3 +87,31 @@ exports.testCBORSerialization = function (testcase) {
 
    connection.open();
 };
+
+// see https://github.com/crossbario/autobahn-js/issues/565
+exports.testCBORLargePayload = function (testcase) {
+   let ser = new autobahn.serializer.CBORSerializer();
+
+   let config = {
+      url: testutil.config.url,
+      realm: testutil.config.realm,
+      serializers: [ser]
+   };
+   let connection = new autobahn.Connection(config);
+
+   connection.onopen = async function (session) {
+      await session.register("com.myapp.payload", function (args) {
+         return args[0]
+      })
+
+      let payload = []
+      let data = randomBytes(16350)
+      payload.push({data1: data, city: "x"})
+      let response = await session.call("com.myapp.payload", [payload])
+
+      testcase.ok(response.length === payload.length);
+      testcase.done();
+   }
+
+   connection.open();
+}

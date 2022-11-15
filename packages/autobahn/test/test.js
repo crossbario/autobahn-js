@@ -60,6 +60,7 @@ exports.testConnect = connect.testConnect;
 exports.testJSONSerialization = serialization_json.testJSONSerialization;
 exports.testMsgpackSerialization = serialization_msgpack.testMsgpackSerialization;
 exports.testCBORSerialization = serialization_cbor.testCBORSerialization;
+exports.testCBORLargePayload = serialization_cbor.testCBORLargePayload;
 
 exports.testBinaryCBOR = binary.testBinaryCBOR;
 // exports.testBinaryMsgPack = binary.testBinaryMsgPack;
