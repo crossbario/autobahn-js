@@ -254,11 +254,71 @@ Options that define **Custom error handlers:**
 > error is sent back to the Dealer, and the Caller will receive a `runtime.error` wamp message.
 
 
- Options that control **tls connection**:
- -   `tlsConfiguration`: *object*
-     - `ca`: *Buffer | String* - CA
-     - `cert`: *Buffer | String* - Certificate Public Key
-     - `key`: *Buffer | String* - Certificate Private Key
+Options that control **tls connection**:
+-   `tlsConfiguration`: *object*
+    - `ca`: *Buffer | String* - CA
+    - `cert`: *Buffer | String* - Certificate Public Key
+    - `key`: *Buffer | String* - Certificate Private Key
+
+Options that define **authentication settings**
+- `authid`: *string* - If provided, this auth ID will be passed to the router when connecting. The router may issue a different challenge based on which auth ID is trying to connect.
+- `authextra`: *unknown* - If provided, this data is passed to the router during the connection, which the router may use to further customize the challenge to the client.
+- `authmethods`: *string[]* - An array of names of authentication methods supported by the client. The router *SHOULD* return challenge messages with methods only among those, or otherwise do what it would for unauthenticated connections (drop, continue anonymously, etc.).
+- `onchallenge`: *function(session: Session, method: string, extra: unknown?): string \| \[string, unknown\] | Promise<string \| \[string, unknown\]* - A handler for challenge messages from the router. Return value should be a response to the challenge message. Either a string ("signature"), or an array with the response as the first value, and "extra" data that the router may need to verify that response as a second value. A promise resolving to those types may also be returned. If the function throws or the returned promise rejects, the connection will be aborted. The function is given the following arguments:
+    - `session`: *Session* - The session being challenged.
+    - `method`: *string* - Name of the authentication method the router is expecting a response to.
+    - `extra`: *unknown?* - Extra data that the router may provide the client in order to complete the challenge successfully.
+
+Example:
+```javascript
+    var secret = 'top-secret-do-not-show-in-browser';
+    var connection = new autobahn.Connection({
+        authid: 'my-user',
+        authmethods: ['ticket', 'wampcra'],
+        onchallenge: function (session, method, extra) {
+            switch (method) {
+                case 'ticket':
+                    // This authentication method requires the client to provide a value that the router can verify,
+                    // even if it doesn't know the exact expected value in advance.
+                    
+                    // We'll use JWT as our value.
+                    
+                    /*
+                    // For NodeJS, if the client can be trusted with the JWT signing key anyway,
+                    // the token may be created at the client.
+                    // See https://github.com/panva/jose for the JWT lib used below
+                    return new jose.SignJWT({})
+                        .setProtectedHeader({ alg: 'ES256' })
+                        .setIssuedAt()
+                        .setIssuer('urn:example:issuer')
+                        .setAudience('urn:example:audience')
+                        .setExpirationTime('2h')
+                        .sign(secret);
+                     */
+                    
+                    // For browser facing javascript, and untrusted NodeJS clients,
+                    // the JWT should be generated on the server,
+                    // and the result should be passed to the client.
+                    // The browser should not be trusted with the JWT signing key, only the JWT itself. e.g.
+
+                    return fetch('/my-jwt-generator').then(function (response) {
+                        return response.text();
+                    });
+                case 'wampcra':
+                   // This authentication method is included in autobahn, and is supported by the crossbar router.
+                   // It requires a secret known by both router and client,
+                   // which makes it unsuitable for browser facing javascript.
+                   // Use it only when running in NodeJS or at least ensure the "secret" is short lived
+                   // and only shared with pre-authenticated users.
+                   return autobahn.auth_cra.sign(secret, extra.challenge);
+                default:
+                   throw new Error('Unknown auth method');
+           }
+        }
+        // ... other options
+    });
+
+```
   
 Connection Properties
 ---------------------
