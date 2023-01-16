@@ -12,8 +12,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+// use empty debug() function as default
 let debug = function () {};
 
+// log debug messages to console if AUTOBAHN_DEBUG is in globals or set as environment variable - works in browser and NodeJS
 if ('console' in global) {
    if (('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG) || ('process' in global && process.env.AUTOBAHN_DEBUG)) {
       debug = function () {
@@ -23,6 +25,16 @@ if ('console' in global) {
          // https://stackoverflow.com/a/41354496/884770
          console.log.call(console, JSON.stringify(arguments[0], null, '  '));
       }
+   }
+}
+
+console.log('Sdfsdf');
+
+// write debug messages to tracefile if AUTOBAHN_TRACE is set as environment variable - only works on NodeJS
+if ('process' in global && process.env.AUTOBAHN_TRACE) {
+   debug = function () {
+      const fs = require("fs");
+      fs.appendFileSync(process.env.AUTOBAHN_TRACE, JSON.stringify(arguments[0], null, '  ') + '\n\n');
    }
 }
 

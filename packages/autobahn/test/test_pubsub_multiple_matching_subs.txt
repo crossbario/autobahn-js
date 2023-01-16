@@ -1,20 +1,35 @@
 0 "all sessions connected"
-1 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
-2 "subscription: sub_topic=" "com.myapp.topic1" ", sub_match=" "exact" ", session_ident=" "E"
-3 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
-4 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-5 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
-6 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
+1 "all test sessions subscribed!"
+2 "session_ident=B subscribed with topic=com..topic1, match=wildcard"
+3 "session_ident=C subscribed with topic=com.myapp, match=prefix"
+4 "session_ident=D subscribed with topic=com, match=prefix"
+5 "session_ident=E subscribed with topic=com.myapp.topic1, match=exact"
+6 "publishing test events .."
 7 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
-8 "subscription: sub_topic=" "com..topic1" ", sub_match=" "wildcard" ", session_ident=" "B"
-9 "event: args=" ["hello subscriber!",2] ", kwargs=" {}
-10 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-11 "event: args=" ["hello subscriber!",2] ", kwargs=" {}
-12 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
-13 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
-14 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-15 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
-16 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
-17 "event: args=" ["hello subscriber!",5] ", kwargs=" {}
-18 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
-19 "closing .."
+8 "subscription: sub_topic=" "com.myapp.topic1" ", sub_match=" "exact" ", session_ident=" "E"
+9 "received 1 events up to this point .."
+10 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
+11 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
+12 "received 2 events up to this point .."
+13 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
+14 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
+15 "received 3 events up to this point .."
+16 "event: args=" ["hello subscriber!",1] ", kwargs=" {}
+17 "subscription: sub_topic=" "com..topic1" ", sub_match=" "wildcard" ", session_ident=" "B"
+18 "received 4 events up to this point .."
+19 "event: args=" ["hello subscriber!",2] ", kwargs=" {}
+20 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
+21 "received 5 events up to this point .."
+22 "event: args=" ["hello subscriber!",2] ", kwargs=" {}
+23 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
+24 "received 6 events up to this point .."
+25 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
+26 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
+27 "received 7 events up to this point .."
+28 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
+29 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
+30 "received 8 events up to this point .."
+31 "all test events published!"
+32 "event: args=" ["hello subscriber!",5] ", kwargs=" {}
+33 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
+34 "closing .."
