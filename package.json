@@ -10,12 +10,15 @@
     "deep-equal": ">= 1.0.1",
     "google-closure-compiler": ">= 20170218.0.0",
     "nodeunit": ">= 0.11.3",
-    "random-bytes-seed": ">=1.0.3"
+    "random-bytes-seed": ">=1.0.3",
+    "dotenv": "^16.0.3"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/crossbario/autobahn-js.git"
   },
   "author": "Crossbar.io Technologies GmbH",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+  }
 }

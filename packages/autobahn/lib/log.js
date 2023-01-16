@@ -14,9 +14,15 @@
 
 let debug = function () {};
 
-if ('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG && 'console' in global) {
-   debug = function () {
-      console.log.apply(console, arguments);
+if ('console' in global) {
+   if (('AUTOBAHN_DEBUG' in global && AUTOBAHN_DEBUG) || ('process' in global && process.env.AUTOBAHN_DEBUG)) {
+      debug = function () {
+         // console.log.apply(console, arguments);
+
+         // If you want to send an arguments list you need to use call:
+         // https://stackoverflow.com/a/41354496/884770
+         console.log.call(console, JSON.stringify(arguments[0], null, '  '));
+      }
    }
 }
 

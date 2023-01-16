@@ -138,6 +138,9 @@ test:
 test_connect:
 	cd packages/autobahn && nodeunit test/test_connect.js
 
+test_pubsub_basic:
+	cd packages/autobahn && nodeunit test/test_pubsub_basic.js
+
 test_serialization_cbor:
 	cd packages/autobahn && nodeunit test/test_serialization_cbor.js
 
