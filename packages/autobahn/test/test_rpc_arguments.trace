@@ -1050,3 +1050,1055 @@
   ]
 ]
 
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    8639276282331814,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:46734",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:46734",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    64,
+    1,
+    {},
+    "com.arguments.ping"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    64,
+    2,
+    {},
+    "com.arguments.add2"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    64,
+    3,
+    {},
+    "com.arguments.stars"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    64,
+    4,
+    {},
+    "com.arguments.orders"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    64,
+    5,
+    {},
+    "com.arguments.arglen"
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    65,
+    1,
+    4391918281328557
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    65,
+    2,
+    8853790028011750
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    65,
+    3,
+    5715143693947660
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    65,
+    4,
+    4333135166119335
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    65,
+    5,
+    4877144414939615
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    6,
+    {},
+    "com.arguments.ping"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    7,
+    {},
+    "com.arguments.add2",
+    [
+      2,
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    8,
+    {},
+    "com.arguments.stars"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    9,
+    {},
+    "com.arguments.stars",
+    [],
+    {
+      "nick": "Homer"
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    10,
+    {},
+    "com.arguments.stars",
+    [],
+    {
+      "stars": 5
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    11,
+    {},
+    "com.arguments.stars",
+    [],
+    {
+      "nick": "Homer",
+      "stars": 5
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    12,
+    {},
+    "com.arguments.orders",
+    [
+      "coffee"
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    13,
+    {},
+    "com.arguments.orders",
+    [
+      "coffee"
+    ],
+    {
+      "limit": 10
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    14,
+    {},
+    "com.arguments.arglen"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    15,
+    {},
+    "com.arguments.arglen",
+    [
+      1,
+      2,
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    16,
+    {},
+    "com.arguments.arglen",
+    [],
+    {
+      "a": 1,
+      "b": 2,
+      "c": 3
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    48,
+    17,
+    {},
+    "com.arguments.arglen",
+    [
+      1,
+      2,
+      3
+    ],
+    {
+      "a": 1,
+      "b": 2,
+      "c": 3
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    410,
+    4391918281328557,
+    {}
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    410,
+    {},
+    [
+      null
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    411,
+    8853790028011750,
+    {},
+    [
+      2,
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    411,
+    {},
+    [
+      5
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    412,
+    5715143693947660,
+    {}
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    412,
+    {},
+    [
+      "somebody starred 0x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    413,
+    5715143693947660,
+    {},
+    [],
+    {
+      "nick": "Homer"
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    413,
+    {},
+    [
+      "Homer starred 0x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    414,
+    5715143693947660,
+    {},
+    [],
+    {
+      "stars": 5
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    414,
+    {},
+    [
+      "somebody starred 5x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    415,
+    5715143693947660,
+    {},
+    [],
+    {
+      "nick": "Homer",
+      "stars": 5
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    415,
+    {},
+    [
+      "Homer starred 5x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    416,
+    4333135166119335,
+    {},
+    [
+      "coffee"
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    416,
+    {},
+    [
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    417,
+    4333135166119335,
+    {},
+    [
+      "coffee"
+    ],
+    {
+      "limit": 10
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    417,
+    {},
+    [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    418,
+    4877144414939615,
+    {}
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    418,
+    {},
+    [
+      [
+        0,
+        0
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    419,
+    4877144414939615,
+    {},
+    [
+      1,
+      2,
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    419,
+    {},
+    [
+      [
+        3,
+        0
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    420,
+    4877144414939615,
+    {},
+    [],
+    {
+      "a": 1,
+      "b": 2,
+      "c": 3
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    420,
+    {},
+    [
+      [
+        0,
+        3
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    68,
+    421,
+    4877144414939615,
+    {},
+    [
+      1,
+      2,
+      3
+    ],
+    {
+      "a": 1,
+      "b": 2,
+      "c": 3
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    70,
+    421,
+    {},
+    [
+      [
+        3,
+        3
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    6,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      null
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    7,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      5
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    8,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      "somebody starred 0x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    9,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      "Homer starred 0x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    10,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      "somebody starred 5x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    11,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      "Homer starred 5x"
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    12,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    13,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    14,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        0,
+        0
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    15,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        3,
+        0
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    16,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        0,
+        3
+      ]
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  8639276282331814,
+  [
+    50,
+    17,
+    {
+      "callee": 8639276282331814,
+      "callee_authid": "MJFW-GHHW-R99R-EEHL-67FT-S7H4",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        3,
+        3
+      ]
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  8639276282331814,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+

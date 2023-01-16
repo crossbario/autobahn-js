@@ -87,329 +87,46 @@
 ]
 
 [
-  "RX",
+  "TX",
   "realm1",
   null,
   [
-    2,
-    8704259653957998,
+    1,
+    "realm1",
     {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:38244",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "3WKF-LCYU-RWC7-LUR9-TCA3-QXES",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:38244",
-        "x_cb_pid": 62877
-      },
       "roles": {
-        "broker": {
+        "caller": {
           "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
           }
         },
-        "dealer": {
+        "callee": {
           "features": {
             "caller_identification": true,
             "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
             "shared_registration": true,
-            "call_canceling": true,
             "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
           }
         }
       }
     }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    7740592051475491,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:38248",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "A9EU-WSVH-653P-XU6H-Y5KR-N9P3",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:38248",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  7740592051475491,
-  [
-    32,
-    1,
-    {
-      "match": "wildcard"
-    },
-    "com.example..create"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7740592051475491,
-  [
-    33,
-    1,
-    1464826027751506
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    1,
-    {},
-    "com.example.foobar.create",
-    [
-      "Hello wildcard pattern subscriber!",
-      0
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    2,
-    {},
-    "com.example.1.create",
-    [
-      "Hello wildcard pattern subscriber!",
-      1
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    3,
-    {},
-    "com.example.foobar.delete",
-    [
-      "Hello wildcard pattern subscriber!",
-      2
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    4,
-    {},
-    "com.example.foobar.create2",
-    [
-      "Hello wildcard pattern subscriber!",
-      3
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    5,
-    {},
-    "com.example.foobar.create.barbaz",
-    [
-      "Hello wildcard pattern subscriber!",
-      4
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    6,
-    {},
-    "com.example.foobar",
-    [
-      "Hello wildcard pattern subscriber!",
-      5
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    7,
-    {},
-    "com.example.create",
-    [
-      "Hello wildcard pattern subscriber!",
-      6
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    16,
-    8,
-    {},
-    "com.example",
-    [
-      "Hello wildcard pattern subscriber!",
-      7
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7740592051475491,
-  [
-    36,
-    1464826027751506,
-    6277059831684058,
-    {
-      "topic": "com.example.foobar.create"
-    },
-    [
-      "Hello wildcard pattern subscriber!",
-      0
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7740592051475491,
-  [
-    36,
-    1464826027751506,
-    7220736025188088,
-    {
-      "topic": "com.example.1.create"
-    },
-    [
-      "Hello wildcard pattern subscriber!",
-      1
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8704259653957998,
-  [
-    6,
-    {},
-    "wamp.close.normal"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  7740592051475491,
-  [
-    6,
-    {},
-    "wamp.close.normal"
   ]
 ]
 
@@ -507,21 +224,21 @@
   null,
   [
     2,
-    8332044826691611,
+    5827684853369537,
     {
       "x_cb_node": "intel-nuci7-62868",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:46696",
+      "x_cb_peer": "tcp4:127.0.0.1:54658",
       "x_cb_pid": 62877,
       "realm": "realm1",
-      "authid": "4A7Q-5CJC-YXTE-KA36-S7V3-9K4X",
+      "authid": "YSXN-C375-MJ9P-95UW-6V5E-WTFP",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
         "x_cb_node": "intel-nuci7-62868",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:46696",
+        "x_cb_peer": "tcp4:127.0.0.1:54658",
         "x_cb_pid": 62877
       },
       "roles": {
@@ -565,21 +282,195 @@
   null,
   [
     2,
-    2980829889932643,
+    4426315866227300,
     {
       "x_cb_node": "intel-nuci7-62868",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:46704",
+      "x_cb_peer": "tcp4:127.0.0.1:54662",
       "x_cb_pid": 62877,
       "realm": "realm1",
-      "authid": "NNKS-WEN5-4AFG-SYVA-4ACJ-G4RK",
+      "authid": "KGLT-JXTE-GKN6-JMME-Q9PL-6HWT",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
         "x_cb_node": "intel-nuci7-62868",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:46704",
+        "x_cb_peer": "tcp4:127.0.0.1:54662",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    3881816620649286,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:54664",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "YLYJ-NCLR-S4EN-KUY3-GXFN-ELWG",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:54664",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    292909332548560,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:54680",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "4FCP-9R63-Y4HS-PFYA-KVNW-VYHJ",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:54680",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    110043672210347,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:54694",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "VE4P-5PES-U5FQ-THST-66A3-6WH4",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:54694",
         "x_cb_pid": 62877
       },
       "roles": {
@@ -620,55 +511,197 @@
 [
   "TX",
   "realm1",
-  2980829889932643,
+  4426315866227300,
   [
     32,
     1,
     {
       "match": "wildcard"
     },
-    "com.example..create"
+    "com..topic1"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3881816620649286,
+  [
+    32,
+    1,
+    {
+      "match": "prefix"
+    },
+    "com.myapp"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  292909332548560,
+  [
+    32,
+    1,
+    {
+      "match": "prefix"
+    },
+    "com"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  110043672210347,
+  [
+    32,
+    1,
+    {
+      "match": "exact"
+    },
+    "com.myapp.topic1"
   ]
 ]
 
 [
   "RX",
   "realm1",
-  2980829889932643,
+  4426315866227300,
   [
     33,
     1,
-    4680360638958730
+    6450660446612284
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  3881816620649286,
+  [
+    33,
+    1,
+    2847574936014814
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  292909332548560,
+  [
+    33,
+    1,
+    3044610067739565
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  110043672210347,
+  [
+    33,
+    1,
+    3187775146723721
   ]
 ]
 
 [
   "TX",
   "realm1",
-  8332044826691611,
+  5827684853369537,
   [
     16,
     1,
-    {},
-    "com.example.foobar.create",
+    {
+      "acknowledge": true
+    },
+    "com.myapp.topic1",
     [
-      "Hello wildcard pattern subscriber!",
-      0
+      "hello subscriber!",
+      1
     ]
   ]
 ]
 
 [
-  "TX",
+  "RX",
   "realm1",
-  8332044826691611,
+  5827684853369537,
   [
-    16,
-    2,
+    17,
+    1,
+    5509574824922074
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  110043672210347,
+  [
+    36,
+    3187775146723721,
+    5509574824922074,
     {},
-    "com.example.1.create",
     [
-      "Hello wildcard pattern subscriber!",
+      "hello subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  292909332548560,
+  [
+    36,
+    3044610067739565,
+    5509574824922074,
+    {
+      "topic": "com.myapp.topic1"
+    },
+    [
+      "hello subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  3881816620649286,
+  [
+    36,
+    2847574936014814,
+    5509574824922074,
+    {
+      "topic": "com.myapp.topic1"
+    },
+    [
+      "hello subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4426315866227300,
+  [
+    36,
+    6450660446612284,
+    5509574824922074,
+    {
+      "topic": "com.myapp.topic1"
+    },
+    [
+      "hello subscriber!",
       1
     ]
   ]
@@ -677,14 +710,63 @@
 [
   "TX",
   "realm1",
-  8332044826691611,
+  5827684853369537,
   [
     16,
-    3,
-    {},
-    "com.example.foobar.delete",
+    2,
+    {
+      "acknowledge": true
+    },
+    "com.myapp.topic123",
     [
-      "Hello wildcard pattern subscriber!",
+      "hello subscriber!",
+      2
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  5827684853369537,
+  [
+    17,
+    2,
+    2257838034314971
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  292909332548560,
+  [
+    36,
+    3044610067739565,
+    2257838034314971,
+    {
+      "topic": "com.myapp.topic123"
+    },
+    [
+      "hello subscriber!",
+      2
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  3881816620649286,
+  [
+    36,
+    2847574936014814,
+    2257838034314971,
+    {
+      "topic": "com.myapp.topic123"
+    },
+    [
+      "hello subscriber!",
       2
     ]
   ]
@@ -693,14 +775,63 @@
 [
   "TX",
   "realm1",
-  8332044826691611,
+  5827684853369537,
   [
     16,
-    4,
-    {},
-    "com.example.foobar.create2",
+    3,
+    {
+      "acknowledge": true
+    },
+    "com.myapp.topic1.foobar",
     [
-      "Hello wildcard pattern subscriber!",
+      "hello subscriber!",
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  5827684853369537,
+  [
+    17,
+    3,
+    1862372217565231
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  292909332548560,
+  [
+    36,
+    3044610067739565,
+    1862372217565231,
+    {
+      "topic": "com.myapp.topic1.foobar"
+    },
+    [
+      "hello subscriber!",
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  3881816620649286,
+  [
+    36,
+    2847574936014814,
+    1862372217565231,
+    {
+      "topic": "com.myapp.topic1.foobar"
+    },
+    [
+      "hello subscriber!",
       3
     ]
   ]
@@ -709,30 +840,74 @@
 [
   "TX",
   "realm1",
-  8332044826691611,
+  5827684853369537,
   [
     16,
-    5,
-    {},
-    "com.example.foobar.create.barbaz",
+    4,
+    {
+      "acknowledge": true
+    },
+    "de.myapp.topic1",
     [
-      "Hello wildcard pattern subscriber!",
+      "hello subscriber!",
       4
     ]
   ]
 ]
 
 [
+  "RX",
+  "realm1",
+  5827684853369537,
+  [
+    17,
+    4,
+    8861158149394802
+  ]
+]
+
+[
   "TX",
   "realm1",
-  8332044826691611,
+  5827684853369537,
   [
     16,
-    6,
-    {},
-    "com.example.foobar",
+    5,
+    {
+      "acknowledge": true
+    },
+    "com.foobar",
     [
-      "Hello wildcard pattern subscriber!",
+      "hello subscriber!",
+      5
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  5827684853369537,
+  [
+    17,
+    5,
+    3891529048781150
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  292909332548560,
+  [
+    36,
+    3044610067739565,
+    3891529048781150,
+    {
+      "topic": "com.foobar"
+    },
+    [
+      "hello subscriber!",
       5
     ]
   ]
@@ -741,75 +916,7 @@
 [
   "TX",
   "realm1",
-  8332044826691611,
-  [
-    16,
-    7,
-    {},
-    "com.example.create",
-    [
-      "Hello wildcard pattern subscriber!",
-      6
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8332044826691611,
-  [
-    16,
-    8,
-    {},
-    "com.example",
-    [
-      "Hello wildcard pattern subscriber!",
-      7
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  2980829889932643,
-  [
-    36,
-    4680360638958730,
-    3689753538119011,
-    {
-      "topic": "com.example.foobar.create"
-    },
-    [
-      "Hello wildcard pattern subscriber!",
-      0
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  2980829889932643,
-  [
-    36,
-    4680360638958730,
-    5028913668444631,
-    {
-      "topic": "com.example.1.create"
-    },
-    [
-      "Hello wildcard pattern subscriber!",
-      1
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8332044826691611,
+  110043672210347,
   [
     6,
     {},
@@ -820,7 +927,40 @@
 [
   "TX",
   "realm1",
-  2980829889932643,
+  292909332548560,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3881816620649286,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  4426315866227300,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  5827684853369537,
   [
     6,
     {},
