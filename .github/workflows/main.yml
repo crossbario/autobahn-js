@@ -10,6 +10,9 @@ on:
 
 jobs:
   unittest:
+    env:
+      CB_IMAGE: crossbario/crossbar:cpy-slim-amd64-22.7.1.dev1
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +27,9 @@ jobs:
 
     # Run this a bit early in the CI, so we don't have to "sleep".
     - name: Run crossbar
-      run: docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID crossbario/crossbar --cbdir /node
+      run: |
+        docker run -it --rm --entrypoint=/usr/local/bin/crossbar $CB_IMAGE version
+        docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID --entrypoint=/usr/local/bin/crossbar $CB_IMAGE start --cbdir /node
 
     - name: Install dependencies
       run: |

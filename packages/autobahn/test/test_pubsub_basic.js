@@ -19,7 +19,7 @@ exports.testPubsubBasic = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_pubsub_basic.txt");
+   var test = new testutil.Testlog("test/test_pubsub_basic.txt", true);
 
    var dl = testutil.connect_n(2);
 
