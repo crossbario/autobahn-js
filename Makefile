@@ -134,91 +134,91 @@ crossbar_docker:
 
 test_clean:
 	-rm packages/autobahn/test/test*.txt
-	-rm packages/autobahn/test/test*.json
+	-rm packages/autobahn/test/test*.trace
 
 test_basic_async:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_basic_async.json nodeunit test/test_basic_async.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_basic_async.trace nodeunit test/test_basic_async.js
 
 test_basic_sync:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_basic_sync.json nodeunit test/test_basic_sync.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_basic_sync.trace nodeunit test/test_basic_sync.js
 
 test_binary:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_binary.json nodeunit test/test_binary.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_binary.trace nodeunit test/test_binary.js
 
 test_connect:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_connect.json nodeunit test/test_connect.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_connect.trace nodeunit test/test_connect.js
 
 test_error_handling:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_error_handling.json nodeunit test/test_error_handling.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_error_handling.trace nodeunit test/test_error_handling.js
 
 test_pubsub_basic:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_basic.json nodeunit test/test_pubsub_basic.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_basic.trace nodeunit test/test_pubsub_basic.js
 
 test_pubsub_complex:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_complex.json nodeunit test/test_pubsub_complex.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_complex.trace nodeunit test/test_pubsub_complex.js
 
 test_pubsub_eligible:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_eligible.json nodeunit test/test_pubsub_eligible.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_eligible.trace nodeunit test/test_pubsub_eligible.js
 
 test_pubsub_exclude:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_exclude.json nodeunit test/test_pubsub_exclude.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_exclude.trace nodeunit test/test_pubsub_exclude.js
 
 test_pubsub_excludeme:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_excludeme.json nodeunit test/test_pubsub_excludeme.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_excludeme.trace nodeunit test/test_pubsub_excludeme.js
 
 test_pubsub_multiple_matching_subs:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.json nodeunit test/test_pubsub_multiple_matching_subs.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.trace nodeunit test/test_pubsub_multiple_matching_subs.js
 
 test_pubsub_options:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_options.json nodeunit test/test_pubsub_options.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_options.trace nodeunit test/test_pubsub_options.js
 
 test_pubsub_prefix_sub:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.json nodeunit test/test_pubsub_prefix_sub.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.trace nodeunit test/test_pubsub_prefix_sub.js
 
 test_pubsub_wildcard_sub:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_wildcard_sub.json nodeunit test/test_pubsub_wildcard_sub.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_wildcard_sub.trace nodeunit test/test_pubsub_wildcard_sub.js
 
 test_rawsocket_protocol:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rawsocket_protocol.json nodeunit test/test_rawsocket_protocol.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rawsocket_protocol.trace nodeunit test/test_rawsocket_protocol.js
 
 test_rawsocket_transport:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rawsocket_transport.json nodeunit test/test_rawsocket_transport.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rawsocket_transport.trace nodeunit test/test_rawsocket_transport.js
 
 test_rpc_arguments:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_arguments.json nodeunit test/test_rpc_arguments.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_arguments.trace nodeunit test/test_rpc_arguments.js
 
 test_rpc_complex:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_complex.json nodeunit test/test_rpc_complex.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_complex.trace nodeunit test/test_rpc_complex.js
 
 test_rpc_error:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_error.json nodeunit test/test_rpc_error.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_error.trace nodeunit test/test_rpc_error.js
 
 test_rpc_options:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_options.json nodeunit test/test_rpc_options.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_options.trace nodeunit test/test_rpc_options.js
 
 test_rpc_progress:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_progress.json nodeunit test/test_rpc_progress.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_progress.trace nodeunit test/test_rpc_progress.js
 
 test_rpc_request_id_sequence:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.json nodeunit test/test_rpc_request_id_sequence.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.trace nodeunit test/test_rpc_request_id_sequence.js
 
 test_rpc_routing:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_routing.json nodeunit test/test_rpc_routing.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_routing.trace nodeunit test/test_rpc_routing.js
 
 test_rpc_slowsquare:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_slowsquare.json nodeunit test/test_rpc_slowsquare.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_slowsquare.trace nodeunit test/test_rpc_slowsquare.js
 
 test_sealedbox:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_sealedbox.json nodeunit test/test_sealedbox.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_sealedbox.trace nodeunit test/test_sealedbox.js
 
 test_serialization_cbor:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_cbor.json nodeunit test/test_serialization_cbor.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_cbor.trace nodeunit test/test_serialization_cbor.js
 
 test_serialization_json:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_json.json nodeunit test/test_serialization_json.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_json.trace nodeunit test/test_serialization_json.js
 
 test_serialization_msgpack:
-	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_json.json nodeunit test/test_serialization_msgpack.js
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_json.trace nodeunit test/test_serialization_msgpack.js
 
 
 # FIXME!
