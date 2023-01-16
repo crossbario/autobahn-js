@@ -43,14 +43,12 @@ function Factory (options) {
 
    if (options.autoping_interval) {
      util.assert(options.autoping_interval > 0, "options.autoping_interval must be greater than 0");
-     options.autoping_interval = options.autoping_interval * 1000
    } else {
      options.autoping_interval = 10000;
    }
 
    if (options.autoping_timeout) {
      util.assert(options.autoping_timeout > 0, "options.autoping_timeout must be greater than 0");
-     options.autoping_timeout = options.autoping_timeout * 1000
    } else {
      options.autoping_timeout = 5000;
    }
@@ -183,18 +181,16 @@ Factory.prototype.create = function () {
                // Only using the known working flags in the options.
                // https://nodejs.org/api/https.html#https_https_request_options_callback
 
-               log.debug('Using TLS Client Authentication.');
-
                options.ca = self._options.tlsConfiguration.ca;
                options.cert = self._options.tlsConfiguration.cert;
                options.key = self._options.tlsConfiguration.key;
                options.rejectUnauthorized = false;
             } else {
-               log.debug("Not using TLS Client Authentication. tlsConfiguration should include " +
+               log.warn("Not using TLS Client Authentication. tlsConfiguration should include " +
                    "'ca' 'cert' and 'key' parameters.");
             }
          } else {
-            log.debug('Not using TLS Client Authentication.');
+            // not using TLS Client Authentication
          }
 
          websocket = new WebSocket(self._options.url, protocols, options);

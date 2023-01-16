@@ -74,11 +74,12 @@ function connect_n(n, config) {
 }
 
 
-var Testlog = function (filename) {
+var Testlog = function (filename, quiet) {
 
    var self = this;
 
    self._filename = filename;
+   self._quiet = quiet;
    self._log = [];
 //   self._log = [["AutobahnJS " + autobahn.version]];
 };
@@ -88,7 +89,10 @@ Testlog.prototype.log = function () {
 
    var self = this;
 
-   console.log.apply(this, arguments);
+   if (!self._quiet) {
+      console.log.apply(this, arguments);
+   }
+
    self._log.push(arguments);
 };
 

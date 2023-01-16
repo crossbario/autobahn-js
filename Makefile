@@ -129,20 +129,99 @@ crossbar:
 crossbar_docker:
 	docker run -it --rm -v ${PWD}/.crossbar:/node -p 8080:8080 -p 8090:8090 -u 1000 crossbario/crossbar --cbdir /node
 
-test:
-	# npm install
-	cd packages/autobahn && npm test
-	# FIXME: add xbr specific unit tests
-	# cd packages/autobahn-xbr && npm test
+#test_binary:
+#	cd packages/autobahn && nodeunit test/test_binary.js -t testBinaryCBOR
 
-test_connect:
-	cd packages/autobahn && nodeunit test/test_connect.js
+test_clean:
+	-rm packages/autobahn/test/test*.txt
+	-rm packages/autobahn/test/test*.trace
 
-test_serialization_cbor:
-	cd packages/autobahn && nodeunit test/test_serialization_cbor.js
+test_basic_async:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_basic_async.trace nodeunit test/test_basic_async.js
 
-test_pubsub_multiple_matching_subs:
-	cd packages/autobahn && nodeunit test/test_pubsub_multiple_matching_subs.js
+test_basic_sync:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_basic_sync.trace nodeunit test/test_basic_sync.js
 
 test_binary:
-	cd packages/autobahn && nodeunit test/test_binary.js -t testBinaryCBOR
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_binary.trace nodeunit test/test_binary.js
+
+test_connect:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_connect.trace nodeunit test/test_connect.js
+
+test_error_handling:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_error_handling.trace nodeunit test/test_error_handling.js
+
+test_pubsub_basic:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_basic.trace nodeunit test/test_pubsub_basic.js
+
+test_pubsub_complex:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_complex.trace nodeunit test/test_pubsub_complex.js
+
+test_pubsub_eligible:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_eligible.trace nodeunit test/test_pubsub_eligible.js
+
+test_pubsub_exclude:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_exclude.trace nodeunit test/test_pubsub_exclude.js
+
+test_pubsub_excludeme:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_excludeme.trace nodeunit test/test_pubsub_excludeme.js
+
+test_pubsub_multiple_matching_subs:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.trace nodeunit test/test_pubsub_multiple_matching_subs.js
+
+test_pubsub_options:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_options.trace nodeunit test/test_pubsub_options.js
+
+test_pubsub_prefix_sub:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.trace nodeunit test/test_pubsub_prefix_sub.js
+
+test_pubsub_wildcard_sub:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_pubsub_wildcard_sub.trace nodeunit test/test_pubsub_wildcard_sub.js
+
+test_rawsocket_protocol:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rawsocket_protocol.trace nodeunit test/test_rawsocket_protocol.js
+
+test_rawsocket_transport:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rawsocket_transport.trace nodeunit test/test_rawsocket_transport.js
+
+test_rpc_arguments:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_arguments.trace nodeunit test/test_rpc_arguments.js
+
+test_rpc_complex:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_complex.trace nodeunit test/test_rpc_complex.js
+
+test_rpc_error:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_error.trace nodeunit test/test_rpc_error.js
+
+test_rpc_options:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_options.trace nodeunit test/test_rpc_options.js
+
+test_rpc_progress:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_progress.trace nodeunit test/test_rpc_progress.js
+
+test_rpc_request_id_sequence:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.trace nodeunit test/test_rpc_request_id_sequence.js
+
+test_rpc_routing:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_routing.trace nodeunit test/test_rpc_routing.js
+
+test_rpc_slowsquare:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_rpc_slowsquare.trace nodeunit test/test_rpc_slowsquare.js
+
+test_sealedbox:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_sealedbox.trace nodeunit test/test_sealedbox.js
+
+test_serialization_cbor:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_cbor.trace nodeunit test/test_serialization_cbor.js
+
+test_serialization_json:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_json.trace nodeunit test/test_serialization_json.js
+
+test_serialization_msgpack:
+	cd packages/autobahn && AUTOBAHN_TRACE=test/test_serialization_json.trace nodeunit test/test_serialization_msgpack.js
+
+
+# FIXME!
+# test: test_binary test_sealedbox
+
+test: test_basic_async test_basic_sync test_connect test_error_handling test_pubsub_basic test_pubsub_complex test_pubsub_eligible test_pubsub_exclude test_pubsub_excludeme test_pubsub_multiple_matching_subs test_pubsub_options test_pubsub_prefix_sub test_pubsub_wildcard_sub test_rawsocket_protocol test_rawsocket_transport test_rpc_arguments test_rpc_complex test_rpc_error test_rpc_options test_rpc_progress test_rpc_request_id_sequence test_rpc_routing test_rpc_slowsquare test_serialization_cbor test_serialization_json test_serialization_msgpack

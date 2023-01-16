@@ -273,7 +273,9 @@ var Session = function (socket, defer, onchallenge, on_user_error, on_internal_e
    self._publisher_disclose_me = false;
 
    self._send_wamp = function (msg) {
-      log.debug(msg);
+      // message sequence (MSC) tracing:
+      log.debug(['TX', self._realm, self._id, msg]);
+
       // forward WAMP message to be sent to WAMP transport
       self._socket.send(msg);
    };
@@ -854,6 +856,8 @@ var Session = function (socket, defer, onchallenge, on_user_error, on_internal_e
    // callback fired by WAMP transport on receiving a WAMP message
    //
    self._socket.onmessage = function (msg) {
+      // message sequence (MSC) tracing:
+      log.debug(['RX', self._realm, self._id, msg]);
 
       var msg_type = msg[0];
 

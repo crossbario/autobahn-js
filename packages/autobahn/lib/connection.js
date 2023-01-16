@@ -107,11 +107,9 @@ Connection.prototype._create_transport = function () {
 
    for (var i = 0; i < this._transport_factories.length; ++i) {
       var transport_factory = this._transport_factories[i];
-      log.debug("trying to create WAMP transport of type: " + transport_factory.type);
       try {
          var transport = transport_factory.create();
          if (transport) {
-            log.debug("using WAMP transport type: " + transport_factory.type);
             return transport;
          }
       } catch (e) {
