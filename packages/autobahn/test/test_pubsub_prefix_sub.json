@@ -1,0 +1,1074 @@
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    6346495863208543,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:38190",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "C4SA-JUKN-5NNA-3CJS-7KWT-F6HQ",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:38190",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    371334131722095,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:38200",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "G5P9-9RLT-RHNL-WNXX-R5EK-AW69",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:38200",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  371334131722095,
+  [
+    32,
+    1,
+    {
+      "match": "prefix"
+    },
+    "com.myapp"
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    33,
+    1,
+    2848680933101848
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    1,
+    {},
+    "com.myapp.topic1.foobar",
+    [
+      "Hello prefix pattern subscriber!",
+      0
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    2,
+    {},
+    "com.myapp.topic1",
+    [
+      "Hello prefix pattern subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    3,
+    {},
+    "com.myapp.topi",
+    [
+      "Hello prefix pattern subscriber!",
+      2
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    4,
+    {},
+    "com.myapp2.foobar",
+    [
+      "Hello prefix pattern subscriber!",
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    5,
+    {},
+    "com.myapp2",
+    [
+      "Hello prefix pattern subscriber!",
+      4
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    6,
+    {},
+    "com.myapp.2",
+    [
+      "Hello prefix pattern subscriber!",
+      5
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    7,
+    {},
+    "com.myapp",
+    [
+      "Hello prefix pattern subscriber!",
+      6
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    8,
+    {},
+    "com.app.topic1",
+    [
+      "Hello prefix pattern subscriber!",
+      7
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    9,
+    {},
+    "com.myap",
+    [
+      "Hello prefix pattern subscriber!",
+      8
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    16,
+    10,
+    {},
+    "com",
+    [
+      "Hello prefix pattern subscriber!",
+      9
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    2668078851352064,
+    {
+      "topic": "com.myapp.topic1.foobar"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      0
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    6512534316686067,
+    {
+      "topic": "com.myapp.topic1"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    3332101320178586,
+    {
+      "topic": "com.myapp.topi"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      2
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    350192768863182,
+    {
+      "topic": "com.myapp2.foobar"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    7700946480922858,
+    {
+      "topic": "com.myapp2"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      4
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    8721132473430451,
+    {
+      "topic": "com.myapp.2"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      5
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  371334131722095,
+  [
+    36,
+    2848680933101848,
+    4336182725083928,
+    {
+      "topic": "com.myapp"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      6
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6346495863208543,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  371334131722095,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    7132321910893300,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:42802",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "N5HX-9YFM-A3MM-VX7C-LFM5-YCXK",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:42802",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    4211831480235924,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:42818",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "ANPF-F9UV-T5GX-7C7R-4SUJ-EXYR",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:42818",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  4211831480235924,
+  [
+    32,
+    1,
+    {
+      "match": "prefix"
+    },
+    "com.myapp"
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    33,
+    1,
+    5409233469901428
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    1,
+    {},
+    "com.myapp.topic1.foobar",
+    [
+      "Hello prefix pattern subscriber!",
+      0
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    2,
+    {},
+    "com.myapp.topic1",
+    [
+      "Hello prefix pattern subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    3,
+    {},
+    "com.myapp.topi",
+    [
+      "Hello prefix pattern subscriber!",
+      2
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    4,
+    {},
+    "com.myapp2.foobar",
+    [
+      "Hello prefix pattern subscriber!",
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    5,
+    {},
+    "com.myapp2",
+    [
+      "Hello prefix pattern subscriber!",
+      4
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    6,
+    {},
+    "com.myapp.2",
+    [
+      "Hello prefix pattern subscriber!",
+      5
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    7,
+    {},
+    "com.myapp",
+    [
+      "Hello prefix pattern subscriber!",
+      6
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    8,
+    {},
+    "com.app.topic1",
+    [
+      "Hello prefix pattern subscriber!",
+      7
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    9,
+    {},
+    "com.myap",
+    [
+      "Hello prefix pattern subscriber!",
+      8
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    16,
+    10,
+    {},
+    "com",
+    [
+      "Hello prefix pattern subscriber!",
+      9
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    8526486443572901,
+    {
+      "topic": "com.myapp.topic1.foobar"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      0
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    2940715291332126,
+    {
+      "topic": "com.myapp.topic1"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      1
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    1700337309226588,
+    {
+      "topic": "com.myapp.topi"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      2
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    4947686433286797,
+    {
+      "topic": "com.myapp2.foobar"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    8812719385043133,
+    {
+      "topic": "com.myapp2"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      4
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    3240315372972978,
+    {
+      "topic": "com.myapp.2"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      5
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  4211831480235924,
+  [
+    36,
+    5409233469901428,
+    1152089351814833,
+    {
+      "topic": "com.myapp"
+    },
+    [
+      "Hello prefix pattern subscriber!",
+      6
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  7132321910893300,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  4211831480235924,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+

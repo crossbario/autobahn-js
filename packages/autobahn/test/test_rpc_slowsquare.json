@@ -1,0 +1,566 @@
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    6377274492089865,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:38322",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "MMPS-KRLL-LYXJ-4W5M-WMWE-7K9Q",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:38322",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    64,
+    1,
+    {},
+    "com.math.square"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    64,
+    2,
+    {},
+    "com.math.slowsquare"
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  6377274492089865,
+  [
+    65,
+    1,
+    8608885408124339
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  6377274492089865,
+  [
+    65,
+    2,
+    2512563871619526
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    48,
+    3,
+    {},
+    "com.math.slowsquare",
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    48,
+    4,
+    {},
+    "com.math.square",
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  6377274492089865,
+  [
+    68,
+    278,
+    2512563871619526,
+    {},
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  6377274492089865,
+  [
+    68,
+    279,
+    8608885408124339,
+    {},
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    70,
+    279,
+    {},
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  6377274492089865,
+  [
+    50,
+    4,
+    {
+      "callee": 6377274492089865,
+      "callee_authid": "MMPS-KRLL-LYXJ-4W5M-WMWE-7K9Q",
+      "callee_authrole": "anonymous"
+    },
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    70,
+    278,
+    {},
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  6377274492089865,
+  [
+    50,
+    3,
+    {
+      "callee": 6377274492089865,
+      "callee_authid": "MMPS-KRLL-LYXJ-4W5M-WMWE-7K9Q",
+      "callee_authrole": "anonymous"
+    },
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  6377274492089865,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    1061981932506815,
+    {
+      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:42916",
+      "x_cb_pid": 62877,
+      "realm": "realm1",
+      "authid": "5GNG-HEEM-CSER-P93A-KPQE-6SNP",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:42916",
+        "x_cb_pid": 62877
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    64,
+    1,
+    {},
+    "com.math.square"
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    64,
+    2,
+    {},
+    "com.math.slowsquare"
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  1061981932506815,
+  [
+    65,
+    1,
+    7065103168115188
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  1061981932506815,
+  [
+    65,
+    2,
+    5194123070420054
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    48,
+    3,
+    {},
+    "com.math.slowsquare",
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    48,
+    4,
+    {},
+    "com.math.square",
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  1061981932506815,
+  [
+    68,
+    333,
+    5194123070420054,
+    {},
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  1061981932506815,
+  [
+    68,
+    334,
+    7065103168115188,
+    {},
+    [
+      3
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    70,
+    334,
+    {},
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  1061981932506815,
+  [
+    50,
+    4,
+    {
+      "callee": 1061981932506815,
+      "callee_authid": "5GNG-HEEM-CSER-P93A-KPQE-6SNP",
+      "callee_authrole": "anonymous"
+    },
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    70,
+    333,
+    {},
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "RX",
+  "realm1",
+  1061981932506815,
+  [
+    50,
+    3,
+    {
+      "callee": 1061981932506815,
+      "callee_authid": "5GNG-HEEM-CSER-P93A-KPQE-6SNP",
+      "callee_authrole": "anonymous"
+    },
+    [
+      9
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  1061981932506815,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+

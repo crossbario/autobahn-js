@@ -24,10 +24,10 @@
 23 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
 24 "received 6 events up to this point .."
 25 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
-26 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
+26 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
 27 "received 7 events up to this point .."
 28 "event: args=" ["hello subscriber!",3] ", kwargs=" {}
-29 "subscription: sub_topic=" "com.myapp" ", sub_match=" "prefix" ", session_ident=" "C"
+29 "subscription: sub_topic=" "com" ", sub_match=" "prefix" ", session_ident=" "D"
 30 "received 8 events up to this point .."
 31 "all test events published!"
 32 "event: args=" ["hello subscriber!",5] ", kwargs=" {}

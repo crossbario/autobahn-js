@@ -39,4 +39,6 @@ jobs:
         sudo pip3 install --no-cache-dir -U scons boto taschenmesser
 
     - name: Run tests
-      run: cd packages/autobahn && npm install && npm test
+      run: |
+        cd packages/autobahn && npm install
+        make test
