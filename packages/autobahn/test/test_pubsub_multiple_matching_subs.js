@@ -32,7 +32,7 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_pubsub_multiple_matching_subs.txt");
+   var test = new testutil.Testlog("test/test_pubsub_multiple_matching_subs.txt", true);
 
    var dl = testutil.connect_n(5);
 
@@ -93,7 +93,7 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
                testcase.ok(!chk, chk);
                testcase.done();
             } else {
-               console.log('received ' + received + ' events up to this point ..');
+               test.log('received ' + received + ' events up to this point ..');
             }
          }
 
@@ -106,12 +106,12 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
 
          autobahn.when.all(dl2).then(
             function (subs) {
-               console.log('all test sessions subscribed!');
+               test.log('all test sessions subscribed!');
                for (var i = 0; i < subs.length; ++i) {
-                  console.log('session_ident=' + subs[i].session._ident + ' subscribed with topic=' + subs[i].topic + ', match=' + subs[i].options.match);
+                  test.log('session_ident=' + subs[i].session._ident + ' subscribed with topic=' + subs[i].topic + ', match=' + subs[i].options.match);
                }
 
-               console.log('publishing test events ..');
+               test.log('publishing test events ..');
 
                var options = {acknowledge: true};
 
@@ -136,15 +136,15 @@ exports.testPubsubMultipleMatchingSubs = function (testcase) {
 
                autobahn.when.all(dl3).then(
                   function (res) {
-                     console.log('all test events published!');
+                     test.log('all test events published!');
                   },
                   function (err) {
-                     console.log(err);
+                     test.log(err);
                   }
                );
             },
             function (err) {
-               console.log(err);
+               test.log(err);
             }
          );
       },

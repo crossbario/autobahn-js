@@ -14,11 +14,13 @@
 var autobahn = require('../index.js');
 var testutil = require('./testutil.js');
 
+process.on('warning', e => console.warn(e.stack));
+
 exports.testConnect = function (testcase) {
 
    testcase.expect(1);
 
-   var test = new testutil.Testlog("test/test_connect.txt");
+   var test = new testutil.Testlog("test/test_connect.txt", true);
    var N = 10;
 
    test.log("connecting " + N + " sessions ...");
