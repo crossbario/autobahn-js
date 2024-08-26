@@ -1,6 +1,6 @@
 {
    "name": "autobahn",
-   "version": "0.9.8",
+   "version": "0.9.9",
    "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
    "main": "index.js",
    "scripts": {
@@ -8,7 +8,7 @@
    },
    "dependencies": {
       "when": "~3.7.6",
-      "ws": "8.16.0",
+      "ws": "8.18.0",
       "crypto-js": "4.2.0"
    },
    "devDependencies": {
