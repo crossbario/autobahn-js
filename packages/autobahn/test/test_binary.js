@@ -192,7 +192,7 @@ exports.testBinaryJSON = function (testcase) {
 
     var dl = [];
 
-    dl.push(run_test(testcase, test, new autobahn.serializer.JSONSerializer()));
+    dl.push(run_test(test, new autobahn.serializer.JSONSerializer()));
 
     autobahn.when.all(dl).then(function () {
         var chk = test.check();
