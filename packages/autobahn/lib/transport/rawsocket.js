@@ -41,6 +41,8 @@ Factory.prototype.create = function () {
 
    var self = this;
 
+   log.debug("rawsocket.Factory.create");
+
    // the WAMP transport we create
    var transport = {};
 

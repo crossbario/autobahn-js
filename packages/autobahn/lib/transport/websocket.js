@@ -71,6 +71,8 @@ Factory.prototype.create = function () {
 
    var self = this;
 
+   log.debug("websocket.Factory.create");
+
    // the WAMP transport we create
    var transport = {};
 
