@@ -35,6 +35,7 @@ function Factory (options) {
    if (!options.protocols) {
       options.protocols = [];
       options.serializers.forEach(function (ser) {
+         util.assert(typeof ser.SERIALIZER_ID === "string", "options.serializers[].SERIALIZER_ID must be a string");
          options.protocols.push("wamp.2." + ser.SERIALIZER_ID);
       });
    } else {
