@@ -144,7 +144,11 @@ function run_test (test, ser) {
          function () {
             test.log("Registration failed!", arguments);
          }
-      );
+      )
+      .catch(function (error) {
+        connection.close();
+        done.reject(error);
+      });
    };
 
    connection.open();
