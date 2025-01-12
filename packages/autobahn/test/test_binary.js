@@ -32,8 +32,7 @@ function run_test (test, ser) {
    var done = autobahn.when.defer();
 
    var config = {
-      //url: testutil.config.url,
-      url: "ws://127.0.0.1:8090",
+      url: testutil.config.url,
       realm: testutil.config.realm,
       serializers: [ser]
    };
