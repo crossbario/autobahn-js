@@ -39,4 +39,5 @@ jobs:
 
     - name: Run tests
       run: |
+        cd packages/autobahn
         npm run test
