@@ -1,6 +1,7 @@
-name: Autobahn JS CI
+name: Autobahn JS CI v2
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - $default-branch
@@ -41,4 +42,4 @@ jobs:
       run: |
         cd packages/autobahn
         npm install
-        make test
+        npm run `test
