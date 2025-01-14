@@ -3,10 +3,10 @@ name: Autobahn JS CI
 on:
   push:
     branches:
-      - master
+      - $default-branch
   pull_request:
     branches:
-      - master
+      - $default-branch
 
 jobs:
   unittest:
@@ -16,13 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # https://de.wikipedia.org/wiki/Node.js#Versionen
-        node: ['14', '18', '19']
+        node: [lts/-2, lts/-1, lts/*]
 
     name: Node ${{ matrix.node }} run
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
 
@@ -32,13 +31,14 @@ jobs:
         docker run --rm --entrypoint=/usr/local/bin/crossbar $CB_IMAGE version
         docker run -d -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID --entrypoint=/usr/local/bin/crossbar $CB_IMAGE start --cbdir /node
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo npm install -g nodeunit
-        sudo pip3 install --no-cache-dir -U scons boto taschenmesser
+    # - name: Install dependencies
+    #   run: |
+    #     sudo apt update
+    #     sudo npm install -g nodeunit
+    #     sudo pip3 install --no-cache-dir -U scons boto taschenmesser
 
     - name: Run tests
       run: |
-        cd packages/autobahn && npm install
+        cd packages/autobahn
+        npm install
         make test
