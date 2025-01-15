@@ -8,7 +8,7 @@
     "/lib"
   ],
   "scripts": {
-    "test": "nodeunit test/test.js"
+    "test": "c8 nodeunit test/test.js"
   },
   "engines": {
     "node": ">= 7.10.1"
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "browserify": ">= 13.1.1",
+    "c8": "^8.0.1",
     "deep-equal": ">= 1.0.1",
     "google-closure-compiler": ">= 20170218.0.0",
     "nodeunit": ">= 0.11.3",

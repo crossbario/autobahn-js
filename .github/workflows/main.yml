@@ -13,6 +13,7 @@ jobs:
   unittest:
     env:
       CB_IMAGE: crossbario/crossbar:cpy-slim-amd64-22.7.1.dev1
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     runs-on: ubuntu-latest
     strategy:
@@ -41,3 +42,13 @@ jobs:
       run: |
         cd packages/autobahn
         npm run test
+
+    - name: Upload coverage reports to Codecov via GitHub Actions
+      if: env.CODECOV_TOKEN != ''
+      uses: codecov/codecov-action@v5
+      with:
+        directory: packages/autobahn/coverage
+
+    - name: Skip uploading coverage reports to Codecov via GitHub Actions
+      if: env.CODECOV_TOKEN == ''
+      run: echo "Upload skipped. CODECOV_TOKEN is not defined. Add it as a secret in your repository settings."
