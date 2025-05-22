@@ -1,4 +1,4 @@
-name: Autobahn JS CI v2
+name: Autobahn JS CI
 
 on:
   workflow_dispatch:
