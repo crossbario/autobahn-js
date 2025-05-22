@@ -47,6 +47,7 @@ jobs:
       if: env.CODECOV_TOKEN != ''
       uses: codecov/codecov-action@v5
       with:
+        flags: ${{ matrix.node }}
         directory: packages/autobahn/coverage
 
     - name: Skip uploading coverage reports to Codecov via GitHub Actions
