@@ -28,8 +28,6 @@ if ('console' in global) {
    }
 }
 
-console.log('Sdfsdf');
-
 // write debug messages to tracefile if AUTOBAHN_TRACE is set as environment variable - only works on NodeJS
 if ('process' in global && process.env.AUTOBAHN_TRACE) {
    debug = function () {

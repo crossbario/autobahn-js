@@ -8,7 +8,8 @@
     "/lib"
   ],
   "scripts": {
-    "test": "nodeunit test/test.js"
+    "test": "nodeunit test/test.js",
+    "test:coverage": "c8 nodeunit test/test.js"
   },
   "engines": {
     "node": ">= 7.10.1"
@@ -22,6 +23,7 @@
   },
   "optionalDependencies": {
     "bufferutil": ">= 1.2.1",
+    "c8": "^8.0.1",
     "utf-8-validate": ">= 1.2.1",
     "when": ">= 3.7.7"
   },

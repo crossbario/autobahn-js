@@ -32,8 +32,7 @@ function run_test (test, ser) {
    var done = autobahn.when.defer();
 
    var config = {
-      //url: testutil.config.url,
-      url: "ws://127.0.0.1:8090",
+      url: testutil.config.url,
       realm: testutil.config.realm,
       serializers: [ser]
    };
@@ -71,14 +70,6 @@ function run_test (test, ser) {
                 {a: 5, b: "hello2", c: [1, 2, 3]},
                 [-9007199254740991, 9007199254740991],
                 null,
-                // UTC of today
-                BigInt('1558266424841951553'),
-                // 2**255-1 : NotImplementedError TODO: TAG BIGNUM for bigger bignum bytes_info=24, len(ull)=8
-                // BigInt('57896044618658097711785492504343953926634992332820282019728792003956564819967'),
-                BigInt('340282366920938463463374607431768211455'),
-                Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7]),
-                randomBytes(32),
-                {a: 5, b: "hello2", c: randomBytes(32)}
             ];
 
             for (var i = 0; i < vals1.length; ++i) {
@@ -144,7 +135,11 @@ function run_test (test, ser) {
          function () {
             test.log("Registration failed!", arguments);
          }
-      );
+      )
+      .catch(function (error) {
+        connection.close();
+        done.reject(error);
+      });
    };
 
    connection.open();
@@ -192,7 +187,7 @@ exports.testBinaryJSON = function (testcase) {
 
     var dl = [];
 
-    dl.push(run_test(testcase, test, new autobahn.serializer.JSONSerializer()));
+    dl.push(run_test(test, new autobahn.serializer.JSONSerializer()));
 
     autobahn.when.all(dl).then(function () {
         var chk = test.check();

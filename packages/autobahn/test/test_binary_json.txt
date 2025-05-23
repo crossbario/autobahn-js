@@ -1,6 +1,6 @@
-0 "Connected: wamp.2.cbor"
+0 "Connected: wamp.2.json"
 1 "All registered."
-2 "Serializer ID: cbor"
+2 "Serializer ID: json"
 3 "Result [com.myapp.echo]: 1.7"
 4 "Result [com.myapp.echo]: hello"
 5 "Result [com.myapp.echo]: 1,2,-3"
