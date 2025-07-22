@@ -4,7 +4,12 @@ Tests run using NodeJS and the nodeunit package.
 
 First, ensure that a Crossbar.io instance is running with the default configuration (use `crossbar init` if needed). This will run a WAMP-over-WebSocket transport at `ws://localhost:8080/ws`.
 
-> You should be able to use any compliant WAMP router (on `ws://localhost:8080/ws`) - your mileage may vary though. 
+> You should be able to use any compliant WAMP router (on `ws://localhost:8080/ws`) - your mileage may vary though.
+
+The easiest way is to use Docker (in the root directory of the repository):
+```console
+docker run -it -v $PWD/.crossbar:/node -p 8080:8080 -p 8090:8090 -u $UID crossbario/crossbar --cbdir /node
+```
 
 Then, open a terminal and run `npm test` in the `package` directory.
 
