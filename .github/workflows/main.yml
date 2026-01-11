@@ -18,17 +18,36 @@ env:
   PYTHON_VERSION: '3.11'
 
 jobs:
+  identifiers:
+    # GitHub needs to know where .cicd/workflows/identifiers.yml lives at parse time,
+    # and submodules aren't included in that context! thus the following does NOT work:
+    # uses: ./.cicd/workflows/identifiers.yml
+    # we MUST reference the remote repo directly:
+    uses: wamp-proto/wamp-cicd/.github/workflows/identifiers.yml@main
+    # IMPORTANT: we still need .cicd as a Git submodule in the using repo though!
+    # because e.g. identifiers.yml wants to access scripts/sanitize.sh !
+
   test:
     name: Test (Node ${{ matrix.node }})
+    needs: identifiers
     runs-on: ubuntu-24.04
     strategy:
       matrix:
         node: ['18', '20', '22']
       fail-fast: false
 
+    env:
+      BASE_REPO: ${{ needs.identifiers.outputs.base_repo }}
+      BASE_BRANCH: ${{ needs.identifiers.outputs.base_branch }}
+      PR_NUMBER: ${{ needs.identifiers.outputs.pr_number }}
+      PR_REPO: ${{ needs.identifiers.outputs.pr_repo }}
+      PR_BRANCH: ${{ needs.identifiers.outputs.pr_branch }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup Node.js ${{ matrix.node }}
         uses: actions/setup-node@v4
@@ -79,11 +98,20 @@ jobs:
   build:
     name: Build browser bundles
     runs-on: ubuntu-24.04
-    needs: test
+    needs: [identifiers, test]
+
+    env:
+      BASE_REPO: ${{ needs.identifiers.outputs.base_repo }}
+      BASE_BRANCH: ${{ needs.identifiers.outputs.base_branch }}
+      PR_NUMBER: ${{ needs.identifiers.outputs.pr_number }}
+      PR_REPO: ${{ needs.identifiers.outputs.pr_repo }}
+      PR_BRANCH: ${{ needs.identifiers.outputs.pr_branch }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
@@ -112,14 +140,14 @@ jobs:
         run: just build-xbr
 
       - name: Upload autobahn build artifacts
-        uses: actions/upload-artifact@v4
+        uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
         with:
           name: autobahn-browser-bundle
           path: packages/autobahn/build/
           retention-days: 30
 
       - name: Upload autobahn-xbr build artifacts
-        uses: actions/upload-artifact@v4
+        uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
         with:
           name: autobahn-xbr-browser-bundle
           path: packages/autobahn-xbr/build/
@@ -127,11 +155,21 @@ jobs:
 
   security:
     name: Security scan
+    needs: identifiers
     runs-on: ubuntu-24.04
+
+    env:
+      BASE_REPO: ${{ needs.identifiers.outputs.base_repo }}
+      BASE_BRANCH: ${{ needs.identifiers.outputs.base_branch }}
+      PR_NUMBER: ${{ needs.identifiers.outputs.pr_number }}
+      PR_REPO: ${{ needs.identifiers.outputs.pr_repo }}
+      PR_BRANCH: ${{ needs.identifiers.outputs.pr_branch }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4

@@ -24,6 +24,7 @@ jobs:
       should_release: ${{ steps.check.outputs.should_release }}
       version: ${{ steps.check.outputs.version }}
       is_prerelease: ${{ steps.check.outputs.is_prerelease }}
+      run_id: ${{ steps.check.outputs.run_id }}
 
     steps:
       - name: Check trigger conditions
@@ -39,6 +40,7 @@ jobs:
               console.log(`Workflow: ${workflow_run.name}`);
               console.log(`Conclusion: ${workflow_run.conclusion}`);
               console.log(`Head branch: ${workflow_run.head_branch}`);
+              console.log(`Run ID: ${workflow_run.id}`);
 
               // Only release if main workflow succeeded
               if (workflow_run.conclusion !== 'success') {
@@ -66,6 +68,7 @@ jobs:
               core.setOutput('should_release', 'true');
               core.setOutput('version', version);
               core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
+              core.setOutput('run_id', workflow_run.id.toString());
               return;
             }
 
@@ -87,6 +90,7 @@ jobs:
             core.setOutput('should_release', 'true');
             core.setOutput('version', version);
             core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
+            core.setOutput('run_id', context.runId.toString());
 
   publish-npm:
     name: Publish to npm
@@ -99,6 +103,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: v${{ needs.check-release.outputs.version }}
+          submodules: recursive
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -175,13 +180,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: v${{ needs.check-release.outputs.version }}
+          submodules: recursive
 
-      - name: Download build artifacts (if available)
-        uses: actions/download-artifact@v4
+      - name: Download autobahn build artifacts (verified)
+        uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
         with:
-          pattern: autobahn*-browser-bundle
-          path: release-assets/
-          merge-multiple: true
+          name: autobahn-browser-bundle
+          path: release-assets/autobahn/
+          run-id: ${{ needs.check-release.outputs.run_id }}
+        continue-on-error: true
+
+      - name: Download autobahn-xbr build artifacts (verified)
+        uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
+        with:
+          name: autobahn-xbr-browser-bundle
+          path: release-assets/autobahn-xbr/
+          run-id: ${{ needs.check-release.outputs.run_id }}
         continue-on-error: true
 
       - name: Create GitHub Release
