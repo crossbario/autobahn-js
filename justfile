@@ -258,7 +258,7 @@ build-autobahn: install-npm
     echo "==> autobahn browser bundle built:"
     ls -la build/
 
-# Build autobahn-xbr browser bundle (using npm tools directly, no SCons/taschenmesser)
+# Build autobahn-xbr browser bundle (using npm tools from autobahn package)
 build-xbr: install-npm abi-files
     #!/usr/bin/env bash
     set -e
@@ -270,13 +270,16 @@ build-xbr: install-npm abi-files
     VERSION=$(node -p "require('./package.json').version")
     echo "==> Building autobahn-xbr ${VERSION} browser bundle..."
 
+    # Use build tools from autobahn package (browserify, google-closure-compiler)
+    AUTOBAHN_BIN="{{ PACKAGES_DIR }}/autobahn/node_modules/.bin"
+
     # Step 1: Browserify - create standalone bundle
     echo "    [1/5] Browserify..."
-    ./node_modules/.bin/browserify lib/index.js --ignore-missing --standalone autobahn_xbr -o build/autobahn-xbr.js
+    ${AUTOBAHN_BIN}/browserify lib/index.js --ignore-missing --standalone autobahn_xbr -o build/autobahn-xbr.js
 
     # Step 2: Minify with Google Closure Compiler
     echo "    [2/5] Minify (Google Closure Compiler)..."
-    ./node_modules/.bin/google-closure-compiler \
+    ${AUTOBAHN_BIN}/google-closure-compiler \
         --compilation_level=SIMPLE \
         --language_out=ECMASCRIPT_2018 \
         --strict_mode_input=false \
@@ -319,18 +322,6 @@ crossbar-start venv="": (install-crossbar venv)
     cd {{ PROJECT_DIR }}
     ${VENV_PATH}/bin/crossbar start --cbdir .crossbar
 
-# Start Crossbar.io router via Docker
-crossbar-docker:
-    #!/usr/bin/env bash
-    set -e
-    echo "==> Starting Crossbar.io router via Docker..."
-    docker run -it --rm \
-        -v {{ PROJECT_DIR }}/.crossbar:/node \
-        -p 8080:8080 \
-        -p 8090:8090 \
-        -u $(id -u) \
-        crossbario/crossbar --cbdir /node
-
 # -----------------------------------------------------------------------------
 # -- Tests (requires running Crossbar.io router on ws://localhost:8080/ws)
 # -----------------------------------------------------------------------------
@@ -359,20 +350,23 @@ test-clean:
 # Therefore, trace-based regression testing is NOT reliable.
 # Regression testing is done via nodeunit test assertions.
 #
-# See: https://github.com/crossbario/crossbar/issues/XXX
+# See: https://github.com/crossbario/crossbar/issues/2158
 #      (Feature request for deterministic ID generation mode)
 # -----------------------------------------------------------------------------
 
 # --- Basic tests ---
 
+# Run basic tests (async and sync connection patterns)
 test-basic: test-basic-async test-basic-sync
 
+# Test asynchronous connection handling
 test-basic-async:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_basic_async.trace && AUTOBAHN_TRACE=test/test_basic_async.trace ./node_modules/.bin/nodeunit test/test_basic_async.js
 
+# Test synchronous connection handling
 test-basic-sync:
     #!/usr/bin/env bash
     set -e
@@ -381,6 +375,7 @@ test-basic-sync:
 
 # --- Connection tests ---
 
+# Test WAMP connection establishment and session lifecycle
 test-connect:
     #!/usr/bin/env bash
     set -e
@@ -389,6 +384,7 @@ test-connect:
 
 # --- Error handling tests ---
 
+# Test WAMP error handling (application errors, protocol errors)
 test-error-handling:
     #!/usr/bin/env bash
     set -e
@@ -397,58 +393,68 @@ test-error-handling:
 
 # --- PubSub tests ---
 
+# Run all PubSub tests
 # Note: test-pubsub-multiple-matching-subs excluded - order-dependent, WAMP doesn't guarantee
 #       event delivery order across subscribers (flaky depending on system timing)
 test-pubsub: test-pubsub-basic test-pubsub-complex test-pubsub-eligible test-pubsub-exclude test-pubsub-excludeme test-pubsub-options test-pubsub-prefix-sub test-pubsub-wildcard-sub
 
+# Test basic publish/subscribe functionality
 test-pubsub-basic:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_basic.trace && AUTOBAHN_TRACE=test/test_pubsub_basic.trace ./node_modules/.bin/nodeunit test/test_pubsub_basic.js
 
+# Test complex publish/subscribe scenarios (multiple topics, payloads)
 test-pubsub-complex:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_complex.trace && AUTOBAHN_TRACE=test/test_pubsub_complex.trace ./node_modules/.bin/nodeunit test/test_pubsub_complex.js
 
+# Test publisher eligible list (whitelist specific subscribers)
 test-pubsub-eligible:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_eligible.trace && AUTOBAHN_TRACE=test/test_pubsub_eligible.trace ./node_modules/.bin/nodeunit test/test_pubsub_eligible.js
 
+# Test publisher exclude list (blacklist specific subscribers)
 test-pubsub-exclude:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_exclude.trace && AUTOBAHN_TRACE=test/test_pubsub_exclude.trace ./node_modules/.bin/nodeunit test/test_pubsub_exclude.js
 
+# Test exclude_me option (publisher doesn't receive own events)
 test-pubsub-excludeme:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_excludeme.trace && AUTOBAHN_TRACE=test/test_pubsub_excludeme.trace ./node_modules/.bin/nodeunit test/test_pubsub_excludeme.js
 
+# Test multiple matching subscriptions (EXCLUDED from test-pubsub - flaky)
 test-pubsub-multiple-matching-subs:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_multiple_matching_subs.trace && AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.trace ./node_modules/.bin/nodeunit test/test_pubsub_multiple_matching_subs.js
 
+# Test subscription options (retain, acknowledge, etc.)
 test-pubsub-options:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_options.trace && AUTOBAHN_TRACE=test/test_pubsub_options.trace ./node_modules/.bin/nodeunit test/test_pubsub_options.js
 
+# Test prefix-based subscription matching
 test-pubsub-prefix-sub:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_pubsub_prefix_sub.trace && AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.trace ./node_modules/.bin/nodeunit test/test_pubsub_prefix_sub.js
 
+# Test wildcard-based subscription matching
 test-pubsub-wildcard-sub:
     #!/usr/bin/env bash
     set -e
@@ -457,50 +463,59 @@ test-pubsub-wildcard-sub:
 
 # --- RPC tests ---
 
+# Run all RPC tests
 test-rpc: test-rpc-arguments test-rpc-complex test-rpc-error test-rpc-options test-rpc-progress test-rpc-request-id-sequence test-rpc-routing test-rpc-slowsquare
 
+# Test RPC argument passing (args, kwargs)
 test-rpc-arguments:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_arguments.trace && AUTOBAHN_TRACE=test/test_rpc_arguments.trace ./node_modules/.bin/nodeunit test/test_rpc_arguments.js
 
+# Test complex RPC scenarios (nested calls, multiple procedures)
 test-rpc-complex:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_complex.trace && AUTOBAHN_TRACE=test/test_rpc_complex.trace ./node_modules/.bin/nodeunit test/test_rpc_complex.js
 
+# Test RPC error handling (application errors, cancellation)
 test-rpc-error:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_error.trace && AUTOBAHN_TRACE=test/test_rpc_error.trace ./node_modules/.bin/nodeunit test/test_rpc_error.js
 
+# Test RPC call options (timeout, disclose_me, etc.)
 test-rpc-options:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_options.trace && AUTOBAHN_TRACE=test/test_rpc_options.trace ./node_modules/.bin/nodeunit test/test_rpc_options.js
 
+# Test progressive RPC results (streaming responses)
 test-rpc-progress:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_progress.trace && AUTOBAHN_TRACE=test/test_rpc_progress.trace ./node_modules/.bin/nodeunit test/test_rpc_progress.js
 
+# Test request ID sequencing and correlation
 test-rpc-request-id-sequence:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_request_id_sequence.trace && AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.trace ./node_modules/.bin/nodeunit test/test_rpc_request_id_sequence.js
 
+# Test RPC routing (shared registrations, pattern-based)
 test-rpc-routing:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rpc_routing.trace && AUTOBAHN_TRACE=test/test_rpc_routing.trace ./node_modules/.bin/nodeunit test/test_rpc_routing.js
 
+# Test slow RPC calls (long-running procedures)
 test-rpc-slowsquare:
     #!/usr/bin/env bash
     set -e
@@ -509,20 +524,24 @@ test-rpc-slowsquare:
 
 # --- Serialization tests ---
 
+# Run all serialization tests
 test-serialization: test-serialization-cbor test-serialization-json test-serialization-msgpack
 
+# Test CBOR serialization (RFC 8949)
 test-serialization-cbor:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_serialization_cbor.trace && AUTOBAHN_TRACE=test/test_serialization_cbor.trace ./node_modules/.bin/nodeunit test/test_serialization_cbor.js
 
+# Test JSON serialization (default WAMP serializer)
 test-serialization-json:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_serialization_json.trace && AUTOBAHN_TRACE=test/test_serialization_json.trace ./node_modules/.bin/nodeunit test/test_serialization_json.js
 
+# Test MessagePack serialization (binary, compact)
 test-serialization-msgpack:
     #!/usr/bin/env bash
     set -e
@@ -531,14 +550,17 @@ test-serialization-msgpack:
 
 # --- RawSocket tests ---
 
+# Run all RawSocket tests
 test-rawsocket: test-rawsocket-protocol test-rawsocket-transport
 
+# Test RawSocket protocol framing (handshake, message length)
 test-rawsocket-protocol:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_rawsocket_protocol.trace && AUTOBAHN_TRACE=test/test_rawsocket_protocol.trace ./node_modules/.bin/nodeunit test/test_rawsocket_protocol.js
 
+# Test RawSocket transport (TCP connection, reconnection)
 test-rawsocket-transport:
     #!/usr/bin/env bash
     set -e
@@ -547,12 +569,14 @@ test-rawsocket-transport:
 
 # --- Binary/crypto tests (may require additional setup) ---
 
+# Test binary payload handling
 test-binary:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
     rm -f test/test_binary.trace && AUTOBAHN_TRACE=test/test_binary.trace ./node_modules/.bin/nodeunit test/test_binary.js
 
+# Test NaCl sealed box encryption (cryptographic operations)
 test-sealedbox:
     #!/usr/bin/env bash
     set -e
