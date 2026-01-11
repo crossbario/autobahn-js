@@ -14,7 +14,8 @@ permissions:
   id-token: write      # For npm provenance
 
 env:
-  NODE_VERSION: '22'
+  # Node 24 is current LTS (Krypton)
+  NODE_VERSION: '24'
 
 jobs:
   check-release:

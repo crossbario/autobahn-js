@@ -14,7 +14,8 @@ permissions:
   pull-requests: read
 
 env:
-  NODE_VERSION: '22'
+  # Node 24 is current LTS (Krypton) - use for builds
+  NODE_VERSION: '24'
   PYTHON_VERSION: '3.11'
 
 jobs:
@@ -33,7 +34,8 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        node: ['18', '20', '22']
+        # Node 22 (LTS), 24 (LTS "Krypton"), 25 (Current)
+        node: ['22', '24', '25']
       fail-fast: false
 
     env:
