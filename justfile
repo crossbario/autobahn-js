@@ -386,13 +386,13 @@ test-basic-async:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_basic_async.trace nodeunit test/test_basic_async.js
+    rm -f test/test_basic_async.trace && AUTOBAHN_TRACE=test/test_basic_async.trace ./node_modules/.bin/nodeunit test/test_basic_async.js
 
 test-basic-sync:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_basic_sync.trace nodeunit test/test_basic_sync.js
+    rm -f test/test_basic_sync.trace && AUTOBAHN_TRACE=test/test_basic_sync.trace ./node_modules/.bin/nodeunit test/test_basic_sync.js
 
 # --- Connection tests ---
 
@@ -400,7 +400,7 @@ test-connect:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_connect.trace nodeunit test/test_connect.js
+    rm -f test/test_connect.trace && AUTOBAHN_TRACE=test/test_connect.trace ./node_modules/.bin/nodeunit test/test_connect.js
 
 # --- Error handling tests ---
 
@@ -408,7 +408,7 @@ test-error-handling:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_error_handling.trace nodeunit test/test_error_handling.js
+    rm -f test/test_error_handling.trace && AUTOBAHN_TRACE=test/test_error_handling.trace ./node_modules/.bin/nodeunit test/test_error_handling.js
 
 # --- PubSub tests ---
 
@@ -418,55 +418,55 @@ test-pubsub-basic:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_basic.trace nodeunit test/test_pubsub_basic.js
+    rm -f test/test_pubsub_basic.trace && AUTOBAHN_TRACE=test/test_pubsub_basic.trace ./node_modules/.bin/nodeunit test/test_pubsub_basic.js
 
 test-pubsub-complex:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_complex.trace nodeunit test/test_pubsub_complex.js
+    rm -f test/test_pubsub_complex.trace && AUTOBAHN_TRACE=test/test_pubsub_complex.trace ./node_modules/.bin/nodeunit test/test_pubsub_complex.js
 
 test-pubsub-eligible:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_eligible.trace nodeunit test/test_pubsub_eligible.js
+    rm -f test/test_pubsub_eligible.trace && AUTOBAHN_TRACE=test/test_pubsub_eligible.trace ./node_modules/.bin/nodeunit test/test_pubsub_eligible.js
 
 test-pubsub-exclude:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_exclude.trace nodeunit test/test_pubsub_exclude.js
+    rm -f test/test_pubsub_exclude.trace && AUTOBAHN_TRACE=test/test_pubsub_exclude.trace ./node_modules/.bin/nodeunit test/test_pubsub_exclude.js
 
 test-pubsub-excludeme:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_excludeme.trace nodeunit test/test_pubsub_excludeme.js
+    rm -f test/test_pubsub_excludeme.trace && AUTOBAHN_TRACE=test/test_pubsub_excludeme.trace ./node_modules/.bin/nodeunit test/test_pubsub_excludeme.js
 
 test-pubsub-multiple-matching-subs:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.trace nodeunit test/test_pubsub_multiple_matching_subs.js
+    rm -f test/test_pubsub_multiple_matching_subs.trace && AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.trace ./node_modules/.bin/nodeunit test/test_pubsub_multiple_matching_subs.js
 
 test-pubsub-options:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_options.trace nodeunit test/test_pubsub_options.js
+    rm -f test/test_pubsub_options.trace && AUTOBAHN_TRACE=test/test_pubsub_options.trace ./node_modules/.bin/nodeunit test/test_pubsub_options.js
 
 test-pubsub-prefix-sub:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.trace nodeunit test/test_pubsub_prefix_sub.js
+    rm -f test/test_pubsub_prefix_sub.trace && AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.trace ./node_modules/.bin/nodeunit test/test_pubsub_prefix_sub.js
 
 test-pubsub-wildcard-sub:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_pubsub_wildcard_sub.trace nodeunit test/test_pubsub_wildcard_sub.js
+    rm -f test/test_pubsub_wildcard_sub.trace && AUTOBAHN_TRACE=test/test_pubsub_wildcard_sub.trace ./node_modules/.bin/nodeunit test/test_pubsub_wildcard_sub.js
 
 # --- RPC tests ---
 
@@ -476,49 +476,49 @@ test-rpc-arguments:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_arguments.trace nodeunit test/test_rpc_arguments.js
+    rm -f test/test_rpc_arguments.trace && AUTOBAHN_TRACE=test/test_rpc_arguments.trace ./node_modules/.bin/nodeunit test/test_rpc_arguments.js
 
 test-rpc-complex:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_complex.trace nodeunit test/test_rpc_complex.js
+    rm -f test/test_rpc_complex.trace && AUTOBAHN_TRACE=test/test_rpc_complex.trace ./node_modules/.bin/nodeunit test/test_rpc_complex.js
 
 test-rpc-error:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_error.trace nodeunit test/test_rpc_error.js
+    rm -f test/test_rpc_error.trace && AUTOBAHN_TRACE=test/test_rpc_error.trace ./node_modules/.bin/nodeunit test/test_rpc_error.js
 
 test-rpc-options:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_options.trace nodeunit test/test_rpc_options.js
+    rm -f test/test_rpc_options.trace && AUTOBAHN_TRACE=test/test_rpc_options.trace ./node_modules/.bin/nodeunit test/test_rpc_options.js
 
 test-rpc-progress:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_progress.trace nodeunit test/test_rpc_progress.js
+    rm -f test/test_rpc_progress.trace && AUTOBAHN_TRACE=test/test_rpc_progress.trace ./node_modules/.bin/nodeunit test/test_rpc_progress.js
 
 test-rpc-request-id-sequence:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.trace nodeunit test/test_rpc_request_id_sequence.js
+    rm -f test/test_rpc_request_id_sequence.trace && AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.trace ./node_modules/.bin/nodeunit test/test_rpc_request_id_sequence.js
 
 test-rpc-routing:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_routing.trace nodeunit test/test_rpc_routing.js
+    rm -f test/test_rpc_routing.trace && AUTOBAHN_TRACE=test/test_rpc_routing.trace ./node_modules/.bin/nodeunit test/test_rpc_routing.js
 
 test-rpc-slowsquare:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rpc_slowsquare.trace nodeunit test/test_rpc_slowsquare.js
+    rm -f test/test_rpc_slowsquare.trace && AUTOBAHN_TRACE=test/test_rpc_slowsquare.trace ./node_modules/.bin/nodeunit test/test_rpc_slowsquare.js
 
 # --- Serialization tests ---
 
@@ -528,19 +528,19 @@ test-serialization-cbor:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_serialization_cbor.trace nodeunit test/test_serialization_cbor.js
+    rm -f test/test_serialization_cbor.trace && AUTOBAHN_TRACE=test/test_serialization_cbor.trace ./node_modules/.bin/nodeunit test/test_serialization_cbor.js
 
 test-serialization-json:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_serialization_json.trace nodeunit test/test_serialization_json.js
+    rm -f test/test_serialization_json.trace && AUTOBAHN_TRACE=test/test_serialization_json.trace ./node_modules/.bin/nodeunit test/test_serialization_json.js
 
 test-serialization-msgpack:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_serialization_msgpack.trace nodeunit test/test_serialization_msgpack.js
+    rm -f test/test_serialization_msgpack.trace && AUTOBAHN_TRACE=test/test_serialization_msgpack.trace ./node_modules/.bin/nodeunit test/test_serialization_msgpack.js
 
 # --- RawSocket tests ---
 
@@ -550,13 +550,13 @@ test-rawsocket-protocol:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rawsocket_protocol.trace nodeunit test/test_rawsocket_protocol.js
+    rm -f test/test_rawsocket_protocol.trace && AUTOBAHN_TRACE=test/test_rawsocket_protocol.trace ./node_modules/.bin/nodeunit test/test_rawsocket_protocol.js
 
 test-rawsocket-transport:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_rawsocket_transport.trace nodeunit test/test_rawsocket_transport.js
+    rm -f test/test_rawsocket_transport.trace && AUTOBAHN_TRACE=test/test_rawsocket_transport.trace ./node_modules/.bin/nodeunit test/test_rawsocket_transport.js
 
 # --- Binary/crypto tests (may require additional setup) ---
 
@@ -564,13 +564,13 @@ test-binary:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_binary.trace nodeunit test/test_binary.js
+    rm -f test/test_binary.trace && AUTOBAHN_TRACE=test/test_binary.trace ./node_modules/.bin/nodeunit test/test_binary.js
 
 test-sealedbox:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    AUTOBAHN_TRACE=test/test_sealedbox.trace nodeunit test/test_sealedbox.js
+    rm -f test/test_sealedbox.trace && AUTOBAHN_TRACE=test/test_sealedbox.trace ./node_modules/.bin/nodeunit test/test_sealedbox.js
 
 # -----------------------------------------------------------------------------
 # -- Publishing (manual steps documented)
