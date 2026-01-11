@@ -138,6 +138,21 @@ install-crossbar venv="": (create venv)
     ${VENV_PYTHON} -m pip install crossbar
     ${VENV_PATH}/bin/crossbar version
 
+# Create a separate venv for XBR tools (ABI file extraction)
+create-xbr-venv:
+    #!/usr/bin/env bash
+    set -e
+    XBR_VENV="{{ VENV_DIR }}/xbr-tools"
+    if [ ! -d "${XBR_VENV}" ]; then
+        echo "==> Creating XBR tools venv..."
+        mkdir -p "{{ VENV_DIR }}"
+        uv venv --seed --python "cpython-3.11" "${XBR_VENV}"
+    fi
+    echo "==> Installing xbr>=25.12.2 into xbr-tools venv..."
+    ${XBR_VENV}/bin/python -m pip install --upgrade pip
+    ${XBR_VENV}/bin/python -m pip install "xbr>=25.12.2"
+    ${XBR_VENV}/bin/python -c "import xbr; print(f'xbr {xbr.__version__} installed')"
+
 
 # -----------------------------------------------------------------------------
 # -- Cleanup
@@ -187,25 +202,30 @@ install-npm:
     npm install
     echo "==> npm install complete."
 
-# Download latest XBR ABI files (optional - skipped if unreachable or already present)
-abi-files:
+# Copy XBR ABI files from installed xbr package to autobahn-xbr build
+abi-files: create-xbr-venv
     #!/usr/bin/env bash
     set -e
+    XBR_VENV="{{ VENV_DIR }}/xbr-tools"
+
+    # Get xbr package location
+    XBR_ABI_DIR=$(${XBR_VENV}/bin/python -c "import xbr, os; print(os.path.join(os.path.dirname(xbr.__file__), 'abi'))")
+
+    if [ ! -d "${XBR_ABI_DIR}" ]; then
+        echo "ERROR: XBR ABI directory not found at ${XBR_ABI_DIR}"
+        exit 1
+    fi
+
+    # Copy to lib/contracts for browserify to find during build
     CONTRACTS_DIR="{{ PACKAGES_DIR }}/autobahn-xbr/lib/contracts"
-    if [ -d "${CONTRACTS_DIR}" ] && [ "$(ls -A ${CONTRACTS_DIR} 2>/dev/null)" ]; then
-        echo "==> XBR ABI files already present, skipping download."
-        exit 0
-    fi
-    echo "==> Downloading XBR ABI files..."
-    if curl -sf --connect-timeout 5 https://xbr.network/lib/abi/xbr-protocol-latest.zip -o /tmp/xbr-protocol-latest.zip; then
-        unzip -t /tmp/xbr-protocol-latest.zip
-        rm -rf "${CONTRACTS_DIR}"
-        unzip /tmp/xbr-protocol-latest.zip -d "${CONTRACTS_DIR}"
-        echo "==> XBR ABI files downloaded."
-    else
-        echo "WARNING: Could not download XBR ABI files (xbr.network unreachable)."
-        echo "         autobahn-xbr build will fail if contracts/ directory is empty."
-    fi
+    echo "==> Copying XBR ABI files from ${XBR_ABI_DIR}..."
+    rm -rf "${CONTRACTS_DIR}"
+    mkdir -p "${CONTRACTS_DIR}"
+    cp -r "${XBR_ABI_DIR}"/*.json "${CONTRACTS_DIR}/"
+
+    echo "==> XBR ABI files copied:"
+    ls -la "${CONTRACTS_DIR}/" | head -10
+    echo "    ... ($(ls "${CONTRACTS_DIR}" | wc -l) files total)"
 
 # -----------------------------------------------------------------------------
 # -- Build (browser bundles)
