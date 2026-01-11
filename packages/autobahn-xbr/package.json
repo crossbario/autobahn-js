@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@truffle/contract": ">=4.1.5",
-    "autobahn": "^26.1.1",
+    "autobahn": "file:../autobahn",
     "cbor": ">=3.0.0",
     "crypto-js": ">=3.1.8",
     "eth-sig-util": "^2.5.3",

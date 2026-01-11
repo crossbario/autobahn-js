@@ -28,6 +28,7 @@
   "devDependencies": {
     "browserify": ">= 13.1.1",
     "deep-equal": ">= 1.0.1",
+    "esbuild": ">= 0.20.0",
     "google-closure-compiler": ">= 20170218.0.0",
     "nodeunit": ">= 0.11.3",
     "random-bytes-seed": ">=1.0.3"

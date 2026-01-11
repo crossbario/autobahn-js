@@ -278,7 +278,7 @@ build-autobahn: install-npm
     echo "==> autobahn browser bundle built:"
     ls -la build/
 
-# Build autobahn-xbr browser bundle (using npm tools from autobahn package)
+# Build autobahn-xbr browser bundle (using esbuild from autobahn package)
 build-xbr: install-npm abi-files
     #!/usr/bin/env bash
     set -e
@@ -290,21 +290,29 @@ build-xbr: install-npm abi-files
     VERSION=$(node -p "require('./package.json').version")
     echo "==> Building autobahn-xbr ${VERSION} browser bundle..."
 
-    # Use build tools from autobahn package (browserify, google-closure-compiler)
+    # Use esbuild from autobahn package (handles ES modules natively)
     AUTOBAHN_BIN="{{ PACKAGES_DIR }}/autobahn/node_modules/.bin"
 
-    # Step 1: Browserify - create standalone bundle
-    echo "    [1/5] Browserify..."
-    ${AUTOBAHN_BIN}/browserify lib/index.js --ignore-missing --standalone autobahn_xbr -o build/autobahn-xbr.js
+    # Common esbuild options for browser bundle
+    # Note: Node.js built-ins are externalized (web3 handles browser compatibility)
+    ESBUILD_OPTS="--bundle --format=iife --global-name=autobahn_xbr --platform=browser"
+    # Externalize all Node.js built-ins
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:assert --external:stream --external:http --external:https"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:url --external:zlib --external:crypto --external:buffer"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:fs --external:path --external:os --external:net --external:tls"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:events --external:util --external:querystring --external:string_decoder"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:process --external:child_process --external:cluster --external:dgram"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:dns --external:domain --external:readline --external:repl"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:vm --external:worker_threads --external:perf_hooks"
+    ESBUILD_OPTS="${ESBUILD_OPTS} --external:websocket"
 
-    # Step 2: Minify with Google Closure Compiler
-    echo "    [2/5] Minify (Google Closure Compiler)..."
-    ${AUTOBAHN_BIN}/google-closure-compiler \
-        --compilation_level=SIMPLE \
-        --language_out=ECMASCRIPT_2018 \
-        --strict_mode_input=false \
-        --js=build/autobahn-xbr.js \
-        --js_output_file=build/autobahn-xbr.min.js
+    # Step 1: Bundle with esbuild (unminified)
+    echo "    [1/5] esbuild (bundle)..."
+    ${AUTOBAHN_BIN}/esbuild lib/autobahn-xbr.js ${ESBUILD_OPTS} --outfile=build/autobahn-xbr.js
+
+    # Step 2: Bundle with esbuild (minified)
+    echo "    [2/5] esbuild (minify)..."
+    ${AUTOBAHN_BIN}/esbuild lib/autobahn-xbr.js ${ESBUILD_OPTS} --minify --outfile=build/autobahn-xbr.min.js
 
     # Step 3: Gzip the minified file
     echo "    [3/5] Gzip..."
