@@ -4,7 +4,7 @@
 //
 //  JavaScript client library for the XBR Network.
 //
-//  Copyright (C) Crossbar.io Technologies GmbH and contributors
+//  Copyright (C) typedef int GmbH and contributors
 //
 //  Licensed under the MIT License.
 //  http://www.opensource.org/licenses/mit-license.php
