@@ -161,8 +161,26 @@ autobahn-js/
 | Create `modernization` branch | Done |
 | Create `justfile` | Done |
 | Modernize browser build (remove SCons/taschenmesser) | Done |
-| Port test targets | Pending |
-| Local test execution | Pending |
+| Port test targets | Done |
+| Local test execution | Done |
+
+#### Test Execution Notes
+
+- **Test runner**: `just test` runs all tests via nodeunit
+- **Crossbar router**: `just crossbar-start` starts router from Python venv
+- **Trace files**: `.trace` files are for **debugging only**, not regression testing
+
+**Why trace-based regression testing doesn't work:**
+
+WAMP trace files contain non-deterministic values that differ between runs:
+- Session IDs, Request IDs (randomly generated)
+- Anonymous auth IDs (randomly generated)
+- Machine metadata (`x_cb_node`, `x_cb_pid`, `x_cb_peer`)
+
+Regression testing relies on nodeunit test assertions, not trace file comparison.
+
+**Known flaky test:** `test-pubsub-multiple-matching-subs` is excluded from `just test`
+because it depends on event delivery order, which WAMP doesn't guarantee.
 
 #### Build System Modernization (Completed)
 
