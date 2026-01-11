@@ -114,83 +114,38 @@ This also contains a complete history of previous releases and can be used with 
 	bower install autobahn
 
 
-### NodeJS Development
+### Node.js Development
 
-AutobahnJS is available via the Node package manager [here](https://www.npmjs.org/package/autobahn). To install:
-
-	npm install autobahn
-
-#### NodeJS and ws version
-
-AutobahnJS works with both v1 and v2 of the ws library, and you should use the ws version depending on the NodeJS version you use.
-
-If you run NodeJS v4.5.0 or later, you can use the ws library v2:
+AutobahnJS is available via npm [here](https://www.npmjs.org/package/autobahn). To install:
 
 ```console
-npm install ws@2`
+npm install autobahn
 ```
 
-If you run an earlier version of NodeJS, use must use the ws library v1:
+#### Supported Node.js Versions
+
+AutobahnJS is tested and supported on the following Node.js versions:
+
+| Version | Status | Support Until |
+|---------|--------|---------------|
+| 22.x | Maintenance LTS | Apr 2027 |
+| 24.x | **Active LTS** "Krypton" | Apr 2028 |
+| 25.x | Current | — |
+
+**Recommendation:** Use Node.js 24.x (Active LTS) for production deployments.
+
+For the latest Node.js release schedule, see [nodejs.org/about/previous-releases](https://nodejs.org/en/about/previous-releases).
+
+#### WebSocket Support
+
+Node.js 22+ includes native WebSocket support. For older Node.js versions, AutobahnJS uses the [ws library](https://github.com/websockets/ws/) which is included as a dependency.
+
+#### Quick Check
+
+Verify your installation:
 
 ```console
-npm install ws@1`
-```
-
-**Details**
-
-AutobahnJS currently strives for support of NodeJS v4.2.6 or later. The reason is that this is the version that currently ships with Ubuntu 16.04 LTS.
-
-On NodeJS, we need the [ws library](https://github.com/websockets/ws/) for WebSocket support, as different from browsers, NodeJS does not come with a native implementation.
-
-However, the ws library v2 or later is incompatible with NodeJS earlier than v4.5.0. See [here](http://stackoverflow.com/a/42331959/884770) and [here](https://github.com/websockets/ws/issues/989).
-
-Rather than dropping support for NodeJS v4 (and hence for the system NodeJS version of Ubuntu), we use ws v1 as a dependency in `package.json`, but allow any version of ws to be used.
-
-#### Usage on Ubuntu
-
-As mentioned above, Ubuntu 16.04 ships with Node 4.2, which only works with ws v1. To use that, do the following:
-
-```console
-sudo npm install -g ws@1 autobahn
-export NODE_PATH=/usr/local/lib/node_modules/
-```
-
-> This first install ws at version 1, and then installs Autobahn. When you install Autobahn without installing ws first, the latest ws version will be installed as a dependency of Autobahn, hence ws v2, and that won't work.
-
-To use a current Node with ws v2, do the following:
-
-```console
-cd ~
-wget https://nodejs.org/dist/v6.10.1/node-v6.10.1-linux-x64.tar.xz
-tar xvf node-v6.10.1-linux-x64.tar.xz
-export PATH=${HOME}/node-v6.10.1-linux-x64/bin:${PATH}
-export NODE_PATH=${HOME}/node-v6.10.1-linux-x64/lib/node_modules
-```
-
-This should give you:
-
-```console
-oberstet@office-corei7:~$ which node
-/home/oberstet/node-v6.10.1-linux-x64/bin/node
-oberstet@office-corei7:~$ which npm
-/home/oberstet/node-v6.10.1-linux-x64/bin/npm
-oberstet@office-corei7:~$ node -v
-v6.10.1
-oberstet@office-corei7:~$ npm -v
-3.10.10
-```
-
-Now you can install Autobahn:
-
-```console
-npm install -g autobahn
-```
-
-and check
-
-```console
-oberstet@office-corei7:~$ node -e "var autobahn = require('autobahn'); console.log(autobahn.version);"
-0.12.0
+node -e "var autobahn = require('autobahn'); console.log('AutobahnJS version:', autobahn.version);"
 ```
 
 ## More information
