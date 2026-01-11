@@ -2,10 +2,12 @@
 
 WAMP for Browsers and NodeJS.
 
-[![NPM](https://nodei.co/npm/autobahn.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/autobahn/)
+[![CI](https://github.com/crossbario/autobahn-js/actions/workflows/main.yml/badge.svg)](https://github.com/crossbario/autobahn-js/actions/workflows/main.yml)
+[![npm version](https://img.shields.io/npm/v/autobahn.svg)](https://www.npmjs.com/package/autobahn)
+[![npm downloads](https://img.shields.io/npm/dm/autobahn.svg)](https://www.npmjs.com/package/autobahn)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/crossbario/autobahn-js/)
-[![Build Status](https://travis-ci.org/crossbario/autobahn-js.svg?branch=master)](https://travis-ci.org/crossbario/autobahn-js)
+[![NPM](https://nodei.co/npm/autobahn.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/autobahn/)
 
 **npm quicklinks:**
 

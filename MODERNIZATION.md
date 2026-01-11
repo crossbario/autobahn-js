@@ -4,24 +4,26 @@ This document outlines the modernization plan for AutobahnJS, establishing a fou
 
 **Key Constraint**: Minimize code changes to protect existing customer applications.
 
+**Current Version**: 26.1.1
+
 ---
 
 ## Current State Assessment
 
-### Overview
+### Overview (Post-Modernization)
 
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| **Language** | Pure JavaScript (ES5/ES6 mix) | No TypeScript |
-| **Build System** | SCons + Browserify + Closure Compiler | Python-based, unusual for JS project |
-| **Test Framework** | Nodeunit | Deprecated, unmaintained |
-| **CI/CD** | GitHub Actions | Basic, no security scanning |
-| **Code Quality** | None | No ESLint, Prettier, or linting |
-| **Type Definitions** | None | No `.d.ts` files |
-| **Last Release** | v22.11.1 (Nov 2022) | |
+| **Language** | Pure JavaScript (ES5/ES6 mix) | No TypeScript (by design) |
+| **Build System** | justfile + npm tools | Modernized from Makefile/SCons |
+| **Test Framework** | Nodeunit | Tests working, router via PyPI |
+| **CI/CD** | GitHub Actions | 3 workflows: main, release, release-post-comment |
+| **Code Quality** | npm audit | Security scanning in CI |
+| **Type Definitions** | None (planned) | Track A pending |
+| **Version** | v26.1.1 | Bumped from v22.11.1 |
 | **License** | MIT (core) / Apache-2.0 (XBR) | |
 
-### Project Structure
+### Project Structure (Post-Modernization)
 
 ```
 autobahn-js/
@@ -31,91 +33,79 @@ autobahn-js/
 │   │   ├── test/           # 73 test files
 │   │   └── package.json
 │   └── autobahn-xbr/       # Ethereum/XBR integration (Apache 2.0)
-│       ├── lib/            # XBR source (~4,047 lines)
+│       ├── lib/            # XBR source + contracts (~4,047 lines)
 │       └── package.json
 ├── .crossbar/              # Test router configuration
-├── doc/                    # Documentation
-├── Makefile                # Current build system
-├── Dockerfile              # Build toolchain image
-└── SConstruct              # Browser bundle build
+├── .github/workflows/      # CI/CD workflows (NEW)
+│   ├── main.yml            # Test + Build + Security
+│   ├── release.yml         # npm publish + GH Release
+│   └── release-post-comment.yml
+├── justfile                # Modern build system (NEW)
+└── MODERNIZATION.md        # This document
 ```
 
-### Dependencies
+### Removed Files
 
-**Core (autobahn v22.11.1):**
-- `cbor` >= 3.0.0
-- `crypto-js` >= 3.1.8
-- `msgpack5` >= 3.6.0
-- `tweetnacl` >= 0.14.3
-- `ws` 1.1.4 - 7 (wide range)
-
-**Dev Dependencies:**
-- `browserify` >= 13.1.1
-- `nodeunit` >= 0.11.3 (deprecated)
-- `google-closure-compiler` >= 20170218.0.0
+| File/Directory | Reason |
+|---------------|--------|
+| `Makefile` | Replaced by justfile |
+| `Dockerfile` | Using PyPI crossbar instead |
+| `docker/` | Old ARM/x86 Docker builds |
+| `packages/autobahn/SConstruct` | Using npm tools directly |
 
 ---
 
 ## Critical Gaps for Defense Contractor Use
 
-| Gap | Risk Level | Impact |
+| Gap | Risk Level | Status |
 |-----|------------|--------|
-| **No TypeScript** | High | Type errors only caught at runtime, harder to audit |
-| **No static analysis** | High | No ESLint = no automated code quality gates |
-| **Deprecated test framework** | Medium | Nodeunit unmaintained, no coverage metrics |
-| **Manual release process** | Medium | Human error risk, no provenance |
-| **Flexible dependency versions** | Medium | Wide ranges could pull vulnerabilities |
-| **No SBOM generation** | Medium | Required for EO 14028 / CRA compliance |
-| **No security scanning in CI** | High | No npm audit, no SAST, no dependency review |
-
----
-
-## Contrast with Python Repos (Post-Modernization)
-
-| Feature | Python Repos (26.1.1) | AutobahnJS (Current) |
-|---------|----------------------|---------------------|
-| Type checking | `ty` strict mode | None |
-| Linting | `ruff` | None |
-| Modern syntax | Python 3.11+ | ES5/ES6 mix |
-| CI workflows | Standardized | Basic |
-| SLSA provenance | L2+L3 planned | None |
-| Trusted Publishing | PyPI configured | NPM manual |
-| Test framework | pytest | Nodeunit (deprecated) |
-| Build system | justfile | Makefile + SCons |
-
----
-
-## Positive Findings
-
-1. **Comprehensive test suite** — 73 test files covering RPC, PubSub, auth, serialization
-2. **Clean separation** — `autobahn` core vs `autobahn-xbr` (Ethereum integration)
-3. **Good documentation** — Programming guide, API reference, release process
-4. **Active maintenance** — Recent commits (2025)
-5. **Stable API** — Mature codebase, 654 commits
-6. **MIT License** — Permissive, suitable for defense use
+| **No TypeScript** | High | Planned (Track A) |
+| **No static analysis** | High | Planned (Track A) |
+| **Deprecated test framework** | Medium | Tests working, framework update planned |
+| **Manual release process** | Medium | **FIXED** - Automated via GH Actions |
+| **Flexible dependency versions** | Medium | Unchanged (low priority) |
+| **No SBOM generation** | Medium | Planned |
+| **No security scanning in CI** | High | **FIXED** - npm audit in CI |
 
 ---
 
 ## Modernization Tracks
 
-### Track C: Build System (FIRST PRIORITY)
+### Track C: Build System ✅ COMPLETED
 
 **Goal**: Replace Makefile/SCons with `justfile`, enable local testing.
 
-**Approach**:
-- Create `justfile` replicating Makefile functionality
-- Reuse helper functions from autobahn-python justfile for consistency
-- Install Crossbar.io via Python venv (same approach as Python repos)
-- Port all 26 test targets from Makefile
+**Deliverables**:
+- [x] `justfile` with all build/test recipes
+- [x] Python venv integration for Crossbar.io (from PyPI)
+- [x] Local test execution working
+- [x] Browser build modernized (browserify + esbuild)
+- [x] XBR ABI files from `xbr` PyPI package
 
-**Risk**: Low — No code changes, only build tooling
+**Key Changes**:
+- Removed SCons, taschenmesser, pkg_resources dependencies
+- autobahn build: browserify → google-closure-compiler → gzip
+- autobahn-xbr build: esbuild (handles ES modules from web3)
+- XBR ABI files extracted from installed `xbr>=25.12.2` package
+
+### Track B: CI/CD & Supply Chain ✅ COMPLETED
+
+**Goal**: Add security scanning, automated releases, npm provenance.
 
 **Deliverables**:
-- [ ] `justfile` with all build/test recipes
-- [ ] Python venv integration for Crossbar.io
-- [ ] Local test execution working
+- [x] `.github/workflows/main.yml` - Test, build, security scan
+- [x] `.github/workflows/release.yml` - npm publish with provenance
+- [x] `.github/workflows/release-post-comment.yml` - PR notifications
+- [ ] SBOM generation (planned)
 
-### Track A: Type Safety (AFTER Track C)
+**Workflow Features**:
+- Tests on Node.js 18, 20, 22
+- Crossbar.io test router from PyPI
+- npm audit security scanning
+- npm Trusted Publishing with provenance
+- Automated GitHub Releases
+
+### Track A: Type Safety 🔲 PLANNED
 
 **Goal**: Add type definitions without migrating to TypeScript.
 
@@ -125,81 +115,75 @@ autobahn-js/
 - Configure TypeScript in `checkJs` mode for validation
 - **Do NOT rewrite codebase in TypeScript** (high risk)
 
-**Risk**: Low — Additive changes only, no code modifications
-
 **Deliverables**:
 - [ ] `.d.ts` files for autobahn package
 - [ ] `.d.ts` files for autobahn-xbr package
 - [ ] TypeScript validation in CI
 
-### Track B: CI/CD & Supply Chain (AFTER Track A)
+---
 
-**Goal**: Add security scanning, SLSA provenance, automated releases.
+## Implementation Details
 
-**Approach**:
-- Create GitHub Actions workflows reusing `just` recipes
-- Add npm audit / dependency review
-- Enable npm Trusted Publishing with provenance
-- Generate SBOM (CycloneDX)
+### Build System
 
-**Risk**: Low — CI/CD only, no code changes
+#### autobahn Build Pipeline
+```
+lib/autobahn.js
+    ↓ browserify (--standalone autobahn)
+build/autobahn.js (standalone bundle)
+    ↓ google-closure-compiler (SIMPLE, ES2018)
+build/autobahn.min.js
+    ↓ gzip -9
+build/autobahn.min.jgz
+    ↓ checksums
+CHECKSUM.MD5, CHECKSUM.SHA1, CHECKSUM.SHA256
+```
 
-**Deliverables**:
-- [ ] `.github/workflows/test.yml`
-- [ ] `.github/workflows/release.yml`
-- [ ] npm provenance attestations
-- [ ] SBOM generation
+#### autobahn-xbr Build Pipeline
+```
+lib/autobahn-xbr.js + lib/contracts/*.json
+    ↓ esbuild (--bundle, externalize Node.js built-ins)
+build/autobahn-xbr.js (~23MB with contracts)
+    ↓ esbuild --minify
+build/autobahn-xbr.min.js (~11MB)
+    ↓ gzip -9
+build/autobahn-xbr.min.jgz (~3MB)
+```
+
+### Test Infrastructure
+
+- **Test runner**: `just test` runs all tests via nodeunit
+- **Router**: Crossbar.io installed from PyPI into Python venv
+- **Trace files**: For debugging only (non-deterministic IDs)
+
+**Excluded test**: `test-pubsub-multiple-matching-subs` (flaky - WAMP doesn't guarantee event delivery order)
+
+See: [crossbar#2158](https://github.com/crossbario/crossbar/issues/2158) for deterministic ID generation feature request.
+
+### GitHub Actions Workflows
+
+#### main.yml
+- **Triggers**: push/PR to master, tags v*, manual
+- **Jobs**: test (Node 18/20/22), build, security
+- **Artifacts**: Browser bundles uploaded
+
+#### release.yml
+- **Triggers**: After main workflow completes (for v* tags)
+- **Actions**: npm publish with provenance, GitHub Release
+- **Requirements**: NPM_TOKEN secret
+
+#### release-post-comment.yml
+- **Triggers**: After release workflow completes
+- **Actions**: Post summary comment to associated PR
 
 ---
 
-## Implementation Status
+## Version History
 
-### Track C Progress
-
-| Task | Status |
-|------|--------|
-| Create `modernization` branch | Done |
-| Create `justfile` | Done |
-| Modernize browser build (remove SCons/taschenmesser) | Done |
-| Port test targets | Done |
-| Local test execution | Done |
-
-#### Test Execution Notes
-
-- **Test runner**: `just test` runs all tests via nodeunit
-- **Crossbar router**: `just crossbar-start` starts router from Python venv
-- **Trace files**: `.trace` files are for **debugging only**, not regression testing
-
-**Why trace-based regression testing doesn't work:**
-
-WAMP trace files contain non-deterministic values that differ between runs:
-- Session IDs, Request IDs (randomly generated)
-- Anonymous auth IDs (randomly generated)
-- Machine metadata (`x_cb_node`, `x_cb_pid`, `x_cb_peer`)
-
-Regression testing relies on nodeunit test assertions, not trace file comparison.
-
-**Known flaky test:** `test-pubsub-multiple-matching-subs` is excluded from `just test`
-because it depends on event delivery order, which WAMP doesn't guarantee.
-
-#### Build System Modernization (Completed)
-
-The browser bundle build has been modernized to use npm tools directly:
-
-| Old (SCons/taschenmesser) | New (npm tools) |
-|--------------------------|-----------------|
-| `scons` | Not needed |
-| `taschenmesser` (Python) | Not needed |
-| `pkg_resources` | Not needed |
-| Java-based Closure Compiler | `google-closure-compiler` npm CLI |
-
-**Build steps now:**
-1. `browserify` → `autobahn.js` (standalone bundle)
-2. `google-closure-compiler` → `autobahn.min.js` (SIMPLE_OPTIMIZATIONS, ES2018)
-3. `gzip` → `autobahn.min.jgz`
-4. `md5sum/sha1sum/sha256sum` → checksums
-
-**Note:** `autobahn-xbr` build requires XBR ABI files from `xbr.network` which may be unreachable.
+| Version | Date | Changes |
+|---------|------|---------|
+| 26.1.1 | 2025-01 | Modernization: justfile, GH workflows, esbuild |
+| 22.11.1 | 2022-11 | Last release before modernization |
 
 ---
 
@@ -208,3 +192,4 @@ The browser bundle build has been modernized to use npm tools directly:
 - [autobahn-python justfile](https://github.com/crossbario/autobahn-python/blob/master/justfile) — Reference for helper functions
 - [just manual](https://just.systems/man/en/) — Justfile documentation
 - [npm provenance](https://docs.npmjs.com/generating-provenance-statements) — NPM supply chain security
+- [esbuild](https://esbuild.github.io/) — Fast JavaScript bundler
