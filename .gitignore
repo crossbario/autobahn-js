@@ -18,3 +18,7 @@ packages/autobahn-xbr/contracts/
 
 # Python venvs for crossbar (justfile)
 .venvs/
+
+# Test output files (generated during test runs)
+packages/autobahn/test/*.txt
+packages/autobahn/test/*.trace

@@ -159,9 +159,29 @@ autobahn-js/
 | Task | Status |
 |------|--------|
 | Create `modernization` branch | Done |
-| Create `justfile` | In Progress |
+| Create `justfile` | Done |
+| Modernize browser build (remove SCons/taschenmesser) | Done |
 | Port test targets | Pending |
 | Local test execution | Pending |
+
+#### Build System Modernization (Completed)
+
+The browser bundle build has been modernized to use npm tools directly:
+
+| Old (SCons/taschenmesser) | New (npm tools) |
+|--------------------------|-----------------|
+| `scons` | Not needed |
+| `taschenmesser` (Python) | Not needed |
+| `pkg_resources` | Not needed |
+| Java-based Closure Compiler | `google-closure-compiler` npm CLI |
+
+**Build steps now:**
+1. `browserify` → `autobahn.js` (standalone bundle)
+2. `google-closure-compiler` → `autobahn.min.js` (SIMPLE_OPTIMIZATIONS, ES2018)
+3. `gzip` → `autobahn.min.jgz`
+4. `md5sum/sha1sum/sha256sum` → checksums
+
+**Note:** `autobahn-xbr` build requires XBR ABI files from `xbr.network` which may be unreachable.
 
 ---
 

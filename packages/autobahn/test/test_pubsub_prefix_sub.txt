@@ -1,9 +1,0 @@
-0 "all sessions connected"
-1 "Got event:" ["Hello prefix pattern subscriber!",0]
-2 "Got event:" ["Hello prefix pattern subscriber!",1]
-3 "Got event:" ["Hello prefix pattern subscriber!",2]
-4 "Got event:" ["Hello prefix pattern subscriber!",3]
-5 "Got event:" ["Hello prefix pattern subscriber!",4]
-6 "Got event:" ["Hello prefix pattern subscriber!",5]
-7 "Got event:" ["Hello prefix pattern subscriber!",6]
-8 "Closing .."

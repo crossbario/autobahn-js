@@ -1,9 +1,0 @@
-0 "Connected"
-1 "All registered."
-2 "Someone is calling me;)" {"caller":undefined,"caller_authid":undefined,"caller_authrole":undefined,"procedure":"com.myapp.square","progress":null}
-3 "Someone is calling me;)" {"caller":undefined,"caller_authid":undefined,"caller_authrole":undefined,"procedure":"com.myapp.square","progress":null}
-4 "Someone is calling me;)" {"caller":undefined,"caller_authid":undefined,"caller_authrole":undefined,"procedure":"com.myapp.square","progress":null}
-5 "Squared" 4
-6 "Squared" 0
-7 "Squared" 4
-8 "All finished."

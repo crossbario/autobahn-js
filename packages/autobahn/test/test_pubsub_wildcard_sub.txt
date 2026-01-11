@@ -1,4 +1,0 @@
-0 "all sessions connected"
-1 "Got event:" ["Hello wildcard pattern subscriber!",0]
-2 "Got event:" ["Hello wildcard pattern subscriber!",1]
-3 "Closing .."

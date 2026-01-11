@@ -138,6 +138,7 @@ install-crossbar venv="": (create venv)
     ${VENV_PYTHON} -m pip install crossbar
     ${VENV_PATH}/bin/crossbar version
 
+
 # -----------------------------------------------------------------------------
 # -- Cleanup
 # -----------------------------------------------------------------------------
@@ -147,7 +148,6 @@ clean:
     #!/usr/bin/env bash
     set -e
     echo "==> Cleaning build artifacts..."
-    rm -f .sconsign.dblite
     rm -rf ./build
     rm -rf ./packages/autobahn/build
     rm -rf ./packages/autobahn-xbr/build
@@ -181,25 +181,32 @@ install-npm:
     echo "==> Installing npm dependencies for autobahn..."
     cd {{ PACKAGES_DIR }}/autobahn
     rm -rf node_modules/websocket
-    npm install --only=dev
     npm install
     echo "==> Installing npm dependencies for autobahn-xbr..."
     cd {{ PACKAGES_DIR }}/autobahn-xbr
     rm -rf node_modules/websocket
-    npm install --only=dev
     npm install
     echo "==> npm install complete."
 
-# Download latest XBR ABI files
+# Download latest XBR ABI files (optional - skipped if unreachable or already present)
 abi-files:
     #!/usr/bin/env bash
     set -e
+    CONTRACTS_DIR="{{ PACKAGES_DIR }}/autobahn-xbr/lib/contracts"
+    if [ -d "${CONTRACTS_DIR}" ] && [ "$(ls -A ${CONTRACTS_DIR} 2>/dev/null)" ]; then
+        echo "==> XBR ABI files already present, skipping download."
+        exit 0
+    fi
     echo "==> Downloading XBR ABI files..."
-    curl -s https://xbr.network/lib/abi/xbr-protocol-latest.zip -o /tmp/xbr-protocol-latest.zip
-    unzip -t /tmp/xbr-protocol-latest.zip
-    rm -rf {{ PACKAGES_DIR }}/autobahn-xbr/lib/contracts/
-    unzip /tmp/xbr-protocol-latest.zip -d {{ PACKAGES_DIR }}/autobahn-xbr/lib/contracts/
-    echo "==> XBR ABI files downloaded."
+    if curl -sf --connect-timeout 5 https://xbr.network/lib/abi/xbr-protocol-latest.zip -o /tmp/xbr-protocol-latest.zip; then
+        unzip -t /tmp/xbr-protocol-latest.zip
+        rm -rf "${CONTRACTS_DIR}"
+        unzip /tmp/xbr-protocol-latest.zip -d "${CONTRACTS_DIR}"
+        echo "==> XBR ABI files downloaded."
+    else
+        echo "WARNING: Could not download XBR ABI files (xbr.network unreachable)."
+        echo "         autobahn-xbr build will fail if contracts/ directory is empty."
+    fi
 
 # -----------------------------------------------------------------------------
 # -- Build (browser bundles)
@@ -208,47 +215,93 @@ abi-files:
 # Build all browser bundles
 build: build-autobahn build-xbr
 
-# Build autobahn browser bundle
+# Build autobahn browser bundle (using npm tools directly, no SCons/taschenmesser)
 build-autobahn: install-npm
     #!/usr/bin/env bash
     set -e
-    echo "==> Building autobahn browser bundle..."
     cd {{ PACKAGES_DIR }}/autobahn
     rm -rf node_modules/websocket
+    mkdir -p build
     rm -f build/*
 
-    # Set JAVA_HOME if not set
-    if [ -z "${JAVA_HOME}" ]; then
-        if [ -d "/usr/lib/jvm/default-java" ]; then
-            export JAVA_HOME="/usr/lib/jvm/default-java"
-        fi
-    fi
+    VERSION=$(node -p "require('./package.json').version")
+    echo "==> Building autobahn ${VERSION} browser bundle..."
 
-    export JS_COMPILER="${PWD}/node_modules/google-closure-compiler-java/compiler.jar"
-    scons
+    # Step 1: Browserify - create standalone bundle
+    echo "    [1/5] Browserify..."
+    ./node_modules/.bin/browserify lib/autobahn.js --ignore-missing --standalone autobahn -o build/autobahn.js
+
+    # Step 2: Minify with Google Closure Compiler
+    echo "    [2/5] Minify (Google Closure Compiler)..."
+    ./node_modules/.bin/google-closure-compiler \
+        --compilation_level=SIMPLE \
+        --language_out=ECMASCRIPT_2018 \
+        --strict_mode_input=false \
+        --js=build/autobahn.js \
+        --js_output_file=build/autobahn.min.js
+
+    # Step 3: Gzip the minified file
+    echo "    [3/5] Gzip..."
+    gzip -9 -c build/autobahn.min.js > build/autobahn.min.jgz
+
+    # Step 4: Generate checksums
+    echo "    [4/5] Checksums..."
+    cd build
+    md5sum autobahn.js autobahn.min.js autobahn.min.jgz > CHECKSUM.MD5
+    sha1sum autobahn.js autobahn.min.js autobahn.min.jgz > CHECKSUM.SHA1
+    sha256sum autobahn.js autobahn.min.js autobahn.min.jgz > CHECKSUM.SHA256
+    cd ..
+
+    # Step 5: Copy LICENSE
+    echo "    [5/5] License..."
+    cp LICENSE build/
+
+    echo "==> autobahn browser bundle built:"
     ls -la build/
-    echo "==> autobahn browser bundle built."
 
-# Build autobahn-xbr browser bundle
+# Build autobahn-xbr browser bundle (using npm tools directly, no SCons/taschenmesser)
 build-xbr: install-npm abi-files
     #!/usr/bin/env bash
     set -e
-    echo "==> Building autobahn-xbr browser bundle..."
     cd {{ PACKAGES_DIR }}/autobahn-xbr
     rm -rf node_modules/websocket
+    mkdir -p build
     rm -f build/*
 
-    # Set JAVA_HOME if not set
-    if [ -z "${JAVA_HOME}" ]; then
-        if [ -d "/usr/lib/jvm/default-java" ]; then
-            export JAVA_HOME="/usr/lib/jvm/default-java"
-        fi
-    fi
+    VERSION=$(node -p "require('./package.json').version")
+    echo "==> Building autobahn-xbr ${VERSION} browser bundle..."
 
-    export JS_COMPILER="{{ PACKAGES_DIR }}/autobahn/node_modules/google-closure-compiler-java/compiler.jar"
-    scons
+    # Step 1: Browserify - create standalone bundle
+    echo "    [1/5] Browserify..."
+    ./node_modules/.bin/browserify lib/index.js --ignore-missing --standalone autobahn_xbr -o build/autobahn-xbr.js
+
+    # Step 2: Minify with Google Closure Compiler
+    echo "    [2/5] Minify (Google Closure Compiler)..."
+    ./node_modules/.bin/google-closure-compiler \
+        --compilation_level=SIMPLE \
+        --language_out=ECMASCRIPT_2018 \
+        --strict_mode_input=false \
+        --js=build/autobahn-xbr.js \
+        --js_output_file=build/autobahn-xbr.min.js
+
+    # Step 3: Gzip the minified file
+    echo "    [3/5] Gzip..."
+    gzip -9 -c build/autobahn-xbr.min.js > build/autobahn-xbr.min.jgz
+
+    # Step 4: Generate checksums
+    echo "    [4/5] Checksums..."
+    cd build
+    md5sum autobahn-xbr.js autobahn-xbr.min.js autobahn-xbr.min.jgz > CHECKSUM.MD5
+    sha1sum autobahn-xbr.js autobahn-xbr.min.js autobahn-xbr.min.jgz > CHECKSUM.SHA1
+    sha256sum autobahn-xbr.js autobahn-xbr.min.js autobahn-xbr.min.jgz > CHECKSUM.SHA256
+    cd ..
+
+    # Step 5: Copy LICENSE
+    echo "    [5/5] License..."
+    cp LICENSE build/
+
+    echo "==> autobahn-xbr browser bundle built:"
     ls -la build/
-    echo "==> autobahn-xbr browser bundle built."
 
 # -----------------------------------------------------------------------------
 # -- Crossbar.io test router
