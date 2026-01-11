@@ -15,3 +15,6 @@ package/.crossbar/
 package-lock.json
 packages/autobahn-xbr/lib/contracts/
 packages/autobahn-xbr/contracts/
+
+# Python venvs for crossbar (justfile)
+.venvs/

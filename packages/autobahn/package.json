@@ -1,6 +1,6 @@
 {
   "name": "autobahn",
-  "version": "22.11.1",
+  "version": "26.1.1",
   "description": "An implementation of The Web Application Messaging Protocol (WAMP).",
   "main": "index.js",
   "files": [
@@ -28,6 +28,7 @@
   "devDependencies": {
     "browserify": ">= 13.1.1",
     "deep-equal": ">= 1.0.1",
+    "esbuild": ">= 0.20.0",
     "google-closure-compiler": ">= 20170218.0.0",
     "nodeunit": ">= 0.11.3",
     "random-bytes-seed": ">=1.0.3"
@@ -54,6 +55,6 @@
     "data-service",
     "data-monetization"
   ],
-  "author": "Crossbar.io Technologies GmbH",
+  "author": "typedef int GmbH",
   "license": "MIT"
 }

@@ -1,0 +1,606 @@
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  null,
+  [
+    2,
+    3160856756118618,
+    {
+      "x_cb_node": "asgard1-2279738",
+      "x_cb_worker": "worker001",
+      "x_cb_peer": "tcp4:127.0.0.1:45292",
+      "x_cb_pid": 2279813,
+      "realm": "realm1",
+      "authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "authrole": "anonymous",
+      "authmethod": "anonymous",
+      "authprovider": "static",
+      "authextra": {
+        "x_cb_node": "asgard1-2279738",
+        "x_cb_worker": "worker001",
+        "x_cb_peer": "tcp4:127.0.0.1:45292",
+        "x_cb_pid": 2279813
+      },
+      "roles": {
+        "broker": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "session_meta_api": true,
+            "subscription_meta_api": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true,
+            "subscription_revocation": true,
+            "payload_transparency": true,
+            "payload_encryption_cryptobox": true,
+            "event_retention": true
+          }
+        },
+        "dealer": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "session_meta_api": true,
+            "registration_meta_api": true,
+            "shared_registration": true,
+            "call_canceling": true,
+            "progressive_call_results": true,
+            "registration_revocation": true,
+            "payload_transparency": true,
+            "testament_meta_api": true,
+            "payload_encryption_cryptobox": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    64,
+    1,
+    {},
+    "com.myapp.echo"
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    65,
+    1,
+    2972400816412429
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    48,
+    2,
+    {},
+    "com.myapp.echo",
+    [
+      1.7
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    48,
+    3,
+    {},
+    "com.myapp.echo",
+    [
+      "hello"
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    48,
+    4,
+    {},
+    "com.myapp.echo",
+    [
+      [
+        1,
+        2,
+        -3
+      ]
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    48,
+    5,
+    {},
+    "com.myapp.echo",
+    [
+      {
+        "a": 5,
+        "b": "hello2"
+      }
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    48,
+    6,
+    {},
+    "com.myapp.echo",
+    [
+      [
+        -9007199254740991,
+        9007199254740991
+      ]
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    48,
+    7,
+    {},
+    "com.myapp.echo",
+    [
+      null
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    68,
+    49,
+    2972400816412429,
+    {},
+    [
+      1.7
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    70,
+    49,
+    {},
+    [
+      1.7
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    68,
+    50,
+    2972400816412429,
+    {},
+    [
+      "hello"
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    70,
+    50,
+    {},
+    [
+      "hello"
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    68,
+    51,
+    2972400816412429,
+    {},
+    [
+      [
+        1,
+        2,
+        -3
+      ]
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    70,
+    51,
+    {},
+    [
+      [
+        1,
+        2,
+        -3
+      ]
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    68,
+    52,
+    2972400816412429,
+    {},
+    [
+      {
+        "a": 5,
+        "b": "hello2"
+      }
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    70,
+    52,
+    {},
+    [
+      {
+        "a": 5,
+        "b": "hello2"
+      }
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    68,
+    53,
+    2972400816412429,
+    {},
+    [
+      [
+        -9007199254740991,
+        9007199254740991
+      ]
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    70,
+    53,
+    {},
+    [
+      [
+        -9007199254740991,
+        9007199254740991
+      ]
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    68,
+    54,
+    2972400816412429,
+    {},
+    [
+      null
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    70,
+    54,
+    {},
+    [
+      null
+    ]
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    50,
+    2,
+    {
+      "callee": 3160856756118618,
+      "callee_authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "callee_authrole": "anonymous"
+    },
+    [
+      1.7
+    ]
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    50,
+    3,
+    {
+      "callee": 3160856756118618,
+      "callee_authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "callee_authrole": "anonymous"
+    },
+    [
+      "hello"
+    ]
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    50,
+    4,
+    {
+      "callee": 3160856756118618,
+      "callee_authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        1,
+        2,
+        -3
+      ]
+    ]
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    50,
+    5,
+    {
+      "callee": 3160856756118618,
+      "callee_authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "callee_authrole": "anonymous"
+    },
+    [
+      {
+        "a": 5,
+        "b": "hello2"
+      }
+    ]
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    50,
+    6,
+    {
+      "callee": 3160856756118618,
+      "callee_authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "callee_authrole": "anonymous"
+    },
+    [
+      [
+        -9007199254740991,
+        9007199254740991
+      ]
+    ]
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  3160856756118618,
+  [
+    50,
+    7,
+    {
+      "callee": 3160856756118618,
+      "callee_authid": "63NL-JNMN-WTNQ-6CPF-PQWF-TKFF",
+      "callee_authrole": "anonymous"
+    },
+    [
+      null
+    ]
+  ]
+]
+
+[
+  "TX",
+  "realm1",
+  3160856756118618,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+"WebSocket transport send"
+

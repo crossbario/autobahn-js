@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git://github.com/crossbario/autobahn-js.git"
   },
-  "author": "Crossbar.io Technologies GmbH",
+  "author": "typedef int GmbH",
   "license": "MIT",
   "dependencies": {}
 }

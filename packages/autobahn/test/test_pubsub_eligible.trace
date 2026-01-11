@@ -42,49 +42,7 @@
   ]
 ]
 
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
+"WebSocket transport send"
 
 [
   "TX",
@@ -130,28 +88,78 @@
   ]
 ]
 
+"WebSocket transport send"
+
+[
+  "TX",
+  "realm1",
+  null,
+  [
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    3780692051911074,
+    6187875093337192,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:45510",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:55706",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "LNU5-LY9F-K7KR-J953-3LM3-GQAS",
+      "authid": "4AJ6-RN5M-TVA5-AMRQ-JG36-RMK4",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:45510",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:55706",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -188,28 +196,30 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    7731055377078289,
+    606417862419746,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:45518",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:55718",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "ES6X-W35U-S53T-U6K5-AEFG-JVCK",
+      "authid": "N3TH-3MWA-QCTE-3HCH-CMLE-59CK",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:45518",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:55718",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -246,28 +256,30 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    2050223010794039,
+    2424875789232612,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:45528",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:55728",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "PWA6-RTSY-AAPT-PXFW-JHV5-9XJM",
+      "authid": "KLKY-MKKV-JAFE-45PG-A6PY-TE4P",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:45528",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:55728",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -307,7 +319,7 @@
 [
   "TX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     32,
     1,
@@ -319,7 +331,7 @@
 [
   "TX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     32,
     1,
@@ -328,32 +340,40 @@
   ]
 ]
 
-[
-  "RX",
-  "realm1",
-  7731055377078289,
-  [
-    33,
-    1,
-    4638151969771923
-  ]
-]
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
 
 [
   "RX",
   "realm1",
-  2050223010794039,
+  606417862419746,
   [
     33,
     1,
-    4638151969771923
+    5942884426514545
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  2424875789232612,
+  [
+    33,
+    1,
+    5942884426514545
   ]
 ]
 
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     1,
@@ -365,14 +385,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4638151969771923,
-    4649369593737536,
+    5942884426514545,
+    198717893399925,
     {},
     [
       0
@@ -380,14 +404,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4638151969771923,
-    4649369593737536,
+    5942884426514545,
+    198717893399925,
     {},
     [
       0
@@ -398,7 +424,7 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     2,
@@ -410,14 +436,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4638151969771923,
-    8306333127661433,
+    5942884426514545,
+    877747602761892,
     {},
     [
       1
@@ -425,14 +455,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4638151969771923,
-    8306333127661433,
+    5942884426514545,
+    877747602761892,
     {},
     [
       1
@@ -443,7 +475,7 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     3,
@@ -455,14 +487,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4638151969771923,
-    5697944482663643,
+    5942884426514545,
+    2044769261425106,
     {},
     [
       2
@@ -470,14 +506,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4638151969771923,
-    5697944482663643,
+    5942884426514545,
+    2044769261425106,
     {},
     [
       2
@@ -488,7 +526,7 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     4,
@@ -500,14 +538,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4638151969771923,
-    6485483131983350,
+    5942884426514545,
+    5795619012240011,
     {},
     [
       3
@@ -515,14 +557,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4638151969771923,
-    6485483131983350,
+    5942884426514545,
+    5795619012240011,
     {},
     [
       3
@@ -533,7 +577,7 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     5,
@@ -545,14 +589,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4638151969771923,
-    7767422776029697,
+    5942884426514545,
+    1171227439628659,
     {},
     [
       4
@@ -560,14 +608,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4638151969771923,
-    7767422776029697,
+    5942884426514545,
+    1171227439628659,
     {},
     [
       4
@@ -578,7 +628,7 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     6,
@@ -590,14 +640,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4638151969771923,
-    8441122165267155,
+    5942884426514545,
+    2991731877147326,
     {},
     [
       5
@@ -605,14 +659,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4638151969771923,
-    8441122165267155,
+    5942884426514545,
+    2991731877147326,
     {},
     [
       5
@@ -623,7 +679,7 @@
 [
   "TX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     32,
     2,
@@ -635,7 +691,7 @@
 [
   "TX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     32,
     2,
@@ -644,38 +700,46 @@
   ]
 ]
 
-[
-  "RX",
-  "realm1",
-  7731055377078289,
-  [
-    33,
-    2,
-    3640730637300887
-  ]
-]
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
 
 [
   "RX",
   "realm1",
-  2050223010794039,
+  606417862419746,
   [
     33,
     2,
-    3640730637300887
+    6636293030890907
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  2424875789232612,
+  [
+    33,
+    2,
+    6636293030890907
   ]
 ]
 
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     7,
     {
       "eligible": [
-        2050223010794039
+        2424875789232612
       ]
     },
     "com.myapp.topic2",
@@ -686,14 +750,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    3640730637300887,
-    588670290805822,
+    6636293030890907,
+    1144971641270084,
     {},
     [
       0
@@ -704,13 +772,13 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     8,
     {
       "eligible": [
-        2050223010794039
+        2424875789232612
       ]
     },
     "com.myapp.topic2",
@@ -721,14 +789,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    3640730637300887,
-    1099291953952454,
+    6636293030890907,
+    5113416400418443,
     {},
     [
       1
@@ -739,13 +811,13 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     9,
     {
       "eligible": [
-        2050223010794039
+        2424875789232612
       ]
     },
     "com.myapp.topic2",
@@ -756,14 +828,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    3640730637300887,
-    5718236412177278,
+    6636293030890907,
+    7798481728331100,
     {},
     [
       2
@@ -774,13 +850,13 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     10,
     {
       "eligible": [
-        2050223010794039
+        2424875789232612
       ]
     },
     "com.myapp.topic2",
@@ -791,14 +867,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    3640730637300887,
-    6299650753940666,
+    6636293030890907,
+    3500640725873090,
     {},
     [
       3
@@ -809,13 +889,13 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     11,
     {
       "eligible": [
-        2050223010794039
+        2424875789232612
       ]
     },
     "com.myapp.topic2",
@@ -826,14 +906,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    3640730637300887,
-    7273473070868683,
+    6636293030890907,
+    3806856745904777,
     {},
     [
       4
@@ -844,13 +928,13 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     12,
     {
       "eligible": [
-        2050223010794039
+        2424875789232612
       ]
     },
     "com.myapp.topic2",
@@ -861,14 +945,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    3640730637300887,
-    8743658307219559,
+    6636293030890907,
+    267128053007934,
     {},
     [
       5
@@ -879,7 +967,7 @@
 [
   "TX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     32,
     3,
@@ -891,7 +979,7 @@
 [
   "TX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     32,
     3,
@@ -900,39 +988,47 @@
   ]
 ]
 
-[
-  "RX",
-  "realm1",
-  7731055377078289,
-  [
-    33,
-    3,
-    4275983258428728
-  ]
-]
+"WebSocket transport send"
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
 
 [
   "RX",
   "realm1",
-  2050223010794039,
+  606417862419746,
   [
     33,
     3,
-    4275983258428728
+    1543338723210647
+  ]
+]
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  2424875789232612,
+  [
+    33,
+    3,
+    1543338723210647
   ]
 ]
 
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     13,
     {
       "eligible": [
-        7731055377078289,
-        2050223010794039
+        606417862419746,
+        2424875789232612
       ]
     },
     "com.myapp.topic3",
@@ -943,14 +1039,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4275983258428728,
-    3025086456186067,
+    1543338723210647,
+    3858194273733581,
     {},
     [
       0
@@ -958,14 +1058,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4275983258428728,
-    3025086456186067,
+    1543338723210647,
+    3858194273733581,
     {},
     [
       0
@@ -976,14 +1078,14 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     14,
     {
       "eligible": [
-        7731055377078289,
-        2050223010794039
+        606417862419746,
+        2424875789232612
       ]
     },
     "com.myapp.topic3",
@@ -994,14 +1096,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4275983258428728,
-    2143238190246489,
+    1543338723210647,
+    2991214916860174,
     {},
     [
       1
@@ -1009,14 +1115,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4275983258428728,
-    2143238190246489,
+    1543338723210647,
+    2991214916860174,
     {},
     [
       1
@@ -1027,14 +1135,14 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     15,
     {
       "eligible": [
-        7731055377078289,
-        2050223010794039
+        606417862419746,
+        2424875789232612
       ]
     },
     "com.myapp.topic3",
@@ -1045,14 +1153,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4275983258428728,
-    809656409436822,
+    1543338723210647,
+    142305448310092,
     {},
     [
       2
@@ -1060,14 +1172,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4275983258428728,
-    809656409436822,
+    1543338723210647,
+    142305448310092,
     {},
     [
       2
@@ -1078,14 +1192,14 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     16,
     {
       "eligible": [
-        7731055377078289,
-        2050223010794039
+        606417862419746,
+        2424875789232612
       ]
     },
     "com.myapp.topic3",
@@ -1096,14 +1210,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4275983258428728,
-    281646616360220,
+    1543338723210647,
+    3273502203133594,
     {},
     [
       3
@@ -1111,14 +1229,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4275983258428728,
-    281646616360220,
+    1543338723210647,
+    3273502203133594,
     {},
     [
       3
@@ -1129,14 +1249,14 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     17,
     {
       "eligible": [
-        7731055377078289,
-        2050223010794039
+        606417862419746,
+        2424875789232612
       ]
     },
     "com.myapp.topic3",
@@ -1147,14 +1267,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4275983258428728,
-    876998827997307,
+    1543338723210647,
+    8531344159213754,
     {},
     [
       4
@@ -1162,14 +1286,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4275983258428728,
-    876998827997307,
+    1543338723210647,
+    8531344159213754,
     {},
     [
       4
@@ -1180,14 +1306,14 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     16,
     18,
     {
       "eligible": [
-        7731055377078289,
-        2050223010794039
+        606417862419746,
+        2424875789232612
       ]
     },
     "com.myapp.topic3",
@@ -1198,14 +1324,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     36,
-    4275983258428728,
-    6721911061076869,
+    1543338723210647,
+    6378149534887619,
     {},
     [
       5
@@ -1213,14 +1343,16 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     36,
-    4275983258428728,
-    6721911061076869,
+    1543338723210647,
+    6378149534887619,
     {},
     [
       5
@@ -1231,7 +1363,7 @@
 [
   "TX",
   "realm1",
-  3780692051911074,
+  6187875093337192,
   [
     6,
     {},
@@ -1242,7 +1374,7 @@
 [
   "TX",
   "realm1",
-  7731055377078289,
+  606417862419746,
   [
     6,
     {},
@@ -1253,7 +1385,7 @@
 [
   "TX",
   "realm1",
-  2050223010794039,
+  2424875789232612,
   [
     6,
     {},
@@ -1261,1266 +1393,9 @@
   ]
 ]
 
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
+"WebSocket transport send"
 
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
+"WebSocket transport send"
 
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    1546932190418279,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60100",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "TREE-9AMW-7YGV-LPP9-N3TN-WJ4H",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60100",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    6770354266669486,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60104",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "WGXR-XLR7-9KTQ-RYK6-CLMJ-ANLY",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60104",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    7025363694548540,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60108",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "QE4Q-WPTT-MSLE-MJ7Q-3PNA-YNTL",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60108",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  6770354266669486,
-  [
-    32,
-    1,
-    {},
-    "com.myapp.topic1"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  7025363694548540,
-  [
-    32,
-    1,
-    {},
-    "com.myapp.topic1"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    33,
-    1,
-    1390962200657883
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    33,
-    1,
-    1390962200657883
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    1,
-    {},
-    "com.myapp.topic1",
-    [
-      0
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    1390962200657883,
-    6553060431587478,
-    {},
-    [
-      0
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    1390962200657883,
-    6553060431587478,
-    {},
-    [
-      0
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    2,
-    {},
-    "com.myapp.topic1",
-    [
-      1
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    1390962200657883,
-    8718254374880707,
-    {},
-    [
-      1
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    1390962200657883,
-    8718254374880707,
-    {},
-    [
-      1
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    3,
-    {},
-    "com.myapp.topic1",
-    [
-      2
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    1390962200657883,
-    3851077479661354,
-    {},
-    [
-      2
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    1390962200657883,
-    3851077479661354,
-    {},
-    [
-      2
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    4,
-    {},
-    "com.myapp.topic1",
-    [
-      3
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    1390962200657883,
-    5033566962683658,
-    {},
-    [
-      3
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    1390962200657883,
-    5033566962683658,
-    {},
-    [
-      3
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    5,
-    {},
-    "com.myapp.topic1",
-    [
-      4
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    1390962200657883,
-    6814629046898842,
-    {},
-    [
-      4
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    1390962200657883,
-    6814629046898842,
-    {},
-    [
-      4
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    6,
-    {},
-    "com.myapp.topic1",
-    [
-      5
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    1390962200657883,
-    7886241901484611,
-    {},
-    [
-      5
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    1390962200657883,
-    7886241901484611,
-    {},
-    [
-      5
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  6770354266669486,
-  [
-    32,
-    2,
-    {},
-    "com.myapp.topic2"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  7025363694548540,
-  [
-    32,
-    2,
-    {},
-    "com.myapp.topic2"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    33,
-    2,
-    6626308138851562
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    33,
-    2,
-    6626308138851562
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    7,
-    {
-      "eligible": [
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic2",
-    [
-      0
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    6626308138851562,
-    2370910254188172,
-    {},
-    [
-      0
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    8,
-    {
-      "eligible": [
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic2",
-    [
-      1
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    6626308138851562,
-    5129872596142235,
-    {},
-    [
-      1
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    9,
-    {
-      "eligible": [
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic2",
-    [
-      2
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    6626308138851562,
-    8209306070620550,
-    {},
-    [
-      2
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    10,
-    {
-      "eligible": [
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic2",
-    [
-      3
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    6626308138851562,
-    3374688569410539,
-    {},
-    [
-      3
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    11,
-    {
-      "eligible": [
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic2",
-    [
-      4
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    6626308138851562,
-    2461982653250157,
-    {},
-    [
-      4
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    12,
-    {
-      "eligible": [
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic2",
-    [
-      5
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    6626308138851562,
-    46016907392960,
-    {},
-    [
-      5
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  6770354266669486,
-  [
-    32,
-    3,
-    {},
-    "com.myapp.topic3"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  7025363694548540,
-  [
-    32,
-    3,
-    {},
-    "com.myapp.topic3"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    33,
-    3,
-    7117738496226591
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    33,
-    3,
-    7117738496226591
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    13,
-    {
-      "eligible": [
-        6770354266669486,
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic3",
-    [
-      0
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    7117738496226591,
-    2640047000703684,
-    {},
-    [
-      0
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    7117738496226591,
-    2640047000703684,
-    {},
-    [
-      0
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    14,
-    {
-      "eligible": [
-        6770354266669486,
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic3",
-    [
-      1
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    7117738496226591,
-    4337081137815837,
-    {},
-    [
-      1
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    7117738496226591,
-    4337081137815837,
-    {},
-    [
-      1
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    15,
-    {
-      "eligible": [
-        6770354266669486,
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic3",
-    [
-      2
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    7117738496226591,
-    4392245767715789,
-    {},
-    [
-      2
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    7117738496226591,
-    4392245767715789,
-    {},
-    [
-      2
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    16,
-    {
-      "eligible": [
-        6770354266669486,
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic3",
-    [
-      3
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    7117738496226591,
-    5878308056855960,
-    {},
-    [
-      3
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    7117738496226591,
-    5878308056855960,
-    {},
-    [
-      3
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    17,
-    {
-      "eligible": [
-        6770354266669486,
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic3",
-    [
-      4
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    7117738496226591,
-    6087749919494090,
-    {},
-    [
-      4
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    7117738496226591,
-    6087749919494090,
-    {},
-    [
-      4
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    16,
-    18,
-    {
-      "eligible": [
-        6770354266669486,
-        7025363694548540
-      ]
-    },
-    "com.myapp.topic3",
-    [
-      5
-    ],
-    {}
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  7025363694548540,
-  [
-    36,
-    7117738496226591,
-    5889289825904967,
-    {},
-    [
-      5
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  6770354266669486,
-  [
-    36,
-    7117738496226591,
-    5889289825904967,
-    {},
-    [
-      5
-    ]
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1546932190418279,
-  [
-    6,
-    {},
-    "wamp.close.normal"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  6770354266669486,
-  [
-    6,
-    {},
-    "wamp.close.normal"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  7025363694548540,
-  [
-    6,
-    {},
-    "wamp.close.normal"
-  ]
-]
+"WebSocket transport send"
 

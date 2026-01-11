@@ -1,0 +1,279 @@
+name: release-post-comment
+
+on:
+  # Trigger after release workflow completes
+  workflow_run:
+    workflows: ["release"]
+    types: [completed]
+
+  # Manual dispatch for debugging
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to post summary for"
+        required: false
+        type: string
+      discussion_category_id:
+        description: "GitHub Discussions category ID for CI-CD notifications"
+        required: false
+        type: string
+        default: "DIC_kwDOADgC4c4C01TT"  # CI-CD category in autobahn-js repo
+
+permissions:
+  pull-requests: write  # Required for posting PR comments
+  contents: read        # Required for reading repo info
+  discussions: write    # Required for posting to discussions
+
+jobs:
+  identifiers:
+    # GitHub needs to know where .cicd/workflows/identifiers.yml lives at parse time,
+    # and submodules aren't included in that context! thus the following does NOT work:
+    # uses: ./.cicd/workflows/identifiers.yml
+    # we MUST reference the remote repo directly:
+    uses: wamp-proto/wamp-cicd/.github/workflows/identifiers.yml@main
+    # IMPORTANT: we still need .cicd as a Git submodule in the using repo though!
+    # because e.g. identifiers.yml wants to access scripts/sanitize.sh !
+
+  check-release:
+    name: Check if release exists
+    needs: identifiers
+    runs-on: ubuntu-24.04
+    outputs:
+      has_release: ${{ steps.check.outputs.has_release }}
+      release_tag: ${{ steps.check.outputs.release_tag }}
+      release_url: ${{ steps.check.outputs.release_url }}
+      release_name: ${{ steps.check.outputs.release_name }}
+      pr_number: ${{ steps.check.outputs.pr_number }}
+      is_stable: ${{ steps.check.outputs.is_stable }}
+
+    steps:
+      - name: Check for release and PR
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { workflow_run } = context.payload;
+
+            // Get the commit SHA from the triggering workflow
+            const commitSha = workflow_run?.head_sha || context.sha;
+            console.log(`Commit SHA: ${commitSha}`);
+
+            // Check if triggering workflow succeeded
+            if (workflow_run && workflow_run.conclusion !== 'success') {
+              console.log('Release workflow did not succeed - skipping');
+              core.setOutput('has_release', 'false');
+              return;
+            }
+
+            // Find releases for this commit
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10
+            });
+
+            // Find the most recent release
+            const latestRelease = releases[0];
+            if (!latestRelease) {
+              console.log('No releases found');
+              core.setOutput('has_release', 'false');
+              return;
+            }
+
+            console.log(`Latest release: ${latestRelease.tag_name}`);
+
+            // Check if this is a stable release (v* tag)
+            const isStable = latestRelease.tag_name.startsWith('v');
+
+            core.setOutput('has_release', 'true');
+            core.setOutput('release_tag', latestRelease.tag_name);
+            core.setOutput('release_url', latestRelease.html_url);
+            core.setOutput('release_name', latestRelease.name);
+            core.setOutput('is_stable', isStable ? 'true' : 'false');
+
+            // Try to find associated PR
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: commitSha
+            });
+
+            if (prs.length > 0) {
+              const pr = prs[0];
+              console.log(`Found associated PR: #${pr.number}`);
+              core.setOutput('pr_number', pr.number.toString());
+            } else {
+              console.log('No associated PR found');
+              core.setOutput('pr_number', '');
+            }
+
+  post-pr-comment:
+    name: Post PR comment
+    needs: [identifiers, check-release]
+    runs-on: ubuntu-24.04
+    if: needs.check-release.outputs.has_release == 'true' && needs.check-release.outputs.pr_number != ''
+
+    env:
+      BASE_REPO: ${{ needs.identifiers.outputs.base_repo }}
+      BASE_BRANCH: ${{ needs.identifiers.outputs.base_branch }}
+      PR_NUMBER: ${{ needs.identifiers.outputs.pr_number }}
+      PR_REPO: ${{ needs.identifiers.outputs.pr_repo }}
+      PR_BRANCH: ${{ needs.identifiers.outputs.pr_branch }}
+
+    steps:
+      - name: Post comment to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = parseInt('${{ needs.check-release.outputs.pr_number }}');
+            const releaseTag = '${{ needs.check-release.outputs.release_tag }}';
+            const releaseUrl = '${{ needs.check-release.outputs.release_url }}';
+            const version = releaseTag.replace(/^v/, '');
+
+            const comment = `## Release Published
+
+This PR has been included in **[${releaseTag}](${releaseUrl})**.
+
+### npm packages:
+- [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})
+- [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})
+
+### Browser bundles:
+Download from [GitHub Releases](${releaseUrl}).
+
+---
+*Automated by GitHub Actions*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: comment
+            });
+
+            console.log(`Posted comment to PR #${prNumber}`);
+
+  post-discussion:
+    name: Post to GitHub Discussions
+    needs: [identifiers, check-release]
+    runs-on: ubuntu-24.04
+    # Only post discussions for stable releases (v* tags)
+    if: needs.check-release.outputs.has_release == 'true' && needs.check-release.outputs.is_stable == 'true'
+
+    env:
+      RELEASE_TYPE: ${{ needs.identifiers.outputs.release_type }}
+      RELEASE_TAG: ${{ needs.check-release.outputs.release_tag }}
+      RELEASE_URL: ${{ needs.check-release.outputs.release_url }}
+      RELEASE_NAME: ${{ needs.check-release.outputs.release_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Get release notes
+        id: release-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "==> Fetching release notes for: $RELEASE_TAG"
+
+          # Get release body via GitHub API
+          RELEASE_JSON=$(gh api repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG 2>/dev/null || echo "{}")
+
+          if [ "$RELEASE_JSON" = "{}" ]; then
+            echo "Release not found, using default message"
+            echo "No release notes available." > release-notes.md
+          else
+            echo "$RELEASE_JSON" | jq -r '.body // "No release notes available."' > release-notes.md
+            echo "Release notes retrieved"
+          fi
+
+      - name: Post to GitHub Discussions
+        uses: actions/github-script@v7
+        env:
+          DISCUSSION_CATEGORY_ID: ${{ github.event.inputs.discussion_category_id || 'DIC_kwDOADgC4c4C01TT' }}
+        with:
+          script: |
+            const fs = require('fs');
+            const releaseNotes = fs.readFileSync('release-notes.md', 'utf8');
+
+            const releaseTag = '${{ env.RELEASE_TAG }}';
+            const releaseUrl = '${{ env.RELEASE_URL }}';
+            const version = releaseTag.replace(/^v/, '');
+
+            const title = `Release ${releaseTag}`;
+
+            const body = `## AutobahnJS ${releaseTag} Released
+
+**[View Release on GitHub](${releaseUrl})**
+
+### npm packages:
+- [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})
+- [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})
+
+### Browser bundles:
+Download from [GitHub Releases](${releaseUrl}).
+
+---
+
+### Release Notes
+
+${releaseNotes}
+
+---
+*Automated by GitHub Actions*`;
+
+            console.log(`Creating discussion: ${title}`);
+            console.log(`Category ID: ${process.env.DISCUSSION_CATEGORY_ID}`);
+
+            // Create discussion using GraphQL API
+            const mutation = `
+              mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+                createDiscussion(input: {
+                  repositoryId: $repositoryId
+                  categoryId: $categoryId
+                  title: $title
+                  body: $body
+                }) {
+                  discussion {
+                    url
+                  }
+                }
+              }
+            `;
+
+            // Get repository ID
+            const { data: repo } = await github.rest.repos.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const repositoryId = repo.node_id;
+
+            // Create the discussion
+            const result = await github.graphql(mutation, {
+              repositoryId: repositoryId,
+              categoryId: process.env.DISCUSSION_CATEGORY_ID,
+              title: title,
+              body: body
+            });
+
+            const discussionUrl = result.createDiscussion.discussion.url;
+            console.log(`Discussion created: ${discussionUrl}`);
+            core.setOutput('discussion_url', discussionUrl);
+
+  summary:
+    name: Workflow Summary
+    needs: [check-release, post-pr-comment, post-discussion]
+    runs-on: ubuntu-24.04
+    if: always() && needs.check-release.outputs.has_release == 'true'
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Release Notification Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release:** [${{ needs.check-release.outputs.release_tag }}](${{ needs.check-release.outputs.release_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "- **PR Comment:** ${{ needs.check-release.outputs.pr_number && format('Posted to #{0}', needs.check-release.outputs.pr_number) || 'N/A (no associated PR)' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Discussion:** ${{ needs.check-release.outputs.is_stable == 'true' && 'Posted to CI-CD category' || 'Skipped (not a stable release)' }}" >> $GITHUB_STEP_SUMMARY

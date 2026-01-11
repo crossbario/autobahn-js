@@ -1,0 +1,212 @@
+name: release
+
+on:
+  # Auto-trigger after main workflow completes
+  workflow_run:
+    workflows: ["main"]
+    types: [completed]
+
+  # Manual dispatch for debugging
+  workflow_dispatch:
+
+permissions:
+  contents: write      # For creating releases
+  id-token: write      # For npm provenance
+
+env:
+  # Node 24 is current LTS (Krypton)
+  NODE_VERSION: '24'
+
+jobs:
+  check-release:
+    name: Check if release needed
+    runs-on: ubuntu-24.04
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+      is_prerelease: ${{ steps.check.outputs.is_prerelease }}
+      run_id: ${{ steps.check.outputs.run_id }}
+
+    steps:
+      - name: Check trigger conditions
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { workflow_run } = context.payload;
+
+            // For workflow_run trigger
+            if (workflow_run) {
+              console.log('Triggered by workflow_run');
+              console.log(`Workflow: ${workflow_run.name}`);
+              console.log(`Conclusion: ${workflow_run.conclusion}`);
+              console.log(`Head branch: ${workflow_run.head_branch}`);
+              console.log(`Run ID: ${workflow_run.id}`);
+
+              // Only release if main workflow succeeded
+              if (workflow_run.conclusion !== 'success') {
+                console.log('Main workflow did not succeed - skipping release');
+                core.setOutput('should_release', 'false');
+                return;
+              }
+
+              // Check if this is a tag push (v*)
+              const ref = workflow_run.head_branch;
+              const isTag = ref && ref.startsWith('v');
+
+              if (!isTag) {
+                console.log(`Not a version tag (${ref}) - skipping release`);
+                core.setOutput('should_release', 'false');
+                return;
+              }
+
+              const version = ref.replace(/^v/, '');
+              const isPrerelease = version.includes('-') || version.includes('alpha') || version.includes('beta') || version.includes('rc');
+
+              console.log(`Version tag detected: ${version}`);
+              console.log(`Is prerelease: ${isPrerelease}`);
+
+              core.setOutput('should_release', 'true');
+              core.setOutput('version', version);
+              core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
+              core.setOutput('run_id', workflow_run.id.toString());
+              return;
+            }
+
+            // For workflow_dispatch trigger
+            console.log('Manual dispatch - checking current ref');
+            const ref = context.ref;
+            const isTag = ref.startsWith('refs/tags/v');
+
+            if (!isTag) {
+              console.log(`Not a version tag (${ref}) - skipping release`);
+              core.setOutput('should_release', 'false');
+              return;
+            }
+
+            const version = ref.replace('refs/tags/v', '');
+            const isPrerelease = version.includes('-') || version.includes('alpha') || version.includes('beta') || version.includes('rc');
+
+            console.log(`Version: ${version}`);
+            core.setOutput('should_release', 'true');
+            core.setOutput('version', version);
+            core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
+            core.setOutput('run_id', context.runId.toString());
+
+  publish-npm:
+    name: Publish to npm
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'true'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.check-release.outputs.version }}
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build packages
+        run: |
+          just build-autobahn
+          just build-xbr
+
+      - name: Verify package versions match tag
+        run: |
+          VERSION="${{ needs.check-release.outputs.version }}"
+          AB_VERSION=$(node -p "require('./packages/autobahn/package.json').version")
+          XBR_VERSION=$(node -p "require('./packages/autobahn-xbr/package.json').version")
+
+          echo "Tag version: $VERSION"
+          echo "autobahn version: $AB_VERSION"
+          echo "autobahn-xbr version: $XBR_VERSION"
+
+          if [ "$AB_VERSION" != "$VERSION" ]; then
+            echo "ERROR: autobahn version ($AB_VERSION) does not match tag ($VERSION)"
+            exit 1
+          fi
+
+          if [ "$XBR_VERSION" != "$VERSION" ]; then
+            echo "ERROR: autobahn-xbr version ($XBR_VERSION) does not match tag ($VERSION)"
+            exit 1
+          fi
+
+          echo "Version check passed!"
+
+      - name: Publish autobahn to npm
+        run: |
+          cd packages/autobahn
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish autobahn-xbr to npm
+        run: |
+          cd packages/autobahn-xbr
+          # Update autobahn dependency from local to npm version before publishing
+          npm pkg set dependencies.autobahn="^${{ needs.check-release.outputs.version }}"
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  create-release:
+    name: Create GitHub Release
+    needs: [check-release, publish-npm]
+    if: needs.check-release.outputs.should_release == 'true'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.check-release.outputs.version }}
+          submodules: recursive
+
+      - name: Download autobahn build artifacts (verified)
+        uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
+        with:
+          name: autobahn-browser-bundle
+          path: release-assets/autobahn/
+          run-id: ${{ needs.check-release.outputs.run_id }}
+        continue-on-error: true
+
+      - name: Download autobahn-xbr build artifacts (verified)
+        uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
+        with:
+          name: autobahn-xbr-browser-bundle
+          path: release-assets/autobahn-xbr/
+          run-id: ${{ needs.check-release.outputs.run_id }}
+        continue-on-error: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.check-release.outputs.version }}
+          name: v${{ needs.check-release.outputs.version }}
+          prerelease: ${{ needs.check-release.outputs.is_prerelease == 'true' }}
+          generate_release_notes: true
+          files: |
+            release-assets/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

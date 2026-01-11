@@ -42,28 +42,32 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    5278822651947720,
+    6049121651591970,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:37820",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:45328",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "L64S-A4PC-E6TP-RAUU-MCA5-WV6J",
+      "authid": "GTM5-USA5-NLLT-E3G5-RGNF-CRGA",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:37820",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:45328",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -144,28 +148,32 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    8677597634946228,
+    4795033743630402,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:37824",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:45332",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "QYUE-43LW-MNQA-R7S3-K6V6-GLYQ",
+      "authid": "SVKV-JRCU-HAX7-RVSL-CYF9-JSE7",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:37824",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:45332",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -205,7 +213,22 @@
 [
   "TX",
   "realm1",
-  8677597634946228,
+  4795033743630402,
+  [
+    6,
+    {},
+    "wamp.close.normal"
+  ]
+]
+
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
+[
+  "RX",
+  "realm1",
+  4795033743630402,
   [
     6,
     {},
@@ -214,15 +237,50 @@
 ]
 
 [
-  "RX",
+  "TX",
   "realm1",
-  8677597634946228,
+  null,
   [
-    6,
-    {},
-    "wamp.close.normal"
+    1,
+    "realm1",
+    {
+      "roles": {
+        "caller": {
+          "features": {
+            "caller_identification": true,
+            "call_canceling": true,
+            "progressive_call_results": true
+          }
+        },
+        "callee": {
+          "features": {
+            "caller_identification": true,
+            "pattern_based_registration": true,
+            "shared_registration": true,
+            "progressive_call_results": true,
+            "registration_revocation": true
+          }
+        },
+        "publisher": {
+          "features": {
+            "publisher_identification": true,
+            "subscriber_blackwhite_listing": true,
+            "publisher_exclusion": true
+          }
+        },
+        "subscriber": {
+          "features": {
+            "publisher_identification": true,
+            "pattern_based_subscription": true,
+            "subscription_revocation": true
+          }
+        }
+      }
+    }
   ]
 ]
+
+"WebSocket transport send"
 
 [
   "TX",
@@ -268,49 +326,9 @@
   ]
 ]
 
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
+"WebSocket transport send"
+
+"WebSocket transport receive"
 
 [
   "RX",
@@ -318,22 +336,22 @@
   null,
   [
     2,
-    4875877030354653,
+    1966273455744091,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:37828",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:45336",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "PMYJ-WAFK-NPCN-5AES-H79P-TFPW",
+      "authid": "9FF4-SCLT-FE9H-VCWN-STS9-WEFE",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:37828",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:45336",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -370,28 +388,30 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    7992312285354522,
+    602582801560721,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:37842",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:45348",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "QS7G-LYRN-UNWJ-WPK3-S9JS-SSU4",
+      "authid": "HH36-NJEC-KRFM-4Y9L-T7SK-XWWQ",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:37842",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:45348",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -431,7 +451,7 @@
 [
   "TX",
   "realm1",
-  4875877030354653,
+  1966273455744091,
   [
     32,
     1,
@@ -440,21 +460,25 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  4875877030354653,
+  1966273455744091,
   [
     33,
     1,
-    515432862225266
+    5790314735187157
   ]
 ]
 
 [
   "TX",
   "realm1",
-  7992312285354522,
+  602582801560721,
   [
     16,
     1,
@@ -464,14 +488,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  4875877030354653,
+  1966273455744091,
   [
     36,
-    515432862225266,
-    2619861458448693,
+    5790314735187157,
+    6427975674252628,
     {}
   ]
 ]
@@ -520,6 +548,8 @@
   ]
 ]
 
+"WebSocket transport send"
+
 [
   "TX",
   "realm1",
@@ -564,28 +594,32 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    1662572072162007,
+    4050629651959065,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:45452",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:45352",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "QJJ4-FLLN-EESU-WFXC-6K3P-FLSX",
+      "authid": "PSCC-QVW3-LANS-5MMK-3VXJ-CPQN",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:45452",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:45352",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -622,28 +656,30 @@
   ]
 ]
 
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
   null,
   [
     2,
-    3509142678066162,
+    1609725635128609,
     {
-      "x_cb_node": "intel-nuci7-62868",
+      "x_cb_node": "asgard1-2279738",
       "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:45466",
-      "x_cb_pid": 62877,
+      "x_cb_peer": "tcp4:127.0.0.1:45364",
+      "x_cb_pid": 2279813,
       "realm": "realm1",
-      "authid": "GXMK-SEFG-5HWW-JH69-3FQ6-XANX",
+      "authid": "4S96-WMEA-EUAK-CTAG-QKXX-7CR6",
       "authrole": "anonymous",
       "authmethod": "anonymous",
       "authprovider": "static",
       "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
+        "x_cb_node": "asgard1-2279738",
         "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:45466",
-        "x_cb_pid": 62877
+        "x_cb_peer": "tcp4:127.0.0.1:45364",
+        "x_cb_pid": 2279813
       },
       "roles": {
         "broker": {
@@ -683,7 +719,7 @@
 [
   "TX",
   "realm1",
-  1662572072162007,
+  4050629651959065,
   [
     64,
     1,
@@ -692,21 +728,25 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  1662572072162007,
+  4050629651959065,
   [
     65,
     1,
-    7051424042292823
+    3385721963884086
   ]
 ]
 
 [
   "TX",
   "realm1",
-  3509142678066162,
+  1609725635128609,
   [
     48,
     1,
@@ -716,14 +756,18 @@
   ]
 ]
 
+"WebSocket transport send"
+
+"WebSocket transport receive"
+
 [
   "RX",
   "realm1",
-  1662572072162007,
+  4050629651959065,
   [
     68,
-    354,
-    7051424042292823,
+    55,
+    3385721963884086,
     {}
   ]
 ]
@@ -731,11 +775,11 @@
 [
   "TX",
   "realm1",
-  1662572072162007,
+  4050629651959065,
   [
     8,
     68,
-    354,
+    55,
     {},
     "wamp.error.runtime_error",
     [
@@ -744,772 +788,14 @@
   ]
 ]
 
-[
-  "RX",
-  "realm1",
-  3509142678066162,
-  [
-    8,
-    48,
-    1,
-    {},
-    "wamp.error.runtime_error",
-    [
-      {}
-    ]
-  ]
-]
+"WebSocket transport send"
 
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
+"WebSocket transport receive"
 
 [
   "RX",
   "realm1",
-  null,
-  [
-    2,
-    2588234494794466,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60012",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "ASHH-A5YP-79GA-9WM5-GN3V-7L6S",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60012",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    3025041356556586,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60022",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "XUS4-3L9P-AY5U-LN6R-6WXE-WEJL",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60022",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  3025041356556586,
-  [
-    6,
-    {},
-    "wamp.close.normal"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  3025041356556586,
-  [
-    6,
-    {},
-    "wamp.close.normal"
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    415724973021006,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60028",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "UA5V-XMT5-RQEW-LEHT-FX7A-4AUL",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60028",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    1119632440558376,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60034",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "R994-MYFK-AGQM-J7LN-T7S9-U7NM",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60034",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  415724973021006,
-  [
-    32,
-    1,
-    {},
-    "com.myapp.topic"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  415724973021006,
-  [
-    33,
-    1,
-    4500435878659718
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1119632440558376,
-  [
-    16,
-    1,
-    {},
-    "com.myapp.topic",
-    []
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  415724973021006,
-  [
-    36,
-    4500435878659718,
-    4020896442157135,
-    {}
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  null,
-  [
-    1,
-    "realm1",
-    {
-      "roles": {
-        "caller": {
-          "features": {
-            "caller_identification": true,
-            "call_canceling": true,
-            "progressive_call_results": true
-          }
-        },
-        "callee": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "shared_registration": true,
-            "progressive_call_results": true,
-            "registration_revocation": true
-          }
-        },
-        "publisher": {
-          "features": {
-            "publisher_identification": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true
-          }
-        },
-        "subscriber": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "subscription_revocation": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    1947642094041968,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60038",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "7FJE-6KWE-YE5X-TKF3-LH5Q-TK6P",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60038",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  null,
-  [
-    2,
-    8897413421418884,
-    {
-      "x_cb_node": "intel-nuci7-62868",
-      "x_cb_worker": "worker001",
-      "x_cb_peer": "tcp4:127.0.0.1:60054",
-      "x_cb_pid": 62877,
-      "realm": "realm1",
-      "authid": "549X-Y9UE-RYYL-7SCV-QMCL-9XNE",
-      "authrole": "anonymous",
-      "authmethod": "anonymous",
-      "authprovider": "static",
-      "authextra": {
-        "x_cb_node": "intel-nuci7-62868",
-        "x_cb_worker": "worker001",
-        "x_cb_peer": "tcp4:127.0.0.1:60054",
-        "x_cb_pid": 62877
-      },
-      "roles": {
-        "broker": {
-          "features": {
-            "publisher_identification": true,
-            "pattern_based_subscription": true,
-            "session_meta_api": true,
-            "subscription_meta_api": true,
-            "subscriber_blackwhite_listing": true,
-            "publisher_exclusion": true,
-            "subscription_revocation": true,
-            "payload_transparency": true,
-            "payload_encryption_cryptobox": true,
-            "event_retention": true
-          }
-        },
-        "dealer": {
-          "features": {
-            "caller_identification": true,
-            "pattern_based_registration": true,
-            "session_meta_api": true,
-            "registration_meta_api": true,
-            "shared_registration": true,
-            "call_canceling": true,
-            "progressive_call_results": true,
-            "registration_revocation": true,
-            "payload_transparency": true,
-            "testament_meta_api": true,
-            "payload_encryption_cryptobox": true
-          }
-        }
-      }
-    }
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1947642094041968,
-  [
-    64,
-    1,
-    {},
-    "com.myapp.topic"
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  1947642094041968,
-  [
-    65,
-    1,
-    1778115632271963
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  8897413421418884,
-  [
-    48,
-    1,
-    {},
-    "com.myapp.topic",
-    []
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  1947642094041968,
-  [
-    68,
-    409,
-    1778115632271963,
-    {}
-  ]
-]
-
-[
-  "TX",
-  "realm1",
-  1947642094041968,
-  [
-    8,
-    68,
-    409,
-    {},
-    "wamp.error.runtime_error",
-    [
-      {}
-    ]
-  ]
-]
-
-[
-  "RX",
-  "realm1",
-  8897413421418884,
+  1609725635128609,
   [
     8,
     48,
