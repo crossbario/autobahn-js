@@ -152,8 +152,7 @@ clean:
     rm -rf ./packages/autobahn/build
     rm -rf ./packages/autobahn-xbr/build
     rm -rf ./packages/autobahn-xbr/lib/contracts
-    rm -f ./packages/autobahn/test/*.trace
-    rm -f ./packages/autobahn/test/*.txt
+    # Note: .trace and .txt files in test/ are golden reference outputs - do NOT delete
     echo "==> Clean complete."
 
 # Deep clean (node_modules, venvs, lockfiles)
@@ -339,11 +338,45 @@ crossbar-docker:
 # Run all tests
 test: test-basic test-connect test-pubsub test-rpc test-serialization test-rawsocket test-error-handling
 
-# Clean test artifacts
+# Clean test output files (use before regenerating golden files)
 test-clean:
     #!/usr/bin/env bash
+    echo "==> Cleaning test output files..."
     rm -f {{ PACKAGES_DIR }}/autobahn/test/*.txt
     rm -f {{ PACKAGES_DIR }}/autobahn/test/*.trace
+    echo "==> Test files cleaned. Run 'just test' to regenerate."
+
+# Compare test outputs against committed golden files (regression detection)
+test-regression:
+    #!/usr/bin/env bash
+    set -e
+    cd {{ PROJECT_DIR }}
+    echo "==> Checking for regressions in test output files..."
+
+    # Check if there are any changes to .trace or .txt files
+    DIFF_OUTPUT=$(git diff --stat -- packages/autobahn/test/*.trace packages/autobahn/test/*.txt 2>/dev/null || true)
+
+    if [ -z "$DIFF_OUTPUT" ]; then
+        echo "✓ No regressions detected - test outputs match golden files."
+        exit 0
+    else
+        echo "⚠ REGRESSION DETECTED - test outputs differ from golden files:"
+        echo ""
+        echo "$DIFF_OUTPUT"
+        echo ""
+        echo "Run 'git diff packages/autobahn/test/' for detailed diff."
+        echo "If changes are intentional, run 'just test-update-golden' to update."
+        exit 1
+    fi
+
+# Update golden files with current test outputs (after intentional changes)
+test-update-golden:
+    #!/usr/bin/env bash
+    set -e
+    cd {{ PROJECT_DIR }}
+    echo "==> Updating golden test files..."
+    git add packages/autobahn/test/*.trace packages/autobahn/test/*.txt
+    echo "==> Golden files staged. Review with 'git diff --staged' then commit."
 
 # --- Basic tests ---
 

@@ -1,0 +1,10 @@
+0 "Connected"
+1 "All registered."
+2 "Serializer ID: msgpack"
+3 "Result:" 1.7
+4 "Result:" "hello"
+5 "Result:" [1,2,-3]
+6 "Result:" {"a":5,"b":"hello2"}
+7 "Result:" [-9007199254740991,9007199254740991]
+8 "Result:" null
+9 "All finished."

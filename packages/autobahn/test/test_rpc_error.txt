@@ -1,0 +1,6 @@
+0 "Connected"
+1 "All registered."
+2 "Result:" "1.414214"
+3 "Error:" "wamp.error.runtime_error" ["don't ask folly questions;)"] {}
+4 "Error:" "com.myapp.error" ["fuck"] {"a":23,"b":9}
+5 "All finished."
