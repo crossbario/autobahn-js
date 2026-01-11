@@ -1,0 +1,116 @@
+name: release-post-comment
+
+on:
+  # Trigger after release workflow completes
+  workflow_run:
+    workflows: ["release"]
+    types: [completed]
+
+  # Manual dispatch for debugging
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to post summary for"
+        required: false
+        type: string
+
+permissions:
+  pull-requests: write  # Required for posting PR comments
+  contents: read        # Required for reading repo info
+
+jobs:
+  post-comment:
+    name: Post release summary
+    runs-on: ubuntu-24.04
+    # Only run if release workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Get release info
+        id: release_info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { workflow_run } = context.payload;
+
+            // Get the commit SHA from the triggering workflow
+            const commitSha = workflow_run?.head_sha || context.sha;
+            console.log(`Commit SHA: ${commitSha}`);
+
+            // Find releases for this commit
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10
+            });
+
+            // Find the most recent release
+            const latestRelease = releases[0];
+            if (!latestRelease) {
+              console.log('No releases found');
+              core.setOutput('has_release', 'false');
+              return;
+            }
+
+            console.log(`Latest release: ${latestRelease.tag_name}`);
+            core.setOutput('has_release', 'true');
+            core.setOutput('release_tag', latestRelease.tag_name);
+            core.setOutput('release_url', latestRelease.html_url);
+            core.setOutput('release_name', latestRelease.name);
+
+            // Try to find associated PR
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: commitSha
+            });
+
+            if (prs.length > 0) {
+              const pr = prs[0];
+              console.log(`Found associated PR: #${pr.number}`);
+              core.setOutput('pr_number', pr.number.toString());
+            } else {
+              console.log('No associated PR found');
+              core.setOutput('pr_number', '');
+            }
+
+      - name: Post comment to PR
+        if: steps.release_info.outputs.has_release == 'true' && steps.release_info.outputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = parseInt('${{ steps.release_info.outputs.pr_number }}');
+            const releaseTag = '${{ steps.release_info.outputs.release_tag }}';
+            const releaseUrl = '${{ steps.release_info.outputs.release_url }}';
+            const version = releaseTag.replace(/^v/, '');
+
+            const comment = `## 🎉 Release Published!
+
+            This PR has been included in **[${releaseTag}](${releaseUrl})**.
+
+            ### npm packages:
+            - [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})
+            - [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})
+
+            ### Browser bundles:
+            Download from [GitHub Releases](${releaseUrl}).
+
+            ---
+            *Automated by GitHub Actions*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: comment
+            });
+
+            console.log(`Posted comment to PR #${prNumber}`);
+
+      - name: Summary
+        if: steps.release_info.outputs.has_release == 'true'
+        run: |
+          echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release:** [${{ steps.release_info.outputs.release_tag }}](${{ steps.release_info.outputs.release_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "- **PR:** ${{ steps.release_info.outputs.pr_number && format('#{0}', steps.release_info.outputs.pr_number) || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
