@@ -30,6 +30,15 @@ WAMP provides asynchronous **Remote Procedure Calls** and **Publish & Subscribe*
 
 **Autobahn**|JS runs on both **Web browsers** and **[Node.js](http://nodejs.org/)**.
 
+## Platform Requirements
+
+**Autobahn**|JS targets:
+
+- **Node.js 22+** (uses native WebSocket, no external dependencies)
+- **Modern browsers**: Chrome, Firefox, Edge, Safari (all current versions)
+
+For older Node.js versions (< 22), use AutobahnJS v20.x which includes the `ws` library.
+
 ## What can I do with this stuff?
 
 **Autobahn|JS** makes **distributed, realtime Web applications easy**: it provides the infrastructure for both **distributing live updates** to all connected clients (using the PubSub messaging pattern) and for **calling remote procedures** in different backend components (using RPC).

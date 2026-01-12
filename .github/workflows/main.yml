@@ -141,6 +141,16 @@ jobs:
       - name: Run tests
         run: just test
 
+      - name: Upload test results
+        if: always()
+        uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
+        with:
+          name: test-results-node-${{ matrix.node }}
+          path: |
+            test-results.log
+            test-results.json
+          retention-days: 30
+
       - name: Stop Crossbar.io router
         if: always()
         run: pkill -f crossbar || true

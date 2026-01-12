@@ -399,10 +399,21 @@ test:
     TOTAL_FAILED=0
     TOTAL_TESTS=0
 
-    echo "================================================================================"
-    echo "                         AutobahnJS Test Suite"
-    echo "================================================================================"
-    echo ""
+    # Log file for complete test output
+    LOG_FILE="{{ PROJECT_DIR }}/test-results.log"
+    rm -f "$LOG_FILE"
+
+    # Helper to print to both console and log
+    log() {
+        echo "$@" | tee -a "$LOG_FILE"
+    }
+
+    log "================================================================================"
+    log "                         AutobahnJS Test Suite"
+    log "================================================================================"
+    log "Node.js version: $(node --version)"
+    log "Timestamp: $(date -Iseconds)"
+    log ""
 
     for test_file in "${TEST_FILES[@]}"; do
         # Run test and capture output
@@ -410,9 +421,10 @@ test:
         RAW_OUTPUT=$(AUTOBAHN_TRACE="test/${test_file}.trace" ./node_modules/.bin/nodeunit "test/${test_file}.js" 2>&1)
         EXIT_CODE=$?
 
-        # Print detailed test output (with colors)
+        # Print detailed test output (with colors to console, stripped to log)
         echo "$RAW_OUTPUT"
-        echo ""
+        echo "$OUTPUT" >> "$LOG_FILE"
+        echo "" | tee -a "$LOG_FILE"
 
         # Strip ANSI escape codes for parsing
         OUTPUT=$(echo "$RAW_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
@@ -452,32 +464,61 @@ test:
         TOTAL_TESTS=$((TOTAL_TESTS + 1))
     done
 
-    echo ""
-    echo "================================================================================"
-    echo "                              TEST RESULTS SUMMARY"
-    echo "================================================================================"
-    printf "%-40s %8s %8s %10s %8s\n" "Test Name" "Passed" "Failed" "Time (ms)" "Result"
-    echo "--------------------------------------------------------------------------------"
+    log ""
+    log "================================================================================"
+    log "                              TEST RESULTS SUMMARY"
+    log "================================================================================"
+    printf "%-40s %8s %8s %10s %8s\n" "Test Name" "Passed" "Failed" "Time (ms)" "Result" | tee -a "$LOG_FILE"
+    log "--------------------------------------------------------------------------------"
 
     for i in "${!RESULTS_NAME[@]}"; do
         if [ "${RESULTS_STATUS[$i]}" = "OK" ]; then
             RESULT_FMT="\033[32mOK\033[0m"
+            RESULT_TXT="OK"
         else
             RESULT_FMT="\033[31mFAIL\033[0m"
+            RESULT_TXT="FAIL"
         fi
+        # Console with colors
         printf "%-40s %8s %8s %10s " "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}"
         echo -e "$RESULT_FMT"
+        # Log without colors
+        printf "%-40s %8s %8s %10s %8s\n" "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}" "$RESULT_TXT" >> "$LOG_FILE"
     done
 
-    echo "--------------------------------------------------------------------------------"
-    printf "%-40s %8s %8s %10s\n" "TOTAL" "$TOTAL_PASSED" "$TOTAL_FAILED" ""
-    echo "================================================================================"
+    log "--------------------------------------------------------------------------------"
+    printf "%-40s %8s %8s %10s\n" "TOTAL" "$TOTAL_PASSED" "$TOTAL_FAILED" "" | tee -a "$LOG_FILE"
+    log "================================================================================"
+
+    # Generate JSON summary
+    JSON_FILE="{{ PROJECT_DIR }}/test-results.json"
+    echo "{" > "$JSON_FILE"
+    echo "  \"node_version\": \"$(node --version)\"," >> "$JSON_FILE"
+    echo "  \"timestamp\": \"$(date -Iseconds)\"," >> "$JSON_FILE"
+    echo "  \"total_tests\": $TOTAL_TESTS," >> "$JSON_FILE"
+    echo "  \"total_passed\": $TOTAL_PASSED," >> "$JSON_FILE"
+    echo "  \"total_failed\": $TOTAL_FAILED," >> "$JSON_FILE"
+    echo "  \"success\": $([ $TOTAL_FAILED -eq 0 ] && echo 'true' || echo 'false')," >> "$JSON_FILE"
+    echo "  \"tests\": [" >> "$JSON_FILE"
+    for i in "${!RESULTS_NAME[@]}"; do
+        COMMA=$([ $i -lt $((${#RESULTS_NAME[@]} - 1)) ] && echo ',' || echo '')
+        echo "    {\"name\": \"${RESULTS_NAME[$i]}\", \"passed\": ${RESULTS_PASSED[$i]}, \"failed\": ${RESULTS_FAILED[$i]}, \"time_ms\": ${RESULTS_TIME[$i]}, \"status\": \"${RESULTS_STATUS[$i]}\"}$COMMA" >> "$JSON_FILE"
+    done
+    echo "  ]" >> "$JSON_FILE"
+    echo "}" >> "$JSON_FILE"
+    log ""
+    log "==> Test log written to: $LOG_FILE"
+    log "==> JSON summary written to: $JSON_FILE"
 
     if [ $TOTAL_FAILED -eq 0 ]; then
-        echo -e "\n\033[32m✔ All $TOTAL_TESTS tests passed ($TOTAL_PASSED assertions)\033[0m\n"
+        MSG="✔ All $TOTAL_TESTS tests passed ($TOTAL_PASSED assertions)"
+        echo -e "\n\033[32m$MSG\033[0m\n"
+        echo "$MSG" >> "$LOG_FILE"
         exit 0
     else
-        echo -e "\n\033[31m✖ $TOTAL_FAILED assertions failed across $TOTAL_TESTS tests\033[0m\n"
+        MSG="✖ $TOTAL_FAILED assertions failed across $TOTAL_TESTS tests"
+        echo -e "\n\033[31m$MSG\033[0m\n"
+        echo "$MSG" >> "$LOG_FILE"
         exit 1
     fi
 
