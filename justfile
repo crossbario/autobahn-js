@@ -960,12 +960,6 @@ install-docs venv="":
 
     echo "==> Installing documentation dependencies..."
     ${VENV_PYTHON} -m pip install -r {{ DOCS_DIR }}/requirements.txt
-
-    # Install jsdoc for sphinx-js
-    echo "==> Installing jsdoc (for sphinx-js)..."
-    cd {{ PROJECT_DIR }}
-    npm install --save-dev jsdoc
-
     echo "==> Documentation dependencies installed."
 
 # Build documentation (HTML)

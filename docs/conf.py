@@ -39,8 +39,9 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
 
-    # JavaScript API documentation
-    "sphinx_js",
+    # NOTE: sphinx-js disabled until JSDoc annotations are added to source code
+    # See: https://github.com/crossbario/autobahn-js/issues/597
+    # "sphinx_js",
 
     # Shared WAMP ecosystem extensions (from .cicd submodule)
     "sphinx_auto_section_anchors",
@@ -74,11 +75,9 @@ myst_enable_extensions = [
 myst_heading_anchors = 3
 
 # -- sphinx-js Configuration -------------------------------------------------
-# Path to JavaScript source (relative to conf.py)
-js_source_path = "../packages/autobahn/lib"
-
-# Use jsdoc for parsing JavaScript
-js_language = "javascript"
+# NOTE: Disabled until JSDoc annotations are added to source code
+# js_source_path = "../packages/autobahn/lib"
+# js_language = "javascript"
 
 # -- Intersphinx Configuration -----------------------------------------------
 intersphinx_mapping = {

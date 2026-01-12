@@ -10,13 +10,11 @@ furo>=2024.1.29
 # MyST Markdown support
 myst-parser>=2.0
 
-# JavaScript API documentation
-sphinx-js>=3.2
-
 # Modern UX extensions
 sphinx-design>=0.5
 sphinx-copybutton>=0.5
 sphinxext-opengraph>=0.9
 
-# JSDoc (for sphinx-js) - installed via npm, not pip
-# npm install -g jsdoc
+# NOTE: sphinx-js disabled until JSDoc annotations are added to source code
+# sphinx-js>=3.2
+# Also requires: npm install -g jsdoc

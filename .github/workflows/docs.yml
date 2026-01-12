@@ -62,7 +62,6 @@ jobs:
       - name: Install documentation dependencies
         run: |
           pip install -r docs/requirements.txt
-          npm install --save-dev jsdoc
 
       - name: Build documentation
         run: |
