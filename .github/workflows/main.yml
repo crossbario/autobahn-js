@@ -146,9 +146,7 @@ jobs:
         uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
         with:
           name: test-results-node-${{ matrix.node }}
-          path: |
-            test-results.log
-            test-results.json
+          path: test-results/
           retention-days: 30
 
       - name: Stop Crossbar.io router

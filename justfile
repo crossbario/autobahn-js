@@ -399,8 +399,10 @@ test:
     TOTAL_FAILED=0
     TOTAL_TESTS=0
 
-    # Log file for complete test output
-    LOG_FILE="{{ PROJECT_DIR }}/test-results.log"
+    # Output directory for test results
+    RESULTS_DIR="{{ PROJECT_DIR }}/test-results"
+    mkdir -p "$RESULTS_DIR"
+    LOG_FILE="$RESULTS_DIR/test-results.log"
     rm -f "$LOG_FILE"
 
     # Helper to print to both console and log
@@ -491,7 +493,7 @@ test:
     log "================================================================================"
 
     # Generate JSON summary
-    JSON_FILE="{{ PROJECT_DIR }}/test-results.json"
+    JSON_FILE="$RESULTS_DIR/test-results.json"
     echo "{" > "$JSON_FILE"
     echo "  \"node_version\": \"$(node --version)\"," >> "$JSON_FILE"
     echo "  \"timestamp\": \"$(date -Iseconds)\"," >> "$JSON_FILE"
