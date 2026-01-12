@@ -11,19 +11,16 @@
     "test": "nodeunit test/test.js"
   },
   "engines": {
-    "node": ">= 7.10.1"
+    "node": ">= 22.0.0"
   },
   "dependencies": {
-    "cbor": ">= 3.0.0",
-    "crypto-js": ">=3.1.8",
-    "msgpack5": ">= 3.6.0",
-    "tweetnacl": ">= 0.14.3",
-    "ws": "1.1.4 - 7"
+    "cbor": "^9.0.0",
+    "crypto-js": "^4.2.0",
+    "msgpack5": "^6.0.0",
+    "tweetnacl": "^1.0.0"
   },
   "optionalDependencies": {
-    "bufferutil": ">= 1.2.1",
-    "utf-8-validate": ">= 1.2.1",
-    "when": ">= 3.7.7"
+    "when": "3.7.8"
   },
   "devDependencies": {
     "browserify": ">= 13.1.1",
@@ -34,7 +31,6 @@
     "random-bytes-seed": ">=1.0.3"
   },
   "browser": {
-    "ws": false,
     "./lib/transport/rawsocket.js": false
   },
   "repository": {

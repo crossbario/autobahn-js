@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+build/
+dist/
+*.min.js
+*.jgz
+
+# XBR contract ABIs (generated)
+packages/autobahn-xbr/lib/contracts/
+
+# Package lock files
+package-lock.json
+
+# Coverage
+.nyc_output/
+coverage/
+
+# Python
+.venvs/
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.vscode/
+
+# Crossbar
+.crossbar/.db*/

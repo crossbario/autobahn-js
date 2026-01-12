@@ -130,19 +130,21 @@ jobs:
             const releaseUrl = '${{ needs.check-release.outputs.release_url }}';
             const version = releaseTag.replace(/^v/, '');
 
-            const comment = `## Release Published
-
-This PR has been included in **[${releaseTag}](${releaseUrl})**.
-
-### npm packages:
-- [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})
-- [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})
-
-### Browser bundles:
-Download from [GitHub Releases](${releaseUrl}).
-
----
-*Automated by GitHub Actions*`;
+            const comment = [
+              '## Release Published',
+              '',
+              `This PR has been included in **[${releaseTag}](${releaseUrl})**.`,
+              '',
+              '### npm packages:',
+              `- [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})`,
+              `- [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})`,
+              '',
+              '### Browser bundles:',
+              `Download from [GitHub Releases](${releaseUrl}).`,
+              '',
+              '---',
+              '*Automated by GitHub Actions*'
+            ].join('\n');
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
@@ -205,25 +207,27 @@ Download from [GitHub Releases](${releaseUrl}).
 
             const title = `Release ${releaseTag}`;
 
-            const body = `## AutobahnJS ${releaseTag} Released
-
-**[View Release on GitHub](${releaseUrl})**
-
-### npm packages:
-- [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})
-- [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})
-
-### Browser bundles:
-Download from [GitHub Releases](${releaseUrl}).
-
----
-
-### Release Notes
-
-${releaseNotes}
-
----
-*Automated by GitHub Actions*`;
+            const body = [
+              `## AutobahnJS ${releaseTag} Released`,
+              '',
+              `**[View Release on GitHub](${releaseUrl})**`,
+              '',
+              '### npm packages:',
+              `- [\`autobahn@${version}\`](https://www.npmjs.com/package/autobahn/v/${version})`,
+              `- [\`autobahn-xbr@${version}\`](https://www.npmjs.com/package/autobahn-xbr/v/${version})`,
+              '',
+              '### Browser bundles:',
+              `Download from [GitHub Releases](${releaseUrl}).`,
+              '',
+              '---',
+              '',
+              '### Release Notes',
+              '',
+              releaseNotes,
+              '',
+              '---',
+              '*Automated by GitHub Actions*'
+            ].join('\n');
 
             console.log(`Creating discussion: ${title}`);
             console.log(`Category ID: ${process.env.DISCUSSION_CATEGORY_ID}`);

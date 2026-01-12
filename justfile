@@ -354,8 +354,175 @@ crossbar-start venv="": (install-crossbar venv)
 # -- Tests (requires running Crossbar.io router on ws://localhost:8080/ws)
 # -----------------------------------------------------------------------------
 
-# Run all tests
-test: test-basic test-connect test-pubsub test-rpc test-serialization test-rawsocket test-error-handling
+# Run all tests with summary table
+test:
+    #!/usr/bin/env bash
+    cd {{ PACKAGES_DIR }}/autobahn
+
+    # Test files to run (in order)
+    TEST_FILES=(
+        "test_basic_async"
+        "test_basic_sync"
+        "test_connect"
+        "test_error_handling"
+        "test_pubsub_basic"
+        "test_pubsub_complex"
+        "test_pubsub_eligible"
+        "test_pubsub_exclude"
+        "test_pubsub_excludeme"
+        "test_pubsub_options"
+        "test_pubsub_prefix_sub"
+        "test_pubsub_wildcard_sub"
+        "test_rpc_arguments"
+        "test_rpc_complex"
+        "test_rpc_error"
+        "test_rpc_options"
+        "test_rpc_progress"
+        "test_rpc_request_id_sequence"
+        "test_rpc_routing"
+        "test_rpc_slowsquare"
+        "test_serialization_cbor"
+        "test_serialization_json"
+        "test_serialization_msgpack"
+        "test_rawsocket_protocol"
+        "test_rawsocket_transport"
+    )
+
+    # Arrays to store results
+    declare -a RESULTS_NAME
+    declare -a RESULTS_PASSED
+    declare -a RESULTS_FAILED
+    declare -a RESULTS_TIME
+    declare -a RESULTS_STATUS
+
+    TOTAL_PASSED=0
+    TOTAL_FAILED=0
+    TOTAL_TESTS=0
+
+    # Output directory for test results
+    RESULTS_DIR="{{ PROJECT_DIR }}/test-results"
+    mkdir -p "$RESULTS_DIR"
+    LOG_FILE="$RESULTS_DIR/test-results.log"
+    rm -f "$LOG_FILE"
+
+    # Helper to print to both console and log
+    log() {
+        echo "$@" | tee -a "$LOG_FILE"
+    }
+
+    log "================================================================================"
+    log "                         AutobahnJS Test Suite"
+    log "================================================================================"
+    log "Node.js version: $(node --version)"
+    log "Timestamp: $(date -Iseconds)"
+    log ""
+
+    for test_file in "${TEST_FILES[@]}"; do
+        # Run test and capture output
+        rm -f "test/${test_file}.trace"
+        RAW_OUTPUT=$(AUTOBAHN_TRACE="test/${test_file}.trace" ./node_modules/.bin/nodeunit "test/${test_file}.js" 2>&1)
+        EXIT_CODE=$?
+
+        # Print detailed test output (with colors to console, stripped to log)
+        echo "$RAW_OUTPUT"
+        echo "$OUTPUT" >> "$LOG_FILE"
+        echo "" | tee -a "$LOG_FILE"
+
+        # Strip ANSI escape codes for parsing
+        OUTPUT=$(echo "$RAW_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
+
+        # Parse the summary line: "OK: N assertions (Xms)" or "FAILURES: X/Y assertions failed (Xms)"
+        if echo "$OUTPUT" | grep -q "^OK:"; then
+            SUMMARY=$(echo "$OUTPUT" | grep "^OK:")
+            PASSED=$(echo "$SUMMARY" | sed -E 's/OK: ([0-9]+) assertions.*/\1/')
+            FAILED=0
+            TIME_MS=$(echo "$SUMMARY" | sed -E 's/.*\(([0-9]+)ms\).*/\1/')
+            STATUS="OK"
+        elif echo "$OUTPUT" | grep -q "FAILURES:"; then
+            SUMMARY=$(echo "$OUTPUT" | grep "FAILURES:")
+            # Format: "FAILURES: X/Y assertions failed (Xms)"
+            FAILED=$(echo "$SUMMARY" | sed -E 's/FAILURES: ([0-9]+)\/([0-9]+).*/\1/')
+            TOTAL_ASSERTS=$(echo "$SUMMARY" | sed -E 's/FAILURES: ([0-9]+)\/([0-9]+).*/\2/')
+            PASSED=$((TOTAL_ASSERTS - FAILED))
+            TIME_MS=$(echo "$SUMMARY" | sed -E 's/.*\(([0-9]+)ms\).*/\1/')
+            STATUS="FAIL"
+        else
+            # Test crashed or no output
+            PASSED=0
+            FAILED=1
+            TIME_MS=0
+            STATUS="FAIL"
+        fi
+
+        # Store results
+        RESULTS_NAME+=("$test_file")
+        RESULTS_PASSED+=("$PASSED")
+        RESULTS_FAILED+=("$FAILED")
+        RESULTS_TIME+=("$TIME_MS")
+        RESULTS_STATUS+=("$STATUS")
+
+        TOTAL_PASSED=$((TOTAL_PASSED + PASSED))
+        TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
+        TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    done
+
+    log ""
+    log "================================================================================"
+    log "                              TEST RESULTS SUMMARY"
+    log "================================================================================"
+    printf "%-40s %8s %8s %10s %8s\n" "Test Name" "Passed" "Failed" "Time (ms)" "Result" | tee -a "$LOG_FILE"
+    log "--------------------------------------------------------------------------------"
+
+    for i in "${!RESULTS_NAME[@]}"; do
+        if [ "${RESULTS_STATUS[$i]}" = "OK" ]; then
+            RESULT_FMT="\033[32mOK\033[0m"
+            RESULT_TXT="OK"
+        else
+            RESULT_FMT="\033[31mFAIL\033[0m"
+            RESULT_TXT="FAIL"
+        fi
+        # Console with colors
+        printf "%-40s %8s %8s %10s " "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}"
+        echo -e "$RESULT_FMT"
+        # Log without colors
+        printf "%-40s %8s %8s %10s %8s\n" "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}" "$RESULT_TXT" >> "$LOG_FILE"
+    done
+
+    log "--------------------------------------------------------------------------------"
+    printf "%-40s %8s %8s %10s\n" "TOTAL" "$TOTAL_PASSED" "$TOTAL_FAILED" "" | tee -a "$LOG_FILE"
+    log "================================================================================"
+
+    # Generate JSON summary
+    JSON_FILE="$RESULTS_DIR/test-results.json"
+    echo "{" > "$JSON_FILE"
+    echo "  \"node_version\": \"$(node --version)\"," >> "$JSON_FILE"
+    echo "  \"timestamp\": \"$(date -Iseconds)\"," >> "$JSON_FILE"
+    echo "  \"total_tests\": $TOTAL_TESTS," >> "$JSON_FILE"
+    echo "  \"total_passed\": $TOTAL_PASSED," >> "$JSON_FILE"
+    echo "  \"total_failed\": $TOTAL_FAILED," >> "$JSON_FILE"
+    echo "  \"success\": $([ $TOTAL_FAILED -eq 0 ] && echo 'true' || echo 'false')," >> "$JSON_FILE"
+    echo "  \"tests\": [" >> "$JSON_FILE"
+    for i in "${!RESULTS_NAME[@]}"; do
+        COMMA=$([ $i -lt $((${#RESULTS_NAME[@]} - 1)) ] && echo ',' || echo '')
+        echo "    {\"name\": \"${RESULTS_NAME[$i]}\", \"passed\": ${RESULTS_PASSED[$i]}, \"failed\": ${RESULTS_FAILED[$i]}, \"time_ms\": ${RESULTS_TIME[$i]}, \"status\": \"${RESULTS_STATUS[$i]}\"}$COMMA" >> "$JSON_FILE"
+    done
+    echo "  ]" >> "$JSON_FILE"
+    echo "}" >> "$JSON_FILE"
+    log ""
+    log "==> Test log written to: $LOG_FILE"
+    log "==> JSON summary written to: $JSON_FILE"
+
+    if [ $TOTAL_FAILED -eq 0 ]; then
+        MSG="✔ All $TOTAL_TESTS tests passed ($TOTAL_PASSED assertions)"
+        echo -e "\n\033[32m$MSG\033[0m\n"
+        echo "$MSG" >> "$LOG_FILE"
+        exit 0
+    else
+        MSG="✖ $TOTAL_FAILED assertions failed across $TOTAL_TESTS tests"
+        echo -e "\n\033[31m$MSG\033[0m\n"
+        echo "$MSG" >> "$LOG_FILE"
+        exit 1
+    fi
 
 # Clean test output files (.trace and .txt)
 test-clean:
@@ -612,6 +779,148 @@ test-sealedbox:
     rm -f test/test_sealedbox.trace && AUTOBAHN_TRACE=test/test_sealedbox.trace ./node_modules/.bin/nodeunit test/test_sealedbox.js
 
 # -----------------------------------------------------------------------------
+# -- Code Quality (ESLint + Prettier)
+# -----------------------------------------------------------------------------
+
+# Install root dev dependencies (ESLint, Prettier)
+install-lint:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Installing root dev dependencies (ESLint, Prettier)..."
+    cd {{ PROJECT_DIR }}
+    npm install
+    echo "==> Lint tools installed."
+
+# Run ESLint to check for code issues
+lint: install-lint
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Running ESLint..."
+    cd {{ PROJECT_DIR }}
+    ./node_modules/.bin/eslint packages/autobahn/lib packages/autobahn/test packages/autobahn-xbr/lib
+    echo "==> ESLint passed."
+
+# Run ESLint and fix auto-fixable issues
+lint-fix: install-lint
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Running ESLint with --fix..."
+    cd {{ PROJECT_DIR }}
+    ./node_modules/.bin/eslint --fix packages/autobahn/lib packages/autobahn/test packages/autobahn-xbr/lib
+    echo "==> ESLint fix complete."
+
+# Check code formatting with Prettier (informational - does not fail)
+format: install-lint
+    #!/usr/bin/env bash
+    echo "==> Checking code formatting with Prettier..."
+    cd {{ PROJECT_DIR }}
+    # Note: Many files need formatting - this is informational only for now
+    # Run format-fix to auto-fix formatting issues
+    ./node_modules/.bin/prettier --check "packages/autobahn/lib/**/*.js" "packages/autobahn/test/**/*.js" "packages/autobahn-xbr/lib/**/*.js" || echo "==> Formatting issues found (see above)"
+    echo "==> Formatting check complete."
+
+# Fix code formatting with Prettier
+format-fix: install-lint
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Fixing code formatting with Prettier..."
+    cd {{ PROJECT_DIR }}
+    ./node_modules/.bin/prettier --write "packages/autobahn/lib/**/*.js" "packages/autobahn/test/**/*.js" "packages/autobahn-xbr/lib/**/*.js"
+    echo "==> Formatting complete."
+
+# -----------------------------------------------------------------------------
+# -- CalVer Versioning
+# -----------------------------------------------------------------------------
+#
+# Version format: YY.M.PATCH[.devN]
+#   YY    - 2-digit year (e.g., 26 for 2026)
+#   M     - Month (1-12, no leading zero)
+#   PATCH - Patch number within month
+#   .devN - Development suffix (removed for releases)
+#
+# Examples:
+#   26.1.1.dev1 - Development version
+#   26.1.1      - Stable release
+#
+# Reference: https://github.com/crossbario/crossbar/issues/2155
+# -----------------------------------------------------------------------------
+
+# Package version files
+JS_VERSION_FILE := PROJECT_DIR / "packages/autobahn/package.json"
+XBR_VERSION_FILE := PROJECT_DIR / "packages/autobahn-xbr/package.json"
+
+# Display current version from package.json files
+file-version:
+    #!/usr/bin/env bash
+    echo "==> Package versions:"
+    echo "    autobahn:     $(jq -r '.version' {{ JS_VERSION_FILE }})"
+    echo "    autobahn-xbr: $(jq -r '.version' {{ XBR_VERSION_FILE }})"
+
+# Prepare for release: Remove .devN suffix from version
+prep-release:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Preparing for stable release..."
+
+    # Get current versions
+    CURRENT_AB=$(jq -r '.version' {{ JS_VERSION_FILE }})
+    CURRENT_XBR=$(jq -r '.version' {{ XBR_VERSION_FILE }})
+    echo "    Current autobahn:     $CURRENT_AB"
+    echo "    Current autobahn-xbr: $CURRENT_XBR"
+
+    # Remove .devN suffix
+    NEW_AB=$(echo "$CURRENT_AB" | sed 's/\.dev[0-9]*$//')
+    NEW_XBR=$(echo "$CURRENT_XBR" | sed 's/\.dev[0-9]*$//')
+
+    if [ "$CURRENT_AB" = "$NEW_AB" ] && [ "$CURRENT_XBR" = "$NEW_XBR" ]; then
+        echo "==> Versions already clean (no .devN suffix)"
+        exit 0
+    fi
+
+    # Update package.json files
+    jq --arg v "$NEW_AB" '.version = $v' {{ JS_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ JS_VERSION_FILE }}
+    jq --arg v "$NEW_XBR" '.version = $v' {{ XBR_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ XBR_VERSION_FILE }}
+
+    echo "    New autobahn:     $NEW_AB"
+    echo "    New autobahn-xbr: $NEW_XBR"
+    echo ""
+    echo "==> Version cleaned for release. Next steps:"
+    echo "    1. git add packages/autobahn/package.json packages/autobahn-xbr/package.json"
+    echo "    2. git commit -m \"prep v${NEW_AB} release\""
+    echo "    3. git tag v${NEW_AB}"
+    echo "    4. git push && git push --tags"
+    echo "    5. After CI completes: just bump-next <NEXT_VERSION>.dev1"
+
+# Bump to next development version
+bump-next next_version:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Bumping to {{ next_version }}..."
+
+    # Validate version format (should end with .devN)
+    if ! echo "{{ next_version }}" | grep -qE '\.dev[0-9]+$'; then
+        echo "WARNING: Version '{{ next_version }}' doesn't end with .devN"
+        echo "         Development versions should use format: YY.M.PATCH.devN"
+        read -p "Continue anyway? [y/N] " confirm
+        if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+            echo "Aborted."
+            exit 1
+        fi
+    fi
+
+    # Update package.json files
+    jq --arg v "{{ next_version }}" '.version = $v' {{ JS_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ JS_VERSION_FILE }}
+    jq --arg v "{{ next_version }}" '.version = $v' {{ XBR_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ XBR_VERSION_FILE }}
+
+    echo "    autobahn:     {{ next_version }}"
+    echo "    autobahn-xbr: {{ next_version }}"
+    echo ""
+    echo "==> Version bumped. Next steps:"
+    echo "    1. git add packages/autobahn/package.json packages/autobahn-xbr/package.json"
+    echo "    2. git commit -m \"chore: bump version to {{ next_version }}\""
+    echo "    3. git push"
+
+# -----------------------------------------------------------------------------
 # -- Publishing (manual steps documented)
 # -----------------------------------------------------------------------------
 
@@ -626,3 +935,68 @@ publish-npm:
     cd {{ PACKAGES_DIR }}/autobahn-xbr
     npm publish
     echo "==> Published to npm."
+
+# -----------------------------------------------------------------------------
+# -- Documentation (Sphinx + sphinx-js + Furo)
+# -----------------------------------------------------------------------------
+
+# Documentation directory
+DOCS_DIR := PROJECT_DIR / "docs"
+DOCS_BUILD := DOCS_DIR / "_build"
+
+# Install documentation dependencies
+install-docs venv="":
+    #!/usr/bin/env bash
+    set -e
+    VENV_NAME="{{ venv }}"
+    if [ -z "${VENV_NAME}" ]; then
+        VENV_NAME=$(just --quiet _get-system-venv-name)
+    fi
+    VENV_PATH="{{ VENV_DIR }}/${VENV_NAME}"
+    VENV_PYTHON=$(just --quiet _get-venv-python "${VENV_NAME}")
+
+    # Create venv if needed
+    just create "${VENV_NAME}"
+
+    echo "==> Installing documentation dependencies..."
+    ${VENV_PYTHON} -m pip install -r {{ DOCS_DIR }}/requirements.txt
+    echo "==> Documentation dependencies installed."
+
+# Build documentation (HTML)
+docs venv="": (install-docs venv)
+    #!/usr/bin/env bash
+    set -e
+    VENV_NAME="{{ venv }}"
+    if [ -z "${VENV_NAME}" ]; then
+        VENV_NAME=$(just --quiet _get-system-venv-name)
+    fi
+    VENV_PATH="{{ VENV_DIR }}/${VENV_NAME}"
+
+    echo "==> Building documentation..."
+    cd {{ DOCS_DIR }}
+    ${VENV_PATH}/bin/sphinx-build -b html . {{ DOCS_BUILD }}/html
+
+    echo "==> Documentation built:"
+    echo "    Open: file://{{ DOCS_BUILD }}/html/index.html"
+
+# Build documentation and serve locally
+docs-serve venv="": (docs venv)
+    #!/usr/bin/env bash
+    set -e
+    VENV_NAME="{{ venv }}"
+    if [ -z "${VENV_NAME}" ]; then
+        VENV_NAME=$(just --quiet _get-system-venv-name)
+    fi
+    VENV_PATH="{{ VENV_DIR }}/${VENV_NAME}"
+
+    echo "==> Serving documentation at http://localhost:8000 ..."
+    cd {{ DOCS_BUILD }}/html
+    ${VENV_PATH}/bin/python -m http.server 8000
+
+# Clean documentation build
+docs-clean:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Cleaning documentation build..."
+    rm -rf {{ DOCS_BUILD }}
+    echo "==> Documentation clean complete."
