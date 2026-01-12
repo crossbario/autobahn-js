@@ -1,0 +1,22 @@
+# Sphinx documentation build requirements
+# Install with: pip install -r docs/requirements.txt
+
+# Core Sphinx
+Sphinx>=7.2
+
+# Furo theme (modern, responsive)
+furo>=2024.1.29
+
+# MyST Markdown support
+myst-parser>=2.0
+
+# JavaScript API documentation
+sphinx-js>=3.2
+
+# Modern UX extensions
+sphinx-design>=0.5
+sphinx-copybutton>=0.5
+sphinxext-opengraph>=0.9
+
+# JSDoc (for sphinx-js) - installed via npm, not pip
+# npm install -g jsdoc

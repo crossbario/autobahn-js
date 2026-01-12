@@ -935,3 +935,74 @@ publish-npm:
     cd {{ PACKAGES_DIR }}/autobahn-xbr
     npm publish
     echo "==> Published to npm."
+
+# -----------------------------------------------------------------------------
+# -- Documentation (Sphinx + sphinx-js + Furo)
+# -----------------------------------------------------------------------------
+
+# Documentation directory
+DOCS_DIR := PROJECT_DIR / "docs"
+DOCS_BUILD := DOCS_DIR / "_build"
+
+# Install documentation dependencies
+install-docs venv="":
+    #!/usr/bin/env bash
+    set -e
+    VENV_NAME="{{ venv }}"
+    if [ -z "${VENV_NAME}" ]; then
+        VENV_NAME=$(just --quiet _get-system-venv-name)
+    fi
+    VENV_PATH="{{ VENV_DIR }}/${VENV_NAME}"
+    VENV_PYTHON=$(just --quiet _get-venv-python "${VENV_NAME}")
+
+    # Create venv if needed
+    just create "${VENV_NAME}"
+
+    echo "==> Installing documentation dependencies..."
+    ${VENV_PYTHON} -m pip install -r {{ DOCS_DIR }}/requirements.txt
+
+    # Install jsdoc for sphinx-js
+    echo "==> Installing jsdoc (for sphinx-js)..."
+    cd {{ PROJECT_DIR }}
+    npm install --save-dev jsdoc
+
+    echo "==> Documentation dependencies installed."
+
+# Build documentation (HTML)
+docs venv="": (install-docs venv)
+    #!/usr/bin/env bash
+    set -e
+    VENV_NAME="{{ venv }}"
+    if [ -z "${VENV_NAME}" ]; then
+        VENV_NAME=$(just --quiet _get-system-venv-name)
+    fi
+    VENV_PATH="{{ VENV_DIR }}/${VENV_NAME}"
+
+    echo "==> Building documentation..."
+    cd {{ DOCS_DIR }}
+    ${VENV_PATH}/bin/sphinx-build -b html . {{ DOCS_BUILD }}/html
+
+    echo "==> Documentation built:"
+    echo "    Open: file://{{ DOCS_BUILD }}/html/index.html"
+
+# Build documentation and serve locally
+docs-serve venv="": (docs venv)
+    #!/usr/bin/env bash
+    set -e
+    VENV_NAME="{{ venv }}"
+    if [ -z "${VENV_NAME}" ]; then
+        VENV_NAME=$(just --quiet _get-system-venv-name)
+    fi
+    VENV_PATH="{{ VENV_DIR }}/${VENV_NAME}"
+
+    echo "==> Serving documentation at http://localhost:8000 ..."
+    cd {{ DOCS_BUILD }}/html
+    ${VENV_PATH}/bin/python -m http.server 8000
+
+# Clean documentation build
+docs-clean:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Cleaning documentation build..."
+    rm -rf {{ DOCS_BUILD }}
+    echo "==> Documentation clean complete."
