@@ -12,6 +12,7 @@ on:
 permissions:
   contents: write      # For creating releases
   id-token: write      # For npm provenance
+  pull-requests: read  # Required by identifiers.yml
 
 env:
   # Node 24 is current LTS (Krypton)
