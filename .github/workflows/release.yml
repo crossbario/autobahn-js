@@ -18,10 +18,21 @@ env:
   NODE_VERSION: '24'
 
 jobs:
+  identifiers:
+    # GitHub needs to know where .cicd/workflows/identifiers.yml lives at parse time,
+    # and submodules aren't included in that context! thus the following does NOT work:
+    # uses: ./.cicd/workflows/identifiers.yml
+    # we MUST reference the remote repo directly:
+    uses: wamp-proto/wamp-cicd/.github/workflows/identifiers.yml@main
+    # IMPORTANT: we still need .cicd as a Git submodule in the using repo though!
+    # because e.g. identifiers.yml wants to access scripts/sanitize.sh !
+
   check-release:
     name: Check if release needed
+    needs: identifiers
     runs-on: ubuntu-24.04
     outputs:
+      release_type: ${{ steps.check.outputs.release_type }}
       should_release: ${{ steps.check.outputs.should_release }}
       version: ${{ steps.check.outputs.version }}
       is_prerelease: ${{ steps.check.outputs.is_prerelease }}
@@ -30,73 +41,138 @@ jobs:
     steps:
       - name: Check trigger conditions
         id: check
+        env:
+          RELEASE_TYPE: ${{ needs.identifiers.outputs.release_type }}
+          RELEASE_NAME: ${{ needs.identifiers.outputs.release_name }}
         uses: actions/github-script@v7
         with:
           script: |
             const { workflow_run } = context.payload;
+            const releaseType = process.env.RELEASE_TYPE;
+            const releaseName = process.env.RELEASE_NAME;
+
+            console.log('─────────────────────────────────────────────────');
+            console.log('🔍 Checking release conditions');
+            console.log('─────────────────────────────────────────────────');
+            console.log(`Release type: ${releaseType}`);
+            console.log(`Release name: ${releaseName}`);
 
             // For workflow_run trigger
             if (workflow_run) {
-              console.log('Triggered by workflow_run');
-              console.log(`Workflow: ${workflow_run.name}`);
+              console.log(`Triggered by: ${workflow_run.name}`);
               console.log(`Conclusion: ${workflow_run.conclusion}`);
               console.log(`Head branch: ${workflow_run.head_branch}`);
               console.log(`Run ID: ${workflow_run.id}`);
 
               // Only release if main workflow succeeded
               if (workflow_run.conclusion !== 'success') {
-                console.log('Main workflow did not succeed - skipping release');
+                console.log('❌ Main workflow did not succeed - skipping release');
                 core.setOutput('should_release', 'false');
                 return;
               }
 
-              // Check if this is a tag push (v*)
-              const ref = workflow_run.head_branch;
-              const isTag = ref && ref.startsWith('v');
+              core.setOutput('run_id', workflow_run.id.toString());
+            } else {
+              // Manual dispatch
+              console.log('Triggered by: manual dispatch');
+              core.setOutput('run_id', context.runId.toString());
+            }
 
-              if (!isTag) {
-                console.log(`Not a version tag (${ref}) - skipping release`);
-                core.setOutput('should_release', 'false');
-                return;
-              }
+            // Determine release type from identifiers
+            core.setOutput('release_type', releaseType);
 
-              const version = ref.replace(/^v/, '');
+            if (releaseType === 'stable') {
+              // Stable release (v* tag)
+              const version = releaseName.replace(/^v/, '');
               const isPrerelease = version.includes('-') || version.includes('alpha') || version.includes('beta') || version.includes('rc');
 
-              console.log(`Version tag detected: ${version}`);
-              console.log(`Is prerelease: ${isPrerelease}`);
+              console.log(`✅ Stable release: ${version}`);
+              console.log(`   Is prerelease: ${isPrerelease}`);
 
               core.setOutput('should_release', 'true');
               core.setOutput('version', version);
               core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
-              core.setOutput('run_id', workflow_run.id.toString());
-              return;
-            }
 
-            // For workflow_dispatch trigger
-            console.log('Manual dispatch - checking current ref');
-            const ref = context.ref;
-            const isTag = ref.startsWith('refs/tags/v');
+            } else if (releaseType === 'development') {
+              // Development release (master branch)
+              console.log(`✅ Development release: ${releaseName}`);
 
-            if (!isTag) {
-              console.log(`Not a version tag (${ref}) - skipping release`);
+              core.setOutput('should_release', 'true');
+              core.setOutput('version', releaseName);
+              core.setOutput('is_prerelease', 'true');
+
+            } else {
+              console.log(`❌ Unknown release type: ${releaseType} - skipping`);
               core.setOutput('should_release', 'false');
-              return;
             }
 
-            const version = ref.replace('refs/tags/v', '');
-            const isPrerelease = version.includes('-') || version.includes('alpha') || version.includes('beta') || version.includes('rc');
+            console.log('─────────────────────────────────────────────────');
 
-            console.log(`Version: ${version}`);
-            core.setOutput('should_release', 'true');
-            core.setOutput('version', version);
-            core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
-            core.setOutput('run_id', context.runId.toString());
+  # Development GitHub Release (master branch, no npm publish)
+  release-development:
+    name: Development GitHub Release
+    needs: [identifiers, check-release]
+    if: |
+      needs.check-release.outputs.should_release == 'true' &&
+      needs.check-release.outputs.release_type == 'development'
+    runs-on: ubuntu-24.04
 
+    env:
+      RELEASE_NAME: ${{ needs.identifiers.outputs.release_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download autobahn build artifacts (verified)
+        uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
+        with:
+          name: autobahn-browser-bundle
+          path: release-assets/autobahn/
+          run-id: ${{ needs.check-release.outputs.run_id }}
+        continue-on-error: true
+
+      - name: Download autobahn-xbr build artifacts (verified)
+        uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
+        with:
+          name: autobahn-xbr-browser-bundle
+          path: release-assets/autobahn-xbr/
+          run-id: ${{ needs.check-release.outputs.run_id }}
+        continue-on-error: true
+
+      - name: Create Development GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_NAME }}
+          name: ${{ env.RELEASE_NAME }}
+          prerelease: true
+          generate_release_notes: true
+          body: |
+            ## Development Build
+
+            This is an automated development build from the `master` branch.
+
+            **⚠️ Not for production use** - This build has not been published to npm.
+
+            ### Browser Bundles
+            Download the browser bundles from the release assets below.
+
+            ### For Production
+            Use stable releases from [npm](https://www.npmjs.com/package/autobahn).
+          files: |
+            release-assets/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Stable Release: Publish to npm
   publish-npm:
     name: Publish to npm
-    needs: check-release
-    if: needs.check-release.outputs.should_release == 'true'
+    needs: [identifiers, check-release]
+    if: |
+      needs.check-release.outputs.should_release == 'true' &&
+      needs.check-release.outputs.release_type == 'stable'
     runs-on: ubuntu-24.04
 
     steps:
@@ -170,10 +246,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  create-release:
-    name: Create GitHub Release
-    needs: [check-release, publish-npm]
-    if: needs.check-release.outputs.should_release == 'true'
+  # Stable Release: Create GitHub Release (after npm publish)
+  release-stable:
+    name: Stable GitHub Release
+    needs: [identifiers, check-release, publish-npm]
+    if: |
+      needs.check-release.outputs.should_release == 'true' &&
+      needs.check-release.outputs.release_type == 'stable'
     runs-on: ubuntu-24.04
 
     steps:
