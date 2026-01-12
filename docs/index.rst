@@ -1,5 +1,3 @@
-.. autobahn-js documentation master file
-
 ======================================
 Autobahn|JS Documentation
 ======================================
@@ -16,8 +14,14 @@ providing **Remote Procedure Calls (RPC)** and **Publish/Subscribe (PubSub)** ov
 
       Quick introduction to installing and using Autobahn|JS
 
+   .. grid-item-card:: Programming Guide
+      :link: programming
+      :link-type: doc
+
+      Introduction to using Autobahn|JS in your applications
+
    .. grid-item-card:: API Reference
-      :link: api/index
+      :link: reference
       :link-type: doc
 
       Complete JavaScript API documentation
@@ -26,12 +30,7 @@ providing **Remote Procedure Calls (RPC)** and **Publish/Subscribe (PubSub)** ov
       :link: examples
       :link-type: doc
 
-      Code examples for common use cases
-
-   .. grid-item-card:: WAMP Protocol
-      :link: https://wamp-proto.org/
-
-      Learn about the WAMP protocol specification
+      Overview of available code examples
 
 Installation
 ------------
@@ -47,40 +46,6 @@ Installation
 .. code-block:: html
 
    <script src="https://cdn.jsdelivr.net/npm/autobahn@latest/autobahn.min.js"></script>
-
-Quick Example
--------------
-
-.. code-block:: javascript
-
-   const autobahn = require('autobahn');
-
-   const connection = new autobahn.Connection({
-       url: 'ws://localhost:8080/ws',
-       realm: 'realm1'
-   });
-
-   connection.onopen = function (session) {
-       // Subscribe to a topic
-       session.subscribe('com.example.event', function (args) {
-           console.log('Event received:', args[0]);
-       });
-
-       // Call a remote procedure
-       session.call('com.example.add2', [2, 3]).then(function (result) {
-           console.log('Result:', result);
-       });
-
-       // Register a procedure
-       session.register('com.example.multiply', function (args) {
-           return args[0] * args[1];
-       });
-
-       // Publish an event
-       session.publish('com.example.event', ['Hello, WAMP!']);
-   };
-
-   connection.open();
 
 Platform Support
 ----------------
@@ -107,13 +72,24 @@ Packages
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
+   :caption: User Guide
    :hidden:
 
    getting-started
-   api/index
+   programming
+   reference
    examples
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Development
+   :hidden:
+
+   building
+   release-process
+   utils
    changelog
+   api/index
 
 .. toctree::
    :maxdepth: 1
