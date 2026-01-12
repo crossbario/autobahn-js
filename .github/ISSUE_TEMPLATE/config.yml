@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/crossbario/autobahn-js/discussions
+    about: Ask questions and discuss AutobahnJS usage
+  - name: WAMP Protocol
+    url: https://wamp-proto.org
+    about: Learn about the WAMP protocol specification
+  - name: Crossbar.io Documentation
+    url: https://crossbar.io/docs/
+    about: Documentation for Crossbar.io WAMP router
