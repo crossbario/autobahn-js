@@ -20,7 +20,7 @@
     "tweetnacl": "^1.0.0"
   },
   "optionalDependencies": {
-    "when": ">= 3.7.7"
+    "when": "3.7.8"
   },
   "devDependencies": {
     "browserify": ">= 13.1.1",
