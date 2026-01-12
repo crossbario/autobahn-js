@@ -94,9 +94,9 @@ jobs:
               core.setOutput('version', version);
               core.setOutput('is_prerelease', isPrerelease ? 'true' : 'false');
 
-            } else if (releaseType === 'development') {
-              // Development release (master branch)
-              console.log(`✅ Development release: ${releaseName}`);
+            } else if (releaseType === 'development' || releaseType === 'nightly') {
+              // Development/nightly release (master branch)
+              console.log(`✅ ${releaseType} release: ${releaseName}`);
 
               core.setOutput('should_release', 'true');
               core.setOutput('version', releaseName);
@@ -109,13 +109,14 @@ jobs:
 
             console.log('─────────────────────────────────────────────────');
 
-  # Development GitHub Release (master branch, no npm publish)
+  # Development/Nightly GitHub Release (master branch, no npm publish)
   release-development:
     name: Development GitHub Release
     needs: [identifiers, check-release]
     if: |
       needs.check-release.outputs.should_release == 'true' &&
-      needs.check-release.outputs.release_type == 'development'
+      (needs.check-release.outputs.release_type == 'development' ||
+       needs.check-release.outputs.release_type == 'nightly')
     runs-on: ubuntu-24.04
 
     env:
