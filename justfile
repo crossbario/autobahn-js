@@ -829,6 +829,98 @@ format-fix: install-lint
     echo "==> Formatting complete."
 
 # -----------------------------------------------------------------------------
+# -- CalVer Versioning
+# -----------------------------------------------------------------------------
+#
+# Version format: YY.M.PATCH[.devN]
+#   YY    - 2-digit year (e.g., 26 for 2026)
+#   M     - Month (1-12, no leading zero)
+#   PATCH - Patch number within month
+#   .devN - Development suffix (removed for releases)
+#
+# Examples:
+#   26.1.1.dev1 - Development version
+#   26.1.1      - Stable release
+#
+# Reference: https://github.com/crossbario/crossbar/issues/2155
+# -----------------------------------------------------------------------------
+
+# Package version files
+JS_VERSION_FILE := PROJECT_DIR / "packages/autobahn/package.json"
+XBR_VERSION_FILE := PROJECT_DIR / "packages/autobahn-xbr/package.json"
+
+# Display current version from package.json files
+file-version:
+    #!/usr/bin/env bash
+    echo "==> Package versions:"
+    echo "    autobahn:     $(jq -r '.version' {{ JS_VERSION_FILE }})"
+    echo "    autobahn-xbr: $(jq -r '.version' {{ XBR_VERSION_FILE }})"
+
+# Prepare for release: Remove .devN suffix from version
+prep-release:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Preparing for stable release..."
+
+    # Get current versions
+    CURRENT_AB=$(jq -r '.version' {{ JS_VERSION_FILE }})
+    CURRENT_XBR=$(jq -r '.version' {{ XBR_VERSION_FILE }})
+    echo "    Current autobahn:     $CURRENT_AB"
+    echo "    Current autobahn-xbr: $CURRENT_XBR"
+
+    # Remove .devN suffix
+    NEW_AB=$(echo "$CURRENT_AB" | sed 's/\.dev[0-9]*$//')
+    NEW_XBR=$(echo "$CURRENT_XBR" | sed 's/\.dev[0-9]*$//')
+
+    if [ "$CURRENT_AB" = "$NEW_AB" ] && [ "$CURRENT_XBR" = "$NEW_XBR" ]; then
+        echo "==> Versions already clean (no .devN suffix)"
+        exit 0
+    fi
+
+    # Update package.json files
+    jq --arg v "$NEW_AB" '.version = $v' {{ JS_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ JS_VERSION_FILE }}
+    jq --arg v "$NEW_XBR" '.version = $v' {{ XBR_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ XBR_VERSION_FILE }}
+
+    echo "    New autobahn:     $NEW_AB"
+    echo "    New autobahn-xbr: $NEW_XBR"
+    echo ""
+    echo "==> Version cleaned for release. Next steps:"
+    echo "    1. git add packages/autobahn/package.json packages/autobahn-xbr/package.json"
+    echo "    2. git commit -m \"prep v${NEW_AB} release\""
+    echo "    3. git tag v${NEW_AB}"
+    echo "    4. git push && git push --tags"
+    echo "    5. After CI completes: just bump-next <NEXT_VERSION>.dev1"
+
+# Bump to next development version
+bump-next next_version:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Bumping to {{ next_version }}..."
+
+    # Validate version format (should end with .devN)
+    if ! echo "{{ next_version }}" | grep -qE '\.dev[0-9]+$'; then
+        echo "WARNING: Version '{{ next_version }}' doesn't end with .devN"
+        echo "         Development versions should use format: YY.M.PATCH.devN"
+        read -p "Continue anyway? [y/N] " confirm
+        if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+            echo "Aborted."
+            exit 1
+        fi
+    fi
+
+    # Update package.json files
+    jq --arg v "{{ next_version }}" '.version = $v' {{ JS_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ JS_VERSION_FILE }}
+    jq --arg v "{{ next_version }}" '.version = $v' {{ XBR_VERSION_FILE }} > tmp.$$.json && mv tmp.$$.json {{ XBR_VERSION_FILE }}
+
+    echo "    autobahn:     {{ next_version }}"
+    echo "    autobahn-xbr: {{ next_version }}"
+    echo ""
+    echo "==> Version bumped. Next steps:"
+    echo "    1. git add packages/autobahn/package.json packages/autobahn-xbr/package.json"
+    echo "    2. git commit -m \"chore: bump version to {{ next_version }}\""
+    echo "    3. git push"
+
+# -----------------------------------------------------------------------------
 # -- Publishing (manual steps documented)
 # -----------------------------------------------------------------------------
 
