@@ -9,6 +9,7 @@ furo>=2024.1.29
 
 # MyST Markdown support
 myst-parser>=2.0
+linkify-it-py>=2.0  # Required for MyST linkify extension
 
 # Modern UX extensions
 sphinx-design>=0.5
