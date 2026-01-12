@@ -65,30 +65,49 @@ jobs:
               return;
             }
 
-            // Find releases for this commit
-            const { data: releases } = await github.rest.repos.listReleases({
+            // Check if there's a tag pointing to this commit
+            const { data: tags } = await github.rest.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              per_page: 10
+              per_page: 20
             });
 
-            // Find the most recent release
-            const latestRelease = releases[0];
-            if (!latestRelease) {
-              console.log('No releases found');
+            const matchingTag = tags.find(tag => tag.commit.sha === commitSha);
+            if (!matchingTag) {
+              console.log(`No tag found for commit ${commitSha} - skipping`);
               core.setOutput('has_release', 'false');
               return;
             }
 
-            console.log(`Latest release: ${latestRelease.tag_name}`);
+            console.log(`Found tag for commit: ${matchingTag.name}`);
+
+            // Check if there's a release for this tag
+            let release;
+            try {
+              const { data: releaseData } = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: matchingTag.name
+              });
+              release = releaseData;
+            } catch (e) {
+              if (e.status === 404) {
+                console.log(`No release found for tag ${matchingTag.name} - skipping`);
+                core.setOutput('has_release', 'false');
+                return;
+              }
+              throw e;
+            }
+
+            console.log(`Found release: ${release.tag_name}`);
 
             // Check if this is a stable release (v* tag)
-            const isStable = latestRelease.tag_name.startsWith('v');
+            const isStable = release.tag_name.startsWith('v');
 
             core.setOutput('has_release', 'true');
-            core.setOutput('release_tag', latestRelease.tag_name);
-            core.setOutput('release_url', latestRelease.html_url);
-            core.setOutput('release_name', latestRelease.name);
+            core.setOutput('release_tag', release.tag_name);
+            core.setOutput('release_url', release.html_url);
+            core.setOutput('release_name', release.name);
             core.setOutput('is_stable', isStable ? 'true' : 'false');
 
             // Try to find associated PR
