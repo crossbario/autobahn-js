@@ -612,6 +612,56 @@ test-sealedbox:
     rm -f test/test_sealedbox.trace && AUTOBAHN_TRACE=test/test_sealedbox.trace ./node_modules/.bin/nodeunit test/test_sealedbox.js
 
 # -----------------------------------------------------------------------------
+# -- Code Quality (ESLint + Prettier)
+# -----------------------------------------------------------------------------
+
+# Install root dev dependencies (ESLint, Prettier)
+install-lint:
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Installing root dev dependencies (ESLint, Prettier)..."
+    cd {{ PROJECT_DIR }}
+    npm install
+    echo "==> Lint tools installed."
+
+# Run ESLint to check for code issues
+lint: install-lint
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Running ESLint..."
+    cd {{ PROJECT_DIR }}
+    ./node_modules/.bin/eslint packages/autobahn/lib packages/autobahn/test packages/autobahn-xbr/lib
+    echo "==> ESLint passed."
+
+# Run ESLint and fix auto-fixable issues
+lint-fix: install-lint
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Running ESLint with --fix..."
+    cd {{ PROJECT_DIR }}
+    ./node_modules/.bin/eslint --fix packages/autobahn/lib packages/autobahn/test packages/autobahn-xbr/lib
+    echo "==> ESLint fix complete."
+
+# Check code formatting with Prettier (informational - does not fail)
+format: install-lint
+    #!/usr/bin/env bash
+    echo "==> Checking code formatting with Prettier..."
+    cd {{ PROJECT_DIR }}
+    # Note: Many files need formatting - this is informational only for now
+    # Run format-fix to auto-fix formatting issues
+    ./node_modules/.bin/prettier --check "packages/autobahn/lib/**/*.js" "packages/autobahn/test/**/*.js" "packages/autobahn-xbr/lib/**/*.js" || echo "==> Formatting issues found (see above)"
+    echo "==> Formatting check complete."
+
+# Fix code formatting with Prettier
+format-fix: install-lint
+    #!/usr/bin/env bash
+    set -e
+    echo "==> Fixing code formatting with Prettier..."
+    cd {{ PROJECT_DIR }}
+    ./node_modules/.bin/prettier --write "packages/autobahn/lib/**/*.js" "packages/autobahn/test/**/*.js" "packages/autobahn-xbr/lib/**/*.js"
+    echo "==> Formatting complete."
+
+# -----------------------------------------------------------------------------
 # -- Publishing (manual steps documented)
 # -----------------------------------------------------------------------------
 

@@ -28,6 +28,54 @@ jobs:
     # IMPORTANT: we still need .cicd as a Git submodule in the using repo though!
     # because e.g. identifiers.yml wants to access scripts/sanitize.sh !
 
+  lint:
+    name: ESLint
+    needs: identifiers
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Run ESLint
+        run: just lint
+
+  format:
+    name: Prettier
+    needs: identifiers
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Check formatting
+        run: just format
+
   test:
     name: Test (Node ${{ matrix.node }})
     needs: identifiers
