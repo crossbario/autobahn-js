@@ -106,9 +106,9 @@ Features
 * provides asynchronous RPC and PubSub messaging patterns
 * uses WebSocket or HTTP long-poll as transport
 * easy to use Promise-based API
-* pluggable promises/deferreds: use [when.js](https://github.com/cujojs/when)  (built-in), [jQuery](http://api.jquery.com/category/deferred-object/) , [Dojo](http://dojotoolkit.org/reference-guide/1.7/dojo/Deferred.html), ECMA Script 6 or others
-* no dependencies
-* small size (244kB source, 111kB minified, 33kB compressed)
+* pluggable promises/deferreds: uses [when.js](https://github.com/cujojs/when) (built-in) with progress support for WAMP progressive calls
+* minimal dependencies (when.js for promises, CryptoJS for WAMP-CRA auth)
+* small size (~250kB source, ~110kB minified, ~35kB gzipped)
 * Open-Source (MIT License)
 
 
@@ -147,7 +147,7 @@ For the latest Node.js release schedule, see [nodejs.org/about/previous-releases
 
 #### WebSocket Support
 
-Node.js 22+ includes native WebSocket support. For older Node.js versions, AutobahnJS uses the [ws library](https://github.com/websockets/ws/) which is included as a dependency.
+Node.js 22+ includes native WebSocket support. AutobahnJS uses this native implementation directly—no external WebSocket library is required.
 
 #### Quick Check
 
@@ -176,8 +176,9 @@ Get in touch on our [user forum](https://crossbar.discourse.group/).
 
 **Autobahn**|JS includes code from the following open-source projects
 
-  * [when.js](https://github.com/cujojs/when)
-  * [ws: a node.js websocket library](https://github.com/einaros/ws)
-  * [CryptoJS](http://code.google.com/p/crypto-js/)
+  * [when.js](https://github.com/cujojs/when) — Promise/A+ implementation with progress support
+  * [CryptoJS](http://code.google.com/p/crypto-js/) — Cryptographic functions for WAMP-CRA
 
 Special thanks to the [Coders with an Unhealthy Javascript Obsession](http://cujojs.com/) for creating *when.js - A lightweight Promise and when() implementation, plus other async goodies.*
+
+**Historical note:** Prior to v26.x, AutobahnJS used the excellent [ws](https://github.com/websockets/ws) library for WebSocket support in Node.js. With Node.js 22+ providing native WebSocket, this dependency is no longer needed.
