@@ -410,11 +410,12 @@ test:
         RAW_OUTPUT=$(AUTOBAHN_TRACE="test/${test_file}.trace" ./node_modules/.bin/nodeunit "test/${test_file}.js" 2>&1)
         EXIT_CODE=$?
 
+        # Print detailed test output (with colors)
+        echo "$RAW_OUTPUT"
+        echo ""
+
         # Strip ANSI escape codes for parsing
         OUTPUT=$(echo "$RAW_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
-
-        # Extract test names from output (lines with ✔ or ✖)
-        TEST_NAMES=$(echo "$OUTPUT" | grep -E "^✔|^✖" | sed 's/^[✔✖] //')
 
         # Parse the summary line: "OK: N assertions (Xms)" or "FAILURES: X/Y assertions failed (Xms)"
         if echo "$OUTPUT" | grep -q "^OK:"; then
@@ -449,13 +450,6 @@ test:
         TOTAL_PASSED=$((TOTAL_PASSED + PASSED))
         TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
         TOTAL_TESTS=$((TOTAL_TESTS + 1))
-
-        # Print progress indicator
-        if [ "$STATUS" = "OK" ]; then
-            echo "✔ $test_file ($PASSED assertions, ${TIME_MS}ms)"
-        else
-            echo "✖ $test_file (FAILED: $FAILED/$((PASSED + FAILED)) assertions, ${TIME_MS}ms)"
-        fi
     done
 
     echo ""
