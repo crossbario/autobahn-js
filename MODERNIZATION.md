@@ -16,11 +16,13 @@ This document outlines the modernization plan for AutobahnJS, establishing a fou
 |--------|--------|-------|
 | **Language** | Pure JavaScript (ES5/ES6 mix) | No TypeScript (by design) |
 | **Build System** | justfile + npm tools | Modernized from Makefile/SCons |
-| **Test Framework** | Nodeunit | Tests working, router via PyPI |
-| **CI/CD** | GitHub Actions | 3 workflows: main, release, release-post-comment |
-| **Code Quality** | npm audit | Security scanning in CI |
+| **Test Framework** | Nodeunit | 25 tests, summary table, JSON output |
+| **CI/CD** | GitHub Actions | 4 workflows: main, release, release-post-comment, docs |
+| **Code Quality** | ESLint 9 + Prettier | Flat config, npm audit in CI |
+| **Documentation** | Sphinx + Furo | GitHub Pages deployment |
 | **Type Definitions** | None (planned) | Track A pending |
-| **Version** | v26.1.1 | Bumped from v22.11.1 |
+| **Node.js** | 22+ required | Native WebSocket (no ws dependency) |
+| **Version** | v26.1.1 | CalVer: YY.M.PATCH |
 | **License** | MIT (core) / Apache-2.0 (XBR) | |
 
 ### Project Structure (Post-Modernization)
@@ -35,12 +37,23 @@ autobahn-js/
 │   └── autobahn-xbr/       # Ethereum/XBR integration (Apache 2.0)
 │       ├── lib/            # XBR source + contracts (~4,047 lines)
 │       └── package.json
+├── docs/                   # Sphinx documentation (NEW)
+│   ├── conf.py             # Sphinx config (Furo + sphinx-js)
+│   ├── index.rst           # Documentation root
+│   └── _static/            # Logo, favicon
 ├── .crossbar/              # Test router configuration
-├── .github/workflows/      # CI/CD workflows (NEW)
-│   ├── main.yml            # Test + Build + Security
-│   ├── release.yml         # npm publish + GH Release
-│   └── release-post-comment.yml
+├── .github/
+│   ├── workflows/          # CI/CD workflows (NEW)
+│   │   ├── main.yml        # Lint + Test + Build + Security
+│   │   ├── release.yml     # npm publish + GH Release
+│   │   ├── release-post-comment.yml
+│   │   └── docs.yml        # Sphinx docs → GitHub Pages
+│   ├── ISSUE_TEMPLATE/     # Bug report, feature request (NEW)
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── justfile                # Modern build system (NEW)
+├── eslint.config.mjs       # ESLint 9 flat config (NEW)
+├── .prettierrc             # Prettier config (NEW)
+├── CONTRIBUTING.md         # Contribution guide (NEW)
 └── MODERNIZATION.md        # This document
 ```
 
@@ -60,7 +73,7 @@ autobahn-js/
 | Gap | Risk Level | Status |
 |-----|------------|--------|
 | **No TypeScript** | High | Planned (Track A) |
-| **No static analysis** | High | Planned (Track A) |
+| **No static analysis** | High | **FIXED** - ESLint 9 in CI |
 | **Deprecated test framework** | Medium | Tests working, framework update planned |
 | **Manual release process** | Medium | **FIXED** - Automated via GH Actions |
 | **Flexible dependency versions** | Medium | Unchanged (low priority) |
@@ -99,7 +112,7 @@ autobahn-js/
 - [ ] SBOM generation (planned)
 
 **Workflow Features**:
-- Tests on Node.js 18, 20, 22
+- Tests on Node.js 22, 24, 25 (22+ required for native WebSocket)
 - Crossbar.io test router from PyPI
 - npm audit security scanning
 - npm Trusted Publishing with provenance
@@ -164,8 +177,8 @@ See: [crossbar#2158](https://github.com/crossbario/crossbar/issues/2158) for det
 
 #### main.yml
 - **Triggers**: push/PR to master, tags v*, manual
-- **Jobs**: test (Node 18/20/22), build, security
-- **Artifacts**: Browser bundles uploaded
+- **Jobs**: lint, format, test (Node 22/24/25), build, security
+- **Artifacts**: Browser bundles, test results uploaded
 
 #### release.yml
 - **Triggers**: After main workflow completes (for v* tags)
@@ -176,13 +189,18 @@ See: [crossbar#2158](https://github.com/crossbario/crossbar/issues/2158) for det
 - **Triggers**: After release workflow completes
 - **Actions**: Post summary comment to associated PR
 
+#### docs.yml
+- **Triggers**: push to master (docs/ or lib/ changes), manual
+- **Actions**: Build Sphinx docs, deploy to GitHub Pages
+- **URL**: https://crossbario.github.io/autobahn-js/
+
 ---
 
 ## Version History
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 26.1.1 | 2025-01 | Modernization: justfile, GH workflows, esbuild |
+| 26.1.1 | 2026-01 | Modernization: justfile, GH workflows, ESLint/Prettier, Sphinx docs, Node.js 22+ |
 | 22.11.1 | 2022-11 | Last release before modernization |
 
 ---
