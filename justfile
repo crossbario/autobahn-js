@@ -354,8 +354,138 @@ crossbar-start venv="": (install-crossbar venv)
 # -- Tests (requires running Crossbar.io router on ws://localhost:8080/ws)
 # -----------------------------------------------------------------------------
 
-# Run all tests
-test: test-basic test-connect test-pubsub test-rpc test-serialization test-rawsocket test-error-handling
+# Run all tests with summary table
+test:
+    #!/usr/bin/env bash
+    cd {{ PACKAGES_DIR }}/autobahn
+
+    # Test files to run (in order)
+    TEST_FILES=(
+        "test_basic_async"
+        "test_basic_sync"
+        "test_connect"
+        "test_error_handling"
+        "test_pubsub_basic"
+        "test_pubsub_complex"
+        "test_pubsub_eligible"
+        "test_pubsub_exclude"
+        "test_pubsub_excludeme"
+        "test_pubsub_options"
+        "test_pubsub_prefix_sub"
+        "test_pubsub_wildcard_sub"
+        "test_rpc_arguments"
+        "test_rpc_complex"
+        "test_rpc_error"
+        "test_rpc_options"
+        "test_rpc_progress"
+        "test_rpc_request_id_sequence"
+        "test_rpc_routing"
+        "test_rpc_slowsquare"
+        "test_serialization_cbor"
+        "test_serialization_json"
+        "test_serialization_msgpack"
+        "test_rawsocket_protocol"
+        "test_rawsocket_transport"
+    )
+
+    # Arrays to store results
+    declare -a RESULTS_NAME
+    declare -a RESULTS_PASSED
+    declare -a RESULTS_FAILED
+    declare -a RESULTS_TIME
+    declare -a RESULTS_STATUS
+
+    TOTAL_PASSED=0
+    TOTAL_FAILED=0
+    TOTAL_TESTS=0
+
+    echo "================================================================================"
+    echo "                         AutobahnJS Test Suite"
+    echo "================================================================================"
+    echo ""
+
+    for test_file in "${TEST_FILES[@]}"; do
+        # Run test and capture output
+        rm -f "test/${test_file}.trace"
+        RAW_OUTPUT=$(AUTOBAHN_TRACE="test/${test_file}.trace" ./node_modules/.bin/nodeunit "test/${test_file}.js" 2>&1)
+        EXIT_CODE=$?
+
+        # Strip ANSI escape codes for parsing
+        OUTPUT=$(echo "$RAW_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
+
+        # Extract test names from output (lines with ✔ or ✖)
+        TEST_NAMES=$(echo "$OUTPUT" | grep -E "^✔|^✖" | sed 's/^[✔✖] //')
+
+        # Parse the summary line: "OK: N assertions (Xms)" or "FAILURES: X/Y assertions failed (Xms)"
+        if echo "$OUTPUT" | grep -q "^OK:"; then
+            SUMMARY=$(echo "$OUTPUT" | grep "^OK:")
+            PASSED=$(echo "$SUMMARY" | sed -E 's/OK: ([0-9]+) assertions.*/\1/')
+            FAILED=0
+            TIME_MS=$(echo "$SUMMARY" | sed -E 's/.*\(([0-9]+)ms\).*/\1/')
+            STATUS="OK"
+        elif echo "$OUTPUT" | grep -q "FAILURES:"; then
+            SUMMARY=$(echo "$OUTPUT" | grep "FAILURES:")
+            # Format: "FAILURES: X/Y assertions failed (Xms)"
+            FAILED=$(echo "$SUMMARY" | sed -E 's/FAILURES: ([0-9]+)\/([0-9]+).*/\1/')
+            TOTAL_ASSERTS=$(echo "$SUMMARY" | sed -E 's/FAILURES: ([0-9]+)\/([0-9]+).*/\2/')
+            PASSED=$((TOTAL_ASSERTS - FAILED))
+            TIME_MS=$(echo "$SUMMARY" | sed -E 's/.*\(([0-9]+)ms\).*/\1/')
+            STATUS="FAIL"
+        else
+            # Test crashed or no output
+            PASSED=0
+            FAILED=1
+            TIME_MS=0
+            STATUS="FAIL"
+        fi
+
+        # Store results
+        RESULTS_NAME+=("$test_file")
+        RESULTS_PASSED+=("$PASSED")
+        RESULTS_FAILED+=("$FAILED")
+        RESULTS_TIME+=("$TIME_MS")
+        RESULTS_STATUS+=("$STATUS")
+
+        TOTAL_PASSED=$((TOTAL_PASSED + PASSED))
+        TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
+        TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+        # Print progress indicator
+        if [ "$STATUS" = "OK" ]; then
+            echo "✔ $test_file ($PASSED assertions, ${TIME_MS}ms)"
+        else
+            echo "✖ $test_file (FAILED: $FAILED/$((PASSED + FAILED)) assertions, ${TIME_MS}ms)"
+        fi
+    done
+
+    echo ""
+    echo "================================================================================"
+    echo "                              TEST RESULTS SUMMARY"
+    echo "================================================================================"
+    printf "%-40s %8s %8s %10s %8s\n" "Test Name" "Passed" "Failed" "Time (ms)" "Result"
+    echo "--------------------------------------------------------------------------------"
+
+    for i in "${!RESULTS_NAME[@]}"; do
+        if [ "${RESULTS_STATUS[$i]}" = "OK" ]; then
+            RESULT_FMT="\033[32mOK\033[0m"
+        else
+            RESULT_FMT="\033[31mFAIL\033[0m"
+        fi
+        printf "%-40s %8s %8s %10s " "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}"
+        echo -e "$RESULT_FMT"
+    done
+
+    echo "--------------------------------------------------------------------------------"
+    printf "%-40s %8s %8s %10s\n" "TOTAL" "$TOTAL_PASSED" "$TOTAL_FAILED" ""
+    echo "================================================================================"
+
+    if [ $TOTAL_FAILED -eq 0 ]; then
+        echo -e "\n\033[32m✔ All $TOTAL_TESTS tests passed ($TOTAL_PASSED assertions)\033[0m\n"
+        exit 0
+    else
+        echo -e "\n\033[31m✖ $TOTAL_FAILED assertions failed across $TOTAL_TESTS tests\033[0m\n"
+        exit 1
+    fi
 
 # Clean test output files (.trace and .txt)
 test-clean:
