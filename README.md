@@ -2,6 +2,7 @@
 
 WAMP for Browsers and NodeJS.
 
+[![IANA WAMP](https://img.shields.io/badge/IANA-WAMP%20Subprotocol-informational.svg)](https://www.iana.org/assignments/websocket/websocket.xhtml)
 [![CI](https://github.com/crossbario/autobahn-js/actions/workflows/main.yml/badge.svg)](https://github.com/crossbario/autobahn-js/actions/workflows/main.yml)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://crossbario.github.io/autobahn-js/)
 [![npm version](https://img.shields.io/npm/v/autobahn.svg)](https://www.npmjs.com/package/autobahn)
