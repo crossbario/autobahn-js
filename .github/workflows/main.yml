@@ -209,14 +209,14 @@ jobs:
       - name: Upload autobahn build artifacts
         uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
         with:
-          name: autobahn-browser-bundle
+          name: autobahn-bundle
           path: packages/autobahn/build/
           retention-days: 30
 
       - name: Upload autobahn-xbr build artifacts
         uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
         with:
-          name: autobahn-xbr-browser-bundle
+          name: autobahn-xbr-bundle
           path: packages/autobahn-xbr/build/
           retention-days: 30
 
@@ -248,8 +248,70 @@ jobs:
           cd packages/autobahn && npm install
           cd ../autobahn-xbr && npm install
 
+      - name: Create security results directory
+        run: mkdir -p security-results
+
       - name: Run npm audit (autobahn)
-        run: cd packages/autobahn && npm audit --audit-level=high || true
+        run: |
+          cd packages/autobahn
+          echo "=== npm audit for autobahn ===" > ../../security-results/autobahn-audit.log
+          echo "Timestamp: $(date -Iseconds)" >> ../../security-results/autobahn-audit.log
+          echo "Node.js: $(node --version)" >> ../../security-results/autobahn-audit.log
+          echo "npm: $(npm --version)" >> ../../security-results/autobahn-audit.log
+          echo "" >> ../../security-results/autobahn-audit.log
+
+          # Run audit and capture output (don't fail on vulnerabilities)
+          npm audit --json > ../../security-results/autobahn-audit.json 2>&1 || true
+          npm audit >> ../../security-results/autobahn-audit.log 2>&1 || true
+
+          # Extract summary for quick reference
+          echo ""
+          echo "=== Audit Summary ==="
+          cat ../../security-results/autobahn-audit.log
 
       - name: Run npm audit (autobahn-xbr)
-        run: cd packages/autobahn-xbr && npm audit --audit-level=high || true
+        run: |
+          cd packages/autobahn-xbr
+          echo "=== npm audit for autobahn-xbr ===" > ../../security-results/autobahn-xbr-audit.log
+          echo "Timestamp: $(date -Iseconds)" >> ../../security-results/autobahn-xbr-audit.log
+          echo "Node.js: $(node --version)" >> ../../security-results/autobahn-xbr-audit.log
+          echo "npm: $(npm --version)" >> ../../security-results/autobahn-xbr-audit.log
+          echo "" >> ../../security-results/autobahn-xbr-audit.log
+
+          # Run audit and capture output (don't fail on vulnerabilities)
+          npm audit --json > ../../security-results/autobahn-xbr-audit.json 2>&1 || true
+          npm audit >> ../../security-results/autobahn-xbr-audit.log 2>&1 || true
+
+          # Extract summary for quick reference
+          echo ""
+          echo "=== Audit Summary ==="
+          cat ../../security-results/autobahn-xbr-audit.log
+
+      - name: Generate security summary
+        run: |
+          cd security-results
+
+          # Create summary JSON
+          cat > security-summary.json << 'SUMMARY'
+          {
+            "timestamp": "$(date -Iseconds)",
+            "node_version": "$(node --version)",
+            "npm_version": "$(npm --version)",
+            "packages": ["autobahn", "autobahn-xbr"]
+          }
+          SUMMARY
+
+          # Generate checksums
+          sha256sum *.json *.log > CHECKSUM.SHA256
+          md5sum *.json *.log > CHECKSUM.MD5
+
+          echo "=== Security Results Checksums ==="
+          cat CHECKSUM.SHA256
+
+      - name: Upload security scan results
+        if: always()
+        uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
+        with:
+          name: security-scan-results
+          path: security-results/
+          retention-days: 30

@@ -131,7 +131,7 @@ jobs:
       - name: Download autobahn build artifacts (verified)
         uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
         with:
-          name: autobahn-browser-bundle
+          name: autobahn-bundle
           path: release-assets/autobahn/
           run-id: ${{ needs.check-release.outputs.run_id }}
         continue-on-error: true
@@ -139,7 +139,7 @@ jobs:
       - name: Download autobahn-xbr build artifacts (verified)
         uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
         with:
-          name: autobahn-xbr-browser-bundle
+          name: autobahn-xbr-bundle
           path: release-assets/autobahn-xbr/
           run-id: ${{ needs.check-release.outputs.run_id }}
         continue-on-error: true
@@ -267,7 +267,7 @@ jobs:
       - name: Download autobahn build artifacts (verified)
         uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
         with:
-          name: autobahn-browser-bundle
+          name: autobahn-bundle
           path: release-assets/autobahn/
           run-id: ${{ needs.check-release.outputs.run_id }}
         continue-on-error: true
@@ -275,7 +275,7 @@ jobs:
       - name: Download autobahn-xbr build artifacts (verified)
         uses: wamp-proto/wamp-cicd/actions/download-artifact-verified@main
         with:
-          name: autobahn-xbr-browser-bundle
+          name: autobahn-xbr-bundle
           path: release-assets/autobahn-xbr/
           run-id: ${{ needs.check-release.outputs.run_id }}
         continue-on-error: true

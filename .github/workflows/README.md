@@ -20,9 +20,10 @@ including artifact production and consumption flow.
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  main.yml                                                                   │
-│  ├── autobahn-browser-bundle        (autobahn.js, autobahn.min.js, etc.)   │
-│  ├── autobahn-xbr-browser-bundle    (autobahn-xbr.js, autobahn-xbr.min.js) │
-│  └── test-results-node-{22,24,25}   (test logs & JSON summaries)           │
+│  ├── autobahn-bundle                (autobahn.js, autobahn.min.js, etc.)   │
+│  ├── autobahn-xbr-bundle            (autobahn-xbr.js, autobahn-xbr.min.js) │
+│  ├── test-results-node-{22,24,25}   (test logs & JSON summaries)           │
+│  └── security-scan-results          (npm audit logs & JSON reports)        │
 │                                                                             │
 │  docs.yml                                                                   │
 │  └── github-pages                   (Sphinx HTML docs)                      │
@@ -104,20 +105,26 @@ Post-release notifications:
 
 ## Artifact Details
 
-### Browser Bundles (main.yml → release.yml)
+### Build Bundles (main.yml → release.yml)
 
 | Artifact | Contents |
 |----------|----------|
-| `autobahn-browser-bundle` | `autobahn.js`, `autobahn.min.js`, `autobahn.min.jgz`, checksums, LICENSE |
-| `autobahn-xbr-browser-bundle` | `autobahn-xbr.js`, `autobahn-xbr.min.js`, `autobahn-xbr.min.jgz`, checksums, LICENSE |
+| `autobahn-bundle` | `autobahn.js`, `autobahn.min.js`, `autobahn.min.jgz`, checksums, LICENSE |
+| `autobahn-xbr-bundle` | `autobahn-xbr.js`, `autobahn-xbr.min.js`, `autobahn-xbr.min.jgz`, checksums, LICENSE |
 
 ### Test Results (main.yml)
 
 | Artifact | Contents |
 |----------|----------|
-| `test-results-node-22` | `test-results.log`, `test-results.json` |
-| `test-results-node-24` | `test-results.log`, `test-results.json` |
-| `test-results-node-25` | `test-results.log`, `test-results.json` |
+| `test-results-node-22` | `test-results.log`, `test-results.json`, checksums |
+| `test-results-node-24` | `test-results.log`, `test-results.json`, checksums |
+| `test-results-node-25` | `test-results.log`, `test-results.json`, checksums |
+
+### Security Scan Results (main.yml)
+
+| Artifact | Contents |
+|----------|----------|
+| `security-scan-results` | `autobahn-audit.json`, `autobahn-audit.log`, `autobahn-xbr-audit.json`, `autobahn-xbr-audit.log`, `security-summary.json`, checksums |
 
 ## Platform Coverage
 
