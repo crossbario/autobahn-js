@@ -3,6 +3,7 @@
 WAMP for Browsers and NodeJS.
 
 [![CI](https://github.com/crossbario/autobahn-js/actions/workflows/main.yml/badge.svg)](https://github.com/crossbario/autobahn-js/actions/workflows/main.yml)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://crossbario.github.io/autobahn-js/)
 [![npm version](https://img.shields.io/npm/v/autobahn.svg)](https://www.npmjs.com/package/autobahn)
 [![npm downloads](https://img.shields.io/npm/dm/autobahn.svg)](https://www.npmjs.com/package/autobahn)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
