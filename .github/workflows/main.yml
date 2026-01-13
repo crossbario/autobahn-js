@@ -141,6 +141,15 @@ jobs:
       - name: Run tests
         run: just test
 
+      - name: Ensure test-results directory exists
+        if: always()
+        run: |
+          mkdir -p test-results
+          # Create marker file if tests didn't run
+          if [ ! -f test-results/test-results.json ]; then
+            echo '{"node_version": "'$(node --version)'", "error": "Tests did not complete", "timestamp": "'$(date -Iseconds)'"}' > test-results/test-results.json
+          fi
+
       - name: Upload test results
         if: always()
         uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
