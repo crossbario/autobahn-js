@@ -71,6 +71,24 @@ export default [
       },
    },
 
+   // Vitest test files: add test framework globals
+   {
+      files: ['**/*.vitest.js'],
+      languageOptions: {
+         globals: {
+            describe: 'readonly',
+            test: 'readonly',
+            expect: 'readonly',
+            it: 'readonly',
+            beforeEach: 'readonly',
+            afterEach: 'readonly',
+            beforeAll: 'readonly',
+            afterAll: 'readonly',
+            vi: 'readonly',
+         },
+      },
+   },
+
    // Ignore patterns
    {
       ignores: [

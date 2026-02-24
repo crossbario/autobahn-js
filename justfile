@@ -351,10 +351,22 @@ crossbar-start venv="": (install-crossbar venv)
     ${VENV_PATH}/bin/crossbar start --cbdir .crossbar
 
 # -----------------------------------------------------------------------------
-# -- Tests (requires running Crossbar.io router on ws://localhost:8080/ws)
+# -- Unit Tests (Vitest - no Crossbar.io required)
 # -----------------------------------------------------------------------------
 
-# Run all tests with summary table
+# Run unit tests with Vitest (no Crossbar.io router needed)
+test-unit:
+    #!/usr/bin/env bash
+    set -e
+    cd {{ PROJECT_DIR }}
+    echo "==> Running unit tests with Vitest..."
+    npx vitest run
+
+# -----------------------------------------------------------------------------
+# -- Integration Tests (requires running Crossbar.io router on ws://localhost:8080/ws)
+# -----------------------------------------------------------------------------
+
+# Run all integration tests with summary table (requires Crossbar.io)
 test:
     #!/usr/bin/env bash
     cd {{ PACKAGES_DIR }}/autobahn
