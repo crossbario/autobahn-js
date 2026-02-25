@@ -359,182 +359,20 @@ test-unit:
     #!/usr/bin/env bash
     set -e
     cd {{ PROJECT_DIR }}
-    echo "==> Running unit tests with Vitest..."
-    npx vitest run
+    echo "==> Running unit tests with Vitest (no Crossbar.io required)..."
+    npx vitest run test_util_is_object test_rawsocket_protocol test_basic_sync test_basic_async test_sealedbox
 
 # -----------------------------------------------------------------------------
 # -- Integration Tests (requires running Crossbar.io router on ws://localhost:8080/ws)
 # -----------------------------------------------------------------------------
 
-# Run all integration tests with summary table (requires Crossbar.io)
+# Run all tests with Vitest (requires running Crossbar.io for integration tests)
 test:
     #!/usr/bin/env bash
-    cd {{ PACKAGES_DIR }}/autobahn
-
-    # Test files to run (in order)
-    TEST_FILES=(
-        "test_basic_async"
-        "test_basic_sync"
-        "test_connect"
-        "test_error_handling"
-        "test_pubsub_basic"
-        "test_pubsub_complex"
-        "test_pubsub_eligible"
-        "test_pubsub_exclude"
-        "test_pubsub_excludeme"
-        "test_pubsub_options"
-        "test_pubsub_prefix_sub"
-        "test_pubsub_wildcard_sub"
-        "test_rpc_arguments"
-        "test_rpc_complex"
-        "test_rpc_error"
-        "test_rpc_options"
-        "test_rpc_progress"
-        "test_rpc_request_id_sequence"
-        "test_rpc_routing"
-        "test_rpc_slowsquare"
-        "test_serialization_cbor"
-        "test_serialization_json"
-        "test_serialization_msgpack"
-        "test_rawsocket_protocol"
-        "test_rawsocket_transport"
-    )
-
-    # Arrays to store results
-    declare -a RESULTS_NAME
-    declare -a RESULTS_PASSED
-    declare -a RESULTS_FAILED
-    declare -a RESULTS_TIME
-    declare -a RESULTS_STATUS
-
-    TOTAL_PASSED=0
-    TOTAL_FAILED=0
-    TOTAL_TESTS=0
-
-    # Output directory for test results
-    RESULTS_DIR="{{ PROJECT_DIR }}/test-results"
-    mkdir -p "$RESULTS_DIR"
-    LOG_FILE="$RESULTS_DIR/test-results.log"
-    rm -f "$LOG_FILE"
-
-    # Helper to print to both console and log
-    log() {
-        echo "$@" | tee -a "$LOG_FILE"
-    }
-
-    log "================================================================================"
-    log "                         AutobahnJS Test Suite"
-    log "================================================================================"
-    log "Node.js version: $(node --version)"
-    log "Timestamp: $(date -Iseconds)"
-    log ""
-
-    for test_file in "${TEST_FILES[@]}"; do
-        # Run test and capture output
-        rm -f "test/${test_file}.trace"
-        RAW_OUTPUT=$(AUTOBAHN_TRACE="test/${test_file}.trace" ./node_modules/.bin/nodeunit "test/${test_file}.js" 2>&1)
-        EXIT_CODE=$?
-
-        # Print detailed test output (with colors to console, stripped to log)
-        echo "$RAW_OUTPUT"
-        echo "$OUTPUT" >> "$LOG_FILE"
-        echo "" | tee -a "$LOG_FILE"
-
-        # Strip ANSI escape codes for parsing
-        OUTPUT=$(echo "$RAW_OUTPUT" | sed 's/\x1b\[[0-9;]*m//g')
-
-        # Parse the summary line: "OK: N assertions (Xms)" or "FAILURES: X/Y assertions failed (Xms)"
-        if echo "$OUTPUT" | grep -q "^OK:"; then
-            SUMMARY=$(echo "$OUTPUT" | grep "^OK:")
-            PASSED=$(echo "$SUMMARY" | sed -E 's/OK: ([0-9]+) assertions.*/\1/')
-            FAILED=0
-            TIME_MS=$(echo "$SUMMARY" | sed -E 's/.*\(([0-9]+)ms\).*/\1/')
-            STATUS="OK"
-        elif echo "$OUTPUT" | grep -q "FAILURES:"; then
-            SUMMARY=$(echo "$OUTPUT" | grep "FAILURES:")
-            # Format: "FAILURES: X/Y assertions failed (Xms)"
-            FAILED=$(echo "$SUMMARY" | sed -E 's/FAILURES: ([0-9]+)\/([0-9]+).*/\1/')
-            TOTAL_ASSERTS=$(echo "$SUMMARY" | sed -E 's/FAILURES: ([0-9]+)\/([0-9]+).*/\2/')
-            PASSED=$((TOTAL_ASSERTS - FAILED))
-            TIME_MS=$(echo "$SUMMARY" | sed -E 's/.*\(([0-9]+)ms\).*/\1/')
-            STATUS="FAIL"
-        else
-            # Test crashed or no output
-            PASSED=0
-            FAILED=1
-            TIME_MS=0
-            STATUS="FAIL"
-        fi
-
-        # Store results
-        RESULTS_NAME+=("$test_file")
-        RESULTS_PASSED+=("$PASSED")
-        RESULTS_FAILED+=("$FAILED")
-        RESULTS_TIME+=("$TIME_MS")
-        RESULTS_STATUS+=("$STATUS")
-
-        TOTAL_PASSED=$((TOTAL_PASSED + PASSED))
-        TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
-        TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    done
-
-    log ""
-    log "================================================================================"
-    log "                              TEST RESULTS SUMMARY"
-    log "================================================================================"
-    printf "%-40s %8s %8s %10s %8s\n" "Test Name" "Passed" "Failed" "Time (ms)" "Result" | tee -a "$LOG_FILE"
-    log "--------------------------------------------------------------------------------"
-
-    for i in "${!RESULTS_NAME[@]}"; do
-        if [ "${RESULTS_STATUS[$i]}" = "OK" ]; then
-            RESULT_FMT="\033[32mOK\033[0m"
-            RESULT_TXT="OK"
-        else
-            RESULT_FMT="\033[31mFAIL\033[0m"
-            RESULT_TXT="FAIL"
-        fi
-        # Console with colors
-        printf "%-40s %8s %8s %10s " "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}"
-        echo -e "$RESULT_FMT"
-        # Log without colors
-        printf "%-40s %8s %8s %10s %8s\n" "${RESULTS_NAME[$i]}" "${RESULTS_PASSED[$i]}" "${RESULTS_FAILED[$i]}" "${RESULTS_TIME[$i]}" "$RESULT_TXT" >> "$LOG_FILE"
-    done
-
-    log "--------------------------------------------------------------------------------"
-    printf "%-40s %8s %8s %10s\n" "TOTAL" "$TOTAL_PASSED" "$TOTAL_FAILED" "" | tee -a "$LOG_FILE"
-    log "================================================================================"
-
-    # Generate JSON summary
-    JSON_FILE="$RESULTS_DIR/test-results.json"
-    echo "{" > "$JSON_FILE"
-    echo "  \"node_version\": \"$(node --version)\"," >> "$JSON_FILE"
-    echo "  \"timestamp\": \"$(date -Iseconds)\"," >> "$JSON_FILE"
-    echo "  \"total_tests\": $TOTAL_TESTS," >> "$JSON_FILE"
-    echo "  \"total_passed\": $TOTAL_PASSED," >> "$JSON_FILE"
-    echo "  \"total_failed\": $TOTAL_FAILED," >> "$JSON_FILE"
-    echo "  \"success\": $([ $TOTAL_FAILED -eq 0 ] && echo 'true' || echo 'false')," >> "$JSON_FILE"
-    echo "  \"tests\": [" >> "$JSON_FILE"
-    for i in "${!RESULTS_NAME[@]}"; do
-        COMMA=$([ $i -lt $((${#RESULTS_NAME[@]} - 1)) ] && echo ',' || echo '')
-        echo "    {\"name\": \"${RESULTS_NAME[$i]}\", \"passed\": ${RESULTS_PASSED[$i]}, \"failed\": ${RESULTS_FAILED[$i]}, \"time_ms\": ${RESULTS_TIME[$i]}, \"status\": \"${RESULTS_STATUS[$i]}\"}$COMMA" >> "$JSON_FILE"
-    done
-    echo "  ]" >> "$JSON_FILE"
-    echo "}" >> "$JSON_FILE"
-    log ""
-    log "==> Test log written to: $LOG_FILE"
-    log "==> JSON summary written to: $JSON_FILE"
-
-    if [ $TOTAL_FAILED -eq 0 ]; then
-        MSG="✔ All $TOTAL_TESTS tests passed ($TOTAL_PASSED assertions)"
-        echo -e "\n\033[32m$MSG\033[0m\n"
-        echo "$MSG" >> "$LOG_FILE"
-        exit 0
-    else
-        MSG="✖ $TOTAL_FAILED assertions failed across $TOTAL_TESTS tests"
-        echo -e "\n\033[31m$MSG\033[0m\n"
-        echo "$MSG" >> "$LOG_FILE"
-        exit 1
-    fi
+    set -e
+    cd {{ PROJECT_DIR }}
+    echo "==> Running all tests with Vitest..."
+    npx vitest run
 
 # Clean test output files (.trace and .txt)
 test-clean:
@@ -545,250 +383,24 @@ test-clean:
     echo "==> Test files cleaned."
 
 # -----------------------------------------------------------------------------
-# NOTE ON TRACE FILES (.trace)
-#
-# The .trace files generated by AUTOBAHN_TRACE are for DEBUGGING only.
-# They contain non-deterministic values that differ between runs:
-#   - Session IDs (randomly generated)
-#   - Request/Registration/Subscription IDs (randomly generated)
-#   - Anonymous auth IDs (randomly generated)
-#   - Machine metadata (x_cb_node, x_cb_pid, x_cb_peer)
-#
-# Therefore, trace-based regression testing is NOT reliable.
-# Regression testing is done via nodeunit test assertions.
-#
-# See: https://github.com/crossbario/crossbar/issues/2158
-#      (Feature request for deterministic ID generation mode)
+# -- Legacy nodeunit test recipes (deprecated - use `just test` or `just test-unit`)
+# -- These will be removed once nodeunit is fully removed from dependencies.
 # -----------------------------------------------------------------------------
 
-# --- Basic tests ---
+# --- Basic tests (nodeunit, deprecated) ---
+test-basic-nodeunit: test-basic-async-nodeunit test-basic-sync-nodeunit
 
-# Run basic tests (async and sync connection patterns)
-test-basic: test-basic-async test-basic-sync
-
-# Test asynchronous connection handling
-test-basic-async:
+test-basic-async-nodeunit:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_basic_async.trace && AUTOBAHN_TRACE=test/test_basic_async.trace ./node_modules/.bin/nodeunit test/test_basic_async.js
+    ./node_modules/.bin/nodeunit test/test_basic_async.js
 
-# Test synchronous connection handling
-test-basic-sync:
+test-basic-sync-nodeunit:
     #!/usr/bin/env bash
     set -e
     cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_basic_sync.trace && AUTOBAHN_TRACE=test/test_basic_sync.trace ./node_modules/.bin/nodeunit test/test_basic_sync.js
-
-# --- Connection tests ---
-
-# Test WAMP connection establishment and session lifecycle
-test-connect:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_connect.trace && AUTOBAHN_TRACE=test/test_connect.trace ./node_modules/.bin/nodeunit test/test_connect.js
-
-# --- Error handling tests ---
-
-# Test WAMP error handling (application errors, protocol errors)
-test-error-handling:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_error_handling.trace && AUTOBAHN_TRACE=test/test_error_handling.trace ./node_modules/.bin/nodeunit test/test_error_handling.js
-
-# --- PubSub tests ---
-
-# Run all PubSub tests
-# Note: test-pubsub-multiple-matching-subs excluded - order-dependent, WAMP doesn't guarantee
-#       event delivery order across subscribers (flaky depending on system timing)
-test-pubsub: test-pubsub-basic test-pubsub-complex test-pubsub-eligible test-pubsub-exclude test-pubsub-excludeme test-pubsub-options test-pubsub-prefix-sub test-pubsub-wildcard-sub
-
-# Test basic publish/subscribe functionality
-test-pubsub-basic:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_basic.trace && AUTOBAHN_TRACE=test/test_pubsub_basic.trace ./node_modules/.bin/nodeunit test/test_pubsub_basic.js
-
-# Test complex publish/subscribe scenarios (multiple topics, payloads)
-test-pubsub-complex:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_complex.trace && AUTOBAHN_TRACE=test/test_pubsub_complex.trace ./node_modules/.bin/nodeunit test/test_pubsub_complex.js
-
-# Test publisher eligible list (whitelist specific subscribers)
-test-pubsub-eligible:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_eligible.trace && AUTOBAHN_TRACE=test/test_pubsub_eligible.trace ./node_modules/.bin/nodeunit test/test_pubsub_eligible.js
-
-# Test publisher exclude list (blacklist specific subscribers)
-test-pubsub-exclude:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_exclude.trace && AUTOBAHN_TRACE=test/test_pubsub_exclude.trace ./node_modules/.bin/nodeunit test/test_pubsub_exclude.js
-
-# Test exclude_me option (publisher doesn't receive own events)
-test-pubsub-excludeme:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_excludeme.trace && AUTOBAHN_TRACE=test/test_pubsub_excludeme.trace ./node_modules/.bin/nodeunit test/test_pubsub_excludeme.js
-
-# Test multiple matching subscriptions (EXCLUDED from test-pubsub - flaky)
-test-pubsub-multiple-matching-subs:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_multiple_matching_subs.trace && AUTOBAHN_TRACE=test/test_pubsub_multiple_matching_subs.trace ./node_modules/.bin/nodeunit test/test_pubsub_multiple_matching_subs.js
-
-# Test subscription options (retain, acknowledge, etc.)
-test-pubsub-options:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_options.trace && AUTOBAHN_TRACE=test/test_pubsub_options.trace ./node_modules/.bin/nodeunit test/test_pubsub_options.js
-
-# Test prefix-based subscription matching
-test-pubsub-prefix-sub:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_prefix_sub.trace && AUTOBAHN_TRACE=test/test_pubsub_prefix_sub.trace ./node_modules/.bin/nodeunit test/test_pubsub_prefix_sub.js
-
-# Test wildcard-based subscription matching
-test-pubsub-wildcard-sub:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_pubsub_wildcard_sub.trace && AUTOBAHN_TRACE=test/test_pubsub_wildcard_sub.trace ./node_modules/.bin/nodeunit test/test_pubsub_wildcard_sub.js
-
-# --- RPC tests ---
-
-# Run all RPC tests
-test-rpc: test-rpc-arguments test-rpc-complex test-rpc-error test-rpc-options test-rpc-progress test-rpc-request-id-sequence test-rpc-routing test-rpc-slowsquare
-
-# Test RPC argument passing (args, kwargs)
-test-rpc-arguments:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_arguments.trace && AUTOBAHN_TRACE=test/test_rpc_arguments.trace ./node_modules/.bin/nodeunit test/test_rpc_arguments.js
-
-# Test complex RPC scenarios (nested calls, multiple procedures)
-test-rpc-complex:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_complex.trace && AUTOBAHN_TRACE=test/test_rpc_complex.trace ./node_modules/.bin/nodeunit test/test_rpc_complex.js
-
-# Test RPC error handling (application errors, cancellation)
-test-rpc-error:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_error.trace && AUTOBAHN_TRACE=test/test_rpc_error.trace ./node_modules/.bin/nodeunit test/test_rpc_error.js
-
-# Test RPC call options (timeout, disclose_me, etc.)
-test-rpc-options:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_options.trace && AUTOBAHN_TRACE=test/test_rpc_options.trace ./node_modules/.bin/nodeunit test/test_rpc_options.js
-
-# Test progressive RPC results (streaming responses)
-test-rpc-progress:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_progress.trace && AUTOBAHN_TRACE=test/test_rpc_progress.trace ./node_modules/.bin/nodeunit test/test_rpc_progress.js
-
-# Test request ID sequencing and correlation
-test-rpc-request-id-sequence:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_request_id_sequence.trace && AUTOBAHN_TRACE=test/test_rpc_request_id_sequence.trace ./node_modules/.bin/nodeunit test/test_rpc_request_id_sequence.js
-
-# Test RPC routing (shared registrations, pattern-based)
-test-rpc-routing:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_routing.trace && AUTOBAHN_TRACE=test/test_rpc_routing.trace ./node_modules/.bin/nodeunit test/test_rpc_routing.js
-
-# Test slow RPC calls (long-running procedures)
-test-rpc-slowsquare:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rpc_slowsquare.trace && AUTOBAHN_TRACE=test/test_rpc_slowsquare.trace ./node_modules/.bin/nodeunit test/test_rpc_slowsquare.js
-
-# --- Serialization tests ---
-
-# Run all serialization tests
-test-serialization: test-serialization-cbor test-serialization-json test-serialization-msgpack
-
-# Test CBOR serialization (RFC 8949)
-test-serialization-cbor:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_serialization_cbor.trace && AUTOBAHN_TRACE=test/test_serialization_cbor.trace ./node_modules/.bin/nodeunit test/test_serialization_cbor.js
-
-# Test JSON serialization (default WAMP serializer)
-test-serialization-json:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_serialization_json.trace && AUTOBAHN_TRACE=test/test_serialization_json.trace ./node_modules/.bin/nodeunit test/test_serialization_json.js
-
-# Test MessagePack serialization (binary, compact)
-test-serialization-msgpack:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_serialization_msgpack.trace && AUTOBAHN_TRACE=test/test_serialization_msgpack.trace ./node_modules/.bin/nodeunit test/test_serialization_msgpack.js
-
-# --- RawSocket tests ---
-
-# Run all RawSocket tests
-test-rawsocket: test-rawsocket-protocol test-rawsocket-transport
-
-# Test RawSocket protocol framing (handshake, message length)
-test-rawsocket-protocol:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rawsocket_protocol.trace && AUTOBAHN_TRACE=test/test_rawsocket_protocol.trace ./node_modules/.bin/nodeunit test/test_rawsocket_protocol.js
-
-# Test RawSocket transport (TCP connection, reconnection)
-test-rawsocket-transport:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_rawsocket_transport.trace && AUTOBAHN_TRACE=test/test_rawsocket_transport.trace ./node_modules/.bin/nodeunit test/test_rawsocket_transport.js
-
-# --- Binary/crypto tests (may require additional setup) ---
-
-# Test binary payload handling
-test-binary:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_binary.trace && AUTOBAHN_TRACE=test/test_binary.trace ./node_modules/.bin/nodeunit test/test_binary.js
-
-# Test NaCl sealed box encryption (cryptographic operations)
-test-sealedbox:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    rm -f test/test_sealedbox.trace && AUTOBAHN_TRACE=test/test_sealedbox.trace ./node_modules/.bin/nodeunit test/test_sealedbox.js
+    ./node_modules/.bin/nodeunit test/test_basic_sync.js
 
 # -----------------------------------------------------------------------------
 # -- Code Quality (ESLint + Prettier)

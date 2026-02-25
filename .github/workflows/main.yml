@@ -169,25 +169,8 @@ jobs:
           just crossbar-start &
           sleep 5  # Wait for router to start
 
-      - name: Run tests
+      - name: Run integration tests (Vitest)
         run: just test
-
-      - name: Ensure test-results directory exists
-        if: always()
-        run: |
-          mkdir -p test-results
-          # Create marker file if tests didn't run
-          if [ ! -f test-results/test-results.json ]; then
-            echo '{"node_version": "'$(node --version)'", "error": "Tests did not complete", "timestamp": "'$(date -Iseconds)'"}' > test-results/test-results.json
-          fi
-
-      - name: Upload test results
-        if: always()
-        uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
-        with:
-          name: test-results-node-${{ matrix.node }}
-          path: test-results/
-          retention-days: 30
 
       - name: Stop Crossbar.io router
         if: always()
