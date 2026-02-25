@@ -76,8 +76,39 @@ jobs:
       - name: Check formatting
         run: just format
 
+  test-unit:
+    name: Unit tests (Node ${{ matrix.node }})
+    needs: identifiers
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        node: ['22', '24', '25']
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Install npm dependencies
+        run: just install-npm
+
+      - name: Run unit tests (Vitest)
+        run: just test-unit
+
   test:
-    name: Test (Node ${{ matrix.node }})
+    name: Integration tests (Node ${{ matrix.node }})
     needs: identifiers
     runs-on: ubuntu-24.04
     strategy:
@@ -138,25 +169,8 @@ jobs:
           just crossbar-start &
           sleep 5  # Wait for router to start
 
-      - name: Run tests
+      - name: Run integration tests (Vitest)
         run: just test
-
-      - name: Ensure test-results directory exists
-        if: always()
-        run: |
-          mkdir -p test-results
-          # Create marker file if tests didn't run
-          if [ ! -f test-results/test-results.json ]; then
-            echo '{"node_version": "'$(node --version)'", "error": "Tests did not complete", "timestamp": "'$(date -Iseconds)'"}' > test-results/test-results.json
-          fi
-
-      - name: Upload test results
-        if: always()
-        uses: wamp-proto/wamp-cicd/actions/upload-artifact-verified@main
-        with:
-          name: test-results-node-${{ matrix.node }}
-          path: test-results/
-          retention-days: 30
 
       - name: Stop Crossbar.io router
         if: always()
@@ -165,7 +179,7 @@ jobs:
   build:
     name: Build browser bundles
     runs-on: ubuntu-24.04
-    needs: [identifiers, test]
+    needs: [identifiers, test-unit, test]
 
     env:
       BASE_REPO: ${{ needs.identifiers.outputs.base_repo }}

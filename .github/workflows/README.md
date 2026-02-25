@@ -57,14 +57,14 @@ Runs on every push/PR to master. Contains parallel jobs for fast feedback:
 |-----|---------|---------------|
 | `lint` | ESLint code quality check | 24 |
 | `format` | Prettier formatting check | 24 |
-| `test` | Run nodeunit tests against Crossbar.io | 22, 24, 25 |
+| `test` | Run Vitest tests against Crossbar.io | 22, 24, 25 |
 | `build` | Build browser bundles | 24 |
 | `security` | npm audit for vulnerabilities | 24 |
 
 **Test Infrastructure:**
 - Crossbar.io router installed from PyPI into Python venv
-- Tests run with nodeunit, results in JSON format
-- 25 test suites covering RPC, PubSub, serialization, RawSocket
+- Tests run with Vitest, results in JSON format
+- 29 test suites covering RPC, PubSub, serialization, RawSocket
 
 ### docs.yml
 
