@@ -26,40 +26,68 @@
  */
 exports.run = function (fn) {
    return new Promise(function (resolve, reject) {
+      var settled = false;
+
+      function safeReject(err) {
+         if (!settled) {
+            settled = true;
+            reject(err);
+         }
+      }
+
       var testcase = {
          // testcase.expect(N) - no-op in Vitest (assertion counting not needed)
          expect: function () {},
 
          // testcase.ok(expr, msg) - truthy assertion
          ok: function (expr, msg) {
-            expect(expr).toBeTruthy();
+            try {
+               expect(expr).toBeTruthy();
+            } catch (err) {
+               safeReject(err);
+            }
          },
 
          // testcase.equal(actual, expected, msg) - strict equality
          equal: function (actual, expected, msg) {
-            expect(actual).toBe(expected);
+            try {
+               expect(actual).toBe(expected);
+            } catch (err) {
+               safeReject(err);
+            }
          },
 
          // testcase.deepEqual(actual, expected, msg) - deep equality
          deepEqual: function (actual, expected, msg) {
-            expect(actual).toEqual(expected);
+            try {
+               expect(actual).toEqual(expected);
+            } catch (err) {
+               safeReject(err);
+            }
          },
 
          // testcase.doesNotThrow(fn, msg) - assert no throw
          doesNotThrow: function (fn, msg) {
-            expect(fn).not.toThrow();
+            try {
+               expect(fn).not.toThrow();
+            } catch (err) {
+               safeReject(err);
+            }
          },
 
          // testcase.done() - signal test completion
          done: function () {
-            resolve();
+            if (!settled) {
+               settled = true;
+               resolve();
+            }
          },
       };
 
       try {
          fn(testcase);
       } catch (err) {
-         reject(err);
+         safeReject(err);
       }
    });
 };
