@@ -16,7 +16,7 @@ This document outlines the modernization plan for AutobahnJS, establishing a fou
 |--------|--------|-------|
 | **Language** | Pure JavaScript (ES5/ES6 mix) | No TypeScript (by design) |
 | **Build System** | justfile + npm tools | Modernized from Makefile/SCons |
-| **Test Framework** | Nodeunit | 25 tests, summary table, JSON output |
+| **Test Framework** | Vitest | 29 tests migrated from Nodeunit |
 | **CI/CD** | GitHub Actions | 4 workflows: main, release, release-post-comment, docs |
 | **Code Quality** | ESLint 9 + Prettier | Flat config, npm audit in CI |
 | **Documentation** | Sphinx + Furo | GitHub Pages deployment |
@@ -74,7 +74,7 @@ autobahn-js/
 |-----|------------|--------|
 | **No TypeScript** | High | Planned (Track A) |
 | **No static analysis** | High | **FIXED** - ESLint 9 in CI |
-| **Deprecated test framework** | Medium | Tests working, framework update planned |
+| **Deprecated test framework** | Medium | **FIXED** - Migrated from Nodeunit to Vitest |
 | **Manual release process** | Medium | **FIXED** - Automated via GH Actions |
 | **Flexible dependency versions** | Medium | Unchanged (low priority) |
 | **No SBOM generation** | Medium | Planned |
@@ -165,7 +165,7 @@ build/autobahn-xbr.min.jgz (~3MB)
 
 ### Test Infrastructure
 
-- **Test runner**: `just test` runs all tests via nodeunit
+- **Test runner**: `just test` runs all tests via Vitest
 - **Router**: Crossbar.io installed from PyPI into Python venv
 - **Trace files**: For debugging only (non-deterministic IDs)
 

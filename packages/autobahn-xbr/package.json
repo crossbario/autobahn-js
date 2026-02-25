@@ -8,7 +8,7 @@
     "/lib"
   ],
   "scripts": {
-    "test": "nodeunit test/test.js"
+    "test": "echo \"No tests yet\""
   },
   "engines": {
     "node": ">= 7.10.1"

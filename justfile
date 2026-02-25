@@ -386,26 +386,6 @@ test-clean:
     echo "==> Test files cleaned."
 
 # -----------------------------------------------------------------------------
-# -- Legacy nodeunit test recipes (deprecated - use `just test` or `just test-unit`)
-# -- These will be removed once nodeunit is fully removed from dependencies.
-# -----------------------------------------------------------------------------
-
-# --- Basic tests (nodeunit, deprecated) ---
-test-basic-nodeunit: test-basic-async-nodeunit test-basic-sync-nodeunit
-
-test-basic-async-nodeunit:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    ./node_modules/.bin/nodeunit test/test_basic_async.js
-
-test-basic-sync-nodeunit:
-    #!/usr/bin/env bash
-    set -e
-    cd {{ PACKAGES_DIR }}/autobahn
-    ./node_modules/.bin/nodeunit test/test_basic_sync.js
-
-# -----------------------------------------------------------------------------
 # -- Code Quality (ESLint + Prettier)
 # -----------------------------------------------------------------------------
 

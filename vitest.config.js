@@ -13,8 +13,7 @@ export default defineConfig({
       // Setup file: changes CWD to packages/autobahn/ for Testlog paths
       setupFiles: ['test/vitest.setup.js'],
 
-      // Test file pattern: *.vitest.js files coexist with nodeunit *.js tests
-      // during the migration period
+      // Test file pattern: *.vitest.js files
       include: ['test/**/*.vitest.js'],
 
       // Inject describe, test, expect as globals (CommonJS compatibility)
