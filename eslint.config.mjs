@@ -73,7 +73,7 @@ export default [
 
    // Vitest test files: add test framework globals
    {
-      files: ['**/*.vitest.js'],
+      files: ['**/*.vitest.js', '**/vitest_adapter.js', '**/vitest.setup.js'],
       languageOptions: {
          globals: {
             describe: 'readonly',

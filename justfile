@@ -188,10 +188,13 @@ distclean: clean
 # -- NPM dependencies
 # -----------------------------------------------------------------------------
 
-# Install npm dependencies for all packages
+# Install npm dependencies for all packages (root + autobahn + autobahn-xbr)
 install-npm:
     #!/usr/bin/env bash
     set -e
+    echo "==> Installing root npm dependencies (Vitest, ESLint, Prettier)..."
+    cd {{ PROJECT_DIR }}
+    npm install
     echo "==> Installing npm dependencies for autobahn..."
     cd {{ PACKAGES_DIR }}/autobahn
     rm -rf node_modules/websocket
