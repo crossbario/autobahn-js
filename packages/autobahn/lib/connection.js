@@ -336,7 +336,7 @@ Connection.prototype.open = function () {
             will_retry: next_retry.will_retry
          };
 
-         log.warn("connection closed", reason, details);
+         log.debug("connection closed", reason, details);
 
          // fire app code handler
          //
@@ -373,7 +373,7 @@ Connection.prototype.open = function () {
                log.warn("giving up trying to auto-reconnect!");
             }
          } else {
-            log.warn("auto-reconnect disabled!", self._retry, stop_retrying);
+            log.debug("auto-reconnect disabled!", self._retry, stop_retrying);
          }
       }
    }
