@@ -600,6 +600,32 @@ docs-serve venv="": (docs venv)
     cd {{ DOCS_BUILD }}/html
     ${VENV_PATH}/bin/python -m http.server 8000
 
+# Publish autobahn package to npm
+# Usage: just publish-autobahn          (dry-run, shows what would be published)
+#        just publish-autobahn confirm  (actually publishes to npm)
+publish-autobahn mode="dry-run":
+    #!/usr/bin/env bash
+    set -e
+    cd "{{ PACKAGES_DIR }}/autobahn"
+    VERSION=$(node -p "require('./package.json').version")
+    echo "==> AutobahnJS v${VERSION}"
+    echo ""
+
+    if [ "{{ mode }}" = "confirm" ]; then
+        echo "==> Publishing to npm..."
+        npm publish --access public
+        echo ""
+        echo "==> Published autobahn@${VERSION} to npm"
+        echo "    https://www.npmjs.com/package/autobahn/v/${VERSION}"
+    else
+        echo "==> Dry run — showing what would be published:"
+        echo ""
+        npm pack --dry-run 2>&1
+        echo ""
+        echo "==> To actually publish, run:"
+        echo "    just publish-autobahn confirm"
+    fi
+
 # Clean documentation build
 docs-clean:
     #!/usr/bin/env bash

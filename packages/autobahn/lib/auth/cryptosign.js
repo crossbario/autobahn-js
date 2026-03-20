@@ -94,7 +94,7 @@ function create_connection (config) {
         }
     }
 
-    authextra = {
+    var authextra = {
         // forward the client pubkey: this allows us to omit authid as
         // the router can identify us with the pubkey already
         pubkey: public_key(pkey),
@@ -149,7 +149,11 @@ function create_connection (config) {
         authextra: authextra,
 
         // WAMP serializers to use
-        serializers: config.serializers
+        serializers: config.serializers,
+
+        // forward promise configuration from caller
+        use_es6_promises: config.use_es6_promises,
+        use_deferred: config.use_deferred
     });
 
     return _connection;
