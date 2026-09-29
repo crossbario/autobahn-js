@@ -1,5 +1,9 @@
 # AutobahnJS - Change Log
 
+## Unreleased
+
+* Adopt the contribution workflow shared by all WAMP projects: `CONTRIBUTING.md`, the pull request template and `.audit/README.md` are deployed byte-identically from wamp-cicd (GitHub issue first, red → green tests, AI-assistance disclosure) and kept in sync by a CI drift check; project-specific notes moved to a new `DEVELOPMENT.md`. `.cicd` and `.ai` are pinned to the same commits across the WAMP fleet, and the shared workflow recipes (`just where`, `new-branch`, `publish`, `land`) are imported (#608)
+
 ## 20.2.2
 
 * new: update XBR contract ABI files to v20.2.2
