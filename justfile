@@ -363,6 +363,26 @@ crossbar-start venv="": (install-crossbar venv)
     cd {{ PROJECT_DIR }}
     ${VENV_PATH}/bin/crossbar start --cbdir .crossbar
 
+# Wait until the test router accepts connections on its ports (WebSocket 8080, RawSocket 8090)
+crossbar-wait timeout="60":
+    #!/usr/bin/env bash
+    set -e
+    # A fixed sleep after `just crossbar-start &` is a race: on a slow machine the tests
+    # start before the router listens, and the error-handling tests fail (#615). So poll,
+    # with bash's /dev/tcp (no extra tool), and fail clearly if it never comes up.
+    for port in 8080 8090; do
+        waited=0
+        until (exec 3<>/dev/tcp/127.0.0.1/${port}) 2>/dev/null; do
+            if [ "${waited}" -ge "{{ timeout }}" ]; then
+                echo "==> ERROR: no router listening on 127.0.0.1:${port} after {{ timeout }}s" >&2
+                exit 1
+            fi
+            sleep 1
+            waited=$((waited + 1))
+        done
+        echo "==> Router listening on 127.0.0.1:${port}"
+    done
+
 # -----------------------------------------------------------------------------
 # -- Unit Tests (Vitest - no Crossbar.io required)
 # -----------------------------------------------------------------------------

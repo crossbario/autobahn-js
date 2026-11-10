@@ -25,6 +25,7 @@ just install-crossbar       # Crossbar.io, the router the integration tests run 
 ```bash
 just test-unit              # unit tests (no router needed)
 just crossbar-start &       # start the test router in the background
+just crossbar-wait          # wait until it listens (fails after 60s if it never does)
 just test                   # all tests with Vitest (needs the running router)
 ```
 

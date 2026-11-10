@@ -172,7 +172,7 @@ jobs:
       - name: Start Crossbar.io router
         run: |
           just crossbar-start &
-          sleep 5  # Wait for router to start
+          just crossbar-wait  # until it listens, not a fixed sleep (#615)
 
       - name: Run integration tests (Vitest)
         run: just test
