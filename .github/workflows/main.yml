@@ -310,8 +310,9 @@ jobs:
         run: |
           cd security-results
 
-          # Create summary JSON
-          cat > security-summary.json << 'SUMMARY'
+          # Create summary JSON. The delimiter is unquoted on purpose: the $(...) below
+          # must expand. A quoted one ('SUMMARY') wrote the command text itself (#613).
+          cat > security-summary.json << SUMMARY
           {
             "timestamp": "$(date -Iseconds)",
             "node_version": "$(node --version)",
