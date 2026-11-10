@@ -21,27 +21,53 @@ describe('pubsub options', function () {
                var session2 = res[1];
 
                var counter = 0;
-               var received = 0;
                var sub;
+
+               // The log must not depend on whether an acknowledgement or its event
+               // arrives first: that order varies (it differed on Node 25, #601). So
+               // record both, finish when all of them are in, and log each kind in
+               // its own order. Events from one publisher to one subscriber keep
+               // their order (WAMP guarantees it), so their sequence is still checked.
+               var N = 6;
+               var acks = [];
+               var events = [];
+               var finished = false;
+
+               function finish() {
+                  if (finished || acks.length < N || events.length < N) {
+                     return;
+                  }
+                  finished = true;
+                  clearInterval(t1);
+
+                  for (var i = 0; i < acks.length; ++i) {
+                     test.log.apply(test, acks[i]);
+                  }
+                  for (var j = 0; j < events.length; ++j) {
+                     test.log.apply(test, events[j]);
+                  }
+                  test.log('Closing ..');
+
+                  session1.leave();
+                  session2.leave();
+
+                  var chk = test.check();
+                  testcase.ok(!chk, chk);
+                  testcase.done();
+               }
 
                function onevent1(args, kwargs, details) {
                   // FIXME: publisher disclosure now is a strictly router configured
                   // test.log("got event:", typeof(details), typeof(details.publication), typeof(details.publisher), details.publisher == session1.id, args[0]);
-                  test.log('got event:', typeof details, typeof details.publication, args[0]);
-
-                  received += 1;
-                  if (received > 5) {
-                     test.log('Closing ..');
-
-                     clearInterval(t1);
-
-                     session1.leave();
-                     session2.leave();
-
-                     var chk = test.check();
-                     testcase.ok(!chk, chk);
-                     testcase.done();
+                  if (events.length < N) {
+                     events.push([
+                        'got event:',
+                        typeof details,
+                        typeof details.publication,
+                        args[0],
+                     ]);
                   }
+                  finish();
                }
 
                sub = session2.subscribe('com.myapp.topic1', onevent1);
@@ -50,7 +76,10 @@ describe('pubsub options', function () {
                   var options = { acknowledge: true };
 
                   session1.publish('com.myapp.topic1', [counter], {}, options).then(function (pub) {
-                     test.log('event published', typeof pub, typeof pub.id);
+                     if (acks.length < N) {
+                        acks.push(['event published', typeof pub, typeof pub.id]);
+                     }
+                     finish();
                   });
                   counter += 1;
                }, 1000);

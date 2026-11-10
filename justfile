@@ -407,12 +407,25 @@ test:
     echo "==> Running all tests with Vitest..."
     npx vitest run
 
-# Clean test output files (.trace and .txt)
+# Create the missing reference logs (test/*.txt) from a run against the router
+test-baseline:
+    #!/usr/bin/env bash
+    set -e
+    cd {{ PROJECT_DIR }}
+    echo "==> Running all tests, writing a reference log for each test that has none..."
+    AUTOBAHN_TEST_WRITE_BASELINE=1 npx vitest run
+    echo "==> Review the new files (git status), run 'just test' again to check they are"
+    echo "    stable, and commit them. Existing references are never overwritten."
+
+# Clean test output files (.trace, and .txt that are not committed reference logs)
 test-clean:
     #!/usr/bin/env bash
+    set -e
     echo "==> Cleaning test output files..."
-    rm -f {{ PACKAGES_DIR }}/autobahn/test/*.txt
     rm -f {{ PACKAGES_DIR }}/autobahn/test/*.trace
+    # The committed test/*.txt are the reference logs the tests compare against:
+    # remove only untracked ones (#617).
+    git -C {{ PROJECT_DIR }} clean -f -q -- 'packages/autobahn/test/*.txt'
     echo "==> Test files cleaned."
 
 # -----------------------------------------------------------------------------

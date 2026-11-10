@@ -50,34 +50,63 @@ describe('pubsub multiple matching subs', function () {
                session_d._ident = 'D';
                session_e._ident = 'E';
 
-               var received = 0;
+               // The router delivers one publication to several sessions, each on its
+               // own connection, and the order they receive it in varies from run to
+               // run (#601, #617). So record every delivery, finish when all nine are
+               // in and every publish is acknowledged, and log them sorted by
+               // publication, then session: who received what is still checked exactly.
+               var EXPECTED = 9;
+               var deliveries = [];
+               var all_published = false;
+               var finished = false;
+
+               function finish() {
+                  if (finished || !all_published || deliveries.length < EXPECTED) {
+                     return;
+                  }
+                  finished = true;
+
+                  deliveries.sort(function (x, y) {
+                     return (
+                        x.counter - y.counter ||
+                        (x.ident < y.ident ? -1 : x.ident > y.ident ? 1 : 0)
+                     );
+                  });
+                  for (var i = 0; i < deliveries.length; ++i) {
+                     var d = deliveries[i];
+                     test.log('event: args=', d.args, ', kwargs=', d.kwargs);
+                     test.log(
+                        'subscription: sub_topic=',
+                        d.topic,
+                        ', sub_match=',
+                        d.match,
+                        ', session_ident=',
+                        d.ident
+                     );
+                  }
+                  test.log('closing ..');
+
+                  session_e.leave();
+                  session_d.leave();
+                  session_c.leave();
+                  session_b.leave();
+                  session_a.leave();
+
+                  var chk = test.check();
+                  testcase.ok(!chk, chk);
+                  testcase.done();
+               }
 
                function on_event(args, kwargs, details, sub) {
-                  test.log('event: args=', args, ', kwargs=', kwargs);
-                  test.log(
-                     'subscription: sub_topic=',
-                     sub.topic,
-                     ', sub_match=',
-                     sub.options.match,
-                     ', session_ident=',
-                     sub.session._ident
-                  );
-                  received += 1;
-                  if (received >= 9) {
-                     test.log('closing ..');
-
-                     session_e.leave();
-                     session_d.leave();
-                     session_c.leave();
-                     session_b.leave();
-                     session_a.leave();
-
-                     var chk = test.check();
-                     testcase.ok(!chk, chk);
-                     testcase.done();
-                  } else {
-                     test.log('received ' + received + ' events up to this point ..');
-                  }
+                  deliveries.push({
+                     counter: args[1],
+                     ident: sub.session._ident,
+                     args: args,
+                     kwargs: kwargs,
+                     topic: sub.topic,
+                     match: sub.options.match,
+                  });
+                  finish();
                }
 
                var dl2 = [];
@@ -172,6 +201,8 @@ describe('pubsub multiple matching subs', function () {
                      autobahn.when.all(dl3).then(
                         function (res) {
                            test.log('all test events published!');
+                           all_published = true;
+                           finish();
                         },
                         function (err) {
                            test.log(err);
