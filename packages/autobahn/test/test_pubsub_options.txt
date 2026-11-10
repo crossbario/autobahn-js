@@ -1,0 +1,14 @@
+0 "all sessions connected"
+1 "event published" "object" "number"
+2 "event published" "object" "number"
+3 "event published" "object" "number"
+4 "event published" "object" "number"
+5 "event published" "object" "number"
+6 "event published" "object" "number"
+7 "got event:" "object" "number" 0
+8 "got event:" "object" "number" 1
+9 "got event:" "object" "number" 2
+10 "got event:" "object" "number" 3
+11 "got event:" "object" "number" 4
+12 "got event:" "object" "number" 5
+13 "Closing .."

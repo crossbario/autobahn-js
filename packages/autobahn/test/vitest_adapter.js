@@ -24,6 +24,15 @@
  * @param {Function} fn - nodeunit test function: function(testcase) { ... }
  * @returns {Promise}
  */
+/**
+ * The nodeunit message as Vitest's assertion message, so a failure says why: for a
+ * Testlog comparison, the expected and actual logs, or the missing reference file
+ * (#617). Without it, a failure read only "expected false to be truthy".
+ */
+function message(msg) {
+   return msg === undefined || msg === null ? undefined : String(msg);
+}
+
 exports.run = function (fn) {
    return new Promise(function (resolve, reject) {
       var settled = false;
@@ -42,7 +51,7 @@ exports.run = function (fn) {
          // testcase.ok(expr, msg) - truthy assertion
          ok: function (expr, msg) {
             try {
-               expect(expr).toBeTruthy();
+               expect(expr, message(msg)).toBeTruthy();
             } catch (err) {
                safeReject(err);
             }
@@ -51,7 +60,7 @@ exports.run = function (fn) {
          // testcase.equal(actual, expected, msg) - strict equality
          equal: function (actual, expected, msg) {
             try {
-               expect(actual).toBe(expected);
+               expect(actual, message(msg)).toBe(expected);
             } catch (err) {
                safeReject(err);
             }
@@ -60,7 +69,7 @@ exports.run = function (fn) {
          // testcase.deepEqual(actual, expected, msg) - deep equality
          deepEqual: function (actual, expected, msg) {
             try {
-               expect(actual).toEqual(expected);
+               expect(actual, message(msg)).toEqual(expected);
             } catch (err) {
                safeReject(err);
             }
@@ -69,7 +78,7 @@ exports.run = function (fn) {
          // testcase.doesNotThrow(fn, msg) - assert no throw
          doesNotThrow: function (fn, msg) {
             try {
-               expect(fn).not.toThrow();
+               expect(fn, message(msg)).not.toThrow();
             } catch (err) {
                safeReject(err);
             }

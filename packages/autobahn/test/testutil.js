@@ -159,10 +159,17 @@ Testlog.prototype.check = function () {
       } else {
          return null;
       }
-   } else {
+   } else if (process.env.AUTOBAHN_TEST_WRITE_BASELINE === "1") {
       fs.writeFileSync(self._filename, slog);
       console.log("Know-good log file created", self._filename, slog.length);
       return null;
+   } else {
+      // A missing reference is a failure, not a pass: writing it here and returning
+      // null compared the log with itself, so on a fresh clone (every CI run) the
+      // test could not fail (#617). Creating a reference is a deliberate act.
+      return "\nNo reference log file: " + self._filename +
+         "\nCreate it with `just test-baseline` (a running router is needed),\n" +
+         "review it, check that it is the same on every run, and commit it.\n\nGot:\n\n" + slog;
    }
 };
 
